@@ -1,20 +1,14 @@
-import {Text, View} from 'react-native';
-import useGetCombinedAudioData, {
-  getFirebaseAudioURL,
-} from '../hooks/useGetCombinedAudioData';
-import Sound from './Sound';
+import {useState} from 'react';
+import {Text, TouchableOpacity, View} from 'react-native';
+import TopicContent from './TopicContent';
 
 const TopicComponent = ({
-  japaneseLoadedContent,
   topicName,
+  japaneseLoadedContent,
   japaneseLoadedContentFullMP3s,
+  pureWordsUnique,
 }) => {
-  const topicData = japaneseLoadedContent[topicName];
-  const hasUnifiedMP3File = japaneseLoadedContentFullMP3s.some(
-    mp3 => mp3.name === topicName,
-  );
-
-  const url = getFirebaseAudioURL(topicName);
+  const [isContainerOpen, setIsContainerOpen] = useState(false);
 
   return (
     <View>
@@ -23,25 +17,19 @@ const TopicComponent = ({
           margin: 20,
         }}>
         {topicName}
+        <TouchableOpacity onPress={() => setIsContainerOpen(!isContainerOpen)}>
+          <Text style={{marginLeft: 10, margin: 'auto'}}>Open</Text>
+        </TouchableOpacity>
       </Text>
-      {hasUnifiedMP3File && (
-        <View>
-          <Sound url={url} />
-        </View>
+      {isContainerOpen && (
+        <TopicContent
+          topicName={topicName}
+          isContainerOpen={isContainerOpen}
+          japaneseLoadedContent={japaneseLoadedContent}
+          japaneseLoadedContentFullMP3s={japaneseLoadedContentFullMP3s}
+          pureWordsUnique={pureWordsUnique}
+        />
       )}
-      <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
-        {topicData?.map((topicSentence, index) => {
-          return (
-            <Text
-              key={index}
-              style={{
-                fontSize: 20,
-              }}>
-              {topicSentence.targetLang}
-            </Text>
-          );
-        })}
-      </View>
     </View>
   );
 };

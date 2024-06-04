@@ -1,5 +1,6 @@
 import {useEffect, useState} from 'react';
 import {FIREBASE_AUDIO_URL, FIREBASE_STORAGE_ID} from '@env';
+import Sound from 'react-native-sound';
 
 export const getFirebaseAudioURL = (mp3FileName: string) => {
   const baseURL = FIREBASE_AUDIO_URL;
@@ -14,27 +15,32 @@ const useGetCombinedAudioData = ({hasUnifiedMP3File, audioFiles}) => {
 
   useEffect(() => {
     const fetchDurations = async () => {
-      const durationsPromises = await Promise.all(
-        audioFiles.map(async item => {
-          const url = getFirebaseAudioURL(item.id);
-          const oneItem = await new Promise(resolve => {
-            const audio = new Audio(url);
-            audio.addEventListener('loadedmetadata', () => {
-              resolve({
-                id: item.id,
-                duration: audio.duration,
-              });
-            });
-          });
+      const durationsPromises = audioFiles.map(item => {
+        const url = getFirebaseAudioURL(item.id);
+        return new Promise(resolve => {
+          const sound = new Sound(url, '', error => {
+            if (error) {
+              console.log('Failed to load the sound', error);
+              resolve({id: item.id, duration: 0});
+              return;
+            }
+            const duration = sound.getDuration();
 
-          return oneItem;
-        }),
-      );
+            resolve({
+              id: item.id,
+              duration,
+            });
+            sound.release(); // Release the sound resource
+          });
+        });
+      });
+
+      const durationsResults = await Promise.all(durationsPromises);
 
       let endAt = 0;
 
       const sortedAudios = audioFiles.map(audioItem => {
-        const thisDuration = durationsPromises.find(
+        const thisDuration = durationsResults.find(
           item => item.id === audioItem.id,
         ).duration;
         const startAt = endAt;

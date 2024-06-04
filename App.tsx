@@ -9,9 +9,8 @@ import {
 
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import {getAllData} from './api/load-content';
-import {mockData} from './mockData';
-import useGetCombinedAudioData from './hooks/useGetCombinedAudioData';
 import TopicComponent from './components/TopicComponent';
+import {makeArrayUnique} from './hooks/useHighlightWordToWordBank';
 
 function App(): React.JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
@@ -24,7 +23,6 @@ function App(): React.JSX.Element {
       try {
         // const results = mockData || (await getAllData());
         const results = await getAllData();
-        console.log('## results: ', results);
 
         setData(results);
       } catch (error) {
@@ -37,8 +35,22 @@ function App(): React.JSX.Element {
 
     fetchData();
   }, []);
-  useGetCombinedAudioData;
-  if (loading || !data) {
+
+  const getPureWords = () => {
+    let pureWords = [];
+    const japaneseLoadedWords = data?.japaneseLoadedWords;
+
+    japaneseLoadedWords?.forEach(wordData => {
+      pureWords.push(wordData.baseForm);
+      pureWords.push(wordData.surfaceForm);
+    });
+
+    const pureWordsUnique =
+      pureWords?.length > 0 ? makeArrayUnique(pureWords) : [];
+    return pureWordsUnique;
+  };
+
+  if (loading || !data || !data?.japaneseLoadedContent) {
     return <Text>Loading...</Text>;
   }
 
@@ -61,9 +73,11 @@ function App(): React.JSX.Element {
         <View>
           {topics.map(topicName => (
             <TopicComponent
+              key={topicName}
               topicName={topicName}
               japaneseLoadedContent={japaneseLoadedContent}
               japaneseLoadedContentFullMP3s={japaneseLoadedContentFullMP3s}
+              pureWordsUnique={getPureWords()}
             />
           ))}
         </View>
