@@ -67,25 +67,24 @@ const TopicContent = ({
 
   const isLoading = durationsLengths !== topicDataLengths;
 
-  const getCurrentTimeFunc = () => {
-    soundRef.current.getCurrentTime(currentTime => {
-      const lastItem = durations[durations.length - 1];
-      if (lastItem) {
-        setProgress(currentTime / lastItem.endAt);
-        setCurrentTimeState(currentTime);
-      }
-      const currentAudioPlaying = durations.findIndex(
-        item => currentTime < item.endAt && currentTime > item.startAt,
-      );
-
-      const newId = topicData[currentAudioPlaying]?.id;
-      if (newId !== masterPlay) {
-        setMasterPlay(newId);
-      }
-    });
-  };
-
   useEffect(() => {
+    const getCurrentTimeFunc = () => {
+      soundRef.current.getCurrentTime(currentTime => {
+        const lastItem = durations[durations.length - 1];
+        if (lastItem) {
+          setProgress(currentTime / lastItem.endAt);
+          setCurrentTimeState(currentTime);
+        }
+        const currentAudioPlaying = durations.findIndex(
+          item => currentTime < item.endAt && currentTime > item.startAt,
+        );
+
+        const newId = topicData[currentAudioPlaying]?.id;
+        if (newId !== masterPlay) {
+          setMasterPlay(newId);
+        }
+      });
+    };
     const interval = setInterval(() => {
       if (
         soundRef.current &&
@@ -97,15 +96,7 @@ const TopicContent = ({
     }, 100);
 
     return () => clearInterval(interval);
-  }, [
-    durations,
-    getCurrentTimeFunc,
-    masterPlay,
-    topicData,
-    soundRef,
-    setMasterPlay,
-    isLoading,
-  ]);
+  }, [durations, masterPlay, topicData, soundRef, setMasterPlay, isLoading]);
 
   const playFromThisSentence = id => {
     if (soundRef.current) {
@@ -157,10 +148,12 @@ const TopicContent = ({
                       ? 'yellow'
                       : 'transparent',
                   }}>
-                  <TouchableOpacity onPress={() => playFromThisSentence(id)}>
-                    <Text style={{marginRight: 5}}>▶️</Text>
-                  </TouchableOpacity>
-                  {getSafeText(topicSentence.targetLang)}
+                  <SatoriLine
+                    focusThisSentence={focusThisSentence}
+                    getSafeText={getSafeText}
+                    topicSentence={topicSentence}
+                    playFromThisSentence={playFromThisSentence}
+                  />
                 </Text>
               );
             })}
@@ -171,12 +164,36 @@ const TopicContent = ({
   );
 };
 
-const styles = StyleSheet.create({
-  inlineContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    marginVertical: 5,
-  },
-});
+const SatoriLine = ({
+  focusThisSentence,
+  playFromThisSentence,
+  getSafeText,
+  topicSentence,
+}) => {
+  const [showEng, setShowEng] = useState(false);
+  const [showNotes, setShowNotes] = useState(false);
+
+  return (
+    <Text
+      style={{
+        backgroundColor: focusThisSentence ? 'yellow' : 'transparent',
+      }}>
+      <TouchableOpacity onPress={() => playFromThisSentence(topicSentence.id)}>
+        <Text style={{marginRight: 5}}>▶️</Text>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={() => setShowEng(!showEng)}>
+        <Text style={{marginRight: 5}}>🇬🇧</Text>
+      </TouchableOpacity>
+      {topicSentence.notes ? (
+        <TouchableOpacity onPress={() => setShowNotes(!showNotes)}>
+          <Text style={{marginRight: 5}}>☝🏽</Text>
+        </TouchableOpacity>
+      ) : null}
+      {getSafeText(topicSentence.targetLang)}
+      {showEng ? <Text>{topicSentence.baseLang}</Text> : null}
+      {showNotes ? <Text>{topicSentence.notes}</Text> : null}
+    </Text>
+  );
+};
 
 export default TopicContent;
