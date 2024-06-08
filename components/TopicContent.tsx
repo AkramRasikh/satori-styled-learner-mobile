@@ -29,6 +29,8 @@ const TopicContent = ({
     soundRef,
     isPlaying,
     setIsPlaying,
+    topicName,
+    isPlaying,
   });
 
   const {underlineWordsInSentence} = useHighlightWordToWordBank({

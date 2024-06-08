@@ -1,10 +1,23 @@
 import {useEffect} from 'react';
-import Sound from 'react-native-sound';
 
-const useSoundHook = ({url, soundRef, isPlaying, setIsPlaying}) => {
+import Sound from 'react-native-sound';
+import useBackgroundAudioHook from './useBackgroundAudioHook';
+
+Sound.setCategory('Playback');
+
+const useSoundHook = ({url, soundRef, isPlaying, setIsPlaying, topicName}) => {
+  let soundInstance: Sound;
+
+  useBackgroundAudioHook({
+    soundInstance,
+    topicName,
+    url,
+    soundRef,
+  });
+
   useEffect(() => {
     if (url) {
-      const soundInstance = new Sound(url, '', error => {
+      soundInstance = new Sound(url, '', error => {
         if (error) {
           console.log('## Failed to load the sound', error);
           return;
@@ -26,14 +39,22 @@ const useSoundHook = ({url, soundRef, isPlaying, setIsPlaying}) => {
     }
   }, [url, soundRef]);
 
+  // const playPause = async () => {
+  //   const currentState = await TrackPlayer.getState();
+  //   if (currentState === State.Playing) {
+  //     TrackPlayer.pause();
+  //   } else {
+  //     TrackPlayer.play();
+  //   }
+  // };
+
   const playSound = () => {
     if (soundRef.current) {
       soundRef.current.play(success => {
         if (success) {
-          console.log('Successfully finished playing');
           setIsPlaying(false);
         } else {
-          console.log('Playback failed due to audio decoding errors');
+          console.log('## Playback failed due to audio decoding errors');
         }
       });
       setIsPlaying(true);

@@ -1,11 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {
-  SafeAreaView,
-  ScrollView,
-  Text,
-  useColorScheme,
-  View,
-} from 'react-native';
+import {SafeAreaView, ScrollView, Text, View} from 'react-native';
 
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import {getAllData} from './api/load-content';
@@ -13,7 +7,6 @@ import TopicComponent from './components/TopicComponent';
 import {makeArrayUnique} from './hooks/useHighlightWordToWordBank';
 
 function App(): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -60,15 +53,15 @@ function App(): React.JSX.Element {
   const topics = Object.keys(japaneseLoadedContent);
 
   return (
-    <SafeAreaView>
+    <SafeAreaView style={{backgroundColor: Colors.white}}>
       <ScrollView
         contentInsetAdjustmentBehavior="automatic"
         style={{padding: 10}}>
         <View
           style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
+            backgroundColor: Colors.white,
           }}>
-          <Text>Yah dun know!</Text>
+          <Text>Yah dun know!!</Text>
         </View>
         <View>
           {topics.map(topicName => (

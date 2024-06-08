@@ -1,6 +1,7 @@
 import {useEffect, useState} from 'react';
 import {FIREBASE_AUDIO_URL, FIREBASE_STORAGE_ID} from '@env';
 import Sound from 'react-native-sound';
+Sound.setCategory('Playback');
 
 export const getFirebaseAudioURL = (mp3FileName: string) => {
   const baseURL = FIREBASE_AUDIO_URL;
