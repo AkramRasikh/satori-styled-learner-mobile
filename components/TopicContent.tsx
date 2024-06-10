@@ -22,6 +22,7 @@ const TopicContent = ({
   const [progress, setProgress] = useState(0);
   const [currentTimeState, setCurrentTimeState] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [isLoopMode, setIsLoopMode] = useState(false);
   const [longPressedWord, setLongPressedWord] = useState();
 
   const soundRef = useRef(null);
@@ -156,7 +157,6 @@ const TopicContent = ({
   if (isLoading) {
     return <Text>Loading</Text>;
   }
-  // {"baseForm": "いとこ", "contexts": ["9a053240-fb92-40d5-b260-14f652fdac8f"], "definition": "cousin", "id": "89e36d07-acf6-4128-ba11-d431671d2587", "phonetic": "いとこ", "surfaceForm": "いとこ", "transliteration": "Itoko"}
   return (
     <>
       {isContainerOpen ? (
@@ -195,18 +195,21 @@ const TopicContent = ({
       ) : null}
       {hasUnifiedMP3File && (
         <View>
-          <SoundComponent
-            soundRef={soundRef}
-            isPlaying={isPlaying}
-            playSound={playSound}
-            pauseSound={pauseSound}
-            rewindSound={rewindSound}
-            forwardSound={forwardSound}
-          />
-          <ProgressBarComponent
-            progress={progress}
-            time={currentTimeState.toFixed(2)}
-          />
+          <View>
+            <SoundComponent
+              soundRef={soundRef}
+              isPlaying={isPlaying}
+              playSound={playSound}
+              pauseSound={pauseSound}
+              rewindSound={rewindSound}
+              forwardSound={forwardSound}
+            />
+            <ProgressBarComponent
+              progress={progress}
+              time={currentTimeState.toFixed(2)}
+            />
+          </View>
+          <LoopMode isLoopMode={isLoopMode} setIsLoopMode={setIsLoopMode} />
         </View>
       )}
     </>
@@ -243,6 +246,16 @@ const SatoriLine = ({
       {showEng ? <Text selectable={true}>{topicSentence.baseLang}</Text> : null}
       {showNotes ? <Text>{topicSentence.notes}</Text> : null}
     </Text>
+  );
+};
+
+const LoopMode = ({isLoopMode, setIsLoopMode}) => {
+  return (
+    <View style={{margin: 'auto'}}>
+      <TouchableOpacity onPress={() => setIsLoopMode(!isLoopMode)}>
+        <Text>{isLoopMode ? '🔄' : '➡️'}</Text>
+      </TouchableOpacity>
+    </View>
   );
 };
 
