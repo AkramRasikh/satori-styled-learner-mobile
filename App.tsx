@@ -10,6 +10,7 @@ function App(): React.JSX.Element {
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [structuredUnifiedData, setStructuredUnifiedData] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -53,16 +54,16 @@ function App(): React.JSX.Element {
   const topics = Object.keys(japaneseLoadedContent);
 
   return (
-    <SafeAreaView style={{backgroundColor: Colors.white}}>
+    <SafeAreaView style={{backgroundColor: '#D3D3D3'}}>
       <ScrollView
         contentInsetAdjustmentBehavior="automatic"
         style={{padding: 10}}>
-        <View
-          style={{
-            backgroundColor: Colors.white,
-          }}>
-          <Text>Yah dun know!!</Text>
+        <View>
+          <Text style={{textAlign: 'center', fontWeight: 'bold'}}>
+            Yah dun know!!
+          </Text>
         </View>
+
         <View>
           {topics.map(topicName => (
             <TopicComponent
@@ -71,6 +72,9 @@ function App(): React.JSX.Element {
               japaneseLoadedContent={japaneseLoadedContent}
               japaneseLoadedContentFullMP3s={japaneseLoadedContentFullMP3s}
               pureWordsUnique={getPureWords()}
+              structuredUnifiedData={structuredUnifiedData}
+              setStructuredUnifiedData={setStructuredUnifiedData}
+              japaneseLoadedWords={data?.japaneseLoadedWords}
             />
           ))}
         </View>

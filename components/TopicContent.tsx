@@ -1,5 +1,5 @@
 import {useEffect, useRef, useState} from 'react';
-import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
+import {View, Text, TouchableOpacity} from 'react-native';
 import SoundComponent from './Sound';
 import useSoundHook from '../hooks/useSoundHook';
 import useGetCombinedAudioData, {
@@ -14,11 +14,15 @@ const TopicContent = ({
   japaneseLoadedContent,
   japaneseLoadedContentFullMP3s,
   pureWordsUnique,
+  structuredUnifiedData,
+  setStructuredUnifiedData,
+  japaneseLoadedWords,
 }) => {
   const [masterPlay, setMasterPlay] = useState('');
   const [progress, setProgress] = useState(0);
   const [currentTimeState, setCurrentTimeState] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [longPressedWord, setLongPressedWord] = useState();
 
   const soundRef = useRef(null);
 
@@ -30,21 +34,34 @@ const TopicContent = ({
     isPlaying,
     setIsPlaying,
     topicName,
-    isPlaying,
   });
 
   const {underlineWordsInSentence} = useHighlightWordToWordBank({
     pureWordsUnique,
   });
 
+  const onLongPress = text => {
+    const longPressedText = japaneseLoadedWords.find(
+      word => word.surfaceForm === text,
+    );
+    if (longPressedText) {
+      setLongPressedWord(longPressedText);
+    }
+  };
+
   const getSafeText = targetText => {
     const textSegments = underlineWordsInSentence(targetText);
 
-    return textSegments.map((segment, index) => (
-      <Text key={index} style={[segment.style]}>
-        {segment.text}
-      </Text>
-    ));
+    return textSegments.map((segment, index) => {
+      return (
+        <Text
+          key={index}
+          style={[segment.style]}
+          onLongPress={() => onLongPress(segment.text)}>
+          {segment.text}
+        </Text>
+      );
+    });
   };
 
   const topicData = japaneseLoadedContent[topicName];
@@ -59,15 +76,27 @@ const TopicContent = ({
     };
   });
 
+  const hasAlreadyBeenUnified = structuredUnifiedData[topicName];
+
   const durations = useGetCombinedAudioData({
     hasUnifiedMP3File,
     audioFiles: orderedContent,
+    hasAlreadyBeenUnified,
   });
 
   const durationsLengths = durations.length;
   const topicDataLengths = topicData?.length;
 
   const isLoading = durationsLengths !== topicDataLengths;
+
+  useEffect(() => {
+    if (!hasAlreadyBeenUnified && durationsLengths === topicDataLengths) {
+      setStructuredUnifiedData(prevState => ({
+        ...prevState,
+        [topicName]: durations,
+      }));
+    }
+  }, [structuredUnifiedData, topicName, durations, topicData]);
 
   useEffect(() => {
     const getCurrentTimeFunc = () => {
@@ -113,12 +142,57 @@ const TopicContent = ({
     }
   };
 
+  const getLongPressedWordData = () => {
+    const surfaceForm = longPressedWord.surfaceForm;
+    const baseForm = longPressedWord.baseForm;
+    const phonetic = longPressedWord.phonetic;
+    const definition = longPressedWord.definition;
+
+    return (
+      surfaceForm + '...' + baseForm + '...' + phonetic + '...' + definition
+    );
+  };
+
   if (isLoading) {
     return <Text>Loading</Text>;
   }
-
+  // {"baseForm": "いとこ", "contexts": ["9a053240-fb92-40d5-b260-14f652fdac8f"], "definition": "cousin", "id": "89e36d07-acf6-4128-ba11-d431671d2587", "phonetic": "いとこ", "surfaceForm": "いとこ", "transliteration": "Itoko"}
   return (
     <>
+      {isContainerOpen ? (
+        <View>
+          {longPressedWord ? (
+            <View style={{marginBottom: 15}}>
+              <Text>{getLongPressedWordData()}</Text>
+            </View>
+          ) : null}
+          <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
+            <Text style={{fontSize: 20}}>
+              {topicData?.map(topicSentence => {
+                const id = topicSentence.id;
+                const focusThisSentence = id === masterPlay;
+
+                return (
+                  <Text
+                    key={id}
+                    style={{
+                      backgroundColor: focusThisSentence
+                        ? 'yellow'
+                        : 'transparent',
+                    }}>
+                    <SatoriLine
+                      focusThisSentence={focusThisSentence}
+                      getSafeText={getSafeText}
+                      topicSentence={topicSentence}
+                      playFromThisSentence={playFromThisSentence}
+                    />
+                  </Text>
+                );
+              })}
+            </Text>
+          </View>
+        </View>
+      ) : null}
       {hasUnifiedMP3File && (
         <View>
           <SoundComponent
@@ -135,33 +209,6 @@ const TopicContent = ({
           />
         </View>
       )}
-      {isContainerOpen ? (
-        <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
-          <Text style={{fontSize: 20}}>
-            {topicData?.map(topicSentence => {
-              const id = topicSentence.id;
-              const focusThisSentence = id === masterPlay;
-
-              return (
-                <Text
-                  key={id}
-                  style={{
-                    backgroundColor: focusThisSentence
-                      ? 'yellow'
-                      : 'transparent',
-                  }}>
-                  <SatoriLine
-                    focusThisSentence={focusThisSentence}
-                    getSafeText={getSafeText}
-                    topicSentence={topicSentence}
-                    playFromThisSentence={playFromThisSentence}
-                  />
-                </Text>
-              );
-            })}
-          </Text>
-        </View>
-      ) : null}
     </>
   );
 };
@@ -177,6 +224,7 @@ const SatoriLine = ({
 
   return (
     <Text
+      selectable={true}
       style={{
         backgroundColor: focusThisSentence ? 'yellow' : 'transparent',
       }}>
@@ -192,7 +240,7 @@ const SatoriLine = ({
         </TouchableOpacity>
       ) : null}
       {getSafeText(topicSentence.targetLang)}
-      {showEng ? <Text>{topicSentence.baseLang}</Text> : null}
+      {showEng ? <Text selectable={true}>{topicSentence.baseLang}</Text> : null}
       {showNotes ? <Text>{topicSentence.notes}</Text> : null}
     </Text>
   );

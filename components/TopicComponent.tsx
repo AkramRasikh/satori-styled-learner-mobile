@@ -7,11 +7,17 @@ const TopicComponent = ({
   japaneseLoadedContent,
   japaneseLoadedContentFullMP3s,
   pureWordsUnique,
+  structuredUnifiedData,
+  setStructuredUnifiedData,
+  japaneseLoadedWords,
 }) => {
   const [isContainerOpen, setIsContainerOpen] = useState(false);
 
   return (
-    <View>
+    <View
+      style={{
+        paddingBottom: 50,
+      }}>
       <Text
         style={{
           margin: 20,
@@ -28,6 +34,9 @@ const TopicComponent = ({
           japaneseLoadedContent={japaneseLoadedContent}
           japaneseLoadedContentFullMP3s={japaneseLoadedContentFullMP3s}
           pureWordsUnique={pureWordsUnique}
+          structuredUnifiedData={structuredUnifiedData}
+          setStructuredUnifiedData={setStructuredUnifiedData}
+          japaneseLoadedWords={japaneseLoadedWords}
         />
       )}
     </View>

@@ -11,7 +11,11 @@ export const getFirebaseAudioURL = (mp3FileName: string) => {
   return url;
 };
 
-const useGetCombinedAudioData = ({hasUnifiedMP3File, audioFiles}) => {
+const useGetCombinedAudioData = ({
+  hasUnifiedMP3File,
+  audioFiles,
+  hasAlreadyBeenUnified,
+}) => {
   const [durations, setDurations] = useState([]);
 
   useEffect(() => {
@@ -59,13 +63,18 @@ const useGetCombinedAudioData = ({hasUnifiedMP3File, audioFiles}) => {
     if (
       hasUnifiedMP3File &&
       audioFiles?.length > 0 &&
-      !(durations?.length > 0)
+      !(durations?.length > 0) &&
+      !hasAlreadyBeenUnified
     ) {
       fetchDurations();
     }
-  }, [audioFiles, hasUnifiedMP3File, durations]);
+  }, [audioFiles, hasUnifiedMP3File, durations, hasAlreadyBeenUnified]);
 
-  return durations;
+  if (hasAlreadyBeenUnified?.length > 1) {
+    return hasAlreadyBeenUnified;
+  } else {
+    return durations;
+  }
 };
 
 export default useGetCombinedAudioData;

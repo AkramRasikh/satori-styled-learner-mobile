@@ -1,22 +1,22 @@
-import {useEffect, useRef} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import {AppState} from 'react-native';
 import Sound from 'react-native-sound';
-import TrackPlayer, {Capability, State} from 'react-native-track-player';
+import TrackPlayer, {Capability, Event, State} from 'react-native-track-player';
 
 Sound.setCategory('Playback');
 
 const useBackgroundAudioHook = ({soundInstance, topicName, url, soundRef}) => {
   const trackAddedRef = useRef(false);
+
   const setTrackPlayerCurrentTime = async () => {
     try {
-      // Ensure TrackPlayer is ready and track is loaded before seeking
       const currentTrack = await TrackPlayer.getActiveTrack();
       if (currentTrack !== null) {
         soundRef.current.getCurrentTime(async currentTime => {
           await TrackPlayer.seekTo(currentTime);
         });
         soundRef.current.pause();
-        // await TrackPlayer.play();
+        await TrackPlayer.play();
       } else {
         console.log('## No track is currently loaded');
       }
@@ -62,7 +62,6 @@ const useBackgroundAudioHook = ({soundInstance, topicName, url, soundRef}) => {
     return () => {
       TrackPlayer.stop();
       trackAddedRef.current = false;
-      AppState.removeEventListener('change', handleAppStateChange);
     };
   }, []);
 
