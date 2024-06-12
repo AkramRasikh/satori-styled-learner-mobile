@@ -1,8 +1,8 @@
 #import "AppDelegate.h"
 #import <React/RCTBundleURLProvider.h>
-#import <React/RCTRootView.h>  // Import for RCTRootView
-#import <AVFoundation/AVFoundation.h>  // Import for AVFoundation
-#import <MediaPlayer/MediaPlayer.h>  // Import for MediaPlayer
+#import <React/RCTRootView.h>
+#import <AVFoundation/AVFoundation.h>
+#import <MediaPlayer/MediaPlayer.h>
 
 @implementation AppDelegate
 
@@ -23,13 +23,13 @@
   // Set up MPRemoteCommandCenter for custom intervals
   MPRemoteCommandCenter *commandCenter = [MPRemoteCommandCenter sharedCommandCenter];
 
-  // commandCenter.skipForwardCommand.preferredIntervals = @[@10]; // Set custom skip forward interval to 10 seconds
-  // [commandCenter.skipForwardCommand setEnabled:YES];
-  // [commandCenter.skipForwardCommand addTarget:self action:@selector(handleSkipForwardEvent:)];
+  commandCenter.skipForwardCommand.preferredIntervals = @[@10]; // Set custom skip forward interval to 10 seconds
+  [commandCenter.skipForwardCommand setEnabled:YES];
+  [commandCenter.skipForwardCommand addTarget:self action:@selector(handleSkipForwardEvent:)];
 
-  // commandCenter.skipBackwardCommand.preferredIntervals = @[@10]; // Set custom skip backward interval to 10 seconds
-  // [commandCenter.skipBackwardCommand setEnabled:YES];
-  // [commandCenter.skipBackwardCommand addTarget:self action:@selector(handleSkipBackwardEvent:)];
+  commandCenter.skipBackwardCommand.preferredIntervals = @[@10]; // Set custom skip backward interval to 10 seconds
+  [commandCenter.skipBackwardCommand setEnabled:YES];
+  [commandCenter.skipBackwardCommand addTarget:self action:@selector(handleSkipBackwardEvent:)];
 
   // Initialize React Native
   NSURL *jsCodeLocation = [self sourceURLForBridge:nil]; // Retrieve the JS bundle URL
@@ -50,10 +50,6 @@
 }
 
 - (NSURL *)sourceURLForBridge:(RCTBridge *)bridge {
-  return [self bundleURL];
-}
-
-- (NSURL *)bundleURL {
 #if DEBUG
   return [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index"];
 #else
@@ -62,13 +58,15 @@
 }
 
 // Handle skip forward command
-// - (void)handleSkipForwardEvent:(MPRemoteCommandEvent *)event {
-//   [[NSNotificationCenter defaultCenter] postNotificationName:@"SkipForwardEvent" object:nil];
-// }
+- (MPRemoteCommandHandlerStatus)handleSkipForwardEvent:(MPRemoteCommandEvent *)event {
+  [[NSNotificationCenter defaultCenter] postNotificationName:@"SkipForwardEvent" object:nil];
+  return MPRemoteCommandHandlerStatusSuccess;
+}
 
-// // Handle skip backward command
-// - (void)handleSkipBackwardEvent:(MPRemoteCommandEvent *)event {
-//   [[NSNotificationCenter defaultCenter] postNotificationName:@"SkipBackwardEvent" object:nil];
-// }
+// Handle skip backward command
+- (MPRemoteCommandHandlerStatus)handleSkipBackwardEvent:(MPRemoteCommandEvent *)event {
+  [[NSNotificationCenter defaultCenter] postNotificationName:@"SkipBackwardEvent" object:nil];
+  return MPRemoteCommandHandlerStatusSuccess;
+}
 
 @end
