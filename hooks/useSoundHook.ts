@@ -1,12 +1,22 @@
-import {useEffect} from 'react';
-
+import {useEffect, useState} from 'react';
 import Sound from 'react-native-sound';
 import useBackgroundAudioHook from './useBackgroundAudioHook';
 
 Sound.setCategory('Playback');
 
-const useSoundHook = ({url, soundRef, isPlaying, setIsPlaying, topicName}) => {
-  let soundInstance: Sound;
+const useSoundHook = ({
+  url,
+  soundRef,
+  isPlaying,
+  setIsPlaying,
+  topicName,
+  isSnippet,
+  startTime,
+  duration,
+}) => {
+  let soundInstance: Sound | null = null;
+
+  const [currentTime, setCurrentTime] = useState(0);
 
   useBackgroundAudioHook({
     soundInstance,
@@ -37,34 +47,73 @@ const useSoundHook = ({url, soundRef, isPlaying, setIsPlaying, topicName}) => {
         }
       };
     }
-  }, [url, soundRef]);
+  }, [url, soundRef, isSnippet]);
 
-  // const playPause = async () => {
-  //   const currentState = await TrackPlayer.getState();
-  //   if (currentState === State.Playing) {
-  //     TrackPlayer.pause();
-  //   } else {
-  //     TrackPlayer.play();
-  //   }
-  // };
+  useEffect(() => {
+    const updateCurrentTime = () => {
+      if (soundRef.current && isSnippet) {
+        soundRef.current.getCurrentTime(seconds => {
+          setCurrentTime(seconds);
+        });
+      }
+    };
+
+    const interval = setInterval(updateCurrentTime, 300); // Update every second
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, [soundRef, isSnippet]);
+
+  useEffect(() => {
+    if (currentTime) {
+      const endTime = startTime + duration;
+      if (currentTime > endTime) {
+        soundRef.current.stop(() => {
+          setIsPlaying(false);
+        });
+      }
+    }
+  }, [currentTime, soundRef, startTime, setIsPlaying, duration]);
 
   const playSound = () => {
-    if (soundRef.current) {
+    if (isSnippet && soundRef.current) {
+      soundRef.current.setCurrentTime(startTime);
+      soundRef.current.getCurrentTime(() => {
+        soundRef.current.play(success => {
+          if (!success) {
+            console.log('Playback failed due to audio decoding errors');
+          }
+        });
+      });
+      setIsPlaying(true);
+    } else if (soundRef.current) {
       soundRef.current.play(success => {
         if (success) {
           setIsPlaying(false);
         } else {
-          console.log('## Playback failed due to audio decoding errors');
+          console.log('Playback failed due to audio decoding errors');
         }
       });
+
       setIsPlaying(true);
     }
   };
 
   const pauseSound = () => {
-    if (soundRef.current && isPlaying) {
+    if (soundRef.current && isPlaying && isSnippet) {
+      stopAudio();
+    } else if (soundRef.current && isPlaying) {
       soundRef.current.pause();
       setIsPlaying(false);
+    }
+  };
+
+  const stopAudio = () => {
+    if (soundRef.current) {
+      soundRef.current.stop(() => {
+        setIsPlaying(false);
+      });
     }
   };
 

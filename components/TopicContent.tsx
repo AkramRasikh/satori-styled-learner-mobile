@@ -23,7 +23,10 @@ const TopicContent = ({
   const [currentTimeState, setCurrentTimeState] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isLoopMode, setIsLoopMode] = useState(false);
+  const [isFlowingSentences, setIsFlowingSentences] = useState(true);
+  const [isSentenceSnipping, setIsSentenceSnipping] = useState(true);
   const [longPressedWord, setLongPressedWord] = useState();
+  const [miniSnippets, setMiniSnippets] = useState([]);
 
   const soundRef = useRef(null);
 
@@ -100,6 +103,41 @@ const TopicContent = ({
   }, [structuredUnifiedData, topicName, durations, topicData]);
 
   useEffect(() => {
+    if (currentTimeState && !isFlowingSentences) {
+      const currentAudioPlayingObj = durations.find(
+        item =>
+          currentTimeState < item.endAt && currentTimeState > item.startAt,
+      );
+
+      if (!currentAudioPlayingObj) {
+        return;
+      }
+      const currentAudioPlayingIndex = currentAudioPlayingObj?.position;
+
+      const newLine = topicData[currentAudioPlayingIndex];
+      const newId = newLine.id;
+      if (
+        masterPlay !== undefined &&
+        newId !== undefined &&
+        newId !== masterPlay
+      ) {
+        soundRef.current.pause();
+        soundRef.current.getCurrentTime(() => {
+          soundRef.current.setCurrentTime(currentAudioPlayingObj.endAt);
+        });
+        setIsPlaying(false);
+      }
+    }
+  }, [
+    currentTimeState,
+    topicData,
+    durations,
+    masterPlay,
+    isFlowingSentences,
+    soundRef,
+  ]);
+
+  useEffect(() => {
     const getCurrentTimeFunc = () => {
       soundRef.current.getCurrentTime(currentTime => {
         const lastItem = durations[durations.length - 1];
@@ -143,6 +181,22 @@ const TopicContent = ({
     }
   };
 
+  const getTimeStamp = id => {
+    const thisItem = durations.find(item => item.id === id);
+    const pointInAudio = thisItem.startAt;
+    const targetLang = thisItem.targetLang;
+    const itemToSave = {
+      id,
+      pointInAudio,
+      url,
+      targetLang,
+      topicName,
+    };
+    setMiniSnippets(prev => [...prev, itemToSave]);
+    pauseSound();
+    setIsPlaying(false);
+  };
+
   const getLongPressedWordData = () => {
     const surfaceForm = longPressedWord.surfaceForm;
     const baseForm = longPressedWord.baseForm;
@@ -158,9 +212,25 @@ const TopicContent = ({
     return <Text>Loading</Text>;
   }
   return (
-    <>
+    <View>
+      {miniSnippets?.length > 0 &&
+        miniSnippets?.map((snippet, index) => {
+          return (
+            <MiniSnippetsComponent
+              key={index}
+              snippet={snippet}
+              setMasterAudio={setIsPlaying}
+              masterAudio={isPlaying}
+            />
+          );
+        })}
       {isContainerOpen ? (
         <View>
+          <LoopMode isLoopMode={isLoopMode} setIsLoopMode={setIsLoopMode} />
+          <FlowSetting
+            isFlowingSentences={isFlowingSentences}
+            setIsFlowingSentences={setIsFlowingSentences}
+          />
           {longPressedWord ? (
             <View style={{marginBottom: 15}}>
               <Text>{getLongPressedWordData()}</Text>
@@ -181,10 +251,13 @@ const TopicContent = ({
                         : 'transparent',
                     }}>
                     <SatoriLine
+                      id={id}
                       focusThisSentence={focusThisSentence}
                       getSafeText={getSafeText}
                       topicSentence={topicSentence}
                       playFromThisSentence={playFromThisSentence}
+                      getTimeStamp={getTimeStamp}
+                      isSentenceSnipping={isSentenceSnipping}
                     />
                   </Text>
                 );
@@ -195,24 +268,21 @@ const TopicContent = ({
       ) : null}
       {hasUnifiedMP3File && (
         <View>
-          <View>
-            <SoundComponent
-              soundRef={soundRef}
-              isPlaying={isPlaying}
-              playSound={playSound}
-              pauseSound={pauseSound}
-              rewindSound={rewindSound}
-              forwardSound={forwardSound}
-            />
-            <ProgressBarComponent
-              progress={progress}
-              time={currentTimeState.toFixed(2)}
-            />
-          </View>
-          <LoopMode isLoopMode={isLoopMode} setIsLoopMode={setIsLoopMode} />
+          <SoundComponent
+            soundRef={soundRef}
+            isPlaying={isPlaying}
+            playSound={playSound}
+            pauseSound={pauseSound}
+            rewindSound={rewindSound}
+            forwardSound={forwardSound}
+          />
+          <ProgressBarComponent
+            progress={progress}
+            time={currentTimeState.toFixed(2)}
+          />
         </View>
       )}
-    </>
+    </View>
   );
 };
 
@@ -221,6 +291,9 @@ const SatoriLine = ({
   playFromThisSentence,
   getSafeText,
   topicSentence,
+  getTimeStamp,
+  isSentenceSnipping,
+  id,
 }) => {
   const [showEng, setShowEng] = useState(false);
   const [showNotes, setShowNotes] = useState(false);
@@ -237,6 +310,11 @@ const SatoriLine = ({
       <TouchableOpacity onPress={() => setShowEng(!showEng)}>
         <Text style={{marginRight: 5}}>🇬🇧</Text>
       </TouchableOpacity>
+      {isSentenceSnipping ? (
+        <TouchableOpacity onPress={() => getTimeStamp(id)}>
+          <Text style={{marginRight: 5}}>🤔</Text>
+        </TouchableOpacity>
+      ) : null}
       {topicSentence.notes ? (
         <TouchableOpacity onPress={() => setShowNotes(!showNotes)}>
           <Text style={{marginRight: 5}}>☝🏽</Text>
@@ -251,10 +329,132 @@ const SatoriLine = ({
 
 const LoopMode = ({isLoopMode, setIsLoopMode}) => {
   return (
-    <View style={{margin: 'auto'}}>
+    <View style={{margin: 'auto', padding: 10}}>
       <TouchableOpacity onPress={() => setIsLoopMode(!isLoopMode)}>
-        <Text>{isLoopMode ? '🔄' : '➡️'}</Text>
+        <Text>{isLoopMode ? 'Looping 🔄' : 'Auto ➡️'}</Text>
       </TouchableOpacity>
+    </View>
+  );
+};
+
+const FlowSetting = ({isFlowingSentences, setIsFlowingSentences}) => {
+  return (
+    <View style={{margin: 'auto', padding: 10}}>
+      <TouchableOpacity
+        onPress={() => setIsFlowingSentences(!isFlowingSentences)}>
+        <Text>{isFlowingSentences ? 'Flowing 🏄🏽' : 'One By One 🧱'}</Text>
+      </TouchableOpacity>
+    </View>
+  );
+};
+
+const MiniSnippetsComponent = ({snippet, setMasterAudio, masterAudio}) => {
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [adjustableStartTime, setAdjustableStartTime] = useState();
+  const [adjustableDuration, setAdjustableDuration] = useState();
+
+  const soundRef = useRef();
+
+  const url = snippet.url;
+  const targetLang = snippet.targetLang;
+  const pointInAudio = snippet.pointInAudio;
+  const topicName = snippet.topicName + '-' + pointInAudio.toFixed(2);
+
+  useEffect(() => {
+    if (masterAudio && isPlaying) {
+      setMasterAudio(false);
+    }
+  }, [masterAudio, setMasterAudio, isPlaying]);
+
+  useEffect(() => {
+    if (!adjustableStartTime && !adjustableDuration) {
+      setAdjustableStartTime(pointInAudio);
+      setAdjustableDuration(5);
+    }
+  }, [
+    adjustableStartTime,
+    pointInAudio,
+    adjustableDuration,
+    setAdjustableDuration,
+    setAdjustableStartTime,
+  ]);
+
+  const {playSound, pauseSound} = useSoundHook({
+    url,
+    soundRef,
+    isPlaying,
+    setIsPlaying,
+    topicName,
+    isSnippet: true,
+    startTime: adjustableStartTime,
+    duration: adjustableDuration,
+  });
+
+  const handleSetEarlierTime = forward => {
+    const newAdjustableTime = forward
+      ? adjustableStartTime - 1
+      : adjustableStartTime + 1;
+    setAdjustableStartTime(newAdjustableTime);
+  };
+
+  const handleSetDuration = increase => {
+    const newAdjustableDuration = increase
+      ? adjustableDuration + 1
+      : adjustableDuration - 1;
+
+    setAdjustableDuration(newAdjustableDuration);
+  };
+
+  return (
+    <View
+      style={{
+        alignItems: 'center',
+        padding: 10,
+        borderBottomColor: 'black',
+        borderBottomWidth: 2,
+      }}>
+      <View
+        style={{
+          flex: 1,
+          backgroundColor: isPlaying ? 'green' : 'red',
+        }}>
+        {isPlaying ? (
+          <TouchableOpacity onPress={pauseSound}>
+            <Text>⏸️ Pause</Text>
+          </TouchableOpacity>
+        ) : (
+          <TouchableOpacity onPress={playSound}>
+            <Text>▶️ Play</Text>
+          </TouchableOpacity>
+        )}
+      </View>
+      <Text style={{padding: 10}}>{targetLang}</Text>
+      <View
+        style={{
+          marginHorizontal: 5,
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+        }}>
+        <View style={{flex: 1}}>
+          <TouchableOpacity onPress={handleSetEarlierTime}>
+            <Text>-1 ⏪ {adjustableStartTime?.toFixed(2)}</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={{flex: 1}}>
+          <TouchableOpacity onPress={() => handleSetEarlierTime(true)}>
+            <Text>+1 ⏩ {adjustableStartTime?.toFixed(2)}</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={{flex: 1}}>
+          <TouchableOpacity onPress={() => handleSetDuration(true)}>
+            <Text>duration (+1) {adjustableDuration}</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => handleSetDuration(false)}>
+            <Text>duration (-1) {adjustableDuration}</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
     </View>
   );
 };
