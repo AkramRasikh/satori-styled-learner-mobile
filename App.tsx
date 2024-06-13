@@ -102,7 +102,8 @@ function App(): React.JSX.Element {
                   paddingVertical: 10,
                   paddingHorizontal: 15,
                   margin: 5,
-                  backgroundColor: selectedTopic === topic ? 'green' : 'auto',
+                  backgroundColor:
+                    selectedTopic === topic ? 'green' : 'transparent',
                 }}>
                 <Text>{topic}</Text>
               </TouchableOpacity>
