@@ -1,5 +1,4 @@
-import {useState} from 'react';
-import {Text, TouchableOpacity, View} from 'react-native';
+import {Text, View} from 'react-native';
 import TopicContent from './TopicContent';
 
 const TopicComponent = ({
@@ -11,8 +10,6 @@ const TopicComponent = ({
   setStructuredUnifiedData,
   japaneseLoadedWords,
 }) => {
-  const [isContainerOpen, setIsContainerOpen] = useState(false);
-
   return (
     <View
       style={{
@@ -21,24 +18,21 @@ const TopicComponent = ({
       <Text
         style={{
           margin: 20,
+          fontSize: 18,
+          fontWeight: 'bold',
+          alignSelf: 'center',
         }}>
         {topicName}
-        <TouchableOpacity onPress={() => setIsContainerOpen(!isContainerOpen)}>
-          <Text style={{marginLeft: 10, margin: 'auto'}}>Open</Text>
-        </TouchableOpacity>
       </Text>
-      {isContainerOpen && (
-        <TopicContent
-          topicName={topicName}
-          isContainerOpen={isContainerOpen}
-          japaneseLoadedContent={japaneseLoadedContent}
-          japaneseLoadedContentFullMP3s={japaneseLoadedContentFullMP3s}
-          pureWordsUnique={pureWordsUnique}
-          structuredUnifiedData={structuredUnifiedData}
-          setStructuredUnifiedData={setStructuredUnifiedData}
-          japaneseLoadedWords={japaneseLoadedWords}
-        />
-      )}
+      <TopicContent
+        topicName={topicName}
+        japaneseLoadedContent={japaneseLoadedContent}
+        japaneseLoadedContentFullMP3s={japaneseLoadedContentFullMP3s}
+        pureWordsUnique={pureWordsUnique}
+        structuredUnifiedData={structuredUnifiedData}
+        setStructuredUnifiedData={setStructuredUnifiedData}
+        japaneseLoadedWords={japaneseLoadedWords}
+      />
     </View>
   );
 };

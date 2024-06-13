@@ -1,7 +1,12 @@
 import React, {useEffect, useState} from 'react';
-import {SafeAreaView, ScrollView, Text, View} from 'react-native';
+import {
+  SafeAreaView,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 
-import {Colors} from 'react-native/Libraries/NewAppScreen';
 import {getAllData} from './api/load-content';
 import TopicComponent from './components/TopicComponent';
 import {makeArrayUnique} from './hooks/useHighlightWordToWordBank';
@@ -11,6 +16,7 @@ function App(): React.JSX.Element {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [structuredUnifiedData, setStructuredUnifiedData] = useState([]);
+  const [selectedTopic, setSelectedTopic] = useState('');
 
   useEffect(() => {
     const fetchData = async () => {
@@ -44,8 +50,25 @@ function App(): React.JSX.Element {
     return pureWordsUnique;
   };
 
+  const handleShowTopic = topic => {
+    if (topic === selectedTopic) {
+      setSelectedTopic('');
+    } else {
+      setSelectedTopic(topic);
+    }
+  };
+
   if (loading || !data || !data?.japaneseLoadedContent) {
-    return <Text>Loading...</Text>;
+    return (
+      <View
+        style={{
+          flex: 1,
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}>
+        <Text>Loading init data...</Text>
+      </View>
+    );
   }
 
   const japaneseLoadedContent = data.japaneseLoadedContent;
@@ -59,16 +82,38 @@ function App(): React.JSX.Element {
         contentInsetAdjustmentBehavior="automatic"
         style={{padding: 10}}>
         <View>
-          <Text style={{textAlign: 'center', fontWeight: 'bold'}}>
+          <Text
+            style={{
+              textAlign: 'center',
+              fontWeight: 'bold',
+            }}>
             Yah dun know!!
           </Text>
         </View>
+        <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
+          {topics?.map(topic => (
+            <View key={topic}>
+              <TouchableOpacity
+                onPress={() => handleShowTopic(topic)}
+                style={{
+                  borderWidth: 1,
+                  borderColor: '#999999',
+                  borderRadius: 20,
+                  paddingVertical: 10,
+                  paddingHorizontal: 15,
+                  margin: 5,
+                  backgroundColor: selectedTopic === topic ? 'green' : 'auto',
+                }}>
+                <Text>{topic}</Text>
+              </TouchableOpacity>
+            </View>
+          ))}
+        </View>
 
         <View>
-          {topics.map(topicName => (
+          {selectedTopic ? (
             <TopicComponent
-              key={topicName}
-              topicName={topicName}
+              topicName={selectedTopic}
               japaneseLoadedContent={japaneseLoadedContent}
               japaneseLoadedContentFullMP3s={japaneseLoadedContentFullMP3s}
               pureWordsUnique={getPureWords()}
@@ -76,7 +121,7 @@ function App(): React.JSX.Element {
               setStructuredUnifiedData={setStructuredUnifiedData}
               japaneseLoadedWords={data?.japaneseLoadedWords}
             />
-          ))}
+          ) : null}
         </View>
       </ScrollView>
     </SafeAreaView>

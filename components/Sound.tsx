@@ -1,5 +1,6 @@
 import React from 'react';
-import {Button, View} from 'react-native';
+import {Button, TouchableOpacity, View} from 'react-native';
+import {Text} from 'react-native-paper';
 
 const SoundComponent = ({
   soundRef,
@@ -8,6 +9,7 @@ const SoundComponent = ({
   pauseSound,
   rewindSound,
   forwardSound,
+  getTimeStamp,
 }) => {
   return (
     <View
@@ -54,6 +56,18 @@ const SoundComponent = ({
           disabled={!soundRef.current}
         />
       </View>
+      {getTimeStamp ? (
+        <TouchableOpacity
+          onPress={getTimeStamp}
+          style={{
+            marginHorizontal: 5,
+            borderLeftColor: 'black',
+            borderLeftWidth: 1,
+            paddingLeft: 10,
+          }}>
+          <Text style={{marginRight: 5}}>🤏🏾</Text>
+        </TouchableOpacity>
+      ) : null}
     </View>
   );
 };

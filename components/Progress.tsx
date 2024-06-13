@@ -4,7 +4,7 @@ import {ProgressBar} from 'react-native-paper';
 
 const ProgressBarComponent = ({progress, time}) => {
   return (
-    <View style={{padding: 20}}>
+    <View style={{padding: 10}}>
       <ProgressBar progress={progress} style={{marginTop: 20, height: 10}} />
       <Text>{time}</Text>
     </View>

@@ -1,5 +1,11 @@
 import {useEffect, useRef, useState} from 'react';
-import {View, Text, TouchableOpacity} from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  ScrollView,
+  Dimensions,
+} from 'react-native';
 import SoundComponent from './Sound';
 import useSoundHook from '../hooks/useSoundHook';
 import useGetCombinedAudioData, {
@@ -10,7 +16,6 @@ import useHighlightWordToWordBank from '../hooks/useHighlightWordToWordBank';
 
 const TopicContent = ({
   topicName,
-  isContainerOpen,
   japaneseLoadedContent,
   japaneseLoadedContentFullMP3s,
   pureWordsUnique,
@@ -29,7 +34,9 @@ const TopicContent = ({
   const [miniSnippets, setMiniSnippets] = useState([]);
 
   const soundRef = useRef(null);
+  const audioControlsRef = useRef(null);
 
+  const {height} = Dimensions?.get('window');
   const url = getFirebaseAudioURL(topicName);
 
   const {playSound, pauseSound, rewindSound, forwardSound} = useSoundHook({
@@ -181,12 +188,12 @@ const TopicContent = ({
     }
   };
 
-  const getTimeStamp = id => {
-    const thisItem = durations.find(item => item.id === id);
+  const getTimeStamp = () => {
+    const thisItem = durations.find(item => item.id === masterPlay);
     const pointInAudio = thisItem.startAt;
     const targetLang = thisItem.targetLang;
     const itemToSave = {
-      id,
+      id: masterPlay,
       pointInAudio,
       url,
       targetLang,
@@ -211,20 +218,14 @@ const TopicContent = ({
   if (isLoading) {
     return <Text>Loading</Text>;
   }
+
   return (
     <View>
-      {miniSnippets?.length > 0 &&
-        miniSnippets?.map((snippet, index) => {
-          return (
-            <MiniSnippetsComponent
-              key={index}
-              snippet={snippet}
-              setMasterAudio={setIsPlaying}
-              masterAudio={isPlaying}
-            />
-          );
-        })}
-      {isContainerOpen ? (
+      <ScrollView
+        contentInsetAdjustmentBehavior="automatic"
+        style={{
+          maxHeight: height * 0.7,
+        }}>
         <View>
           <LoopMode isLoopMode={isLoopMode} setIsLoopMode={setIsLoopMode} />
           <FlowSetting
@@ -251,13 +252,10 @@ const TopicContent = ({
                         : 'transparent',
                     }}>
                     <SatoriLine
-                      id={id}
                       focusThisSentence={focusThisSentence}
                       getSafeText={getSafeText}
                       topicSentence={topicSentence}
                       playFromThisSentence={playFromThisSentence}
-                      getTimeStamp={getTimeStamp}
-                      isSentenceSnipping={isSentenceSnipping}
                     />
                   </Text>
                 );
@@ -265,9 +263,9 @@ const TopicContent = ({
             </Text>
           </View>
         </View>
-      ) : null}
+      </ScrollView>
       {hasUnifiedMP3File && (
-        <View>
+        <View ref={audioControlsRef}>
           <SoundComponent
             soundRef={soundRef}
             isPlaying={isPlaying}
@@ -275,6 +273,7 @@ const TopicContent = ({
             pauseSound={pauseSound}
             rewindSound={rewindSound}
             forwardSound={forwardSound}
+            getTimeStamp={getTimeStamp}
           />
           <ProgressBarComponent
             progress={progress}
@@ -282,6 +281,17 @@ const TopicContent = ({
           />
         </View>
       )}
+      {miniSnippets?.length > 0 &&
+        miniSnippets?.map((snippet, index) => {
+          return (
+            <MiniSnippetsComponent
+              key={index}
+              snippet={snippet}
+              setMasterAudio={setIsPlaying}
+              masterAudio={isPlaying}
+            />
+          );
+        })}
     </View>
   );
 };
@@ -291,9 +301,6 @@ const SatoriLine = ({
   playFromThisSentence,
   getSafeText,
   topicSentence,
-  getTimeStamp,
-  isSentenceSnipping,
-  id,
 }) => {
   const [showEng, setShowEng] = useState(false);
   const [showNotes, setShowNotes] = useState(false);
@@ -310,11 +317,6 @@ const SatoriLine = ({
       <TouchableOpacity onPress={() => setShowEng(!showEng)}>
         <Text style={{marginRight: 5}}>🇬🇧</Text>
       </TouchableOpacity>
-      {isSentenceSnipping ? (
-        <TouchableOpacity onPress={() => getTimeStamp(id)}>
-          <Text style={{marginRight: 5}}>🤔</Text>
-        </TouchableOpacity>
-      ) : null}
       {topicSentence.notes ? (
         <TouchableOpacity onPress={() => setShowNotes(!showNotes)}>
           <Text style={{marginRight: 5}}>☝🏽</Text>
