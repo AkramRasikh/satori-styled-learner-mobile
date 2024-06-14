@@ -1,10 +1,11 @@
-import {useEffect, useRef, useState} from 'react';
+import {useEffect, useMemo, useRef, useState} from 'react';
 import {
   View,
   Text,
   TouchableOpacity,
   ScrollView,
   Dimensions,
+  StyleSheet,
 } from 'react-native';
 import SoundComponent from './Sound';
 import useSoundHook from '../hooks/useSoundHook';
@@ -36,10 +37,12 @@ const TopicContent = ({
   const [longPressedWord, setLongPressedWord] = useState();
   const [miniSnippets, setMiniSnippets] = useState([]);
 
-  const snippetsLocalAndDb = mergeAndRemoveDuplicates(
-    snippetsForSelectedTopic,
-    miniSnippets,
-  );
+  const snippetsLocalAndDb = useMemo(() => {
+    return mergeAndRemoveDuplicates(
+      snippetsForSelectedTopic,
+      miniSnippets,
+    )?.sort((a, b) => a.pointInAudio - b.pointInAudio);
+  }, [snippetsForSelectedTopic, miniSnippets]);
 
   const soundRef = useRef(null);
   const audioControlsRef = useRef(null);
@@ -106,6 +109,8 @@ const TopicContent = ({
   const durationsLengths = durations.length;
   const topicDataLengths = topicData?.length;
 
+  const lastItem = durations[durations?.length - 1];
+
   const isLoading = durationsLengths !== topicDataLengths;
 
   useEffect(() => {
@@ -115,7 +120,16 @@ const TopicContent = ({
         [topicName]: durations,
       }));
     }
-  }, [structuredUnifiedData, topicName, durations, topicData]);
+  }, [
+    structuredUnifiedData,
+    durationsLengths,
+    topicName,
+    durations,
+    topicData,
+    hasAlreadyBeenUnified,
+    setStructuredUnifiedData,
+    topicDataLengths,
+  ]);
 
   useEffect(() => {
     if (currentTimeState && !isFlowingSentences) {
@@ -309,6 +323,12 @@ const TopicContent = ({
           />
         </View>
       )}
+      {lastItem && snippetsLocalAndDb?.length > 0 && (
+        <SnippetTimeline
+          snippetsLocalAndDb={snippetsLocalAndDb}
+          lastItem={lastItem}
+        />
+      )}
       {snippetsLocalAndDb?.length > 0 &&
         snippetsLocalAndDb?.map((snippet, index) => {
           return (
@@ -323,6 +343,51 @@ const TopicContent = ({
             />
           );
         })}
+    </View>
+  );
+};
+
+const SnippetTimeline = ({snippetsLocalAndDb, lastItem}) => {
+  const duration = lastItem.endAt;
+
+  return (
+    <View>
+      <View
+        style={{
+          flex: 1,
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}>
+        <Text style={{fontStyle: 'italic'}}>
+          Snippet Timeline {snippetsLocalAndDb?.length} points
+        </Text>
+      </View>
+      <View style={styles.outerContainer}>
+        <View style={styles.lineContainer}>
+          <View style={styles.line} />
+          {snippetsLocalAndDb.map((checkpoint, index) => {
+            const checkpointPosition =
+              (checkpoint.pointInAudio / duration) * 100;
+            const saved = checkpoint?.saved;
+
+            return (
+              <View
+                key={index}
+                style={[
+                  styles.checkpointContainer,
+                  {left: `${checkpointPosition}%`},
+                ]}>
+                <View
+                  style={[
+                    styles.checkpoint,
+                    {backgroundColor: !saved ? 'gold' : 'white'},
+                  ]}
+                />
+              </View>
+            );
+          })}
+        </View>
+      </View>
     </View>
   );
 };
@@ -488,6 +553,9 @@ const MiniSnippetsComponent = ({
             flex: 0,
             justifyContent: 'center',
             alignItems: 'center',
+            backgroundColor: !isInDB ? 'orange' : 'transparent',
+            padding: 10,
+            borderRadius: 10,
           }}>
           {isInDB ? (
             <TouchableOpacity onPress={handleRemoveSnippet}>
@@ -571,4 +639,37 @@ const MiniSnippetsComponent = ({
   );
 };
 
+const styles = StyleSheet.create({
+  outerContainer: {
+    padding: 20,
+    width: '100%',
+    alignItems: 'center',
+  },
+  lineContainer: {
+    width: '100%',
+    position: 'relative',
+    height: 16,
+  },
+  line: {
+    height: 4,
+    backgroundColor: 'black',
+    position: 'absolute',
+    top: 8,
+    left: 0,
+    right: 0,
+  },
+  checkpointContainer: {
+    position: 'absolute',
+    top: 0,
+    transform: [{translateX: -8}],
+  },
+  checkpoint: {
+    width: 16, // can be dynamically set
+    height: 16,
+    borderRadius: 8,
+    borderWidth: 2,
+    borderColor: 'red',
+    backgroundColor: 'white',
+  },
+});
 export default TopicContent;
