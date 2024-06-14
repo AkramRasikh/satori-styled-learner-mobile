@@ -23,6 +23,7 @@ const SoundComponent = ({
         style={{
           marginHorizontal: 5,
           backgroundColor: isPlaying ? 'green' : 'red',
+          borderRadius: 10,
         }}>
         {isPlaying ? (
           <Button title="⏸️" onPress={pauseSound} disabled={!isPlaying} />

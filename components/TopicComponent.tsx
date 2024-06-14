@@ -9,6 +9,9 @@ const TopicComponent = ({
   structuredUnifiedData,
   setStructuredUnifiedData,
   japaneseLoadedWords,
+  snippetsForSelectedTopic,
+  addSnippet,
+  removeSnippet,
 }) => {
   return (
     <View
@@ -32,6 +35,9 @@ const TopicComponent = ({
         structuredUnifiedData={structuredUnifiedData}
         setStructuredUnifiedData={setStructuredUnifiedData}
         japaneseLoadedWords={japaneseLoadedWords}
+        addSnippet={addSnippet}
+        snippetsForSelectedTopic={snippetsForSelectedTopic}
+        removeSnippet={removeSnippet}
       />
     </View>
   );

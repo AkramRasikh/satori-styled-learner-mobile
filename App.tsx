@@ -10,6 +10,7 @@ import {
 import {getAllData} from './api/load-content';
 import TopicComponent from './components/TopicComponent';
 import {makeArrayUnique} from './hooks/useHighlightWordToWordBank';
+import {addSnippetAPI, deleteSnippetAPI} from './api/snippet';
 
 function App(): React.JSX.Element {
   const [data, setData] = useState<any>(null);
@@ -17,14 +18,19 @@ function App(): React.JSX.Element {
   const [error, setError] = useState(null);
   const [structuredUnifiedData, setStructuredUnifiedData] = useState([]);
   const [selectedTopic, setSelectedTopic] = useState('');
+  const [masterSnippetState, setMasterSnippetState] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // const results = mockData || (await getAllData());
         const results = await getAllData();
-
         setData(results);
+        const japaneseLoadedSnippetsWithSavedTag =
+          results.japaneseLoadedSnippets?.map(item => ({
+            ...item,
+            saved: true,
+          }));
+        setMasterSnippetState(japaneseLoadedSnippetsWithSavedTag);
       } catch (error) {
         console.log('## App error: ', error);
         setError(error);
@@ -58,6 +64,26 @@ function App(): React.JSX.Element {
     }
   };
 
+  const addSnippet = async snippetData => {
+    try {
+      const res = await addSnippetAPI({contentEntry: snippetData});
+      setMasterSnippetState(prev => [...prev, {...res, saved: true}]);
+    } catch (error) {
+      console.log('## error adding snippet (App.tsx)');
+    }
+  };
+  const removeSnippet = async snippetData => {
+    try {
+      const res = await deleteSnippetAPI({contentEntry: snippetData});
+      const updatedSnippets = masterSnippetState.filter(
+        item => item.id !== res.id,
+      );
+      setMasterSnippetState(updatedSnippets);
+    } catch (error) {
+      console.log('## error adding snippet (App.tsx)');
+    }
+  };
+
   if (loading || !data || !data?.japaneseLoadedContent) {
     return (
       <View
@@ -66,7 +92,9 @@ function App(): React.JSX.Element {
           justifyContent: 'center',
           alignItems: 'center',
         }}>
-        <Text>Loading init data...</Text>
+        <Text style={{fontStyle: 'italic', fontSize: 30, fontWeight: 'bold'}}>
+          Loading data...
+        </Text>
       </View>
     );
   }
@@ -75,6 +103,9 @@ function App(): React.JSX.Element {
   const japaneseLoadedContentFullMP3s = data.japaneseLoadedContentFullMP3s;
 
   const topics = Object.keys(japaneseLoadedContent);
+  const snippetsForSelectedTopic = masterSnippetState?.filter(
+    item => item.topicName === selectedTopic,
+  );
 
   return (
     <SafeAreaView style={{backgroundColor: '#D3D3D3'}}>
@@ -121,6 +152,9 @@ function App(): React.JSX.Element {
               structuredUnifiedData={structuredUnifiedData}
               setStructuredUnifiedData={setStructuredUnifiedData}
               japaneseLoadedWords={data?.japaneseLoadedWords}
+              addSnippet={addSnippet}
+              snippetsForSelectedTopic={snippetsForSelectedTopic}
+              removeSnippet={removeSnippet}
             />
           ) : null}
         </View>

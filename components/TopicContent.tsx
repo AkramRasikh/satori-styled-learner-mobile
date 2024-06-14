@@ -13,6 +13,7 @@ import useGetCombinedAudioData, {
 } from '../hooks/useGetCombinedAudioData';
 import ProgressBarComponent from './Progress';
 import useHighlightWordToWordBank from '../hooks/useHighlightWordToWordBank';
+import {mergeAndRemoveDuplicates} from '../utils/merge-and-remove-duplicates';
 
 const TopicContent = ({
   topicName,
@@ -22,6 +23,9 @@ const TopicContent = ({
   structuredUnifiedData,
   setStructuredUnifiedData,
   japaneseLoadedWords,
+  addSnippet,
+  removeSnippet,
+  snippetsForSelectedTopic,
 }) => {
   const [masterPlay, setMasterPlay] = useState('');
   const [progress, setProgress] = useState(0);
@@ -31,6 +35,11 @@ const TopicContent = ({
   const [isFlowingSentences, setIsFlowingSentences] = useState(true);
   const [longPressedWord, setLongPressedWord] = useState();
   const [miniSnippets, setMiniSnippets] = useState([]);
+
+  const snippetsLocalAndDb = mergeAndRemoveDuplicates(
+    snippetsForSelectedTopic,
+    miniSnippets,
+  );
 
   const soundRef = useRef(null);
   const audioControlsRef = useRef(null);
@@ -204,7 +213,7 @@ const TopicContent = ({
     const targetLang = thisItem.targetLang;
     const itemToSave = {
       id,
-      topicId: masterPlay,
+      sentenceId: masterPlay,
       pointInAudio,
       url,
       targetLang,
@@ -227,7 +236,15 @@ const TopicContent = ({
   };
 
   if (isLoading) {
-    return <Text>Loading</Text>;
+    return (
+      <View
+        style={{
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}>
+        <Text>Loading</Text>
+      </View>
+    );
   }
 
   return (
@@ -292,8 +309,8 @@ const TopicContent = ({
           />
         </View>
       )}
-      {miniSnippets?.length > 0 &&
-        miniSnippets?.map((snippet, index) => {
+      {snippetsLocalAndDb?.length > 0 &&
+        snippetsLocalAndDb?.map((snippet, index) => {
           return (
             <MiniSnippetsComponent
               key={index}
@@ -301,6 +318,8 @@ const TopicContent = ({
               setMasterAudio={setIsPlaying}
               masterAudio={isPlaying}
               deleteSnippet={deleteSnippet}
+              addSnippet={addSnippet}
+              removeSnippet={removeSnippet}
             />
           );
         })}
@@ -367,6 +386,8 @@ const MiniSnippetsComponent = ({
   setMasterAudio,
   masterAudio,
   deleteSnippet,
+  addSnippet,
+  removeSnippet,
 }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [adjustableStartTime, setAdjustableStartTime] = useState();
@@ -378,6 +399,8 @@ const MiniSnippetsComponent = ({
   const url = snippet.url;
   const targetLang = snippet.targetLang;
   const pointInAudio = snippet.pointInAudio;
+  const duration = snippet.duration;
+  const isInDB = snippet?.saved;
   const topicName = snippet.topicName + '-' + pointInAudio.toFixed(2);
 
   useEffect(() => {
@@ -428,6 +451,23 @@ const MiniSnippetsComponent = ({
     deleteSnippet(id);
   };
 
+  const handleAddingSnippet = () => {
+    const formattedSnippet = {
+      ...snippet,
+      pointInAudio: adjustableStartTime,
+      duration: adjustableDuration,
+    };
+    addSnippet(formattedSnippet);
+  };
+  const handleRemoveSnippet = () => {
+    const formattedSnippet = {
+      ...snippet,
+      pointInAudio: adjustableStartTime,
+      duration: adjustableDuration,
+    };
+    removeSnippet(formattedSnippet);
+  };
+
   return (
     <View
       style={{
@@ -439,13 +479,31 @@ const MiniSnippetsComponent = ({
       <View
         style={{
           flexDirection: 'row',
-          justifyContent: 'space-around',
+          justifyContent: 'space-between',
           width: '100%',
+          padding: 10,
         }}>
+        <View
+          style={{
+            flex: 0,
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          {isInDB ? (
+            <TouchableOpacity onPress={handleRemoveSnippet}>
+              <Text>Remove 🧹</Text>
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity onPress={handleAddingSnippet}>
+              <Text>Save 🏦</Text>
+            </TouchableOpacity>
+          )}
+        </View>
         <View
           style={{
             backgroundColor: isPlaying ? 'green' : 'red',
             padding: 10,
+            borderRadius: 10,
           }}>
           {isPlaying ? (
             <TouchableOpacity onPress={pauseSound}>
@@ -457,42 +515,58 @@ const MiniSnippetsComponent = ({
             </TouchableOpacity>
           )}
         </View>
-        <View style={{padding: 10}}>
-          <TouchableOpacity onPress={handleDelete}>
-            <Text>❌</Text>
-          </TouchableOpacity>
-        </View>
+        {!isInDB ? (
+          <View style={{padding: 10}}>
+            <TouchableOpacity onPress={handleDelete}>
+              <Text>❌</Text>
+            </TouchableOpacity>
+          </View>
+        ) : null}
+        {isInDB ? (
+          <View
+            style={{
+              flex: 0,
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
+            <Text>
+              {pointInAudio.toFixed(2)} ➾ {(pointInAudio + duration).toFixed(2)}
+            </Text>
+          </View>
+        ) : null}
       </View>
       <Text style={{padding: 10}}>{targetLang}</Text>
-      <View
-        style={{
-          marginHorizontal: 5,
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-        }}>
-        <View style={{flex: 1}}>
-          <TouchableOpacity onPress={() => handleSetEarlierTime(true)}>
-            <Text>-1 ⏪</Text>
-          </TouchableOpacity>
+      {!isInDB ? (
+        <View
+          style={{
+            marginHorizontal: 5,
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+          }}>
+          <View style={{flex: 1}}>
+            <TouchableOpacity onPress={() => handleSetEarlierTime(true)}>
+              <Text>-1 ⏪</Text>
+            </TouchableOpacity>
+          </View>
+          <Text>{adjustableStartTime?.toFixed(2)}</Text>
+          <View style={{flex: 1}}>
+            <TouchableOpacity onPress={() => handleSetEarlierTime(false)}>
+              <Text>+1 ⏩ </Text>
+            </TouchableOpacity>
+          </View>
+          <View style={{flex: 1, borderLeftWidth: 1, borderLeftColor: 'black'}}>
+            <TouchableOpacity onPress={() => handleSetDuration(false)}>
+              <Text>(-1)</Text>
+            </TouchableOpacity>
+          </View>
+          <Text>duration: {adjustableDuration}</Text>
+          <View style={{flex: 1, borderLeftWidth: 1, borderLeftColor: 'black'}}>
+            <TouchableOpacity onPress={() => handleSetDuration(true)}>
+              <Text>(+1)</Text>
+            </TouchableOpacity>
+          </View>
         </View>
-        <Text>{adjustableStartTime?.toFixed(2)}</Text>
-        <View style={{flex: 1}}>
-          <TouchableOpacity onPress={() => handleSetEarlierTime(false)}>
-            <Text>+1 ⏩ </Text>
-          </TouchableOpacity>
-        </View>
-        <View style={{flex: 1, borderLeftWidth: 1, borderLeftColor: 'black'}}>
-          <TouchableOpacity onPress={() => handleSetDuration(false)}>
-            <Text>(-1)</Text>
-          </TouchableOpacity>
-        </View>
-        <Text>duration: {adjustableDuration}</Text>
-        <View style={{flex: 1, borderLeftWidth: 1, borderLeftColor: 'black'}}>
-          <TouchableOpacity onPress={() => handleSetDuration(true)}>
-            <Text>(+1)</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
+      ) : null}
     </View>
   );
 };
