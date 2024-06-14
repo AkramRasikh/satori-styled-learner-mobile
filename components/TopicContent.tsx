@@ -39,9 +39,9 @@ const TopicContent = ({
 
   const snippetsLocalAndDb = useMemo(() => {
     return mergeAndRemoveDuplicates(
-      snippetsForSelectedTopic,
+      snippetsForSelectedTopic?.sort((a, b) => a.pointInAudio - b.pointInAudio),
       miniSnippets,
-    )?.sort((a, b) => a.pointInAudio - b.pointInAudio);
+    );
   }, [snippetsForSelectedTopic, miniSnippets]);
 
   const soundRef = useRef(null);
@@ -223,12 +223,11 @@ const TopicContent = ({
   const getTimeStamp = () => {
     const id = topicName + '-' + generateRandomId();
     const thisItem = durations.find(item => item.id === masterPlay);
-    const pointInAudio = thisItem.startAt;
     const targetLang = thisItem.targetLang;
     const itemToSave = {
       id,
       sentenceId: masterPlay,
-      pointInAudio,
+      pointInAudio: currentTimeState,
       url,
       targetLang,
       topicName,
@@ -456,7 +455,7 @@ const MiniSnippetsComponent = ({
 }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [adjustableStartTime, setAdjustableStartTime] = useState();
-  const [adjustableDuration, setAdjustableDuration] = useState();
+  const [adjustableDuration, setAdjustableDuration] = useState(4);
 
   const soundRef = useRef();
 
@@ -475,17 +474,11 @@ const MiniSnippetsComponent = ({
   }, [masterAudio, setMasterAudio, isPlaying]);
 
   useEffect(() => {
-    if (!adjustableStartTime && !adjustableDuration) {
-      setAdjustableStartTime(pointInAudio);
-      setAdjustableDuration(5);
+    if (!adjustableStartTime) {
+      const provStartTime = pointInAudio - 0.5;
+      setAdjustableStartTime(provStartTime < 0 ? pointInAudio : provStartTime);
     }
-  }, [
-    adjustableStartTime,
-    pointInAudio,
-    adjustableDuration,
-    setAdjustableDuration,
-    setAdjustableStartTime,
-  ]);
+  }, [adjustableStartTime, pointInAudio, setAdjustableStartTime]);
 
   const {playSound, pauseSound} = useSoundHook({
     url,
@@ -494,7 +487,9 @@ const MiniSnippetsComponent = ({
     setIsPlaying,
     topicName,
     isSnippet: true,
-    startTime: adjustableStartTime,
+    startTime: isFinite(adjustableStartTime)
+      ? adjustableStartTime
+      : pointInAudio,
     duration: adjustableDuration,
   });
 

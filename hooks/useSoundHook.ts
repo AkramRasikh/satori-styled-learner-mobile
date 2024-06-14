@@ -17,6 +17,7 @@ const useSoundHook = ({
   let soundInstance: Sound | null = null;
 
   const [currentTime, setCurrentTime] = useState(0);
+  const [isLoaded, setIsLoaded] = useState(false);
 
   useBackgroundAudioHook({
     soundInstance,
@@ -39,6 +40,7 @@ const useSoundHook = ({
             soundInstance.getNumberOfChannels(),
         );
         soundRef.current = soundInstance;
+        setIsLoaded(true);
       });
 
       return () => {
@@ -47,7 +49,7 @@ const useSoundHook = ({
         }
       };
     }
-  }, [url, soundRef, isSnippet]);
+  }, [url, soundRef, isLoaded, isSnippet]);
 
   useEffect(() => {
     const updateCurrentTime = () => {
