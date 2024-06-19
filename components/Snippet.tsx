@@ -2,6 +2,7 @@ import {useEffect, useRef, useState} from 'react';
 import {TouchableOpacity, View} from 'react-native';
 import {Text} from 'react-native-paper';
 import useSoundHook from '../hooks/useSoundHook';
+import useMasterAudioLoad from '../hooks/useMasterAudioLoad';
 
 const Snippet = ({
   snippet,
@@ -24,6 +25,8 @@ const Snippet = ({
   const duration = snippet.duration;
   const isInDB = snippet?.saved;
   const topicName = snippet.topicName + '-' + pointInAudio.toFixed(2);
+
+  useMasterAudioLoad({soundRef, url});
 
   useEffect(() => {
     if (masterAudio && isPlaying) {
