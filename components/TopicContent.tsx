@@ -16,6 +16,7 @@ import ProgressBarComponent from './Progress';
 import useHighlightWordToWordBank from '../hooks/useHighlightWordToWordBank';
 import {mergeAndRemoveDuplicates} from '../utils/merge-and-remove-duplicates';
 import SnippetComponent from './Snippet';
+import useMasterAudioLoad from '../hooks/useMasterAudioLoad';
 
 const TopicContent = ({
   topicName,
@@ -49,6 +50,10 @@ const TopicContent = ({
 
   const {height} = Dimensions?.get('window');
   const url = getFirebaseAudioURL(topicName);
+
+  const soundRefLoaded = soundRef?.current?.isLoaded();
+
+  useMasterAudioLoad({soundRef, url});
 
   const {playSound, pauseSound, rewindSound, forwardSound} = useSoundHook({
     url,
@@ -327,7 +332,8 @@ const TopicContent = ({
           lastItem={lastItem}
         />
       )}
-      {snippetsLocalAndDb?.length > 0 &&
+      {soundRefLoaded &&
+        snippetsLocalAndDb?.length > 0 &&
         snippetsLocalAndDb?.map((snippet, index) => {
           return (
             <SnippetComponent

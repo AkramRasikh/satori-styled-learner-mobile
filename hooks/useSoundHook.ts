@@ -13,11 +13,9 @@ const useSoundHook = ({
   isSnippet,
   startTime,
   duration,
+  soundInstance,
 }) => {
-  let soundInstance: Sound | null = null;
-
   const [currentTime, setCurrentTime] = useState(0);
-  const [isLoaded, setIsLoaded] = useState(false);
 
   useBackgroundAudioHook({
     soundInstance,
@@ -25,31 +23,6 @@ const useSoundHook = ({
     url,
     soundRef,
   });
-
-  useEffect(() => {
-    if (url) {
-      soundInstance = new Sound(url, '', error => {
-        if (error) {
-          console.log('## Failed to load the sound', error);
-          return;
-        }
-        console.log(
-          'Duration in seconds: ' +
-            soundInstance.getDuration() +
-            ' number of channels: ' +
-            soundInstance.getNumberOfChannels(),
-        );
-        soundRef.current = soundInstance;
-        setIsLoaded(true);
-      });
-
-      return () => {
-        if (soundRef.current) {
-          soundRef.current.release();
-        }
-      };
-    }
-  }, [url, soundRef, isLoaded, isSnippet]);
 
   useEffect(() => {
     const updateCurrentTime = () => {
