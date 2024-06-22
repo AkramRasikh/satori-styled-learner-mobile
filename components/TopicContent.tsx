@@ -267,6 +267,11 @@ const TopicContent = ({
 
   return (
     <View>
+      {longPressedWord ? (
+        <View style={{marginBottom: 15}}>
+          <Text>{getLongPressedWordData()}</Text>
+        </View>
+      ) : null}
       <ScrollView
         contentInsetAdjustmentBehavior="automatic"
         style={{
@@ -277,11 +282,6 @@ const TopicContent = ({
             isFlowingSentences={isFlowingSentences}
             setIsFlowingSentences={setIsFlowingSentences}
           />
-          {longPressedWord ? (
-            <View style={{marginBottom: 15}}>
-              <Text>{getLongPressedWordData()}</Text>
-            </View>
-          ) : null}
           <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
             <Text style={{fontSize: 20}}>
               {topicData?.map(topicSentence => {
