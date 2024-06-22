@@ -68,13 +68,26 @@ const useBackgroundAudioHook = ({
   }, [topicName, url, trackAddedRef]);
 
   const handleAppStateChange = async nextAppState => {
-    if (nextAppState === 'background' && soundRef.current?.isPlaying()) {
+    const isPlaying = soundRef.current?.isPlaying();
+    if (nextAppState === 'background' && isPlaying) {
       setTrackPlayerCurrentTime();
       soundInstance.play(success => {
         console.log('## playback success ✅');
         if (!success) {
           console.log('## playback failed due to audio decoding errors ❌');
         }
+      });
+    } else if (nextAppState === 'active' && !isPlaying) {
+      const progress = await TrackPlayer.getProgress();
+      const position = progress.position;
+      TrackPlayer.pause();
+      soundRef.current.setCurrentTime(position);
+      soundRef.current.getCurrentTime(() => {
+        soundRef.current.play(success => {
+          if (!success) {
+            console.log('Playback failed due to audio decoding errors');
+          }
+        });
       });
     }
   };
