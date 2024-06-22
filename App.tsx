@@ -11,6 +11,7 @@ import {getAllData} from './api/load-content';
 import TopicComponent from './components/TopicComponent';
 import {makeArrayUnique} from './hooks/useHighlightWordToWordBank';
 import {addSnippetAPI, deleteSnippetAPI} from './api/snippet';
+import TrackPlayer, {Capability} from 'react-native-track-player';
 
 function App(): React.JSX.Element {
   const [data, setData] = useState<any>(null);
@@ -19,6 +20,37 @@ function App(): React.JSX.Element {
   const [structuredUnifiedData, setStructuredUnifiedData] = useState([]);
   const [selectedTopic, setSelectedTopic] = useState('');
   const [masterSnippetState, setMasterSnippetState] = useState([]);
+
+  useEffect(() => {
+    async function setupPlayer() {
+      await TrackPlayer.setupPlayer();
+      await TrackPlayer.updateOptions({
+        stopWithApp: false,
+        capabilities: [
+          Capability.Play,
+          Capability.Pause,
+          Capability.SeekTo,
+          Capability.JumpForward,
+          Capability.JumpBackward,
+        ],
+        compactCapabilities: [Capability.Play, Capability.Pause],
+        notificationCapabilities: [
+          Capability.Play,
+          Capability.Pause,
+          Capability.SeekTo,
+          Capability.JumpForward,
+          Capability.JumpBackward,
+        ],
+      });
+    }
+
+    setupPlayer();
+
+    return () => {
+      TrackPlayer.stop();
+      console.log('## unmount background APP');
+    };
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {

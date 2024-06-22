@@ -1,11 +1,17 @@
-import {useEffect, useRef, useState} from 'react';
+import {useEffect, useRef} from 'react';
 import {AppState} from 'react-native';
 import Sound from 'react-native-sound';
-import TrackPlayer, {Capability, Event, State} from 'react-native-track-player';
+import TrackPlayer from 'react-native-track-player';
 
 Sound.setCategory('Playback');
 
-const useBackgroundAudioHook = ({soundInstance, topicName, url, soundRef}) => {
+const useBackgroundAudioHook = ({
+  soundInstance,
+  topicName,
+  url,
+  soundRef,
+  isSnippet,
+}) => {
   const trackAddedRef = useRef(false);
 
   const setTrackPlayerCurrentTime = async () => {
@@ -27,26 +33,6 @@ const useBackgroundAudioHook = ({soundInstance, topicName, url, soundRef}) => {
 
   useEffect(() => {
     async function setupPlayer() {
-      await TrackPlayer.setupPlayer();
-      await TrackPlayer.updateOptions({
-        stopWithApp: false,
-        capabilities: [
-          Capability.Play,
-          Capability.Pause,
-          Capability.SeekTo,
-          Capability.JumpForward,
-          Capability.JumpBackward,
-        ],
-        compactCapabilities: [Capability.Play, Capability.Pause],
-        notificationCapabilities: [
-          Capability.Play,
-          Capability.Pause,
-          Capability.SeekTo,
-          Capability.JumpForward,
-          Capability.JumpBackward,
-        ],
-      });
-
       await TrackPlayer.add({
         id: topicName,
         title: topicName,
@@ -56,8 +42,10 @@ const useBackgroundAudioHook = ({soundInstance, topicName, url, soundRef}) => {
       trackAddedRef.current = true;
     }
 
-    setupPlayer();
-    AppState.addEventListener('change', handleAppStateChange);
+    if (!isSnippet) {
+      setupPlayer();
+      AppState.addEventListener('change', handleAppStateChange);
+    }
 
     return () => {
       TrackPlayer.stop();

@@ -22,6 +22,7 @@ const useSoundHook = ({
     topicName,
     url,
     soundRef,
+    isSnippet,
   });
 
   useEffect(() => {
