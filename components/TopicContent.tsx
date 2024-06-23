@@ -13,7 +13,9 @@ import useGetCombinedAudioData, {
   getFirebaseAudioURL,
 } from '../hooks/useGetCombinedAudioData';
 import ProgressBarComponent from './Progress';
-import useHighlightWordToWordBank from '../hooks/useHighlightWordToWordBank';
+import useHighlightWordToWordBank, {
+  makeArrayUnique,
+} from '../hooks/useHighlightWordToWordBank';
 import {mergeAndRemoveDuplicates} from '../utils/merge-and-remove-duplicates';
 import SnippetComponent from './Snippet';
 import useMasterAudioLoad from '../hooks/useMasterAudioLoad';
@@ -37,6 +39,8 @@ const TopicContent = ({
   const [isFlowingSentences, setIsFlowingSentences] = useState(true);
   const [longPressedWord, setLongPressedWord] = useState();
   const [miniSnippets, setMiniSnippets] = useState([]);
+  const [thisTopicsWords, setThisTopicsWords] = useState([]);
+  const [openTopicWords, setOpenTopicWords] = useState(false);
 
   const snippetsLocalAndDb = useMemo(() => {
     return mergeAndRemoveDuplicates(
@@ -95,6 +99,32 @@ const TopicContent = ({
   const hasUnifiedMP3File = japaneseLoadedContentFullMP3s.some(
     mp3 => mp3.name === topicName,
   );
+
+  const getThisTopicsWords = () => {
+    const masterBank = makeArrayUnique([...(pureWordsUnique || [])]);
+    if (masterBank?.length === 0) return [];
+    const targetLangItems = topicData.map(item => item.targetLang);
+
+    const pattern = new RegExp(`(${masterBank.join('|')})`, 'g');
+
+    const segments = [] as any;
+    targetLangItems.forEach(sentence => {
+      sentence.split(pattern).forEach(segment => {
+        if (segment.match(pattern)) {
+          const thisWordData = japaneseLoadedWords.find(
+            word => word.baseForm === segment || word.surfaceForm === segment,
+          );
+          segments.push(thisWordData);
+        }
+      });
+    });
+
+    return segments;
+  };
+
+  useEffect(() => {
+    setThisTopicsWords(getThisTopicsWords());
+  }, []);
 
   const orderedContent = topicData.map((item, index) => {
     return {
@@ -242,6 +272,14 @@ const TopicContent = ({
     setIsPlaying(false);
   };
 
+  const getThisTopicsWordsEach = word => {
+    const surfaceForm = word.surfaceForm;
+    const baseForm = word.baseForm;
+    const phonetic = word.phonetic;
+    const definition = word.definition;
+    return surfaceForm + ', ' + baseForm + ', ' + phonetic + ', ' + definition;
+  };
+
   const getLongPressedWordData = () => {
     const surfaceForm = longPressedWord.surfaceForm;
     const baseForm = longPressedWord.baseForm;
@@ -267,9 +305,48 @@ const TopicContent = ({
 
   return (
     <View>
+      {openTopicWords ? (
+        <View>
+          {thisTopicsWords?.map((topicsWords, index) => {
+            const listNumber = index + 1 + ') ';
+            return (
+              <View
+                key={index}
+                style={{
+                  padding: 5,
+                }}>
+                <Text>
+                  {listNumber}
+                  {getThisTopicsWordsEach(topicsWords)}
+                </Text>
+              </View>
+            );
+          })}
+        </View>
+      ) : null}
+      {thisTopicsWords?.length > 0 ? (
+        <View
+          style={{
+            margin: 'auto',
+            padding: 10,
+            backgroundColor: 'gray',
+            borderColor: 'black',
+            borderRadius: 10,
+          }}>
+          <TouchableOpacity onPress={() => setOpenTopicWords(!openTopicWords)}>
+            <Text>Open words</Text>
+          </TouchableOpacity>
+        </View>
+      ) : null}
       {longPressedWord ? (
-        <View style={{marginBottom: 15}}>
-          <Text>{getLongPressedWordData()}</Text>
+        <View
+          style={{
+            marginBottom: 15,
+            borderTopColor: 'gray',
+            borderTopWidth: 2,
+            padding: 5,
+          }}>
+          <Text>Long Pressed: {getLongPressedWordData()}</Text>
         </View>
       ) : null}
       <ScrollView
