@@ -5,7 +5,6 @@ import {
   TouchableOpacity,
   ScrollView,
   Dimensions,
-  StyleSheet,
 } from 'react-native';
 import SoundComponent from './Sound';
 import useSoundHook from '../hooks/useSoundHook';
@@ -19,6 +18,8 @@ import useHighlightWordToWordBank, {
 import {mergeAndRemoveDuplicates} from '../utils/merge-and-remove-duplicates';
 import SnippetComponent from './Snippet';
 import useMasterAudioLoad from '../hooks/useMasterAudioLoad';
+import FlowSetting from './FlowSetting';
+import SnippetTimeline from './SnippetTimeline';
 
 const TopicContent = ({
   topicName,
@@ -428,51 +429,6 @@ const TopicContent = ({
   );
 };
 
-const SnippetTimeline = ({snippetsLocalAndDb, lastItem}) => {
-  const duration = lastItem.endAt;
-
-  return (
-    <View>
-      <View
-        style={{
-          flex: 1,
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}>
-        <Text style={{fontStyle: 'italic'}}>
-          Snippet Timeline {snippetsLocalAndDb?.length} points
-        </Text>
-      </View>
-      <View style={styles.outerContainer}>
-        <View style={styles.lineContainer}>
-          <View style={styles.line} />
-          {snippetsLocalAndDb.map((checkpoint, index) => {
-            const checkpointPosition =
-              (checkpoint.pointInAudio / duration) * 100;
-            const saved = checkpoint?.saved;
-
-            return (
-              <View
-                key={index}
-                style={[
-                  styles.checkpointContainer,
-                  {left: `${checkpointPosition}%`},
-                ]}>
-                <View
-                  style={[
-                    styles.checkpoint,
-                    {backgroundColor: !saved ? 'gold' : 'white'},
-                  ]}
-                />
-              </View>
-            );
-          })}
-        </View>
-      </View>
-    </View>
-  );
-};
-
 const SatoriLine = ({
   focusThisSentence,
   playFromThisSentence,
@@ -506,48 +462,4 @@ const SatoriLine = ({
   );
 };
 
-const FlowSetting = ({isFlowingSentences, setIsFlowingSentences}) => {
-  return (
-    <View style={{margin: 'auto', padding: 10}}>
-      <TouchableOpacity
-        onPress={() => setIsFlowingSentences(!isFlowingSentences)}>
-        <Text>{isFlowingSentences ? 'Flowing 🏄🏽' : 'One By One 🧱'}</Text>
-      </TouchableOpacity>
-    </View>
-  );
-};
-
-const styles = StyleSheet.create({
-  outerContainer: {
-    padding: 20,
-    width: '100%',
-    alignItems: 'center',
-  },
-  lineContainer: {
-    width: '100%',
-    position: 'relative',
-    height: 16,
-  },
-  line: {
-    height: 4,
-    backgroundColor: 'black',
-    position: 'absolute',
-    top: 8,
-    left: 0,
-    right: 0,
-  },
-  checkpointContainer: {
-    position: 'absolute',
-    top: 0,
-    transform: [{translateX: -8}],
-  },
-  checkpoint: {
-    width: 16, // can be dynamically set
-    height: 16,
-    borderRadius: 8,
-    borderWidth: 2,
-    borderColor: 'red',
-    backgroundColor: 'white',
-  },
-});
 export default TopicContent;
