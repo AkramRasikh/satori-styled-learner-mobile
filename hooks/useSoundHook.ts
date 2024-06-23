@@ -23,6 +23,7 @@ const useSoundHook = ({
     url,
     soundRef,
     isSnippet,
+    masterSetIsPlaying: setIsPlaying,
   });
 
   useEffect(() => {

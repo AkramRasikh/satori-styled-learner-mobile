@@ -11,6 +11,7 @@ const useBackgroundAudioHook = ({
   url,
   soundRef,
   isSnippet,
+  masterSetIsPlaying,
 }) => {
   const trackAddedRef = useRef(false);
 
@@ -81,14 +82,8 @@ const useBackgroundAudioHook = ({
       const progress = await TrackPlayer.getProgress();
       const position = progress.position;
       TrackPlayer.pause();
+      masterSetIsPlaying(false);
       soundRef.current.setCurrentTime(position);
-      soundRef.current.getCurrentTime(() => {
-        soundRef.current.play(success => {
-          if (!success) {
-            console.log('Playback failed due to audio decoding errors');
-          }
-        });
-      });
     }
   };
 };
