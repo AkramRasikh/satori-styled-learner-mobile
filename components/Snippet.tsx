@@ -2,8 +2,37 @@ import {useEffect, useRef, useState} from 'react';
 import {TouchableOpacity, View} from 'react-native';
 import {Text} from 'react-native-paper';
 import useSoundHook from '../hooks/useSoundHook';
-import useMasterAudioLoad from '../hooks/useMasterAudioLoad';
 import ProgressBarComponent from './Progress';
+import useMasterAudioLoad from '../hooks/useMasterAudioLoad';
+
+export const SnippetContainer = ({
+  snippetsLocalAndDb,
+  setIsPlaying,
+  isPlaying,
+  deleteSnippet,
+  addSnippet,
+  removeSnippet,
+  url,
+}) => {
+  const masterSoundRef = useRef(null);
+  const instance = useMasterAudioLoad({soundRef: masterSoundRef, url});
+
+  return snippetsLocalAndDb?.map((snippet, index) => {
+    return (
+      <Snippet
+        key={index}
+        snippet={snippet}
+        setMasterAudio={setIsPlaying}
+        masterAudio={isPlaying}
+        deleteSnippet={deleteSnippet}
+        addSnippet={addSnippet}
+        removeSnippet={removeSnippet}
+        index={index}
+        instance={instance}
+      />
+    );
+  });
+};
 
 const Snippet = ({
   snippet,
@@ -12,6 +41,8 @@ const Snippet = ({
   deleteSnippet,
   addSnippet,
   removeSnippet,
+  index,
+  instance,
 }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [adjustableStartTime, setAdjustableStartTime] = useState();
@@ -19,17 +50,30 @@ const Snippet = ({
   const [progress, setProgress] = useState(0);
   const [currentTimeState, setCurrentTimeState] = useState(0);
 
-  const soundRef = useRef();
+  const pointInAudio = snippet.pointInAudio;
+
+  const startTime = isFinite(adjustableStartTime)
+    ? adjustableStartTime
+    : pointInAudio;
+
+  const [progressTime, setProgressTime] = useState(startTime);
+
+  const soundRef = useRef(null);
 
   const id = snippet.id;
   const url = snippet.url;
   const targetLang = snippet.targetLang;
-  const pointInAudio = snippet.pointInAudio;
   const duration = snippet.duration;
   const isInDB = snippet?.saved;
   const topicName = snippet.topicName + '-' + pointInAudio.toFixed(2);
 
-  useMasterAudioLoad({soundRef, url});
+  useEffect(() => {
+    if (isPlaying) {
+      const newProgressTime =
+        currentTimeState === 0 ? startTime : currentTimeState;
+      setProgressTime(newProgressTime);
+    }
+  }, [isPlaying, currentTimeState, startTime]);
 
   useEffect(() => {
     const getCurrentTimeFunc = () => {
@@ -43,7 +87,7 @@ const Snippet = ({
       });
     };
     const interval = setInterval(() => {
-      if (soundRef.current && soundRef.current?.isPlaying()) {
+      if (soundRef.current && soundRef.current?.isPlaying() && isPlaying) {
         getCurrentTimeFunc();
       }
     }, 100);
@@ -56,6 +100,7 @@ const Snippet = ({
     adjustableStartTime,
     adjustableDuration,
     isInDB,
+    isPlaying,
   ]);
 
   useEffect(() => {
@@ -78,10 +123,11 @@ const Snippet = ({
     setIsPlaying,
     topicName,
     isSnippet: true,
-    startTime: isFinite(adjustableStartTime)
-      ? adjustableStartTime
-      : pointInAudio,
-    duration: adjustableDuration,
+    startTime: isInDB ? pointInAudio : isFinite(adjustableStartTime),
+    duration: isInDB ? duration : adjustableDuration,
+    setCurrentTime: setCurrentTimeState,
+    index,
+    currentTime: currentTimeState,
   });
 
   const handleSetEarlierTime = forward => {
@@ -129,6 +175,11 @@ const Snippet = ({
     return tempStateProgress;
   };
 
+  const handlePlay = () => {
+    soundRef.current = instance;
+    playSound();
+  };
+
   return (
     <View
       style={{
@@ -174,7 +225,7 @@ const Snippet = ({
               <Text>⏸️ Pause</Text>
             </TouchableOpacity>
           ) : (
-            <TouchableOpacity onPress={playSound}>
+            <TouchableOpacity onPress={handlePlay}>
               <Text>▶️ Play</Text>
             </TouchableOpacity>
           )}
@@ -233,7 +284,7 @@ const Snippet = ({
       ) : null}
       <ProgressBarComponent
         progress={progress}
-        time={currentTimeState.toFixed(2)}
+        time={(progressTime || startTime).toFixed(2)}
         endTime={getEndTimeProgress()}
       />
     </View>

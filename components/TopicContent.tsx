@@ -16,7 +16,7 @@ import useHighlightWordToWordBank, {
   makeArrayUnique,
 } from '../hooks/useHighlightWordToWordBank';
 import {mergeAndRemoveDuplicates} from '../utils/merge-and-remove-duplicates';
-import SnippetComponent from './Snippet';
+import {SnippetContainer} from './Snippet';
 import useMasterAudioLoad from '../hooks/useMasterAudioLoad';
 import FlowSetting from './FlowSetting';
 import SnippetTimeline from './SnippetTimeline';
@@ -410,21 +410,17 @@ const TopicContent = ({
           lastItem={lastItem}
         />
       )}
-      {soundRefLoaded &&
-        snippetsLocalAndDb?.length > 0 &&
-        snippetsLocalAndDb?.map((snippet, index) => {
-          return (
-            <SnippetComponent
-              key={index}
-              snippet={snippet}
-              setMasterAudio={setIsPlaying}
-              masterAudio={isPlaying}
-              deleteSnippet={deleteSnippet}
-              addSnippet={addSnippet}
-              removeSnippet={removeSnippet}
-            />
-          );
-        })}
+      {soundRefLoaded && snippetsLocalAndDb?.length > 0 && (
+        <SnippetContainer
+          snippetsLocalAndDb={snippetsLocalAndDb}
+          setIsPlaying={setIsPlaying}
+          isPlaying={isPlaying}
+          deleteSnippet={deleteSnippet}
+          addSnippet={addSnippet}
+          removeSnippet={removeSnippet}
+          url={url}
+        />
+      )}
     </View>
   );
 };

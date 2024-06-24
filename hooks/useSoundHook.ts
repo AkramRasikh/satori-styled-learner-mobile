@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react';
+import {useEffect} from 'react';
 import Sound from 'react-native-sound';
 import useBackgroundAudioHook from './useBackgroundAudioHook';
 
@@ -14,9 +14,10 @@ const useSoundHook = ({
   startTime,
   duration,
   soundInstance,
+  currentTime,
+  setCurrentTime,
+  index,
 }) => {
-  const [currentTime, setCurrentTime] = useState(0);
-
   useBackgroundAudioHook({
     soundInstance,
     topicName,
@@ -40,18 +41,26 @@ const useSoundHook = ({
     return () => {
       clearInterval(interval);
     };
-  }, [soundRef, isSnippet]);
+  }, [soundRef, setCurrentTime, isSnippet]);
 
   useEffect(() => {
     if (currentTime) {
       const endTime = startTime + duration;
-      if (currentTime > endTime) {
+      if (currentTime > endTime && isPlaying) {
         soundRef.current.stop(() => {
           setIsPlaying(false);
         });
       }
     }
-  }, [currentTime, soundRef, startTime, setIsPlaying, duration]);
+  }, [
+    currentTime,
+    soundRef,
+    setIsPlaying,
+    startTime,
+    duration,
+    isPlaying,
+    index,
+  ]);
 
   const playSound = () => {
     if (isSnippet && soundRef.current) {

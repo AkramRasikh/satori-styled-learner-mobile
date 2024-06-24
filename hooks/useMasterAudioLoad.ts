@@ -1,7 +1,8 @@
-import {useEffect} from 'react';
+import {useEffect, useState} from 'react';
 import Sound from 'react-native-sound';
 
-const useMasterAudioLoad = ({soundRef, url}) => {
+const useMasterAudioLoad = ({soundRef, url, masterSoundState}) => {
+  const [soundState, setSoundState] = useState(null);
   useEffect(() => {
     if (soundRef?.current?.isLoaded()) {
       return;
@@ -19,6 +20,7 @@ const useMasterAudioLoad = ({soundRef, url}) => {
             soundInstance.getNumberOfChannels(),
         );
         soundRef.current = soundInstance;
+        setSoundState(soundInstance);
       });
 
       return () => {
@@ -27,7 +29,9 @@ const useMasterAudioLoad = ({soundRef, url}) => {
         }
       };
     }
-  }, [url, soundRef]);
+  }, [url, soundRef, masterSoundState]);
+
+  return soundState;
 };
 
 export default useMasterAudioLoad;
