@@ -3,36 +3,6 @@ import {TouchableOpacity, View} from 'react-native';
 import {Text} from 'react-native-paper';
 import useSoundHook from '../hooks/useSoundHook';
 import ProgressBarComponent from './Progress';
-import useMasterAudioLoad from '../hooks/useMasterAudioLoad';
-
-export const SnippetContainer = ({
-  snippetsLocalAndDb,
-  setIsPlaying,
-  isPlaying,
-  deleteSnippet,
-  addSnippet,
-  removeSnippet,
-  url,
-}) => {
-  const masterSoundRef = useRef(null);
-  const instance = useMasterAudioLoad({soundRef: masterSoundRef, url});
-
-  return snippetsLocalAndDb?.map((snippet, index) => {
-    return (
-      <Snippet
-        key={index}
-        snippet={snippet}
-        setMasterAudio={setIsPlaying}
-        masterAudio={isPlaying}
-        deleteSnippet={deleteSnippet}
-        addSnippet={addSnippet}
-        removeSnippet={removeSnippet}
-        index={index}
-        instance={instance}
-      />
-    );
-  });
-};
 
 const Snippet = ({
   snippet,

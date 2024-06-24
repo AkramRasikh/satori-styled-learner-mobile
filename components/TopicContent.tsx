@@ -16,10 +16,10 @@ import useHighlightWordToWordBank, {
   makeArrayUnique,
 } from '../hooks/useHighlightWordToWordBank';
 import {mergeAndRemoveDuplicates} from '../utils/merge-and-remove-duplicates';
-import {SnippetContainer} from './Snippet';
 import useMasterAudioLoad from '../hooks/useMasterAudioLoad';
 import FlowSetting from './FlowSetting';
 import SnippetTimeline from './SnippetTimeline';
+import SnippetContainer from './SnippetContainer';
 
 const TopicContent = ({
   topicName,
