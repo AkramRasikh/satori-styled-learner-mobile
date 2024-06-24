@@ -3,6 +3,7 @@ import {TouchableOpacity, View} from 'react-native';
 import {Text} from 'react-native-paper';
 import useSoundHook from '../hooks/useSoundHook';
 import useMasterAudioLoad from '../hooks/useMasterAudioLoad';
+import ProgressBarComponent from './Progress';
 
 const Snippet = ({
   snippet,
@@ -15,6 +16,8 @@ const Snippet = ({
   const [isPlaying, setIsPlaying] = useState(false);
   const [adjustableStartTime, setAdjustableStartTime] = useState();
   const [adjustableDuration, setAdjustableDuration] = useState(4);
+  const [progress, setProgress] = useState(0);
+  const [currentTimeState, setCurrentTimeState] = useState(0);
 
   const soundRef = useRef();
 
@@ -27,6 +30,33 @@ const Snippet = ({
   const topicName = snippet.topicName + '-' + pointInAudio.toFixed(2);
 
   useMasterAudioLoad({soundRef, url});
+
+  useEffect(() => {
+    const getCurrentTimeFunc = () => {
+      soundRef.current.getCurrentTime(currentTime => {
+        if (isInDB) {
+          setProgress((currentTime - pointInAudio) / duration);
+        } else {
+          setProgress((currentTime - adjustableStartTime) / adjustableDuration);
+        }
+        setCurrentTimeState(currentTime);
+      });
+    };
+    const interval = setInterval(() => {
+      if (soundRef.current && soundRef.current?.isPlaying()) {
+        getCurrentTimeFunc();
+      }
+    }, 100);
+
+    return () => clearInterval(interval);
+  }, [
+    soundRef,
+    pointInAudio,
+    duration,
+    adjustableStartTime,
+    adjustableDuration,
+    isInDB,
+  ]);
 
   useEffect(() => {
     if (masterAudio && isPlaying) {
@@ -87,6 +117,16 @@ const Snippet = ({
       duration: adjustableDuration,
     };
     removeSnippet(formattedSnippet);
+  };
+
+  const getEndTimeProgress = () => {
+    if (isInDB) {
+      return (pointInAudio + duration).toFixed(2);
+    }
+    const tempStateProgress = (
+      adjustableStartTime + adjustableDuration
+    ).toFixed(2);
+    return tempStateProgress;
   };
 
   return (
@@ -191,6 +231,11 @@ const Snippet = ({
           </View>
         </View>
       ) : null}
+      <ProgressBarComponent
+        progress={progress}
+        time={currentTimeState.toFixed(2)}
+        endTime={getEndTimeProgress()}
+      />
     </View>
   );
 };
