@@ -20,6 +20,8 @@ import useMasterAudioLoad from '../hooks/useMasterAudioLoad';
 import FlowSetting from './FlowSetting';
 import SnippetTimeline from './SnippetTimeline';
 import SnippetContainer from './SnippetContainer';
+import DisplaySettings from './DisplaySettings';
+import ConditionalWrapper from '../utils/conditional-wrapper';
 
 const TopicContent = ({
   topicName,
@@ -42,6 +44,7 @@ const TopicContent = ({
   const [miniSnippets, setMiniSnippets] = useState([]);
   const [thisTopicsWords, setThisTopicsWords] = useState([]);
   const [openTopicWords, setOpenTopicWords] = useState(false);
+  const [seperateLines, setSeparateLines] = useState(false);
 
   const snippetsLocalAndDb = useMemo(() => {
     return mergeAndRemoveDuplicates(
@@ -339,6 +342,10 @@ const TopicContent = ({
           </TouchableOpacity>
         </View>
       ) : null}
+      <DisplaySettings
+        seperateLines={seperateLines}
+        setSeparateLines={setSeparateLines}
+      />
       {longPressedWord ? (
         <View
           style={{
@@ -360,27 +367,37 @@ const TopicContent = ({
             isFlowingSentences={isFlowingSentences}
             setIsFlowingSentences={setIsFlowingSentences}
           />
-          <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
+          <View
+            style={{
+              flexDirection: 'row',
+              flexWrap: 'wrap',
+            }}>
             <Text style={{fontSize: 20}}>
               {topicData?.map(topicSentence => {
                 const id = topicSentence.id;
                 const focusThisSentence = id === masterPlay;
 
                 return (
-                  <Text
-                    key={id}
-                    style={{
-                      backgroundColor: focusThisSentence
-                        ? 'yellow'
-                        : 'transparent',
-                    }}>
-                    <SatoriLine
-                      focusThisSentence={focusThisSentence}
-                      getSafeText={getSafeText}
-                      topicSentence={topicSentence}
-                      playFromThisSentence={playFromThisSentence}
-                    />
-                  </Text>
+                  <ConditionalWrapper
+                    condition={seperateLines}
+                    wrapper={children => <View>{children}</View>}>
+                    <Text
+                      key={id}
+                      style={{
+                        backgroundColor: focusThisSentence
+                          ? 'yellow'
+                          : 'transparent',
+                        fontSize: 20,
+                        marginBottom: seperateLines ? 10 : 'auto',
+                      }}>
+                      <SatoriLine
+                        focusThisSentence={focusThisSentence}
+                        getSafeText={getSafeText}
+                        topicSentence={topicSentence}
+                        playFromThisSentence={playFromThisSentence}
+                      />
+                    </Text>
+                  </ConditionalWrapper>
                 );
               })}
             </Text>
