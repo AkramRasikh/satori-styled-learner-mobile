@@ -154,24 +154,31 @@ function App(): React.JSX.Element {
           </Text>
         </View>
         <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
-          {topics?.map(topic => (
-            <View key={topic}>
-              <TouchableOpacity
-                onPress={() => handleShowTopic(topic)}
-                style={{
-                  borderWidth: 1,
-                  borderColor: '#999999',
-                  borderRadius: 20,
-                  paddingVertical: 10,
-                  paddingHorizontal: 15,
-                  margin: 5,
-                  backgroundColor:
-                    selectedTopic === topic ? 'green' : 'transparent',
-                }}>
-                <Text>{topic}</Text>
-              </TouchableOpacity>
-            </View>
-          ))}
+          {topics?.map(topic => {
+            const hasUnifiedMP3File = japaneseLoadedContentFullMP3s.some(
+              mp3 => mp3.name === topic,
+            );
+            return (
+              <View key={topic}>
+                <TouchableOpacity
+                  onPress={() => handleShowTopic(topic)}
+                  style={{
+                    borderWidth: 1,
+                    borderColor: '#999999',
+                    borderRadius: 20,
+                    paddingVertical: 10,
+                    paddingHorizontal: 15,
+                    margin: 5,
+                    backgroundColor:
+                      selectedTopic === topic ? 'green' : 'transparent',
+                  }}>
+                  <Text>
+                    {topic} {!hasUnifiedMP3File ? '🔕' : ''}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            );
+          })}
         </View>
 
         <View>
