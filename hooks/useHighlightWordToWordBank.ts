@@ -52,27 +52,6 @@ const useHighlightWordToWordBank = ({pureWordsUnique}) => {
     }
   };
 
-  const underlineWordsInSentenceOrignal = (sentence, isInHighlightMode) => {
-    const masterBank = makeArrayUnique([
-      ...savedWords,
-      ...(pureWordsUnique || []),
-      ...(isInHighlightMode ? [highlightedWord] : []),
-    ]);
-    if (masterBank?.length === 0) return sentence;
-
-    const pattern = new RegExp(masterBank.join('|'), 'g');
-
-    const underlinedSentence = sentence?.replace(pattern, match => {
-      if (match === highlightedWord && isInHighlightMode) {
-        return `<span style="color:goldenrod">${match}</span>`;
-      }
-
-      return `<u>${match}</u>`;
-    });
-
-    return underlinedSentence;
-  };
-
   const underlineWordsInSentence = sentence => {
     const masterBank = makeArrayUnique([
       ...savedWords,
@@ -89,6 +68,7 @@ const useHighlightWordToWordBank = ({pureWordsUnique}) => {
         segments.push({
           text: segment,
           style: {textDecorationLine: 'underline'},
+          id: 'targetWord',
         });
       } else {
         segments.push({text: segment, style: {}});

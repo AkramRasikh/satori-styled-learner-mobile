@@ -1,7 +1,14 @@
 import {Text, View} from 'react-native';
 import SwitchButton from './SwitchButton';
 
-const DisplaySettings = ({setSeparateLines, seperateLines}) => {
+const DisplaySettings = ({
+  setSeparateLines,
+  seperateLines,
+  wordTest,
+  setWordTest,
+  englishOnly,
+  setEnglishOnly,
+}) => {
   return (
     <View
       style={{
@@ -9,11 +16,16 @@ const DisplaySettings = ({setSeparateLines, seperateLines}) => {
         justifyContent: 'space-between',
       }}>
       <View>
-        <Text>Seperate Lines</Text>
+        <Text>Seperate</Text>
         <SwitchButton isOn={seperateLines} setIsOn={setSeparateLines} />
       </View>
       <View>
-        <Text>Show English</Text>
+        <Text>Word test</Text>
+        <SwitchButton isOn={wordTest} setIsOn={setWordTest} />
+      </View>
+      <View>
+        <Text>English only</Text>
+        <SwitchButton isOn={englishOnly} setIsOn={setEnglishOnly} />
       </View>
     </View>
   );

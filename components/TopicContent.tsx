@@ -22,6 +22,7 @@ import SnippetTimeline from './SnippetTimeline';
 import SnippetContainer from './SnippetContainer';
 import DisplaySettings from './DisplaySettings';
 import ConditionalWrapper from '../utils/conditional-wrapper';
+import SatoriLine from './SatoriLine';
 
 const TopicContent = ({
   topicName,
@@ -45,6 +46,8 @@ const TopicContent = ({
   const [thisTopicsWords, setThisTopicsWords] = useState([]);
   const [openTopicWords, setOpenTopicWords] = useState(false);
   const [seperateLines, setSeparateLines] = useState(false);
+  const [wordTest, setWordTest] = useState(false);
+  const [englishOnly, setEnglishOnly] = useState(false);
 
   const snippetsLocalAndDb = useMemo(() => {
     return mergeAndRemoveDuplicates(
@@ -91,6 +94,7 @@ const TopicContent = ({
       return (
         <Text
           key={index}
+          id={segment.id}
           style={[segment.style]}
           onLongPress={() => onLongPress(segment.text)}>
           {segment.text}
@@ -345,6 +349,10 @@ const TopicContent = ({
       <DisplaySettings
         seperateLines={seperateLines}
         setSeparateLines={setSeparateLines}
+        wordTest={wordTest}
+        setWordTest={setWordTest}
+        englishOnly={englishOnly}
+        setEnglishOnly={setEnglishOnly}
       />
       {longPressedWord ? (
         <View
@@ -395,6 +403,8 @@ const TopicContent = ({
                         getSafeText={getSafeText}
                         topicSentence={topicSentence}
                         playFromThisSentence={playFromThisSentence}
+                        wordTest={wordTest}
+                        englishOnly={englishOnly}
                       />
                     </Text>
                   </ConditionalWrapper>
@@ -439,39 +449,6 @@ const TopicContent = ({
         />
       )}
     </View>
-  );
-};
-
-const SatoriLine = ({
-  focusThisSentence,
-  playFromThisSentence,
-  getSafeText,
-  topicSentence,
-}) => {
-  const [showEng, setShowEng] = useState(false);
-  const [showNotes, setShowNotes] = useState(false);
-
-  return (
-    <Text
-      selectable={true}
-      style={{
-        backgroundColor: focusThisSentence ? 'yellow' : 'transparent',
-      }}>
-      <TouchableOpacity onPress={() => playFromThisSentence(topicSentence.id)}>
-        <Text style={{marginRight: 5}}>▶️</Text>
-      </TouchableOpacity>
-      <TouchableOpacity onPress={() => setShowEng(!showEng)}>
-        <Text style={{marginRight: 5}}>🇬🇧</Text>
-      </TouchableOpacity>
-      {topicSentence.notes ? (
-        <TouchableOpacity onPress={() => setShowNotes(!showNotes)}>
-          <Text style={{marginRight: 5}}>☝🏽</Text>
-        </TouchableOpacity>
-      ) : null}
-      {getSafeText(topicSentence.targetLang)}
-      {showEng ? <Text selectable={true}>{topicSentence.baseLang}</Text> : null}
-      {showNotes ? <Text>{topicSentence.notes}</Text> : null}
-    </Text>
   );
 };
 
