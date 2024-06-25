@@ -4,15 +4,13 @@ import {
   Text,
   View,
   TouchableOpacity,
-  Alert,
   PanResponder,
-  Modal,
 } from 'react-native';
 
-const HighlightTextZone = () => {
-  const text = '昨日の夜、友達と一緒に映画を見に行きました';
+const HighlightTextZone = ({
+  text = '昨日の夜、友達と一緒に映画を見に行きました',
+}) => {
   const [highlightedIndices, setHighlightedIndices] = useState([]);
-  const [isModalVisible, setModalVisible] = useState(false);
 
   const startRef = useRef(null);
 
@@ -46,20 +44,7 @@ const HighlightTextZone = () => {
     return Math.floor(x / charWidth);
   };
 
-  const copyToClipboard = word => {
-    Alert.alert('Copied to clipboard!');
-  };
-
-  const handleContextMenuAction = index => {
-    switch (index) {
-      case 0: // Copy
-        // copyToClipboard(word);
-        break;
-      default:
-        break;
-    }
-    setModalVisible(false);
-  };
+  const handleShortenSnippet = () => {};
 
   // Update the highlighted indices based on the drag range
   const updateHighlightedIndices = currentIndex => {
@@ -89,39 +74,33 @@ const HighlightTextZone = () => {
     ));
   };
 
-  // Function to handle clipboard actions
-  const handlePress = () => {};
+  const hasHighlightedText = highlightedIndices?.length > 0;
 
   return (
-    <View style={styles.container} {...panResponder.panHandlers}>
-      <TouchableOpacity onLongPress={handlePress}>
-        <Text style={styles.text}>{renderText(text)}</Text>
-      </TouchableOpacity>
-      <Modal visible={isModalVisible}>
-        <View style={styles.modalContent}>
-          <TouchableOpacity onPress={() => handleContextMenuAction(0)}>
-            <Text style={styles.modalOption} onPress={copyToClipboard}>
-              Copy
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => handleContextMenuAction(1)}>
-            <Text style={styles.modalOption}>Translate</Text>
-          </TouchableOpacity>
-          {/* <TouchableOpacity onPress={() => setModalVisible(false)}>
-          <Text style={styles.modalOption}>Cancel</Text>
-        </TouchableOpacity> */}
-        </View>
-      </Modal>
+    <View>
+      <View {...panResponder.panHandlers}>
+        <TouchableOpacity>
+          <Text style={styles.text}>{renderText(text)}</Text>
+        </TouchableOpacity>
+      </View>
+      <View
+        style={{
+          opacity: hasHighlightedText ? 1 : 0.2,
+          borderRadius: 10,
+          alignSelf: 'flex-start', // Width adjusts to fit children
+          backgroundColor: hasHighlightedText ? 'transparent' : 'red',
+        }}>
+        <TouchableOpacity
+          disabled={!hasHighlightedText}
+          onPress={() => handleShortenSnippet()}>
+          <Text style={styles.modalOption}>🖌️</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    padding: 16,
-  },
   text: {
     fontSize: 16,
     lineHeight: 24,
@@ -130,7 +109,6 @@ const styles = StyleSheet.create({
   },
   normal: {
     fontSize: 16,
-    lineHeight: 24,
   },
   highlight: {
     fontSize: 16,
@@ -139,12 +117,7 @@ const styles = StyleSheet.create({
   },
   modalOption: {
     fontSize: 18,
-    marginVertical: 10,
-  },
-  modalContent: {
-    backgroundColor: 'white',
-    padding: 20,
-    borderRadius: 10,
+    padding: 5,
   },
 });
 
