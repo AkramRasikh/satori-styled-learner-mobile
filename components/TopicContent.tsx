@@ -23,6 +23,7 @@ import SnippetContainer from './SnippetContainer';
 import DisplaySettings from './DisplaySettings';
 import ConditionalWrapper from '../utils/conditional-wrapper';
 import SatoriLine from './SatoriLine';
+import TextInputComponent from './TextInputComponent';
 
 const TopicContent = ({
   topicName,
@@ -365,6 +366,8 @@ const TopicContent = ({
           <Text>Long Pressed: {getLongPressedWordData()}</Text>
         </View>
       ) : null}
+      <TextInputComponent />
+
       <ScrollView
         contentInsetAdjustmentBehavior="automatic"
         style={{
@@ -437,6 +440,7 @@ const TopicContent = ({
           lastItem={lastItem}
         />
       )}
+
       {soundRefLoaded && snippetsLocalAndDb?.length > 0 && (
         <SnippetContainer
           snippetsLocalAndDb={snippetsLocalAndDb}
