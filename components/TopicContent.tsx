@@ -23,7 +23,7 @@ import SnippetContainer from './SnippetContainer';
 import DisplaySettings from './DisplaySettings';
 import ConditionalWrapper from '../utils/conditional-wrapper';
 import SatoriLine from './SatoriLine';
-import TextInputComponent from './TextInputComponent';
+import HighlightTextZone from './HighlightTextZone';
 
 const TopicContent = ({
   topicName,
@@ -366,7 +366,7 @@ const TopicContent = ({
           <Text>Long Pressed: {getLongPressedWordData()}</Text>
         </View>
       ) : null}
-      <TextInputComponent />
+      <HighlightTextZone />
 
       <ScrollView
         contentInsetAdjustmentBehavior="automatic"

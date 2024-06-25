@@ -9,7 +9,7 @@ import {
   Modal,
 } from 'react-native';
 
-const TextInputcomp = () => {
+const HighlightTextZone = () => {
   const text = '昨日の夜、友達と一緒に映画を見に行きました';
   const [highlightedIndices, setHighlightedIndices] = useState([]);
   const [isModalVisible, setModalVisible] = useState(false);
@@ -148,4 +148,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default TextInputcomp;
+export default HighlightTextZone;
