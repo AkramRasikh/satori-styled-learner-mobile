@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   PanResponder,
 } from 'react-native';
+import Clipboard from '@react-native-clipboard/clipboard';
 
 const HighlightTextZone = ({
   text = '昨日の夜、友達と一緒に映画を見に行きました',
@@ -35,7 +36,6 @@ const HighlightTextZone = ({
   };
 
   const highlightedText = extractHighlightedText(text, highlightedIndices);
-  // console.log('## extractHighlightedText: ', {highlightedText});
 
   // Estimate the character index based on the x-coordinate
   const calculateIndex = x => {
@@ -44,7 +44,9 @@ const HighlightTextZone = ({
     return Math.floor(x / charWidth);
   };
 
-  const handleShortenSnippet = () => {};
+  const handleShortenSnippet = async () => {
+    Clipboard.setString(highlightedText);
+  };
 
   // Update the highlighted indices based on the drag range
   const updateHighlightedIndices = currentIndex => {
@@ -87,13 +89,12 @@ const HighlightTextZone = ({
         style={{
           opacity: hasHighlightedText ? 1 : 0.2,
           borderRadius: 10,
-          alignSelf: 'flex-start', // Width adjusts to fit children
-          backgroundColor: hasHighlightedText ? 'transparent' : 'red',
+          alignSelf: 'flex-start',
         }}>
         <TouchableOpacity
           disabled={!hasHighlightedText}
           onPress={() => handleShortenSnippet()}>
-          <Text style={styles.modalOption}>🖌️</Text>
+          <Text style={styles.modalOption}>📋</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -113,7 +114,7 @@ const styles = StyleSheet.create({
   highlight: {
     fontSize: 16,
     lineHeight: 24,
-    backgroundColor: '#ffff00',
+    backgroundColor: '#add8e6',
   },
   modalOption: {
     fontSize: 18,

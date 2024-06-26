@@ -24,6 +24,7 @@ import DisplaySettings from './DisplaySettings';
 import ConditionalWrapper from '../utils/conditional-wrapper';
 import SatoriLine from './SatoriLine';
 import HighlightTextZone from './HighlightTextZone';
+import TopicWordList from './TopicWordList';
 
 const TopicContent = ({
   topicName,
@@ -49,6 +50,7 @@ const TopicContent = ({
   const [seperateLines, setSeparateLines] = useState(false);
   const [wordTest, setWordTest] = useState(false);
   const [englishOnly, setEnglishOnly] = useState(false);
+  const [highlightMode, setHighlightMode] = useState(false);
 
   const snippetsLocalAndDb = useMemo(() => {
     return mergeAndRemoveDuplicates(
@@ -281,14 +283,6 @@ const TopicContent = ({
     setIsPlaying(false);
   };
 
-  const getThisTopicsWordsEach = word => {
-    const surfaceForm = word.surfaceForm;
-    const baseForm = word.baseForm;
-    const phonetic = word.phonetic;
-    const definition = word.definition;
-    return surfaceForm + ', ' + baseForm + ', ' + phonetic + ', ' + definition;
-  };
-
   const getLongPressedWordData = () => {
     const surfaceForm = longPressedWord.surfaceForm;
     const baseForm = longPressedWord.baseForm;
@@ -314,25 +308,10 @@ const TopicContent = ({
 
   return (
     <View>
-      {openTopicWords ? (
-        <View>
-          {thisTopicsWords?.map((topicsWords, index) => {
-            const listNumber = index + 1 + ') ';
-            return (
-              <View
-                key={index}
-                style={{
-                  padding: 5,
-                }}>
-                <Text>
-                  {listNumber}
-                  {getThisTopicsWordsEach(topicsWords)}
-                </Text>
-              </View>
-            );
-          })}
-        </View>
+      {openTopicWords && thisTopicsWords?.length > 0 ? (
+        <TopicWordList thisTopicsWords={thisTopicsWords} />
       ) : null}
+
       {thisTopicsWords?.length > 0 ? (
         <View
           style={{
@@ -354,6 +333,8 @@ const TopicContent = ({
         setWordTest={setWordTest}
         englishOnly={englishOnly}
         setEnglishOnly={setEnglishOnly}
+        highlightMode={highlightMode}
+        setHighlightMode={setHighlightMode}
       />
       {longPressedWord ? (
         <View
@@ -408,6 +389,7 @@ const TopicContent = ({
                         playFromThisSentence={playFromThisSentence}
                         wordTest={wordTest}
                         englishOnly={englishOnly}
+                        highlightMode={highlightMode}
                       />
                     </Text>
                   </ConditionalWrapper>

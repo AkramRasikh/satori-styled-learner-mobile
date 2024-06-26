@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import {Text, TouchableOpacity, View} from 'react-native';
+import HighlightTextZone from './HighlightTextZone';
 
 const filterElementsById = (elements, targetId) => {
   const filteredElements = React.Children.toArray(elements).filter(
@@ -19,6 +20,7 @@ const SatoriLine = ({
   topicSentence,
   wordTest,
   englishOnly,
+  highlightMode,
 }) => {
   const [showEng, setShowEng] = useState(false);
   const [showNotes, setShowNotes] = useState(false);
@@ -43,7 +45,11 @@ const SatoriLine = ({
           <Text style={{marginRight: 5}}>☝🏽</Text>
         </TouchableOpacity>
       ) : null}
-      {!englishOnly && safeText}
+      {englishOnly ? null : highlightMode ? (
+        <HighlightTextZone text={topicSentence.targetLang} />
+      ) : (
+        safeText
+      )}
       {showEng || englishOnly ? (
         <Text selectable={true}>{topicSentence.baseLang}</Text>
       ) : null}

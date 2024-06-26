@@ -8,6 +8,8 @@ const DisplaySettings = ({
   setWordTest,
   englishOnly,
   setEnglishOnly,
+  highlightMode,
+  setHighlightMode,
 }) => {
   return (
     <View
@@ -26,6 +28,10 @@ const DisplaySettings = ({
       <View>
         <Text>English only</Text>
         <SwitchButton isOn={englishOnly} setIsOn={setEnglishOnly} />
+      </View>
+      <View>
+        <Text>Highlight</Text>
+        <SwitchButton isOn={highlightMode} setIsOn={setHighlightMode} />
       </View>
     </View>
   );
