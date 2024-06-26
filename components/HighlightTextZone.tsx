@@ -35,7 +35,7 @@ const HighlightTextZone = ({
   };
 
   const highlightedText = extractHighlightedText(text, highlightedIndices);
-  console.log('## extractHighlightedText: ', {highlightedText});
+  // console.log('## extractHighlightedText: ', {highlightedText});
 
   // Estimate the character index based on the x-coordinate
   const calculateIndex = x => {

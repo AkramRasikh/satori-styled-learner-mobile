@@ -93,7 +93,7 @@ const Snippet = ({
     setIsPlaying,
     topicName,
     isSnippet: true,
-    startTime: isInDB ? pointInAudio : isFinite(adjustableStartTime),
+    startTime: isInDB ? pointInAudio : adjustableStartTime,
     duration: isInDB ? duration : adjustableDuration,
     setCurrentTime: setCurrentTimeState,
     index,
