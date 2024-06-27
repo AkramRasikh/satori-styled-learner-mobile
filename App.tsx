@@ -20,6 +20,7 @@ function App(): React.JSX.Element {
   const [structuredUnifiedData, setStructuredUnifiedData] = useState([]);
   const [selectedTopic, setSelectedTopic] = useState('');
   const [masterSnippetState, setMasterSnippetState] = useState([]);
+  const [showOtherTopics, setShowOtherTopics] = useState(true);
 
   useEffect(() => {
     async function setupPlayer() {
@@ -94,6 +95,7 @@ function App(): React.JSX.Element {
     } else {
       setSelectedTopic(topic);
     }
+    setShowOtherTopics(false);
   };
 
   const addSnippet = async snippetData => {
@@ -144,42 +146,52 @@ function App(): React.JSX.Element {
       <ScrollView
         contentInsetAdjustmentBehavior="automatic"
         style={{padding: 10}}>
-        <View>
-          <Text
+        {selectedTopic ? (
+          <View
             style={{
-              textAlign: 'center',
-              fontWeight: 'bold',
+              justifyContent: 'center',
+              alignItems: 'center',
+              margin: 'auto',
+              padding: 10,
+              backgroundColor: '#CCCCCC',
+              borderColor: 'black',
+              borderRadius: 10,
             }}>
-            Yah dun know!!
-          </Text>
-        </View>
-        <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
-          {topics?.map(topic => {
-            const hasUnifiedMP3File = japaneseLoadedContentFullMP3s.some(
-              mp3 => mp3.name === topic,
-            );
-            return (
-              <View key={topic}>
-                <TouchableOpacity
-                  onPress={() => handleShowTopic(topic)}
-                  style={{
-                    borderWidth: 1,
-                    borderColor: '#999999',
-                    borderRadius: 20,
-                    paddingVertical: 10,
-                    paddingHorizontal: 15,
-                    margin: 5,
-                    backgroundColor:
-                      selectedTopic === topic ? 'green' : 'transparent',
-                  }}>
-                  <Text>
-                    {topic} {!hasUnifiedMP3File ? '🔕' : ''}
-                  </Text>
-                </TouchableOpacity>
-              </View>
-            );
-          })}
-        </View>
+            <TouchableOpacity
+              onPress={() => setShowOtherTopics(!showOtherTopics)}>
+              <Text>More Topics</Text>
+            </TouchableOpacity>
+          </View>
+        ) : null}
+        {!selectedTopic || showOtherTopics ? (
+          <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
+            {topics?.map(topic => {
+              const hasUnifiedMP3File = japaneseLoadedContentFullMP3s.some(
+                mp3 => mp3.name === topic,
+              );
+              return (
+                <View key={topic}>
+                  <TouchableOpacity
+                    onPress={() => handleShowTopic(topic)}
+                    style={{
+                      borderWidth: 1,
+                      borderColor: '#999999',
+                      borderRadius: 20,
+                      paddingVertical: 10,
+                      paddingHorizontal: 15,
+                      margin: 5,
+                      backgroundColor:
+                        selectedTopic === topic ? 'green' : 'transparent',
+                    }}>
+                    <Text>
+                      {topic} {!hasUnifiedMP3File ? '🔕' : ''}
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              );
+            })}
+          </View>
+        ) : null}
 
         <View>
           {selectedTopic ? (
