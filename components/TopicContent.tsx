@@ -308,9 +308,6 @@ const TopicContent = ({
 
   return (
     <View>
-      {openTopicWords && thisTopicsWords?.length > 0 ? (
-        <TopicWordList thisTopicsWords={thisTopicsWords} />
-      ) : null}
       <DisplaySettings
         seperateLines={seperateLines}
         setSeparateLines={setSeparateLines}
@@ -325,6 +322,9 @@ const TopicContent = ({
         isFlowingSentences={isFlowingSentences}
         setIsFlowingSentences={setIsFlowingSentences}
       />
+      {openTopicWords && thisTopicsWords?.length > 0 ? (
+        <TopicWordList thisTopicsWords={thisTopicsWords} />
+      ) : null}
       {longPressedWord ? (
         <View
           style={{
