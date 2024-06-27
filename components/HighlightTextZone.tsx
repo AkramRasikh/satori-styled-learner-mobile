@@ -1,4 +1,5 @@
-import React, {useState, useRef} from 'react';
+import Clipboard from '@react-native-clipboard/clipboard';
+import React, {useRef} from 'react';
 import {
   StyleSheet,
   Text,
@@ -6,14 +7,16 @@ import {
   TouchableOpacity,
   PanResponder,
 } from 'react-native';
-import Clipboard from '@react-native-clipboard/clipboard';
 
 const HighlightTextZone = ({
-  text = '昨日の夜、友達と一緒に映画を見に行きました',
+  text,
+  highlightedIndices,
+  setHighlightedIndices,
+  sentenceIndex,
 }) => {
-  const [highlightedIndices, setHighlightedIndices] = useState([]);
-
   const startRef = useRef(null);
+
+  const sentencePrefix = sentenceIndex + '-';
 
   const panResponder = useRef(
     PanResponder.create({
@@ -21,18 +24,31 @@ const HighlightTextZone = ({
       onMoveShouldSetPanResponder: () => true,
       onPanResponderGrant: evt => {
         startRef.current = calculateIndex(evt.nativeEvent.locationX);
-        setHighlightedIndices([startRef.current]);
+        setHighlightedIndices([sentencePrefix + startRef.current]);
       },
       onPanResponderMove: evt => {
         const currentIndex = calculateIndex(evt.nativeEvent.locationX);
-        updateHighlightedIndices(currentIndex);
+        updateHighlightedIndices(sentencePrefix + currentIndex);
       },
     }),
   ).current;
 
   const extractHighlightedText = (sentence, indices) => {
+    if (indices?.length === 0) {
+      return '';
+    }
     const chars = sentence.split('');
-    return indices.map(index => chars[index]).join('');
+    const firstCharacter = indices[0]?.substring(0, 2);
+    const isThisSentenceHighlighted = firstCharacter === sentencePrefix;
+    if (!isThisSentenceHighlighted) {
+      return '';
+    }
+    const mappedIndices = indices
+      .map(index => {
+        return chars[index.slice(2)];
+      })
+      .join('');
+    return mappedIndices;
   };
 
   const highlightedText = extractHighlightedText(text, highlightedIndices);
@@ -44,18 +60,25 @@ const HighlightTextZone = ({
     return Math.floor(x / charWidth);
   };
 
-  const handleShortenSnippet = async () => {
-    Clipboard.setString(highlightedText);
+  const handleCopyText = () => {
+    if (highlightedText?.length > 0) {
+      Clipboard.setString(highlightedText);
+    }
   };
 
   // Update the highlighted indices based on the drag range
   const updateHighlightedIndices = currentIndex => {
-    if (startRef.current !== null) {
-      const startIndex = Math.min(startRef.current, currentIndex);
-      const endIndex = Math.max(startRef.current, currentIndex);
+    const firstCharacter = currentIndex?.slice(0, 2);
+
+    const isThisSentenceHighlighted = firstCharacter === sentencePrefix;
+
+    if (startRef.current !== null && isThisSentenceHighlighted) {
+      const slicedIndex = currentIndex.slice(2);
+      const startIndex = Math.min(startRef.current, slicedIndex);
+      const endIndex = Math.max(startRef.current, slicedIndex);
       const indices = [];
       for (let i = startIndex; i <= endIndex; i++) {
-        indices.push(i);
+        indices.push(sentenceIndex + '-' + i);
       }
       setHighlightedIndices(indices);
     }
@@ -65,38 +88,33 @@ const HighlightTextZone = ({
   const renderText = text => {
     const splitText = text.split('');
 
-    return splitText.map((char, index) => (
-      <Text
-        key={index}
-        style={
-          highlightedIndices.includes(index) ? styles.highlight : styles.normal
-        }>
-        {char}
-      </Text>
-    ));
+    return splitText.map((char, index) => {
+      return (
+        <Text
+          key={index}
+          style={
+            highlightedIndices.includes(sentencePrefix + index)
+              ? styles.highlight
+              : styles.normal
+          }>
+          {char}
+        </Text>
+      );
+    });
   };
 
-  const hasHighlightedText = highlightedIndices?.length > 0;
-
   return (
-    <View>
-      <View {...panResponder.panHandlers}>
-        <TouchableOpacity>
-          <Text style={styles.text}>{renderText(text)}</Text>
-        </TouchableOpacity>
-      </View>
-      <View
-        style={{
-          opacity: hasHighlightedText ? 1 : 0.2,
-          borderRadius: 10,
-          alignSelf: 'flex-start',
-        }}>
-        <TouchableOpacity
-          disabled={!hasHighlightedText}
-          onPress={() => handleShortenSnippet()}>
-          <Text style={styles.modalOption}>📋</Text>
-        </TouchableOpacity>
-      </View>
+    <View {...panResponder.panHandlers}>
+      <TouchableOpacity>
+        <Text style={styles.text}>
+          {renderText(text)}{' '}
+          {highlightedText?.length > 0 ? (
+            <TouchableOpacity onPress={handleCopyText}>
+              <Text>📋</Text>
+            </TouchableOpacity>
+          ) : null}
+        </Text>
+      </TouchableOpacity>
     </View>
   );
 };

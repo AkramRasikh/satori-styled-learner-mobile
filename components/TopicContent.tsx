@@ -23,7 +23,6 @@ import SnippetContainer from './SnippetContainer';
 import DisplaySettings from './DisplaySettings';
 import ConditionalWrapper from '../utils/conditional-wrapper';
 import SatoriLine from './SatoriLine';
-import HighlightTextZone from './HighlightTextZone';
 import TopicWordList from './TopicWordList';
 
 const TopicContent = ({
@@ -51,6 +50,7 @@ const TopicContent = ({
   const [wordTest, setWordTest] = useState(false);
   const [englishOnly, setEnglishOnly] = useState(false);
   const [highlightMode, setHighlightMode] = useState(false);
+  const [highlightedIndices, setHighlightedIndices] = useState([]);
 
   const snippetsLocalAndDb = useMemo(() => {
     return mergeAndRemoveDuplicates(
@@ -347,7 +347,6 @@ const TopicContent = ({
           <Text>Long Pressed: {getLongPressedWordData()}</Text>
         </View>
       ) : null}
-      <HighlightTextZone />
 
       <ScrollView
         contentInsetAdjustmentBehavior="automatic"
@@ -365,16 +364,16 @@ const TopicContent = ({
               flexWrap: 'wrap',
             }}>
             <Text style={{fontSize: 20}}>
-              {topicData?.map(topicSentence => {
+              {topicData?.map((topicSentence, index) => {
                 const id = topicSentence.id;
                 const focusThisSentence = id === masterPlay;
 
                 return (
                   <ConditionalWrapper
+                    key={id}
                     condition={seperateLines}
                     wrapper={children => <View>{children}</View>}>
                     <Text
-                      key={id}
                       style={{
                         backgroundColor: focusThisSentence
                           ? 'yellow'
@@ -383,6 +382,7 @@ const TopicContent = ({
                         marginBottom: seperateLines ? 10 : 'auto',
                       }}>
                       <SatoriLine
+                        sentenceIndex={index}
                         focusThisSentence={focusThisSentence}
                         getSafeText={getSafeText}
                         topicSentence={topicSentence}
@@ -390,6 +390,8 @@ const TopicContent = ({
                         wordTest={wordTest}
                         englishOnly={englishOnly}
                         highlightMode={highlightMode}
+                        highlightedIndices={highlightedIndices}
+                        setHighlightedIndices={setHighlightedIndices}
                       />
                     </Text>
                   </ConditionalWrapper>

@@ -21,6 +21,9 @@ const SatoriLine = ({
   wordTest,
   englishOnly,
   highlightMode,
+  highlightedIndices,
+  setHighlightedIndices,
+  sentenceIndex,
 }) => {
   const [showEng, setShowEng] = useState(false);
   const [showNotes, setShowNotes] = useState(false);
@@ -46,7 +49,12 @@ const SatoriLine = ({
         </TouchableOpacity>
       ) : null}
       {englishOnly ? null : highlightMode ? (
-        <HighlightTextZone text={topicSentence.targetLang} />
+        <HighlightTextZone
+          sentenceIndex={sentenceIndex}
+          text={topicSentence.targetLang}
+          highlightedIndices={highlightedIndices}
+          setHighlightedIndices={setHighlightedIndices}
+        />
       ) : (
         safeText
       )}
