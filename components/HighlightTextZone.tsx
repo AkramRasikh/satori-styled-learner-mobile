@@ -63,6 +63,7 @@ const HighlightTextZone = ({
   const handleCopyText = () => {
     if (highlightedText?.length > 0) {
       Clipboard.setString(highlightedText);
+      setHighlightedIndices([]);
     }
   };
 
