@@ -10,28 +10,78 @@ const DisplaySettings = ({
   setEnglishOnly,
   highlightMode,
   setHighlightMode,
+  setOpenTopicWords,
+  openTopicWords,
+  isFlowingSentences,
+  setIsFlowingSentences,
 }) => {
   return (
     <View
       style={{
+        gap: 5,
         flexDirection: 'row',
-        justifyContent: 'space-between',
+        flexWrap: 'wrap',
+        alignSelf: 'center',
+        justifyContent: 'center',
+        alignItems: 'center',
       }}>
       <View>
-        <Text>Seperate</Text>
+        <Text
+          style={{
+            alignSelf: 'center',
+          }}>
+          Seperate
+        </Text>
         <SwitchButton isOn={seperateLines} setIsOn={setSeparateLines} />
       </View>
       <View>
-        <Text>Word test</Text>
+        <Text
+          style={{
+            alignSelf: 'center',
+          }}>
+          Word hint
+        </Text>
         <SwitchButton isOn={wordTest} setIsOn={setWordTest} />
       </View>
       <View>
-        <Text>English only</Text>
+        <Text
+          style={{
+            alignSelf: 'center',
+          }}>
+          English
+        </Text>
         <SwitchButton isOn={englishOnly} setIsOn={setEnglishOnly} />
       </View>
       <View>
-        <Text>Highlight</Text>
+        <Text
+          style={{
+            alignSelf: 'center',
+          }}>
+          Highlight
+        </Text>
         <SwitchButton isOn={highlightMode} setIsOn={setHighlightMode} />
+      </View>
+      <View>
+        <Text
+          style={{
+            alignSelf: 'center',
+          }}>
+          Word list
+        </Text>
+        <SwitchButton isOn={openTopicWords} setIsOn={setOpenTopicWords} />
+      </View>
+      <View>
+        <Text
+          style={{
+            alignSelf: 'center',
+          }}>
+          {' '}
+          {isFlowingSentences ? 'Flowing 🏄🏽' : '1 by 1 🧱'}
+        </Text>
+        <SwitchButton
+          isOn={isFlowingSentences}
+          setIsOn={setIsFlowingSentences}
+        />
       </View>
     </View>
   );

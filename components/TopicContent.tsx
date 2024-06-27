@@ -311,21 +311,6 @@ const TopicContent = ({
       {openTopicWords && thisTopicsWords?.length > 0 ? (
         <TopicWordList thisTopicsWords={thisTopicsWords} />
       ) : null}
-
-      {thisTopicsWords?.length > 0 ? (
-        <View
-          style={{
-            margin: 'auto',
-            padding: 10,
-            backgroundColor: 'gray',
-            borderColor: 'black',
-            borderRadius: 10,
-          }}>
-          <TouchableOpacity onPress={() => setOpenTopicWords(!openTopicWords)}>
-            <Text>Open words</Text>
-          </TouchableOpacity>
-        </View>
-      ) : null}
       <DisplaySettings
         seperateLines={seperateLines}
         setSeparateLines={setSeparateLines}
@@ -335,6 +320,10 @@ const TopicContent = ({
         setEnglishOnly={setEnglishOnly}
         highlightMode={highlightMode}
         setHighlightMode={setHighlightMode}
+        setOpenTopicWords={setOpenTopicWords}
+        openTopicWords={openTopicWords}
+        isFlowingSentences={isFlowingSentences}
+        setIsFlowingSentences={setIsFlowingSentences}
       />
       {longPressedWord ? (
         <View
@@ -354,10 +343,6 @@ const TopicContent = ({
           maxHeight: height * 0.7,
         }}>
         <View>
-          <FlowSetting
-            isFlowingSentences={isFlowingSentences}
-            setIsFlowingSentences={setIsFlowingSentences}
-          />
           <View
             style={{
               flexDirection: 'row',
