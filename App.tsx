@@ -21,6 +21,7 @@ function App(): React.JSX.Element {
   const [structuredUnifiedData, setStructuredUnifiedData] = useState([]);
   const [selectedTopic, setSelectedTopic] = useState('');
   const [masterSnippetState, setMasterSnippetState] = useState([]);
+  const [newWordsAdded, setNewWordsAdded] = useState([]);
   const [showOtherTopics, setShowOtherTopics] = useState(true);
 
   useEffect(() => {
@@ -77,7 +78,7 @@ function App(): React.JSX.Element {
   }, []);
 
   const getPureWords = () => {
-    let pureWords = [];
+    let pureWords = [...newWordsAdded];
     const japaneseLoadedWords = data?.japaneseLoadedWords;
 
     japaneseLoadedWords?.forEach(wordData => {
@@ -113,10 +114,11 @@ function App(): React.JSX.Element {
     highlightedWordSentenceId,
   }) => {
     try {
-      await saveWordAPI({
+      const savedWord = await saveWordAPI({
         highlightedWord,
         highlightedWordSentenceId,
       });
+      setNewWordsAdded(prev => [...prev, savedWord]);
     } catch (error) {
       console.log('## saveWordFirebase err', error);
     }
