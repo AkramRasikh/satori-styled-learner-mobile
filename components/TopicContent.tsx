@@ -1,11 +1,5 @@
 import {useEffect, useMemo, useRef, useState} from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  ScrollView,
-  Dimensions,
-} from 'react-native';
+import {View, Text, ScrollView, Dimensions} from 'react-native';
 import SoundComponent from './Sound';
 import useSoundHook from '../hooks/useSoundHook';
 import useGetCombinedAudioData, {
@@ -17,7 +11,6 @@ import useHighlightWordToWordBank, {
 } from '../hooks/useHighlightWordToWordBank';
 import {mergeAndRemoveDuplicates} from '../utils/merge-and-remove-duplicates';
 import useMasterAudioLoad from '../hooks/useMasterAudioLoad';
-import FlowSetting from './FlowSetting';
 import SnippetTimeline from './SnippetTimeline';
 import SnippetContainer from './SnippetContainer';
 import DisplaySettings from './DisplaySettings';
@@ -36,6 +29,7 @@ const TopicContent = ({
   addSnippet,
   removeSnippet,
   snippetsForSelectedTopic,
+  saveWordFirebase,
 }) => {
   const [masterPlay, setMasterPlay] = useState('');
   const [progress, setProgress] = useState(0);
@@ -367,6 +361,7 @@ const TopicContent = ({
                         marginBottom: seperateLines ? 10 : 'auto',
                       }}>
                       <SatoriLine
+                        id={id}
                         sentenceIndex={index}
                         focusThisSentence={focusThisSentence}
                         getSafeText={getSafeText}
@@ -377,6 +372,7 @@ const TopicContent = ({
                         highlightMode={highlightMode}
                         highlightedIndices={highlightedIndices}
                         setHighlightedIndices={setHighlightedIndices}
+                        saveWordFirebase={saveWordFirebase}
                       />
                     </Text>
                   </ConditionalWrapper>

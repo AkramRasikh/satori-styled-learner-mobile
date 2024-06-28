@@ -9,10 +9,12 @@ import {
 } from 'react-native';
 
 const HighlightTextZone = ({
+  id,
   text,
   highlightedIndices,
   setHighlightedIndices,
   sentenceIndex,
+  saveWordFirebase,
 }) => {
   const startRef = useRef(null);
 
@@ -67,6 +69,16 @@ const HighlightTextZone = ({
     }
   };
 
+  const handleSaveWord = () => {
+    if (highlightedText?.length > 0) {
+      saveWordFirebase({
+        highlightedWord: highlightedText,
+        highlightedWordSentenceId: id,
+      });
+      setHighlightedIndices([]);
+    }
+  };
+
   // Update the highlighted indices based on the drag range
   const updateHighlightedIndices = currentIndex => {
     const firstCharacter = currentIndex?.slice(0, 2);
@@ -110,9 +122,14 @@ const HighlightTextZone = ({
         <Text style={styles.text}>
           {renderText(text)}{' '}
           {highlightedText?.length > 0 ? (
-            <TouchableOpacity onPress={handleCopyText}>
-              <Text>📋</Text>
-            </TouchableOpacity>
+            <>
+              <TouchableOpacity onPress={handleCopyText}>
+                <Text>📋</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={handleSaveWord}>
+                <Text>📖</Text>
+              </TouchableOpacity>
+            </>
           ) : null}
         </Text>
       </TouchableOpacity>

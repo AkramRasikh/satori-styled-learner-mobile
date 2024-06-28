@@ -12,6 +12,7 @@ const TopicComponent = ({
   snippetsForSelectedTopic,
   addSnippet,
   removeSnippet,
+  saveWordFirebase,
 }) => {
   return (
     <View
@@ -38,6 +39,7 @@ const TopicComponent = ({
         addSnippet={addSnippet}
         snippetsForSelectedTopic={snippetsForSelectedTopic}
         removeSnippet={removeSnippet}
+        saveWordFirebase={saveWordFirebase}
       />
     </View>
   );

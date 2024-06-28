@@ -14,6 +14,7 @@ const filterElementsById = (elements, targetId) => {
 };
 
 const SatoriLine = ({
+  id,
   focusThisSentence,
   playFromThisSentence,
   getSafeText,
@@ -24,6 +25,7 @@ const SatoriLine = ({
   highlightedIndices,
   setHighlightedIndices,
   sentenceIndex,
+  saveWordFirebase,
 }) => {
   const [showEng, setShowEng] = useState(false);
   const [showNotes, setShowNotes] = useState(false);
@@ -50,10 +52,12 @@ const SatoriLine = ({
       ) : null}
       {englishOnly ? null : highlightMode ? (
         <HighlightTextZone
+          id={id}
           sentenceIndex={sentenceIndex}
           text={topicSentence.targetLang}
           highlightedIndices={highlightedIndices}
           setHighlightedIndices={setHighlightedIndices}
+          saveWordFirebase={saveWordFirebase}
         />
       ) : (
         safeText

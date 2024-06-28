@@ -12,6 +12,7 @@ import TopicComponent from './components/TopicComponent';
 import {makeArrayUnique} from './hooks/useHighlightWordToWordBank';
 import {addSnippetAPI, deleteSnippetAPI} from './api/snippet';
 import TrackPlayer, {Capability} from 'react-native-track-player';
+import saveWordAPI from './api/save-word';
 
 function App(): React.JSX.Element {
   const [data, setData] = useState<any>(null);
@@ -106,6 +107,25 @@ function App(): React.JSX.Element {
       console.log('## error adding snippet (App.tsx)');
     }
   };
+
+  const saveWordFirebase = async ({
+    highlightedWord,
+    highlightedWordSentenceId,
+  }) => {
+    try {
+      await saveWordAPI({
+        highlightedWord,
+        highlightedWordSentenceId,
+      });
+    } catch (error) {
+      console.log('## saveWordFirebase err', error);
+    }
+  };
+
+  const handleOtherTopics = () => {
+    setShowOtherTopics(!showOtherTopics);
+    setSelectedTopic('');
+  };
   const removeSnippet = async snippetData => {
     try {
       const res = await deleteSnippetAPI({contentEntry: snippetData});
@@ -157,8 +177,7 @@ function App(): React.JSX.Element {
               borderColor: 'black',
               borderRadius: 10,
             }}>
-            <TouchableOpacity
-              onPress={() => setShowOtherTopics(!showOtherTopics)}>
+            <TouchableOpacity onPress={handleOtherTopics}>
               <Text>More Topics</Text>
             </TouchableOpacity>
           </View>
@@ -206,6 +225,7 @@ function App(): React.JSX.Element {
               addSnippet={addSnippet}
               snippetsForSelectedTopic={snippetsForSelectedTopic}
               removeSnippet={removeSnippet}
+              saveWordFirebase={saveWordFirebase}
             />
           ) : null}
         </View>
