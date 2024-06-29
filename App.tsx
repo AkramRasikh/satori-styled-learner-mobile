@@ -78,8 +78,11 @@ function App(): React.JSX.Element {
   }, []);
 
   const getPureWords = () => {
-    let pureWords = [...newWordsAdded];
-    const japaneseLoadedWords = data?.japaneseLoadedWords;
+    let pureWords = [];
+    const japaneseLoadedWords = [
+      ...data?.japaneseLoadedWords,
+      ...newWordsAdded,
+    ];
 
     japaneseLoadedWords?.forEach(wordData => {
       pureWords.push(wordData.baseForm);
@@ -157,6 +160,7 @@ function App(): React.JSX.Element {
 
   const japaneseLoadedContent = data.japaneseLoadedContent;
   const japaneseLoadedContentFullMP3s = data.japaneseLoadedContentFullMP3s;
+  const japaneseLoadedWords = [...data?.japaneseLoadedWords, ...newWordsAdded];
 
   const topics = Object.keys(japaneseLoadedContent);
   const snippetsForSelectedTopic = masterSnippetState?.filter(
@@ -223,7 +227,7 @@ function App(): React.JSX.Element {
               pureWordsUnique={getPureWords()}
               structuredUnifiedData={structuredUnifiedData}
               setStructuredUnifiedData={setStructuredUnifiedData}
-              japaneseLoadedWords={data?.japaneseLoadedWords}
+              japaneseLoadedWords={japaneseLoadedWords}
               addSnippet={addSnippet}
               snippetsForSelectedTopic={snippetsForSelectedTopic}
               removeSnippet={removeSnippet}
