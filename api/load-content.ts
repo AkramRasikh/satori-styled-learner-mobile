@@ -3,6 +3,7 @@ import {
   japaneseContentFullMP3s,
   japaneseSentences,
   japaneseSnippets,
+  japaneseSongs,
   japaneseWords,
 } from '../refs';
 import {BACKEND_ENDPOINT} from '@env';
@@ -55,6 +56,10 @@ export const getAllData = async () => {
     const japaneseLoadedSnippets =
       (await loadInContent({
         ref: japaneseSnippets,
+      })) || [];
+    const japaneseLoadedSongs =
+      (await loadInContent({
+        ref: japaneseSongs,
       })) || [];
 
     const topics =
@@ -114,6 +119,7 @@ export const getAllData = async () => {
       japaneseLoadedSentences,
       japaneseLoadedContentFullMP3s,
       japaneseLoadedSnippets,
+      japaneseLoadedSongs,
       wordsByTopics,
     };
   } catch (error) {
@@ -125,6 +131,7 @@ export const getAllData = async () => {
       japaneseLoadedSentences: [],
       japaneseLoadedContentFullMP3s: [],
       japaneseLoadedSnippets: [],
+      japaneseLoadedSongs: [],
     };
   }
 };

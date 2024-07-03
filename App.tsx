@@ -23,6 +23,7 @@ function App(): React.JSX.Element {
   const [masterSnippetState, setMasterSnippetState] = useState([]);
   const [newWordsAdded, setNewWordsAdded] = useState([]);
   const [showOtherTopics, setShowOtherTopics] = useState(true);
+  const [japaneseLoadedSongsState, setJapaneseLoadedSongsState] = useState([]);
 
   useEffect(() => {
     async function setupPlayer() {
@@ -59,6 +60,10 @@ function App(): React.JSX.Element {
     const fetchData = async () => {
       try {
         const results = await getAllData();
+        const japaneseLoadedSongs = results?.japaneseLoadedSongs.filter(
+          item => item !== null,
+        );
+        setJapaneseLoadedSongsState(japaneseLoadedSongs);
         setData(results);
         const japaneseLoadedSnippetsWithSavedTag =
           results.japaneseLoadedSnippets?.map(item => ({
@@ -189,33 +194,59 @@ function App(): React.JSX.Element {
           </View>
         ) : null}
         {!selectedTopic || showOtherTopics ? (
-          <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
-            {topics?.map(topic => {
-              const hasUnifiedMP3File = japaneseLoadedContentFullMP3s.some(
-                mp3 => mp3.name === topic,
-              );
+          <>
+            <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
+              {topics?.map(topic => {
+                const hasUnifiedMP3File = japaneseLoadedContentFullMP3s.some(
+                  mp3 => mp3.name === topic,
+                );
+                return (
+                  <View key={topic}>
+                    <TouchableOpacity
+                      onPress={() => handleShowTopic(topic)}
+                      style={{
+                        borderWidth: 1,
+                        borderColor: '#999999',
+                        borderRadius: 20,
+                        paddingVertical: 10,
+                        paddingHorizontal: 15,
+                        margin: 5,
+                        backgroundColor:
+                          selectedTopic === topic ? 'green' : 'transparent',
+                      }}>
+                      <Text>
+                        {topic} {!hasUnifiedMP3File ? '🔕' : ''}
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+                );
+              })}
+            </View>
+            {japaneseLoadedSongsState?.map(songData => {
               return (
-                <View key={topic}>
-                  <TouchableOpacity
-                    onPress={() => handleShowTopic(topic)}
-                    style={{
-                      borderWidth: 1,
-                      borderColor: '#999999',
-                      borderRadius: 20,
-                      paddingVertical: 10,
-                      paddingHorizontal: 15,
-                      margin: 5,
-                      backgroundColor:
-                        selectedTopic === topic ? 'green' : 'transparent',
-                    }}>
-                    <Text>
-                      {topic} {!hasUnifiedMP3File ? '🔕' : ''}
-                    </Text>
-                  </TouchableOpacity>
+                <View key={songData.id}>
+                  <View key={songData.id}>
+                    <TouchableOpacity
+                      onPress={() => handleShowTopic(songData.title)}
+                      style={{
+                        borderWidth: 1,
+                        borderColor: '#999999',
+                        borderRadius: 20,
+                        paddingVertical: 10,
+                        paddingHorizontal: 15,
+                        margin: 5,
+                        backgroundColor:
+                          selectedTopic === songData.title
+                            ? 'green'
+                            : 'transparent',
+                      }}>
+                      <Text>{songData.title}</Text>
+                    </TouchableOpacity>
+                  </View>
                 </View>
               );
             })}
-          </View>
+          </>
         ) : null}
 
         <View>
