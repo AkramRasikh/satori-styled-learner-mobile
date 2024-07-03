@@ -2,9 +2,7 @@ import {useEffect, useMemo, useRef, useState} from 'react';
 import {View, Text, ScrollView, Dimensions} from 'react-native';
 import SoundComponent from './Sound';
 import useSoundHook from '../hooks/useSoundHook';
-import useGetCombinedAudioData, {
-  getFirebaseAudioURL,
-} from '../hooks/useGetCombinedAudioData';
+import {getFirebaseSongURL} from '../hooks/useGetCombinedAudioData';
 import ProgressBarComponent from './Progress';
 import useHighlightWordToWordBank, {
   makeArrayUnique,
@@ -18,18 +16,15 @@ import ConditionalWrapper from '../utils/conditional-wrapper';
 import SatoriLine from './SatoriLine';
 import TopicWordList from './TopicWordList';
 
-const TopicContent = ({
+const MusicContent = ({
   topicName,
-  japaneseLoadedContent,
-  japaneseLoadedContentFullMP3s,
   pureWordsUnique,
-  structuredUnifiedData,
-  setStructuredUnifiedData,
   japaneseLoadedWords,
   addSnippet,
   removeSnippet,
   snippetsForSelectedTopic,
   saveWordFirebase,
+  topicData,
 }) => {
   const [masterPlay, setMasterPlay] = useState('');
   const [progress, setProgress] = useState(0);
@@ -57,7 +52,7 @@ const TopicContent = ({
   const audioControlsRef = useRef(null);
 
   const {height} = Dimensions?.get('window');
-  const url = getFirebaseAudioURL(topicName);
+  const url = getFirebaseSongURL(topicName);
 
   const soundRefLoaded = soundRef?.current?.isLoaded();
 
@@ -100,11 +95,6 @@ const TopicContent = ({
     });
   };
 
-  const topicData = japaneseLoadedContent[topicName];
-  const hasUnifiedMP3File = japaneseLoadedContentFullMP3s.some(
-    mp3 => mp3.name === topicName,
-  );
-
   const getThisTopicsWords = () => {
     const masterBank = makeArrayUnique([...(pureWordsUnique || [])]);
     if (masterBank?.length === 0) return [];
@@ -131,51 +121,12 @@ const TopicContent = ({
     setThisTopicsWords(getThisTopicsWords());
   }, []);
 
-  const orderedContent = topicData.map((item, index) => {
-    return {
-      ...item,
-      position: index,
-    };
-  });
-
-  const hasAlreadyBeenUnified = structuredUnifiedData[topicName];
-
-  const durations = useGetCombinedAudioData({
-    hasUnifiedMP3File,
-    audioFiles: orderedContent,
-    hasAlreadyBeenUnified,
-  });
-
-  const durationsLengths = durations.length;
-  const topicDataLengths = topicData?.length;
-
-  const lastItem = durations[durations?.length - 1];
-
-  const isLoading = durationsLengths !== topicDataLengths;
-
-  useEffect(() => {
-    if (!hasAlreadyBeenUnified && durationsLengths === topicDataLengths) {
-      setStructuredUnifiedData(prevState => ({
-        ...prevState,
-        [topicName]: durations,
-      }));
-    }
-  }, [
-    structuredUnifiedData,
-    durationsLengths,
-    topicName,
-    durations,
-    topicData,
-    hasAlreadyBeenUnified,
-    setStructuredUnifiedData,
-    topicDataLengths,
-  ]);
-
   useEffect(() => {
     if (currentTimeState && !isFlowingSentences) {
-      const currentAudioPlayingObj = durations.find(
+      const currentAudioPlayingObj = topicData.find(
         item =>
-          currentTimeState < item.endAt && currentTimeState > item.startAt,
+          currentTimeState < (item.endAt || soundRef?.current?.duration) &&
+          currentTimeState > item.startAt,
       );
 
       if (!currentAudioPlayingObj) {
@@ -197,25 +148,22 @@ const TopicContent = ({
         setIsPlaying(false);
       }
     }
-  }, [
-    currentTimeState,
-    topicData,
-    durations,
-    masterPlay,
-    isFlowingSentences,
-    soundRef,
-  ]);
+  }, [currentTimeState, topicData, masterPlay, isFlowingSentences, soundRef]);
 
   useEffect(() => {
     const getCurrentTimeFunc = () => {
       soundRef.current.getCurrentTime(currentTime => {
-        const lastItem = durations[durations.length - 1];
+        const duration = soundRef.current._duration;
+
+        const lastItem = topicData[topicData.length - 1];
         if (lastItem) {
-          setProgress(currentTime / lastItem.endAt);
+          setProgress(currentTime / duration);
           setCurrentTimeState(currentTime);
         }
-        const currentAudioPlaying = durations.findIndex(
-          item => currentTime < item.endAt && currentTime > item.startAt,
+        const currentAudioPlaying = topicData.findIndex(
+          item =>
+            currentTime < (item.endAt || duration) &&
+            currentTime > item.startAt,
         );
 
         const newId = topicData[currentAudioPlaying]?.id;
@@ -227,7 +175,7 @@ const TopicContent = ({
     const interval = setInterval(() => {
       if (
         soundRef.current &&
-        durations?.length > 0 &&
+        topicData?.length > 0 &&
         soundRef.current?.isPlaying()
       ) {
         getCurrentTimeFunc();
@@ -235,11 +183,11 @@ const TopicContent = ({
     }, 100);
 
     return () => clearInterval(interval);
-  }, [durations, masterPlay, topicData, soundRef, setMasterPlay, isLoading]);
+  }, [masterPlay, topicData, soundRef, setMasterPlay]);
 
   const playFromThisSentence = id => {
     if (soundRef.current) {
-      const thisItem = durations.find(item => item.id === id);
+      const thisItem = topicData.find(item => item.id === id);
       if (thisItem) {
         soundRef.current.getCurrentTime(() => {
           soundRef.current.setCurrentTime(thisItem.startAt);
@@ -262,7 +210,7 @@ const TopicContent = ({
 
   const getTimeStamp = () => {
     const id = topicName + '-' + generateRandomId();
-    const thisItem = durations.find(item => item.id === masterPlay);
+    const thisItem = topicData.find(item => item.id === masterPlay);
     const targetLang = thisItem.targetLang;
     const itemToSave = {
       id,
@@ -288,7 +236,7 @@ const TopicContent = ({
     );
   };
 
-  if (isLoading) {
+  if (!soundRefLoaded) {
     return (
       <View
         style={{
@@ -344,6 +292,7 @@ const TopicContent = ({
             }}>
             <Text style={{fontSize: 20}}>
               {topicData?.map((topicSentence, index) => {
+                if (topicSentence.targetLang === '') return null;
                 const id = topicSentence.id;
                 const focusThisSentence = id === masterPlay;
 
@@ -382,27 +331,26 @@ const TopicContent = ({
           </View>
         </View>
       </ScrollView>
-      {hasUnifiedMP3File && (
-        <View ref={audioControlsRef}>
-          <SoundComponent
-            soundRef={soundRef}
-            isPlaying={isPlaying}
-            playSound={playSound}
-            pauseSound={pauseSound}
-            rewindSound={rewindSound}
-            forwardSound={forwardSound}
-            getTimeStamp={getTimeStamp}
-          />
-          <ProgressBarComponent
-            progress={progress}
-            time={currentTimeState.toFixed(2)}
-          />
-        </View>
-      )}
-      {lastItem && snippetsLocalAndDb?.length > 0 && (
+
+      <View ref={audioControlsRef}>
+        <SoundComponent
+          soundRef={soundRef}
+          isPlaying={isPlaying}
+          playSound={playSound}
+          pauseSound={pauseSound}
+          rewindSound={rewindSound}
+          forwardSound={forwardSound}
+          getTimeStamp={getTimeStamp}
+        />
+        <ProgressBarComponent
+          progress={progress}
+          time={currentTimeState.toFixed(2)}
+        />
+      </View>
+      {snippetsLocalAndDb?.length > 0 && (
         <SnippetTimeline
           snippetsLocalAndDb={snippetsLocalAndDb}
-          lastItem={lastItem}
+          lastItem={soundRef?.current._duration}
         />
       )}
 
@@ -421,4 +369,4 @@ const TopicContent = ({
   );
 };
 
-export default TopicContent;
+export default MusicContent;

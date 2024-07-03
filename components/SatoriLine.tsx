@@ -63,7 +63,13 @@ const SatoriLine = ({
         safeText
       )}
       {showEng || englishOnly ? (
-        <Text selectable={true}>{topicSentence.baseLang}</Text>
+        <View
+          style={{
+            paddingTop: 5,
+            width: '100%', // Takes the full width of the parent
+          }}>
+          <Text selectable={true}>{topicSentence.baseLang}</Text>
+        </View>
       ) : null}
       {showNotes ? <Text>{topicSentence.notes}</Text> : null}
       {wordTest && filteredElements.length > 0 ? (

@@ -13,6 +13,7 @@ import {makeArrayUnique} from './hooks/useHighlightWordToWordBank';
 import {addSnippetAPI, deleteSnippetAPI} from './api/snippet';
 import TrackPlayer, {Capability} from 'react-native-track-player';
 import saveWordAPI from './api/save-word';
+import SongComponent from './components/SongComponent';
 
 function App(): React.JSX.Element {
   const [data, setData] = useState<any>(null);
@@ -20,6 +21,7 @@ function App(): React.JSX.Element {
   const [error, setError] = useState(null);
   const [structuredUnifiedData, setStructuredUnifiedData] = useState([]);
   const [selectedTopic, setSelectedTopic] = useState('');
+  const [selectedSong, setSelectedSong] = useState('');
   const [masterSnippetState, setMasterSnippetState] = useState([]);
   const [newWordsAdded, setNewWordsAdded] = useState([]);
   const [showOtherTopics, setShowOtherTopics] = useState(true);
@@ -100,10 +102,21 @@ function App(): React.JSX.Element {
   };
 
   const handleShowTopic = topic => {
+    setSelectedSong('');
     if (topic === selectedTopic) {
       setSelectedTopic('');
     } else {
       setSelectedTopic(topic);
+    }
+    setShowOtherTopics(false);
+  };
+
+  const handleShowMusic = song => {
+    setSelectedTopic('');
+    if (song === selectedSong) {
+      setSelectedSong('');
+    } else {
+      setSelectedSong(song);
     }
     setShowOtherTopics(false);
   };
@@ -169,15 +182,33 @@ function App(): React.JSX.Element {
 
   const topics = Object.keys(japaneseLoadedContent);
   const snippetsForSelectedTopic = masterSnippetState?.filter(
-    item => item.topicName === selectedTopic,
+    item => item.topicName === selectedTopic || item.topicName === selectedSong,
   );
+
+  const songData = japaneseLoadedSongsState?.find(
+    item => item.title === selectedSong,
+  );
+
+  const formattedContent = selectedSong
+    ? songData.lyrics.map((item, index) => {
+        const isLastInArr = index + 1 === songData.lyrics.length;
+
+        return {
+          ...item,
+          startAt: item.time,
+          endAt: isLastInArr ? null : songData.lyrics[index + 1].time,
+        };
+      })
+    : [];
+
+  const topicOrSongSelected = selectedTopic || selectedSong;
 
   return (
     <SafeAreaView style={{backgroundColor: '#D3D3D3'}}>
       <ScrollView
         contentInsetAdjustmentBehavior="automatic"
         style={{padding: 10}}>
-        {selectedTopic ? (
+        {topicOrSongSelected || showOtherTopics ? (
           <View
             style={{
               justifyContent: 'center',
@@ -193,60 +224,60 @@ function App(): React.JSX.Element {
             </TouchableOpacity>
           </View>
         ) : null}
-        {!selectedTopic || showOtherTopics ? (
-          <>
-            <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
-              {topics?.map(topic => {
-                const hasUnifiedMP3File = japaneseLoadedContentFullMP3s.some(
-                  mp3 => mp3.name === topic,
-                );
-                return (
-                  <View key={topic}>
-                    <TouchableOpacity
-                      onPress={() => handleShowTopic(topic)}
-                      style={{
-                        borderWidth: 1,
-                        borderColor: '#999999',
-                        borderRadius: 20,
-                        paddingVertical: 10,
-                        paddingHorizontal: 15,
-                        margin: 5,
-                        backgroundColor:
-                          selectedTopic === topic ? 'green' : 'transparent',
-                      }}>
-                      <Text>
-                        {topic} {!hasUnifiedMP3File ? '🔕' : ''}
-                      </Text>
-                    </TouchableOpacity>
-                  </View>
-                );
-              })}
-            </View>
-            {japaneseLoadedSongsState?.map(songData => {
+        {!topicOrSongSelected || showOtherTopics ? (
+          <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
+            {topics?.map(topic => {
+              const hasUnifiedMP3File = japaneseLoadedContentFullMP3s.some(
+                mp3 => mp3.name === topic,
+              );
               return (
-                <View key={songData.id}>
-                  <View key={songData.id}>
-                    <TouchableOpacity
-                      onPress={() => handleShowTopic(songData.title)}
-                      style={{
-                        borderWidth: 1,
-                        borderColor: '#999999',
-                        borderRadius: 20,
-                        paddingVertical: 10,
-                        paddingHorizontal: 15,
-                        margin: 5,
-                        backgroundColor:
-                          selectedTopic === songData.title
-                            ? 'green'
-                            : 'transparent',
-                      }}>
-                      <Text>{songData.title}</Text>
-                    </TouchableOpacity>
-                  </View>
+                <View key={topic}>
+                  <TouchableOpacity
+                    onPress={() => handleShowTopic(topic)}
+                    style={{
+                      borderWidth: 1,
+                      borderColor: '#999999',
+                      borderRadius: 20,
+                      paddingVertical: 10,
+                      paddingHorizontal: 15,
+                      margin: 5,
+                      backgroundColor:
+                        selectedTopic === topic ? 'green' : 'transparent',
+                    }}>
+                    <Text>
+                      {topic} {!hasUnifiedMP3File ? '🔕' : ''}
+                    </Text>
+                  </TouchableOpacity>
                 </View>
               );
             })}
-          </>
+          </View>
+        ) : null}
+        {!topicOrSongSelected || showOtherTopics ? (
+          <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
+            {japaneseLoadedSongsState?.map(songData => {
+              return (
+                <View key={songData.id}>
+                  <TouchableOpacity
+                    onPress={() => handleShowMusic(songData.title)}
+                    style={{
+                      borderWidth: 1,
+                      borderColor: '#999999',
+                      borderRadius: 20,
+                      paddingVertical: 10,
+                      paddingHorizontal: 15,
+                      margin: 5,
+                      backgroundColor:
+                        selectedTopic === songData.title
+                          ? 'green'
+                          : 'transparent',
+                    }}>
+                    <Text>{songData.title}</Text>
+                  </TouchableOpacity>
+                </View>
+              );
+            })}
+          </View>
         ) : null}
 
         <View>
@@ -263,6 +294,19 @@ function App(): React.JSX.Element {
               snippetsForSelectedTopic={snippetsForSelectedTopic}
               removeSnippet={removeSnippet}
               saveWordFirebase={saveWordFirebase}
+            />
+          ) : selectedSong ? (
+            <SongComponent
+              topicName={selectedSong}
+              pureWordsUnique={getPureWords()}
+              structuredUnifiedData={structuredUnifiedData}
+              setStructuredUnifiedData={setStructuredUnifiedData}
+              japaneseLoadedWords={japaneseLoadedWords}
+              snippetsForSelectedTopic={snippetsForSelectedTopic}
+              addSnippet={addSnippet}
+              removeSnippet={removeSnippet}
+              saveWordFirebase={saveWordFirebase}
+              topicData={formattedContent}
             />
           ) : null}
         </View>
