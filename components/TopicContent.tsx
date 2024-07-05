@@ -43,6 +43,7 @@ const TopicContent = ({
   const [seperateLines, setSeparateLines] = useState(true);
   const [wordTest, setWordTest] = useState(false);
   const [englishOnly, setEnglishOnly] = useState(false);
+  const [engMaster, setEngMaster] = useState(false);
   const [highlightMode, setHighlightMode] = useState(false);
   const [highlightedIndices, setHighlightedIndices] = useState([]);
 
@@ -315,6 +316,8 @@ const TopicContent = ({
         openTopicWords={openTopicWords}
         isFlowingSentences={isFlowingSentences}
         setIsFlowingSentences={setIsFlowingSentences}
+        engMaster={engMaster}
+        setEngMaster={setEngMaster}
       />
       {openTopicWords && thisTopicsWords?.length > 0 ? (
         <TopicWordList thisTopicsWords={thisTopicsWords} />
@@ -334,7 +337,7 @@ const TopicContent = ({
       <ScrollView
         contentInsetAdjustmentBehavior="automatic"
         style={{
-          maxHeight: height * 0.7,
+          maxHeight: height * 0.6,
         }}>
         <View>
           <View
@@ -373,6 +376,7 @@ const TopicContent = ({
                         highlightedIndices={highlightedIndices}
                         setHighlightedIndices={setHighlightedIndices}
                         saveWordFirebase={saveWordFirebase}
+                        engMaster={engMaster}
                       />
                     </Text>
                   </ConditionalWrapper>

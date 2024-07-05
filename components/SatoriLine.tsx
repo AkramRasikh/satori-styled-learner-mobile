@@ -26,6 +26,7 @@ const SatoriLine = ({
   setHighlightedIndices,
   sentenceIndex,
   saveWordFirebase,
+  engMaster,
 }) => {
   const [showEng, setShowEng] = useState(false);
   const [showNotes, setShowNotes] = useState(false);
@@ -62,7 +63,7 @@ const SatoriLine = ({
       ) : (
         safeText
       )}
-      {showEng || englishOnly ? (
+      {showEng || englishOnly || engMaster ? (
         <View
           style={{
             paddingTop: 5,

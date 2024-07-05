@@ -38,6 +38,7 @@ const MusicContent = ({
   const [seperateLines, setSeparateLines] = useState(true);
   const [wordTest, setWordTest] = useState(false);
   const [englishOnly, setEnglishOnly] = useState(false);
+  const [engMaster, setEngMaster] = useState(false);
   const [highlightMode, setHighlightMode] = useState(false);
   const [highlightedIndices, setHighlightedIndices] = useState([]);
 
@@ -263,6 +264,8 @@ const MusicContent = ({
         openTopicWords={openTopicWords}
         isFlowingSentences={isFlowingSentences}
         setIsFlowingSentences={setIsFlowingSentences}
+        setEngMaster={setEngMaster}
+        engMaster={engMaster}
       />
       {openTopicWords && thisTopicsWords?.length > 0 ? (
         <TopicWordList thisTopicsWords={thisTopicsWords} />
@@ -282,7 +285,7 @@ const MusicContent = ({
       <ScrollView
         contentInsetAdjustmentBehavior="automatic"
         style={{
-          maxHeight: height * 0.7,
+          maxHeight: height * 0.6,
         }}>
         <View>
           <View
@@ -322,6 +325,7 @@ const MusicContent = ({
                         highlightedIndices={highlightedIndices}
                         setHighlightedIndices={setHighlightedIndices}
                         saveWordFirebase={saveWordFirebase}
+                        engMaster={engMaster}
                       />
                     </Text>
                   </ConditionalWrapper>

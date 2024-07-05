@@ -14,6 +14,8 @@ const DisplaySettings = ({
   openTopicWords,
   isFlowingSentences,
   setIsFlowingSentences,
+  engMaster,
+  setEngMaster,
 }) => {
   return (
     <View
@@ -51,6 +53,15 @@ const DisplaySettings = ({
           English
         </Text>
         <SwitchButton isOn={englishOnly} setIsOn={setEnglishOnly} />
+      </View>
+      <View>
+        <Text
+          style={{
+            alignSelf: 'center',
+          }}>
+          English Master
+        </Text>
+        <SwitchButton isOn={engMaster} setIsOn={setEngMaster} />
       </View>
       <View>
         <Text
