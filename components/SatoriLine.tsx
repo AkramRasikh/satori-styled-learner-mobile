@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+import Clipboard from '@react-native-clipboard/clipboard';
 import {Text, TouchableOpacity, View} from 'react-native';
 import HighlightTextZone from './HighlightTextZone';
 
@@ -34,6 +35,10 @@ const SatoriLine = ({
 
   const filteredElements = filterElementsById(safeText, 'targetWord');
 
+  const copySentence = () => {
+    Clipboard.setString(topicSentence.targetLang);
+  };
+
   return (
     <Text
       selectable={true}
@@ -45,6 +50,9 @@ const SatoriLine = ({
       </TouchableOpacity>
       <TouchableOpacity onPress={() => setShowEng(!showEng)}>
         <Text style={{marginRight: 5}}>🇬🇧</Text>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={copySentence}>
+        <Text style={{marginRight: 5}}>📋</Text>
       </TouchableOpacity>
       {topicSentence.notes ? (
         <TouchableOpacity onPress={() => setShowNotes(!showNotes)}>

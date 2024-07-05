@@ -57,7 +57,7 @@ const TopicContent = ({
   const soundRef = useRef(null);
   const audioControlsRef = useRef(null);
 
-  const {height} = Dimensions?.get('window');
+  const {height, width} = Dimensions?.get('window');
   const url = getFirebaseAudioURL(topicName);
 
   const soundRefLoaded = soundRef?.current?.isLoaded();
@@ -354,14 +354,21 @@ const TopicContent = ({
                   <ConditionalWrapper
                     key={id}
                     condition={seperateLines}
-                    wrapper={children => <View>{children}</View>}>
+                    wrapper={children => (
+                      <View
+                        style={{
+                          width: width * 0.9,
+                          marginBottom: 10,
+                        }}>
+                        {children}
+                      </View>
+                    )}>
                     <Text
                       style={{
                         backgroundColor: focusThisSentence
                           ? 'yellow'
                           : 'transparent',
                         fontSize: 20,
-                        marginBottom: seperateLines ? 10 : 'auto',
                       }}>
                       <SatoriLine
                         id={id}
