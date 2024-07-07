@@ -17,6 +17,7 @@ import DisplaySettings from './DisplaySettings';
 import ConditionalWrapper from '../utils/conditional-wrapper';
 import SatoriLine from './SatoriLine';
 import TopicWordList from './TopicWordList';
+import Snippet, {MiniSnippet} from './Snippet';
 
 const TopicContent = ({
   topicName,
@@ -350,6 +351,12 @@ const TopicContent = ({
                 const id = topicSentence.id;
                 const focusThisSentence = id === masterPlay;
 
+                const thisSnippets = snippetsLocalAndDb?.filter(
+                  item => id === item.sentenceId && item?.saved,
+                );
+
+                console.log('## ', thisSnippets);
+
                 return (
                   <ConditionalWrapper
                     key={id}
@@ -386,6 +393,24 @@ const TopicContent = ({
                         engMaster={engMaster}
                       />
                     </Text>
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        flexWrap: 'wrap',
+                        justifyContent: 'space-around',
+                      }}>
+                      {thisSnippets?.map((item, indexB) => {
+                        return (
+                          <MiniSnippet
+                            index={indexB}
+                            snippet={item}
+                            setMasterAudio={setIsPlaying}
+                            masterAudio={isPlaying}
+                            soundRef={soundRef}
+                          />
+                        );
+                      })}
+                    </View>
                   </ConditionalWrapper>
                 );
               })}

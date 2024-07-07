@@ -261,4 +261,95 @@ const Snippet = ({
   );
 };
 
+export const MiniSnippet = ({
+  snippet,
+  setMasterAudio,
+  masterAudio,
+  soundRef,
+  index,
+}) => {
+  const [isPlaying, setIsPlaying] = useState(false);
+
+  const [currentTimeState, setCurrentTimeState] = useState(0);
+
+  const pointInAudio = snippet.pointInAudio;
+
+  const url = snippet.url;
+  const duration = snippet.duration;
+  const isInDB = snippet?.saved;
+  const topicName = snippet.topicName + '-' + pointInAudio.toFixed(2);
+
+  useEffect(() => {
+    const getCurrentTimeFunc = () => {
+      soundRef.current.getCurrentTime(currentTime => {
+        setCurrentTimeState(currentTime);
+      });
+    };
+    const interval = setInterval(() => {
+      if (soundRef.current && soundRef.current?.isPlaying() && isPlaying) {
+        getCurrentTimeFunc();
+      }
+    }, 100);
+
+    return () => clearInterval(interval);
+  }, [soundRef, pointInAudio, duration, isInDB, isPlaying]);
+
+  useEffect(() => {
+    if (masterAudio && isPlaying) {
+      setMasterAudio(false);
+    }
+  }, [masterAudio, setMasterAudio, isPlaying]);
+
+  const {playSound, pauseSound} = useSoundHook({
+    url,
+    soundRef,
+    isPlaying,
+    setIsPlaying,
+    topicName,
+    isSnippet: true,
+    startTime: pointInAudio,
+    duration: duration,
+    setCurrentTime: setCurrentTimeState,
+    index,
+    currentTime: currentTimeState,
+  });
+
+  const handlePlay = () => {
+    playSound();
+  };
+
+  return (
+    <View
+      style={{
+        alignItems: 'center',
+        paddingRight: 10,
+        borderBottomWidth: 2,
+      }}>
+      <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          width: '100%',
+        }}>
+        <View
+          style={{
+            backgroundColor: isPlaying ? 'green' : 'red',
+            padding: 10,
+            borderRadius: 10,
+          }}>
+          {isPlaying ? (
+            <TouchableOpacity onPress={pauseSound}>
+              <Text>⏸️ Pause</Text>
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity onPress={handlePlay}>
+              <Text>▶️ Play</Text>
+            </TouchableOpacity>
+          )}
+        </View>
+      </View>
+    </View>
+  );
+};
+
 export default Snippet;
