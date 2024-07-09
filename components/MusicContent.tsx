@@ -15,6 +15,8 @@ import SatoriLine from './SatoriLine';
 import TopicWordList from './TopicWordList';
 import SafeTextComponent from './SafeTextComponent';
 import {getThisTopicsWords} from '../helper-functions/get-this-topics-words';
+import useAudioTextSync from '../hooks/useAudioTextSync';
+import {generateRandomId} from '../utils/generate-random-id';
 
 const MusicContent = ({
   topicName,
@@ -60,6 +62,20 @@ const MusicContent = ({
 
   useMasterAudioLoad({soundRef, url});
 
+  useAudioTextSync({
+    currentTimeState,
+    isFlowingSentences,
+    soundRef,
+    setIsPlaying,
+    topicData,
+    isPlaying,
+    soundDuration,
+    masterPlay,
+    setProgress,
+    setCurrentTimeState,
+    setMasterPlay,
+  });
+
   const {playSound, pauseSound, rewindSound, forwardSound} = useSoundHook({
     url,
     soundRef,
@@ -101,79 +117,6 @@ const MusicContent = ({
     );
   }, []);
 
-  useEffect(() => {
-    if (currentTimeState && !isFlowingSentences) {
-      const currentAudioPlayingObj = topicData.find(
-        item =>
-          currentTimeState < (item.endAt || soundRef?.current?.duration) &&
-          currentTimeState > item.startAt,
-      );
-
-      if (!currentAudioPlayingObj) {
-        return;
-      }
-      const currentAudioPlayingIndex = currentAudioPlayingObj?.position;
-
-      const newLine = topicData[currentAudioPlayingIndex];
-      const newId = newLine.id;
-      if (
-        masterPlay !== undefined &&
-        newId !== undefined &&
-        newId !== masterPlay
-      ) {
-        soundRef.current.pause();
-        soundRef.current.getCurrentTime(() => {
-          soundRef.current.setCurrentTime(currentAudioPlayingObj.endAt);
-        });
-        setIsPlaying(false);
-      }
-    }
-  }, [currentTimeState, topicData, masterPlay, isFlowingSentences, soundRef]);
-
-  useEffect(() => {
-    if (
-      topicData?.length > 0 &&
-      currentTimeState &&
-      soundDuration &&
-      isPlaying
-    ) {
-      const currentAudioPlaying = topicData.findIndex(
-        item =>
-          currentTimeState < (item.endAt || soundDuration) &&
-          currentTimeState > item.startAt,
-      );
-
-      const newId = topicData[currentAudioPlaying]?.id;
-      if (newId !== masterPlay) {
-        setMasterPlay(newId);
-      }
-    }
-  }, [topicData, currentTimeState, masterPlay, isPlaying, soundDuration]);
-
-  useEffect(() => {
-    const getCurrentTimeFunc = () => {
-      soundRef.current.getCurrentTime(currentTime => {
-        const lastItem = topicData[topicData.length - 1];
-        if (lastItem) {
-          setProgress(currentTime / soundDuration);
-          setCurrentTimeState(currentTime);
-        }
-      });
-    };
-    const interval = setInterval(() => {
-      if (
-        soundRef.current &&
-        topicData?.length > 0 &&
-        soundRef.current?.isPlaying() &&
-        soundDuration
-      ) {
-        getCurrentTimeFunc();
-      }
-    }, 100);
-
-    return () => clearInterval(interval);
-  }, [masterPlay, topicData, soundRef, soundDuration, setMasterPlay]);
-
   const playFromThisSentence = id => {
     if (soundRef.current) {
       const thisItem = topicData.find(item => item.id === id);
@@ -185,9 +128,6 @@ const MusicContent = ({
         setIsPlaying(true);
       }
     }
-  };
-  const generateRandomId = () => {
-    return Math.random().toString(36).substring(2) + Date.now().toString(36); // Generate a version 4 (random) UUID
   };
 
   const deleteSnippet = idToBeDeleted => {
