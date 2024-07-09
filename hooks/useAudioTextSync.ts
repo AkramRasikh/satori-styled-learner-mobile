@@ -9,7 +9,6 @@ const useAudioTextSync = ({
   isPlaying,
   soundDuration,
   masterPlay,
-  setProgress,
   setCurrentTimeState,
   setMasterPlay,
 }) => {
@@ -79,11 +78,10 @@ const useAudioTextSync = ({
   useEffect(() => {
     const getCurrentTimeFunc = () => {
       soundRef.current.getCurrentTime(currentTime => {
-        const lastItem = topicData[topicData.length - 1];
-        if (lastItem) {
-          setProgress(currentTime / soundDuration);
-          setCurrentTimeState(currentTime);
-        }
+        // const lastItem = topicData[topicData.length - 1];
+        // if (lastItem) {
+        setCurrentTimeState(currentTime);
+        // }
       });
     };
     const interval = setInterval(() => {
@@ -105,7 +103,6 @@ const useAudioTextSync = ({
     soundDuration,
     setCurrentTimeState,
     setMasterPlay,
-    setProgress,
   ]);
 };
 

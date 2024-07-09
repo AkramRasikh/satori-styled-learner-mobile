@@ -29,7 +29,6 @@ const MusicContent = ({
   topicData,
 }) => {
   const [masterPlay, setMasterPlay] = useState('');
-  const [progress, setProgress] = useState(0);
   const [currentTimeState, setCurrentTimeState] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isFlowingSentences, setIsFlowingSentences] = useState(true);
@@ -58,7 +57,7 @@ const MusicContent = ({
   const url = getFirebaseSongURL(topicName);
 
   const soundRefLoaded = soundRef?.current?.isLoaded();
-  const soundDuration = soundRef.current?._duration;
+  const soundDuration = soundRef.current?._duration || 0;
 
   useMasterAudioLoad({soundRef, url});
 
@@ -71,7 +70,6 @@ const MusicContent = ({
     isPlaying,
     soundDuration,
     masterPlay,
-    setProgress,
     setCurrentTimeState,
     setMasterPlay,
   });
@@ -284,14 +282,14 @@ const MusicContent = ({
           getTimeStamp={getTimeStamp}
         />
         <ProgressBarComponent
-          progress={progress}
+          progress={currentTimeState / soundDuration}
           time={currentTimeState.toFixed(2)}
         />
       </View>
       {snippetsLocalAndDb?.length > 0 && (
         <SnippetTimeline
           snippetsLocalAndDb={snippetsLocalAndDb}
-          lastItem={soundRef?.current._duration}
+          lastItem={soundDuration}
         />
       )}
 
