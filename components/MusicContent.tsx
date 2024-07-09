@@ -133,6 +133,7 @@ const MusicContent = ({
     playFromThisSentence,
     deleteSnippet,
     getLongPressedWordData,
+    getTimeStamp,
   } = useContentControls({
     japaneseLoadedWords,
     setLongPressedWord,
