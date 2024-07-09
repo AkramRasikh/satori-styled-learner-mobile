@@ -18,6 +18,7 @@ import {getThisTopicsWords} from '../helper-functions/get-this-topics-words';
 import useAudioTextSync from '../hooks/useAudioTextSync';
 import {generateRandomId} from '../utils/generate-random-id';
 import useContentControls from '../hooks/useContentControls';
+import LongPressedWord from './LongPressedWord';
 
 const MusicContent = ({
   topicName,
@@ -178,17 +179,8 @@ const MusicContent = ({
         <TopicWordList thisTopicsWords={thisTopicsWords} />
       ) : null}
       {longPressedWord ? (
-        <View
-          style={{
-            marginBottom: 15,
-            borderTopColor: 'gray',
-            borderTopWidth: 2,
-            padding: 5,
-          }}>
-          <Text>Long Pressed: {getLongPressedWordData()}</Text>
-        </View>
+        <LongPressedWord getLongPressedWordData={getLongPressedWordData} />
       ) : null}
-
       <ScrollView
         contentInsetAdjustmentBehavior="automatic"
         style={{
