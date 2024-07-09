@@ -28,6 +28,8 @@ const SatoriLine = ({
   sentenceIndex,
   saveWordFirebase,
   engMaster,
+  isPlaying,
+  pauseSound,
 }) => {
   const [showEng, setShowEng] = useState(false);
   const [showNotes, setShowNotes] = useState(false);
@@ -39,14 +41,26 @@ const SatoriLine = ({
     Clipboard.setString(topicSentence.targetLang);
   };
 
+  const handlePlayThisLine = () => {
+    if (isPlaying) {
+      pauseSound();
+    } else {
+      playFromThisSentence(topicSentence.id);
+    }
+  };
+
   return (
     <Text
       selectable={true}
       style={{
         backgroundColor: focusThisSentence ? 'yellow' : 'transparent',
       }}>
-      <TouchableOpacity onPress={() => playFromThisSentence(topicSentence.id)}>
-        <Text style={{marginRight: 5}}>▶️</Text>
+      <TouchableOpacity onPress={handlePlayThisLine}>
+        {isPlaying ? (
+          <Text style={{marginRight: 5}}>⏸️</Text>
+        ) : (
+          <Text style={{marginRight: 5}}>▶️</Text>
+        )}
       </TouchableOpacity>
       <TouchableOpacity onPress={() => setShowEng(!showEng)}>
         <Text style={{marginRight: 5}}>🇬🇧</Text>

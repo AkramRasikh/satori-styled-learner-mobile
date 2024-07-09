@@ -355,8 +355,6 @@ const TopicContent = ({
                   item => id === item.sentenceId && item?.saved,
                 );
 
-                console.log('## ', thisSnippets);
-
                 return (
                   <ConditionalWrapper
                     key={id}
@@ -391,6 +389,8 @@ const TopicContent = ({
                         setHighlightedIndices={setHighlightedIndices}
                         saveWordFirebase={saveWordFirebase}
                         engMaster={engMaster}
+                        isPlaying={isPlaying}
+                        pauseSound={pauseSound}
                       />
                     </Text>
                     <View

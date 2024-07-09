@@ -333,6 +333,8 @@ const MusicContent = ({
                         setHighlightedIndices={setHighlightedIndices}
                         saveWordFirebase={saveWordFirebase}
                         engMaster={engMaster}
+                        isPlaying={isPlaying}
+                        pauseSound={pauseSound}
                       />
                     </Text>
                   </ConditionalWrapper>
