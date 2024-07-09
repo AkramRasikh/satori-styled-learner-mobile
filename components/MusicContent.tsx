@@ -4,9 +4,7 @@ import SoundComponent from './Sound';
 import useSoundHook from '../hooks/useSoundHook';
 import {getFirebaseSongURL} from '../hooks/useGetCombinedAudioData';
 import ProgressBarComponent from './Progress';
-import useHighlightWordToWordBank, {
-  makeArrayUnique,
-} from '../hooks/useHighlightWordToWordBank';
+import useHighlightWordToWordBank from '../hooks/useHighlightWordToWordBank';
 import {mergeAndRemoveDuplicates} from '../utils/merge-and-remove-duplicates';
 import useMasterAudioLoad from '../hooks/useMasterAudioLoad';
 import SnippetTimeline from './SnippetTimeline';
@@ -15,6 +13,8 @@ import DisplaySettings from './DisplaySettings';
 import ConditionalWrapper from '../utils/conditional-wrapper';
 import SatoriLine from './SatoriLine';
 import TopicWordList from './TopicWordList';
+import SafeTextComponent from './SafeTextComponent';
+import {getThisTopicsWords} from '../helper-functions/get-this-topics-words';
 
 const MusicContent = ({
   topicName,
@@ -82,45 +82,23 @@ const MusicContent = ({
   };
 
   const getSafeText = targetText => {
-    const textSegments = underlineWordsInSentence(targetText);
-
-    return textSegments.map((segment, index) => {
-      return (
-        <Text
-          key={index}
-          id={segment.id}
-          style={[segment.style]}
-          onLongPress={() => onLongPress(segment.text)}>
-          {segment.text}
-        </Text>
-      );
-    });
-  };
-
-  const getThisTopicsWords = () => {
-    const masterBank = makeArrayUnique([...(pureWordsUnique || [])]);
-    if (masterBank?.length === 0) return [];
-    const targetLangItems = topicData.map(item => item.targetLang);
-
-    const pattern = new RegExp(`(${masterBank.join('|')})`, 'g');
-
-    const segments = [] as any;
-    targetLangItems.forEach(sentence => {
-      sentence.split(pattern).forEach(segment => {
-        if (segment.match(pattern)) {
-          const thisWordData = japaneseLoadedWords.find(
-            word => word.baseForm === segment || word.surfaceForm === segment,
-          );
-          segments.push(thisWordData);
-        }
-      });
-    });
-
-    return segments;
+    return (
+      <SafeTextComponent
+        underlineWordsInSentence={underlineWordsInSentence}
+        targetText={targetText}
+        onLongPress={onLongPress}
+      />
+    );
   };
 
   useEffect(() => {
-    setThisTopicsWords(getThisTopicsWords());
+    setThisTopicsWords(
+      getThisTopicsWords({
+        pureWordsUnique,
+        topicData,
+        japaneseLoadedWords,
+      }),
+    );
   }, []);
 
   useEffect(() => {
@@ -153,6 +131,26 @@ const MusicContent = ({
   }, [currentTimeState, topicData, masterPlay, isFlowingSentences, soundRef]);
 
   useEffect(() => {
+    if (
+      topicData?.length > 0 &&
+      currentTimeState &&
+      soundDuration &&
+      isPlaying
+    ) {
+      const currentAudioPlaying = topicData.findIndex(
+        item =>
+          currentTimeState < (item.endAt || soundDuration) &&
+          currentTimeState > item.startAt,
+      );
+
+      const newId = topicData[currentAudioPlaying]?.id;
+      if (newId !== masterPlay) {
+        setMasterPlay(newId);
+      }
+    }
+  }, [topicData, currentTimeState, masterPlay, isPlaying, soundDuration]);
+
+  useEffect(() => {
     const getCurrentTimeFunc = () => {
       soundRef.current.getCurrentTime(currentTime => {
         const lastItem = topicData[topicData.length - 1];
@@ -160,23 +158,14 @@ const MusicContent = ({
           setProgress(currentTime / soundDuration);
           setCurrentTimeState(currentTime);
         }
-        const currentAudioPlaying = topicData.findIndex(
-          item =>
-            currentTime < (item.endAt || soundDuration) &&
-            currentTime > item.startAt,
-        );
-
-        const newId = topicData[currentAudioPlaying]?.id;
-        if (newId !== masterPlay) {
-          setMasterPlay(newId);
-        }
       });
     };
     const interval = setInterval(() => {
       if (
         soundRef.current &&
         topicData?.length > 0 &&
-        soundRef.current?.isPlaying()
+        soundRef.current?.isPlaying() &&
+        soundDuration
       ) {
         getCurrentTimeFunc();
       }
