@@ -24,7 +24,6 @@ const TopicComponent = ({
           margin: 20,
           fontSize: 18,
           fontWeight: 'bold',
-          alignSelf: 'center',
         }}>
         {topicName}
       </Text>

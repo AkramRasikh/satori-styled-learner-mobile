@@ -209,16 +209,16 @@ function App(): React.JSX.Element {
       <ScrollView
         contentInsetAdjustmentBehavior="automatic"
         style={{padding: 10}}>
-        {topicOrSongSelected || showOtherTopics ? (
+        {topicOrSongSelected ? (
           <View
             style={{
-              justifyContent: 'center',
-              alignItems: 'center',
+              right: 0,
               margin: 'auto',
               padding: 10,
               backgroundColor: '#CCCCCC',
               borderColor: 'black',
               borderRadius: 10,
+              position: 'absolute',
             }}>
             <TouchableOpacity onPress={handleOtherTopics}>
               <Text>More Topics</Text>
@@ -252,6 +252,11 @@ function App(): React.JSX.Element {
                 </View>
               );
             })}
+          </View>
+        ) : null}
+        {!topicOrSongSelected ? (
+          <View style={{padding: 10}}>
+            <Text style={{textDecorationLine: 'underline'}}>Songs:</Text>
           </View>
         ) : null}
         {!topicOrSongSelected || showOtherTopics ? (
