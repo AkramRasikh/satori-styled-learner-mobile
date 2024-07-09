@@ -8,7 +8,6 @@ const SatoriLine = ({
   id,
   focusThisSentence,
   playFromThisSentence,
-  getSafeText,
   topicSentence,
   wordTest,
   englishOnly,
@@ -20,13 +19,12 @@ const SatoriLine = ({
   engMaster,
   isPlaying,
   pauseSound,
-  preLoadedSafeText,
+  safeText,
   textWidth,
   setHighlightMode,
 }) => {
   const [showEng, setShowEng] = useState(false);
   const [showNotes, setShowNotes] = useState(false);
-  const safeText = preLoadedSafeText || getSafeText(topicSentence.targetLang);
 
   const filteredElements = filterElementsById(safeText, 'targetWord');
 

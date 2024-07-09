@@ -213,7 +213,6 @@ const MusicContent = ({
         }}>
         <LineContainer
           formattedData={formattedData}
-          getSafeText={getSafeText}
           playFromThisSentence={playFromThisSentence}
           wordTest={wordTest}
           englishOnly={englishOnly}

@@ -5,7 +5,6 @@ import {MiniSnippet} from './Snippet';
 
 const LineContainer = ({
   formattedData,
-  getSafeText,
   playFromThisSentence,
   wordTest,
   englishOnly,
@@ -65,7 +64,6 @@ const LineContainer = ({
                     id={id}
                     sentenceIndex={index}
                     focusThisSentence={focusThisSentence}
-                    getSafeText={getSafeText}
                     topicSentence={topicSentence}
                     playFromThisSentence={playFromThisSentence}
                     wordTest={wordTest}
@@ -77,7 +75,7 @@ const LineContainer = ({
                     engMaster={engMaster}
                     isPlaying={isPlaying}
                     pauseSound={pauseSound}
-                    preLoadedSafeText={topicSentence.safeText}
+                    safeText={topicSentence.safeText}
                     textWidth={width * 0.9}
                     setHighlightMode={setHighlightMode}
                   />

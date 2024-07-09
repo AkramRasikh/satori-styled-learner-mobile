@@ -17,6 +17,7 @@ import useContentControls from '../hooks/useContentControls';
 import {getThisTopicsWords} from '../helper-functions/get-this-topics-words';
 import useAudioTextSync from '../hooks/useAudioTextSync';
 import LineContainer from './LineContainer';
+import SafeTextComponent from './SafeTextComponent';
 
 const TopicContent = ({
   topicName,
@@ -92,19 +93,13 @@ const TopicContent = ({
   }, [japaneseLoadedWords, initJapaneseWordsList]);
 
   const getSafeText = targetText => {
-    const textSegments = underlineWordsInSentence(targetText);
-
-    return textSegments.map((segment, index) => {
-      return (
-        <Text
-          key={index}
-          id={segment.id}
-          style={[segment.style]}
-          onLongPress={() => onLongPress(segment.text)}>
-          {segment.text}
-        </Text>
-      );
-    });
+    return (
+      <SafeTextComponent
+        underlineWordsInSentence={underlineWordsInSentence}
+        targetText={targetText}
+        onLongPress={onLongPress}
+      />
+    );
   };
 
   const orderedContent = topicData.map((item, index) => {
@@ -260,7 +255,6 @@ const TopicContent = ({
         }}>
         <LineContainer
           formattedData={formattedData}
-          getSafeText={getSafeText}
           playFromThisSentence={playFromThisSentence}
           wordTest={wordTest}
           englishOnly={englishOnly}
