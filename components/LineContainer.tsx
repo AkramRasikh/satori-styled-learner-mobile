@@ -22,6 +22,7 @@ const LineContainer = ({
   highlightMode,
   seperateLines,
   setIsPlaying,
+  setHighlightMode,
 }) => {
   return (
     <View>
@@ -78,6 +79,7 @@ const LineContainer = ({
                     pauseSound={pauseSound}
                     preLoadedSafeText={topicSentence.safeText}
                     textWidth={width * 0.9}
+                    setHighlightMode={setHighlightMode}
                   />
                 </Text>
                 <View

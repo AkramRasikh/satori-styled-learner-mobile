@@ -277,6 +277,7 @@ const TopicContent = ({
           masterPlay={masterPlay}
           highlightMode={highlightMode}
           setIsPlaying={setIsPlaying}
+          setHighlightMode={setHighlightMode}
         />
       </ScrollView>
       {hasUnifiedMP3File && (

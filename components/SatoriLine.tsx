@@ -22,6 +22,7 @@ const SatoriLine = ({
   pauseSound,
   preLoadedSafeText,
   textWidth,
+  setHighlightMode,
 }) => {
   const [showEng, setShowEng] = useState(false);
   const [showNotes, setShowNotes] = useState(false);
@@ -73,6 +74,7 @@ const SatoriLine = ({
           highlightedIndices={highlightedIndices}
           setHighlightedIndices={setHighlightedIndices}
           saveWordFirebase={saveWordFirebase}
+          setHighlightMode={setHighlightMode}
         />
       ) : (
         safeText

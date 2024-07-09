@@ -15,6 +15,7 @@ const HighlightTextZone = ({
   setHighlightedIndices,
   sentenceIndex,
   saveWordFirebase,
+  setHighlightMode,
 }) => {
   const startRef = useRef(null);
 
@@ -76,6 +77,7 @@ const HighlightTextZone = ({
         highlightedWordSentenceId: id,
       });
       setHighlightedIndices([]);
+      setHighlightMode(false);
     }
   };
 

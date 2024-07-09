@@ -230,6 +230,7 @@ const MusicContent = ({
           masterPlay={masterPlay}
           highlightMode={highlightMode}
           setIsPlaying={setIsPlaying}
+          setHighlightMode={setHighlightMode}
         />
       </ScrollView>
 
