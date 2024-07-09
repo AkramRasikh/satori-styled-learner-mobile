@@ -45,6 +45,9 @@ const MusicContent = ({
   const [highlightMode, setHighlightMode] = useState(false);
   const [highlightedIndices, setHighlightedIndices] = useState([]);
   const [formattedData, setFormattedData] = useState([]);
+  const [initJapaneseWordsList, setInitJapaneseWordsList] = useState(null);
+  const [updateWordList, setUpdateWordList] = useState(false);
+
   const isAlreadyLoaded = structuredUnifiedData[topicName];
   const snippetsLocalAndDb = useMemo(() => {
     return mergeAndRemoveDuplicates(
@@ -63,6 +66,17 @@ const MusicContent = ({
   const soundDuration = soundRef.current?._duration || 0;
 
   useMasterAudioLoad({soundRef, url});
+
+  useEffect(() => {
+    console.log('## japaneseLoadedWords', {
+      currentLength: japaneseLoadedWords?.length,
+      init: initJapaneseWordsList,
+    });
+    if (japaneseLoadedWords?.length !== initJapaneseWordsList) {
+      setUpdateWordList(true);
+      setInitJapaneseWordsList(japaneseLoadedWords.length);
+    }
+  }, [japaneseLoadedWords, initJapaneseWordsList]);
 
   useEffect(() => {
     if (!isAlreadyLoaded && formattedData?.length > 0) {
@@ -102,15 +116,8 @@ const MusicContent = ({
         japaneseLoadedWords,
       }),
     );
+    setInitJapaneseWordsList(japaneseLoadedWords?.length);
   }, []);
-
-  useEffect(() => {
-    if (!isAlreadyLoaded) {
-      setFormattedData(formatTextForTargetWords());
-    } else if (isAlreadyLoaded && formattedData?.length === 0) {
-      setFormattedData(isAlreadyLoaded);
-    }
-  }, [isAlreadyLoaded, formattedData, setFormattedData]);
 
   const {underlineWordsInSentence} = useHighlightWordToWordBank({
     pureWordsUnique,
@@ -149,6 +156,23 @@ const MusicContent = ({
     url,
     pauseSound,
   });
+
+  useEffect(() => {
+    if (!isAlreadyLoaded) {
+      setFormattedData(formatTextForTargetWords());
+    } else if (isAlreadyLoaded && formattedData?.length === 0) {
+      setFormattedData(isAlreadyLoaded);
+    } else if (formattedData?.length > 0 && updateWordList) {
+      setFormattedData(formatTextForTargetWords());
+      setUpdateWordList(false);
+    }
+  }, [
+    isAlreadyLoaded,
+    formattedData,
+    formatTextForTargetWords,
+    setFormattedData,
+    updateWordList,
+  ]);
 
   if (!soundRefLoaded) {
     return (

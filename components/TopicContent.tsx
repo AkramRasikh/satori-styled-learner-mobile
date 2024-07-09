@@ -46,6 +46,8 @@ const TopicContent = ({
   const [highlightMode, setHighlightMode] = useState(false);
   const [highlightedIndices, setHighlightedIndices] = useState([]);
   const [formattedData, setFormattedData] = useState([]);
+  const [initJapaneseWordsList, setInitJapaneseWordsList] = useState(null);
+  const [updateWordList, setUpdateWordList] = useState(false);
 
   const topicData = japaneseLoadedContent[topicName];
   const hasUnifiedMP3File = japaneseLoadedContentFullMP3s.some(
@@ -81,6 +83,13 @@ const TopicContent = ({
   const {underlineWordsInSentence} = useHighlightWordToWordBank({
     pureWordsUnique,
   });
+
+  useEffect(() => {
+    if (japaneseLoadedWords?.length !== initJapaneseWordsList) {
+      setUpdateWordList(true);
+      setInitJapaneseWordsList(japaneseLoadedWords.length);
+    }
+  }, [japaneseLoadedWords, initJapaneseWordsList]);
 
   const getSafeText = targetText => {
     const textSegments = underlineWordsInSentence(targetText);
@@ -145,13 +154,23 @@ const TopicContent = ({
         japaneseLoadedWords,
       }),
     );
+    setInitJapaneseWordsList(japaneseLoadedWords?.length);
   }, []);
 
   useEffect(() => {
     if (formattedData?.length === 0 && durations?.length > 0) {
       setFormattedData(formatTextForTargetWords());
+    } else if (formattedData?.length > 0 && updateWordList) {
+      setFormattedData(formatTextForTargetWords());
+      setUpdateWordList(false);
     }
-  }, [formattedData, durations, formatTextForTargetWords]);
+  }, [
+    formattedData,
+    durations,
+    japaneseLoadedWords,
+    formatTextForTargetWords,
+    updateWordList,
+  ]);
 
   const durationsLengths = durations.length;
   const topicDataLengths = topicData?.length;
