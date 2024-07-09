@@ -276,6 +276,7 @@ const MusicContent = ({
                         isPlaying={isPlaying}
                         pauseSound={pauseSound}
                         preLoadedSafeText={topicSentence.safeText}
+                        textWidth={width * 0.9}
                       />
                     </Text>
                   </ConditionalWrapper>

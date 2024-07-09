@@ -21,6 +21,7 @@ const SatoriLine = ({
   isPlaying,
   pauseSound,
   preLoadedSafeText,
+  textWidth,
 }) => {
   const [showEng, setShowEng] = useState(false);
   const [showNotes, setShowNotes] = useState(false);
@@ -80,7 +81,7 @@ const SatoriLine = ({
         <View
           style={{
             paddingTop: 5,
-            width: '100%', // Takes the full width of the parent
+            width: textWidth,
           }}>
           <Text selectable={true}>{topicSentence.baseLang}</Text>
         </View>
@@ -90,7 +91,7 @@ const SatoriLine = ({
         <View
           style={{
             paddingTop: 10,
-            width: '100%', // Takes the full width of the parent
+            width: textWidth,
           }}>
           <Text style={{fontSize: 20}}>Target Words: {filteredElements}</Text>
         </View>
@@ -98,7 +99,7 @@ const SatoriLine = ({
         <View
           style={{
             paddingTop: 10,
-            width: '100%', // Takes the full width of the parent
+            width: textWidth,
           }}>
           <Text style={{fontSize: 20}}>No words</Text>
         </View>
