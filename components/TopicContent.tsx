@@ -6,9 +6,7 @@ import useGetCombinedAudioData, {
   getFirebaseAudioURL,
 } from '../hooks/useGetCombinedAudioData';
 import ProgressBarComponent from './Progress';
-import useHighlightWordToWordBank, {
-  makeArrayUnique,
-} from '../hooks/useHighlightWordToWordBank';
+import useHighlightWordToWordBank from '../hooks/useHighlightWordToWordBank';
 import {mergeAndRemoveDuplicates} from '../utils/merge-and-remove-duplicates';
 import useMasterAudioLoad from '../hooks/useMasterAudioLoad';
 import SnippetTimeline from './SnippetTimeline';
@@ -17,7 +15,10 @@ import DisplaySettings from './DisplaySettings';
 import ConditionalWrapper from '../utils/conditional-wrapper';
 import SatoriLine from './SatoriLine';
 import TopicWordList from './TopicWordList';
-import Snippet, {MiniSnippet} from './Snippet';
+import {MiniSnippet} from './Snippet';
+import useContentControls from '../hooks/useContentControls';
+import {generateRandomId} from '../utils/generate-random-id';
+import {getThisTopicsWords} from '../helper-functions/get-this-topics-words';
 
 const TopicContent = ({
   topicName,
@@ -77,15 +78,6 @@ const TopicContent = ({
     pureWordsUnique,
   });
 
-  const onLongPress = text => {
-    const longPressedText = japaneseLoadedWords.find(
-      word => word.surfaceForm === text,
-    );
-    if (longPressedText) {
-      setLongPressedWord(longPressedText);
-    }
-  };
-
   const getSafeText = targetText => {
     const textSegments = underlineWordsInSentence(targetText);
 
@@ -107,30 +99,32 @@ const TopicContent = ({
     mp3 => mp3.name === topicName,
   );
 
-  const getThisTopicsWords = () => {
-    const masterBank = makeArrayUnique([...(pureWordsUnique || [])]);
-    if (masterBank?.length === 0) return [];
-    const targetLangItems = topicData.map(item => item.targetLang);
-
-    const pattern = new RegExp(`(${masterBank.join('|')})`, 'g');
-
-    const segments = [] as any;
-    targetLangItems.forEach(sentence => {
-      sentence.split(pattern).forEach(segment => {
-        if (segment.match(pattern)) {
-          const thisWordData = japaneseLoadedWords.find(
-            word => word.baseForm === segment || word.surfaceForm === segment,
-          );
-          segments.push(thisWordData);
-        }
-      });
-    });
-
-    return segments;
-  };
+  const {
+    onLongPress,
+    // formatTextForTargetWords,
+    playFromThisSentence,
+    deleteSnippet,
+    getLongPressedWordData,
+  } = useContentControls({
+    japaneseLoadedWords,
+    setLongPressedWord,
+    soundRef,
+    setIsPlaying,
+    setMiniSnippets,
+    longPressedWord,
+    getSafeText,
+    topicData,
+    miniSnippets,
+  });
 
   useEffect(() => {
-    setThisTopicsWords(getThisTopicsWords());
+    setThisTopicsWords(
+      getThisTopicsWords({
+        pureWordsUnique,
+        topicData,
+        japaneseLoadedWords,
+      }),
+    );
   }, []);
 
   const orderedContent = topicData.map((item, index) => {
@@ -239,29 +233,6 @@ const TopicContent = ({
     return () => clearInterval(interval);
   }, [durations, masterPlay, topicData, soundRef, setMasterPlay, isLoading]);
 
-  const playFromThisSentence = id => {
-    if (soundRef.current) {
-      const thisItem = durations.find(item => item.id === id);
-      if (thisItem) {
-        soundRef.current.getCurrentTime(() => {
-          soundRef.current.setCurrentTime(thisItem.startAt);
-        });
-        soundRef.current.play();
-        setIsPlaying(true);
-      }
-    }
-  };
-  const generateRandomId = () => {
-    return Math.random().toString(36).substring(2) + Date.now().toString(36); // Generate a version 4 (random) UUID
-  };
-
-  const deleteSnippet = idToBeDeleted => {
-    const newSnippets = miniSnippets.filter(
-      snippet => snippet.id !== idToBeDeleted,
-    );
-    setMiniSnippets(newSnippets);
-  };
-
   const getTimeStamp = () => {
     const id = topicName + '-' + generateRandomId();
     const thisItem = durations.find(item => item.id === masterPlay);
@@ -277,17 +248,6 @@ const TopicContent = ({
     setMiniSnippets(prev => [...prev, itemToSave]);
     pauseSound();
     setIsPlaying(false);
-  };
-
-  const getLongPressedWordData = () => {
-    const surfaceForm = longPressedWord.surfaceForm;
-    const baseForm = longPressedWord.baseForm;
-    const phonetic = longPressedWord.phonetic;
-    const definition = longPressedWord.definition;
-
-    return (
-      surfaceForm + '...' + baseForm + '...' + phonetic + '...' + definition
-    );
   };
 
   if (isLoading) {
