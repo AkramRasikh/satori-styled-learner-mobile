@@ -310,6 +310,7 @@ const TopicContent = ({
                       {thisSnippets?.map((item, indexB) => {
                         return (
                           <MiniSnippet
+                            key={indexB}
                             index={indexB}
                             snippet={item}
                             setMasterAudio={setIsPlaying}
