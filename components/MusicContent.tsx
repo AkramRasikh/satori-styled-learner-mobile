@@ -29,6 +29,8 @@ const MusicContent = ({
   snippetsForSelectedTopic,
   saveWordFirebase,
   topicData,
+  setStructuredUnifiedData,
+  structuredUnifiedData,
 }) => {
   const [masterPlay, setMasterPlay] = useState('');
   const [currentTimeState, setCurrentTimeState] = useState(0);
@@ -41,11 +43,11 @@ const MusicContent = ({
   const [seperateLines, setSeparateLines] = useState(true);
   const [wordTest, setWordTest] = useState(false);
   const [englishOnly, setEnglishOnly] = useState(false);
-  const [engMaster, setEngMaster] = useState(false);
+  const [engMaster, setEngMaster] = useState(true);
   const [highlightMode, setHighlightMode] = useState(false);
   const [highlightedIndices, setHighlightedIndices] = useState([]);
   const [formattedData, setFormattedData] = useState([]);
-
+  const isAlreadyLoaded = structuredUnifiedData[topicName];
   const snippetsLocalAndDb = useMemo(() => {
     return mergeAndRemoveDuplicates(
       snippetsForSelectedTopic?.sort((a, b) => a.pointInAudio - b.pointInAudio),
@@ -63,6 +65,15 @@ const MusicContent = ({
   const soundDuration = soundRef.current?._duration || 0;
 
   useMasterAudioLoad({soundRef, url});
+
+  useEffect(() => {
+    if (!isAlreadyLoaded && formattedData?.length > 0) {
+      setStructuredUnifiedData(prevState => ({
+        ...prevState,
+        [topicName]: formattedData,
+      }));
+    }
+  }, [setStructuredUnifiedData, isAlreadyLoaded, topicName, formattedData]);
 
   useAudioTextSync({
     currentTimeState,
@@ -93,8 +104,15 @@ const MusicContent = ({
         japaneseLoadedWords,
       }),
     );
-    setFormattedData(formatTextForTargetWords());
   }, []);
+
+  useEffect(() => {
+    if (!isAlreadyLoaded) {
+      setFormattedData(formatTextForTargetWords());
+    } else if (isAlreadyLoaded && formattedData?.length === 0) {
+      setFormattedData(isAlreadyLoaded);
+    }
+  }, [isAlreadyLoaded, formattedData, setFormattedData]);
 
   const {underlineWordsInSentence} = useHighlightWordToWordBank({
     pureWordsUnique,

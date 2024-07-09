@@ -45,7 +45,7 @@ const TopicContent = ({
   const [seperateLines, setSeparateLines] = useState(true);
   const [wordTest, setWordTest] = useState(false);
   const [englishOnly, setEnglishOnly] = useState(false);
-  const [engMaster, setEngMaster] = useState(false);
+  const [engMaster, setEngMaster] = useState(true);
   const [highlightMode, setHighlightMode] = useState(false);
   const [highlightedIndices, setHighlightedIndices] = useState([]);
 
