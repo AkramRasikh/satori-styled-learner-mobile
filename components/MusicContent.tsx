@@ -14,7 +14,6 @@ import TopicWordList from './TopicWordList';
 import SafeTextComponent from './SafeTextComponent';
 import {getThisTopicsWords} from '../helper-functions/get-this-topics-words';
 import useAudioTextSync from '../hooks/useAudioTextSync';
-import {generateRandomId} from '../utils/generate-random-id';
 import useContentControls from '../hooks/useContentControls';
 import LongPressedWord from './LongPressedWord';
 import LineContainer from './LineContainer';

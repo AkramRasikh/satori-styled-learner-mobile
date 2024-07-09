@@ -17,7 +17,6 @@ import SatoriLine from './SatoriLine';
 import TopicWordList from './TopicWordList';
 import {MiniSnippet} from './Snippet';
 import useContentControls from '../hooks/useContentControls';
-import {generateRandomId} from '../utils/generate-random-id';
 import {getThisTopicsWords} from '../helper-functions/get-this-topics-words';
 import useAudioTextSync from '../hooks/useAudioTextSync';
 
@@ -154,8 +153,6 @@ const TopicContent = ({
 
   const lastItem = durations[durations?.length - 1];
 
-  const isLoading = durationsLengths !== topicDataLengths;
-
   useEffect(() => {
     if (!hasAlreadyBeenUnified && durationsLengths === topicDataLengths) {
       setStructuredUnifiedData(prevState => ({
@@ -187,7 +184,7 @@ const TopicContent = ({
     setMasterPlay,
   });
 
-  if (isLoading) {
+  if (!soundRefLoaded) {
     return (
       <View
         style={{
