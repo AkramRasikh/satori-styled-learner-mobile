@@ -148,6 +148,7 @@ function App(): React.JSX.Element {
   const handleOtherTopics = () => {
     setShowOtherTopics(!showOtherTopics);
     setSelectedTopic('');
+    setSelectedSong('');
   };
   const removeSnippet = async snippetData => {
     try {
