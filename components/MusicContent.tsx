@@ -56,6 +56,7 @@ const MusicContent = ({
   const url = getFirebaseSongURL(topicName);
 
   const soundRefLoaded = soundRef?.current?.isLoaded();
+  const soundDuration = soundRef.current?._duration;
 
   useMasterAudioLoad({soundRef, url});
 
@@ -154,16 +155,14 @@ const MusicContent = ({
   useEffect(() => {
     const getCurrentTimeFunc = () => {
       soundRef.current.getCurrentTime(currentTime => {
-        const duration = soundRef.current._duration;
-
         const lastItem = topicData[topicData.length - 1];
         if (lastItem) {
-          setProgress(currentTime / duration);
+          setProgress(currentTime / soundDuration);
           setCurrentTimeState(currentTime);
         }
         const currentAudioPlaying = topicData.findIndex(
           item =>
-            currentTime < (item.endAt || duration) &&
+            currentTime < (item.endAt || soundDuration) &&
             currentTime > item.startAt,
         );
 
@@ -184,7 +183,7 @@ const MusicContent = ({
     }, 100);
 
     return () => clearInterval(interval);
-  }, [masterPlay, topicData, soundRef, setMasterPlay]);
+  }, [masterPlay, topicData, soundRef, soundDuration, setMasterPlay]);
 
   const playFromThisSentence = id => {
     if (soundRef.current) {
