@@ -78,19 +78,11 @@ const useAudioTextSync = ({
   useEffect(() => {
     const getCurrentTimeFunc = () => {
       soundRef.current.getCurrentTime(currentTime => {
-        // const lastItem = topicData[topicData.length - 1];
-        // if (lastItem) {
         setCurrentTimeState(currentTime);
-        // }
       });
     };
     const interval = setInterval(() => {
-      if (
-        soundRef.current &&
-        topicData?.length > 0 &&
-        soundRef.current?.isPlaying() &&
-        soundDuration
-      ) {
+      if (soundRef.current?.isPlaying()) {
         getCurrentTimeFunc();
       }
     }, 100);

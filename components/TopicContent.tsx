@@ -19,6 +19,7 @@ import {MiniSnippet} from './Snippet';
 import useContentControls from '../hooks/useContentControls';
 import {generateRandomId} from '../utils/generate-random-id';
 import {getThisTopicsWords} from '../helper-functions/get-this-topics-words';
+import useAudioTextSync from '../hooks/useAudioTextSync';
 
 const TopicContent = ({
   topicName,
@@ -34,7 +35,6 @@ const TopicContent = ({
   saveWordFirebase,
 }) => {
   const [masterPlay, setMasterPlay] = useState('');
-  const [progress, setProgress] = useState(0);
   const [currentTimeState, setCurrentTimeState] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isFlowingSentences, setIsFlowingSentences] = useState(true);
@@ -48,6 +48,11 @@ const TopicContent = ({
   const [engMaster, setEngMaster] = useState(false);
   const [highlightMode, setHighlightMode] = useState(false);
   const [highlightedIndices, setHighlightedIndices] = useState([]);
+
+  const topicData = japaneseLoadedContent[topicName];
+  const hasUnifiedMP3File = japaneseLoadedContentFullMP3s.some(
+    mp3 => mp3.name === topicName,
+  );
 
   const snippetsLocalAndDb = useMemo(() => {
     return mergeAndRemoveDuplicates(
@@ -63,6 +68,7 @@ const TopicContent = ({
   const url = getFirebaseAudioURL(topicName);
 
   const soundRefLoaded = soundRef?.current?.isLoaded();
+  const soundDuration = soundRef?.current?._duration || 0;
 
   useMasterAudioLoad({soundRef, url});
 
@@ -93,11 +99,6 @@ const TopicContent = ({
       );
     });
   };
-
-  const topicData = japaneseLoadedContent[topicName];
-  const hasUnifiedMP3File = japaneseLoadedContentFullMP3s.some(
-    mp3 => mp3.name === topicName,
-  );
 
   const {
     onLongPress,
@@ -167,71 +168,18 @@ const TopicContent = ({
     topicDataLengths,
   ]);
 
-  useEffect(() => {
-    if (currentTimeState && !isFlowingSentences) {
-      const currentAudioPlayingObj = durations.find(
-        item =>
-          currentTimeState < item.endAt && currentTimeState > item.startAt,
-      );
-
-      if (!currentAudioPlayingObj) {
-        return;
-      }
-      const currentAudioPlayingIndex = currentAudioPlayingObj?.position;
-
-      const newLine = topicData[currentAudioPlayingIndex];
-      const newId = newLine.id;
-      if (
-        masterPlay !== undefined &&
-        newId !== undefined &&
-        newId !== masterPlay
-      ) {
-        soundRef.current.pause();
-        soundRef.current.getCurrentTime(() => {
-          soundRef.current.setCurrentTime(currentAudioPlayingObj.endAt);
-        });
-        setIsPlaying(false);
-      }
-    }
-  }, [
+  useAudioTextSync({
     currentTimeState,
-    topicData,
-    durations,
-    masterPlay,
     isFlowingSentences,
     soundRef,
-  ]);
-
-  useEffect(() => {
-    const getCurrentTimeFunc = () => {
-      soundRef.current.getCurrentTime(currentTime => {
-        const lastItem = durations[durations.length - 1];
-        if (lastItem) {
-          setProgress(currentTime / lastItem.endAt);
-          setCurrentTimeState(currentTime);
-        }
-        const currentAudioPlaying = durations.findIndex(
-          item => currentTime < item.endAt && currentTime > item.startAt,
-        );
-
-        const newId = topicData[currentAudioPlaying]?.id;
-        if (newId !== masterPlay) {
-          setMasterPlay(newId);
-        }
-      });
-    };
-    const interval = setInterval(() => {
-      if (
-        soundRef.current &&
-        durations?.length > 0 &&
-        soundRef.current?.isPlaying()
-      ) {
-        getCurrentTimeFunc();
-      }
-    }, 100);
-
-    return () => clearInterval(interval);
-  }, [durations, masterPlay, topicData, soundRef, setMasterPlay, isLoading]);
+    setIsPlaying,
+    topicData: durations,
+    isPlaying,
+    soundDuration,
+    masterPlay,
+    setCurrentTimeState,
+    setMasterPlay,
+  });
 
   const getTimeStamp = () => {
     const id = topicName + '-' + generateRandomId();
@@ -390,7 +338,7 @@ const TopicContent = ({
             getTimeStamp={getTimeStamp}
           />
           <ProgressBarComponent
-            progress={progress}
+            progress={currentTimeState / soundDuration}
             time={currentTimeState.toFixed(2)}
           />
         </View>
