@@ -17,6 +17,7 @@ import SafeTextComponent from './SafeTextComponent';
 import {getThisTopicsWords} from '../helper-functions/get-this-topics-words';
 import useAudioTextSync from '../hooks/useAudioTextSync';
 import {generateRandomId} from '../utils/generate-random-id';
+import useContentControls from '../hooks/useContentControls';
 
 const MusicContent = ({
   topicName,
@@ -83,18 +84,20 @@ const MusicContent = ({
     topicName,
   });
 
+  useEffect(() => {
+    setThisTopicsWords(
+      getThisTopicsWords({
+        pureWordsUnique,
+        topicData,
+        japaneseLoadedWords,
+      }),
+    );
+    setFormattedData(formatTextForTargetWords());
+  }, []);
+
   const {underlineWordsInSentence} = useHighlightWordToWordBank({
     pureWordsUnique,
   });
-
-  const onLongPress = text => {
-    const longPressedText = japaneseLoadedWords.find(
-      word => word.surfaceForm === text,
-    );
-    if (longPressedText) {
-      setLongPressedWord(longPressedText);
-    }
-  };
 
   const getSafeText = targetText => {
     return (
@@ -106,48 +109,23 @@ const MusicContent = ({
     );
   };
 
-  const formatTextForTargetWords = () => {
-    const formattedText = topicData.map(sentence => {
-      return {
-        ...sentence,
-        safeText: getSafeText(sentence.targetLang),
-      };
-    });
-
-    return formattedText;
-  };
-
-  useEffect(() => {
-    setThisTopicsWords(
-      getThisTopicsWords({
-        pureWordsUnique,
-        topicData,
-        japaneseLoadedWords,
-      }),
-    );
-    // format safe text!
-    setFormattedData(formatTextForTargetWords());
-  }, []);
-
-  const playFromThisSentence = id => {
-    if (soundRef.current) {
-      const thisItem = topicData.find(item => item.id === id);
-      if (thisItem) {
-        soundRef.current.getCurrentTime(() => {
-          soundRef.current.setCurrentTime(thisItem.startAt);
-        });
-        soundRef.current.play();
-        setIsPlaying(true);
-      }
-    }
-  };
-
-  const deleteSnippet = idToBeDeleted => {
-    const newSnippets = miniSnippets.filter(
-      snippet => snippet.id !== idToBeDeleted,
-    );
-    setMiniSnippets(newSnippets);
-  };
+  const {
+    onLongPress,
+    formatTextForTargetWords,
+    playFromThisSentence,
+    deleteSnippet,
+    getLongPressedWordData,
+  } = useContentControls({
+    japaneseLoadedWords,
+    setLongPressedWord,
+    soundRef,
+    setIsPlaying,
+    setMiniSnippets,
+    longPressedWord,
+    getSafeText,
+    topicData,
+    miniSnippets,
+  });
 
   const getTimeStamp = () => {
     const id = topicName + '-' + generateRandomId();
@@ -164,17 +142,6 @@ const MusicContent = ({
     setMiniSnippets(prev => [...prev, itemToSave]);
     pauseSound();
     setIsPlaying(false);
-  };
-
-  const getLongPressedWordData = () => {
-    const surfaceForm = longPressedWord.surfaceForm;
-    const baseForm = longPressedWord.baseForm;
-    const phonetic = longPressedWord.phonetic;
-    const definition = longPressedWord.definition;
-
-    return (
-      surfaceForm + '...' + baseForm + '...' + phonetic + '...' + definition
-    );
   };
 
   if (!soundRefLoaded) {
@@ -308,7 +275,6 @@ const MusicContent = ({
           lastItem={soundDuration}
         />
       )}
-
       {soundRefLoaded && snippetsLocalAndDb?.length > 0 && (
         <SnippetContainer
           snippetsLocalAndDb={snippetsLocalAndDb}
