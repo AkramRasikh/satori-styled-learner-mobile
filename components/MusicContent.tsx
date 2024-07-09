@@ -143,24 +143,12 @@ const MusicContent = ({
     getSafeText,
     topicData,
     miniSnippets,
+    topicName,
+    masterPlay,
+    currentTimeState,
+    url,
+    pauseSound,
   });
-
-  const getTimeStamp = () => {
-    const id = topicName + '-' + generateRandomId();
-    const thisItem = topicData.find(item => item.id === masterPlay);
-    const targetLang = thisItem.targetLang;
-    const itemToSave = {
-      id,
-      sentenceId: masterPlay,
-      pointInAudio: currentTimeState,
-      url,
-      targetLang,
-      topicName,
-    };
-    setMiniSnippets(prev => [...prev, itemToSave]);
-    pauseSound();
-    setIsPlaying(false);
-  };
 
   if (!soundRefLoaded) {
     return (

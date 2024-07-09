@@ -121,6 +121,7 @@ const TopicContent = ({
     playFromThisSentence,
     deleteSnippet,
     getLongPressedWordData,
+    getTimeStamp,
   } = useContentControls({
     japaneseLoadedWords,
     setLongPressedWord,
@@ -131,6 +132,11 @@ const TopicContent = ({
     getSafeText,
     topicData: durations,
     miniSnippets,
+    topicName,
+    masterPlay,
+    currentTimeState,
+    url,
+    pauseSound,
   });
 
   useEffect(() => {
@@ -180,23 +186,6 @@ const TopicContent = ({
     setCurrentTimeState,
     setMasterPlay,
   });
-
-  const getTimeStamp = () => {
-    const id = topicName + '-' + generateRandomId();
-    const thisItem = durations.find(item => item.id === masterPlay);
-    const targetLang = thisItem.targetLang;
-    const itemToSave = {
-      id,
-      sentenceId: masterPlay,
-      pointInAudio: currentTimeState,
-      url,
-      targetLang,
-      topicName,
-    };
-    setMiniSnippets(prev => [...prev, itemToSave]);
-    pauseSound();
-    setIsPlaying(false);
-  };
 
   if (isLoading) {
     return (

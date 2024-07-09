@@ -1,3 +1,5 @@
+import {generateRandomId} from '../utils/generate-random-id';
+
 const useContentControls = ({
   japaneseLoadedWords,
   setLongPressedWord,
@@ -8,7 +10,29 @@ const useContentControls = ({
   getSafeText,
   topicData,
   miniSnippets,
+  topicName,
+  masterPlay,
+  currentTimeState,
+  url,
+  pauseSound,
 }) => {
+  const getTimeStamp = () => {
+    const id = topicName + '-' + generateRandomId();
+    const thisItem = topicData.find(item => item.id === masterPlay);
+    const targetLang = thisItem.targetLang;
+    const itemToSave = {
+      id,
+      sentenceId: masterPlay,
+      pointInAudio: currentTimeState,
+      url,
+      targetLang,
+      topicName,
+    };
+    setMiniSnippets(prev => [...prev, itemToSave]);
+    pauseSound();
+    setIsPlaying(false);
+  };
+
   const onLongPress = text => {
     const longPressedText = japaneseLoadedWords.find(
       word => word.surfaceForm === text,
@@ -64,6 +88,7 @@ const useContentControls = ({
     playFromThisSentence,
     deleteSnippet,
     getLongPressedWordData,
+    getTimeStamp,
   };
 };
 
