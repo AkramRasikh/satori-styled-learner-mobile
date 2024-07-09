@@ -10,8 +10,6 @@ import useMasterAudioLoad from '../hooks/useMasterAudioLoad';
 import SnippetTimeline from './SnippetTimeline';
 import SnippetContainer from './SnippetContainer';
 import DisplaySettings from './DisplaySettings';
-import ConditionalWrapper from '../utils/conditional-wrapper';
-import SatoriLine from './SatoriLine';
 import TopicWordList from './TopicWordList';
 import SafeTextComponent from './SafeTextComponent';
 import {getThisTopicsWords} from '../helper-functions/get-this-topics-words';
@@ -19,7 +17,7 @@ import useAudioTextSync from '../hooks/useAudioTextSync';
 import {generateRandomId} from '../utils/generate-random-id';
 import useContentControls from '../hooks/useContentControls';
 import LongPressedWord from './LongPressedWord';
-import {MiniSnippet} from './Snippet';
+import LineContainer from './LineContainer';
 
 const MusicContent = ({
   topicName,
@@ -205,87 +203,25 @@ const MusicContent = ({
         style={{
           maxHeight: height * 0.6,
         }}>
-        <View>
-          <View
-            style={{
-              flexDirection: 'row',
-              flexWrap: 'wrap',
-            }}>
-            <Text style={{fontSize: 20}}>
-              {formattedData?.map((topicSentence, index) => {
-                if (topicSentence.targetLang === '') return null;
-                const id = topicSentence.id;
-                const focusThisSentence = id === masterPlay;
-
-                const thisSnippets = snippetsLocalAndDb?.filter(
-                  item => id === item.sentenceId && item?.saved,
-                );
-
-                return (
-                  <ConditionalWrapper
-                    key={id}
-                    condition={seperateLines}
-                    wrapper={children => (
-                      <View
-                        style={{
-                          width: width * 0.9,
-                          marginBottom: 10,
-                        }}>
-                        {children}
-                      </View>
-                    )}>
-                    <Text
-                      style={{
-                        backgroundColor: focusThisSentence
-                          ? 'yellow'
-                          : 'transparent',
-                        fontSize: 20,
-                      }}>
-                      <SatoriLine
-                        id={id}
-                        sentenceIndex={index}
-                        focusThisSentence={focusThisSentence}
-                        getSafeText={getSafeText}
-                        topicSentence={topicSentence}
-                        playFromThisSentence={playFromThisSentence}
-                        wordTest={wordTest}
-                        englishOnly={englishOnly}
-                        highlightMode={highlightMode}
-                        highlightedIndices={highlightedIndices}
-                        setHighlightedIndices={setHighlightedIndices}
-                        saveWordFirebase={saveWordFirebase}
-                        engMaster={engMaster}
-                        isPlaying={isPlaying}
-                        pauseSound={pauseSound}
-                        preLoadedSafeText={topicSentence.safeText}
-                        textWidth={width * 0.9}
-                      />
-                    </Text>
-                    <View
-                      style={{
-                        flexDirection: 'row',
-                        flexWrap: 'wrap',
-                        justifyContent: 'space-around',
-                      }}>
-                      {thisSnippets?.map((item, indexB) => {
-                        return (
-                          <MiniSnippet
-                            key={indexB}
-                            index={indexB}
-                            snippet={item}
-                            setMasterAudio={setIsPlaying}
-                            masterAudio={isPlaying}
-                            soundRef={soundRef}
-                          />
-                        );
-                      })}
-                    </View>
-                  </ConditionalWrapper>
-                );
-              })}
-            </Text>
-          </View>
-        </View>
+        <LineContainer
+          formattedData={formattedData}
+          getSafeText={getSafeText}
+          playFromThisSentence={playFromThisSentence}
+          wordTest={wordTest}
+          englishOnly={englishOnly}
+          highlightedIndices={highlightedIndices}
+          setHighlightedIndices={setHighlightedIndices}
+          saveWordFirebase={saveWordFirebase}
+          engMaster={engMaster}
+          isPlaying={isPlaying}
+          pauseSound={pauseSound}
+          width={width}
+          seperateLines={seperateLines}
+          soundRef={soundRef}
+          snippetsLocalAndDb={snippetsLocalAndDb}
+          masterPlay={masterPlay}
+          highlightMode={highlightMode}
+        />
       </ScrollView>
 
       <View ref={audioControlsRef}>
