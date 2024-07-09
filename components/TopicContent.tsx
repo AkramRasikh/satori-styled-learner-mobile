@@ -100,34 +100,6 @@ const TopicContent = ({
     });
   };
 
-  const {
-    onLongPress,
-    // formatTextForTargetWords,
-    playFromThisSentence,
-    deleteSnippet,
-    getLongPressedWordData,
-  } = useContentControls({
-    japaneseLoadedWords,
-    setLongPressedWord,
-    soundRef,
-    setIsPlaying,
-    setMiniSnippets,
-    longPressedWord,
-    getSafeText,
-    topicData,
-    miniSnippets,
-  });
-
-  useEffect(() => {
-    setThisTopicsWords(
-      getThisTopicsWords({
-        pureWordsUnique,
-        topicData,
-        japaneseLoadedWords,
-      }),
-    );
-  }, []);
-
   const orderedContent = topicData.map((item, index) => {
     return {
       ...item,
@@ -142,6 +114,34 @@ const TopicContent = ({
     audioFiles: orderedContent,
     hasAlreadyBeenUnified,
   });
+
+  const {
+    onLongPress,
+    // formatTextForTargetWords,
+    playFromThisSentence,
+    deleteSnippet,
+    getLongPressedWordData,
+  } = useContentControls({
+    japaneseLoadedWords,
+    setLongPressedWord,
+    soundRef,
+    setIsPlaying,
+    setMiniSnippets,
+    longPressedWord,
+    getSafeText,
+    topicData: durations,
+    miniSnippets,
+  });
+
+  useEffect(() => {
+    setThisTopicsWords(
+      getThisTopicsWords({
+        pureWordsUnique,
+        topicData,
+        japaneseLoadedWords,
+      }),
+    );
+  }, []);
 
   const durationsLengths = durations.length;
   const topicDataLengths = topicData?.length;
