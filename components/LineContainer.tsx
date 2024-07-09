@@ -21,6 +21,7 @@ const LineContainer = ({
   masterPlay,
   highlightMode,
   seperateLines,
+  setIsPlaying,
 }) => {
   return (
     <View>

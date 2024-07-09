@@ -221,6 +221,7 @@ const MusicContent = ({
           snippetsLocalAndDb={snippetsLocalAndDb}
           masterPlay={masterPlay}
           highlightMode={highlightMode}
+          setIsPlaying={setIsPlaying}
         />
       </ScrollView>
 
