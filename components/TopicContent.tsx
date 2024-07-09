@@ -347,7 +347,7 @@ const TopicContent = ({
       {lastItem && snippetsLocalAndDb?.length > 0 && (
         <SnippetTimeline
           snippetsLocalAndDb={snippetsLocalAndDb}
-          lastItem={lastItem}
+          duration={soundDuration}
         />
       )}
 

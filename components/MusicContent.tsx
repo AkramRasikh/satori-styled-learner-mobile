@@ -19,6 +19,7 @@ import useAudioTextSync from '../hooks/useAudioTextSync';
 import {generateRandomId} from '../utils/generate-random-id';
 import useContentControls from '../hooks/useContentControls';
 import LongPressedWord from './LongPressedWord';
+import {MiniSnippet} from './Snippet';
 
 const MusicContent = ({
   topicName,
@@ -216,6 +217,10 @@ const MusicContent = ({
                 const id = topicSentence.id;
                 const focusThisSentence = id === masterPlay;
 
+                const thisSnippets = snippetsLocalAndDb?.filter(
+                  item => id === item.sentenceId && item?.saved,
+                );
+
                 return (
                   <ConditionalWrapper
                     key={id}
@@ -256,6 +261,25 @@ const MusicContent = ({
                         textWidth={width * 0.9}
                       />
                     </Text>
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        flexWrap: 'wrap',
+                        justifyContent: 'space-around',
+                      }}>
+                      {thisSnippets?.map((item, indexB) => {
+                        return (
+                          <MiniSnippet
+                            key={indexB}
+                            index={indexB}
+                            snippet={item}
+                            setMasterAudio={setIsPlaying}
+                            masterAudio={isPlaying}
+                            soundRef={soundRef}
+                          />
+                        );
+                      })}
+                    </View>
                   </ConditionalWrapper>
                 );
               })}
@@ -282,7 +306,7 @@ const MusicContent = ({
       {snippetsLocalAndDb?.length > 0 && (
         <SnippetTimeline
           snippetsLocalAndDb={snippetsLocalAndDb}
-          lastItem={soundDuration}
+          duration={soundDuration}
         />
       )}
       {soundRefLoaded && snippetsLocalAndDb?.length > 0 && (

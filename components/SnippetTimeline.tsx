@@ -1,8 +1,6 @@
 import {StyleSheet, Text, View} from 'react-native';
 
-const SnippetTimeline = ({snippetsLocalAndDb, lastItem}) => {
-  const duration = lastItem.endAt;
-
+const SnippetTimeline = ({snippetsLocalAndDb, duration}) => {
   return (
     <View>
       <View
