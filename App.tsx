@@ -209,22 +209,6 @@ function App(): React.JSX.Element {
       <ScrollView
         contentInsetAdjustmentBehavior="automatic"
         style={{padding: 10}}>
-        {topicOrSongSelected ? (
-          <View
-            style={{
-              right: 0,
-              margin: 'auto',
-              padding: 10,
-              backgroundColor: '#CCCCCC',
-              borderColor: 'black',
-              borderRadius: 10,
-              position: 'absolute',
-            }}>
-            <TouchableOpacity onPress={handleOtherTopics}>
-              <Text>More Topics</Text>
-            </TouchableOpacity>
-          </View>
-        ) : null}
         {!topicOrSongSelected || showOtherTopics ? (
           <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
             {topics?.map(topic => {
@@ -300,6 +284,7 @@ function App(): React.JSX.Element {
               snippetsForSelectedTopic={snippetsForSelectedTopic}
               removeSnippet={removeSnippet}
               saveWordFirebase={saveWordFirebase}
+              handleOtherTopics={handleOtherTopics}
             />
           ) : selectedSong ? (
             <SongComponent
@@ -313,6 +298,7 @@ function App(): React.JSX.Element {
               removeSnippet={removeSnippet}
               saveWordFirebase={saveWordFirebase}
               topicData={formattedContent}
+              handleOtherTopics={handleOtherTopics}
             />
           ) : null}
         </View>

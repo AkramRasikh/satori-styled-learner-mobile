@@ -269,10 +269,8 @@ export const MiniSnippet = ({
   index,
 }) => {
   const [isPlaying, setIsPlaying] = useState(false);
-
-  const [currentTimeState, setCurrentTimeState] = useState(0);
-
   const pointInAudio = snippet.pointInAudio;
+  const [currentTimeState, setCurrentTimeState] = useState(pointInAudio);
 
   const url = snippet.url;
   const duration = snippet.duration;
@@ -322,14 +320,11 @@ export const MiniSnippet = ({
     <View
       style={{
         alignItems: 'center',
-        paddingRight: 10,
-        borderBottomWidth: 2,
       }}>
       <View
         style={{
           flexDirection: 'row',
           justifyContent: 'space-between',
-          width: '100%',
         }}>
         <View
           style={{

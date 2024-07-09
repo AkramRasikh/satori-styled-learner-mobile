@@ -1,5 +1,6 @@
-import {Text, View} from 'react-native';
+import {View} from 'react-native';
 import TopicContent from './TopicContent';
+import TopicHeader from './TopicHeader';
 
 const TopicComponent = ({
   topicName,
@@ -13,20 +14,17 @@ const TopicComponent = ({
   addSnippet,
   removeSnippet,
   saveWordFirebase,
+  handleOtherTopics,
 }) => {
   return (
     <View
       style={{
         paddingBottom: 50,
       }}>
-      <Text
-        style={{
-          margin: 20,
-          fontSize: 18,
-          fontWeight: 'bold',
-        }}>
-        {topicName}
-      </Text>
+      <TopicHeader
+        topicName={topicName}
+        handleOtherTopics={handleOtherTopics}
+      />
       <TopicContent
         topicName={topicName}
         japaneseLoadedContent={japaneseLoadedContent}

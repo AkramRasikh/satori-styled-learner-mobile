@@ -1,5 +1,6 @@
-import {Text, View} from 'react-native';
+import {View} from 'react-native';
 import MusicContent from './MusicContent';
+import TopicHeader from './TopicHeader';
 
 const SongComponent = ({
   topicName,
@@ -12,20 +13,17 @@ const SongComponent = ({
   removeSnippet,
   saveWordFirebase,
   topicData,
+  handleOtherTopics,
 }) => {
   return (
     <View
       style={{
         paddingBottom: 50,
       }}>
-      <Text
-        style={{
-          margin: 20,
-          fontSize: 18,
-          fontWeight: 'bold',
-        }}>
-        {topicName}
-      </Text>
+      <TopicHeader
+        topicName={topicName}
+        handleOtherTopics={handleOtherTopics}
+      />
       <MusicContent
         topicName={topicName}
         pureWordsUnique={pureWordsUnique}
