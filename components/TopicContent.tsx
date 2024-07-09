@@ -47,6 +47,7 @@ const TopicContent = ({
   const [engMaster, setEngMaster] = useState(true);
   const [highlightMode, setHighlightMode] = useState(false);
   const [highlightedIndices, setHighlightedIndices] = useState([]);
+  const [formattedData, setFormattedData] = useState([]);
 
   const topicData = japaneseLoadedContent[topicName];
   const hasUnifiedMP3File = japaneseLoadedContentFullMP3s.some(
@@ -116,7 +117,7 @@ const TopicContent = ({
 
   const {
     onLongPress,
-    // formatTextForTargetWords,
+    formatTextForTargetWords,
     playFromThisSentence,
     deleteSnippet,
     getLongPressedWordData,
@@ -147,6 +148,12 @@ const TopicContent = ({
       }),
     );
   }, []);
+
+  useEffect(() => {
+    if (formattedData?.length === 0 && durations?.length > 0) {
+      setFormattedData(formatTextForTargetWords());
+    }
+  }, [formattedData, durations, formatTextForTargetWords]);
 
   const durationsLengths = durations.length;
   const topicDataLengths = topicData?.length;
@@ -184,7 +191,7 @@ const TopicContent = ({
     setMasterPlay,
   });
 
-  if (!soundRefLoaded) {
+  if (!soundRefLoaded || formattedData?.length === 0) {
     return (
       <View
         style={{
@@ -241,7 +248,7 @@ const TopicContent = ({
               flexWrap: 'wrap',
             }}>
             <Text style={{fontSize: 20}}>
-              {topicData?.map((topicSentence, index) => {
+              {formattedData?.map((topicSentence, index) => {
                 const id = topicSentence.id;
                 const focusThisSentence = id === masterPlay;
 
@@ -273,7 +280,6 @@ const TopicContent = ({
                         id={id}
                         sentenceIndex={index}
                         focusThisSentence={focusThisSentence}
-                        getSafeText={getSafeText}
                         topicSentence={topicSentence}
                         playFromThisSentence={playFromThisSentence}
                         wordTest={wordTest}
@@ -285,6 +291,8 @@ const TopicContent = ({
                         engMaster={engMaster}
                         isPlaying={isPlaying}
                         pauseSound={pauseSound}
+                        preLoadedSafeText={topicSentence.safeText}
+                        textWidth={width * 0.9}
                       />
                     </Text>
                     <View
