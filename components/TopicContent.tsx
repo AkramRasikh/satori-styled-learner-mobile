@@ -338,10 +338,13 @@ const TopicContent = ({
             forwardSound={forwardSound}
             getTimeStamp={getTimeStamp}
           />
-          <ProgressBarComponent
-            progress={currentTimeState / soundDuration}
-            time={currentTimeState.toFixed(2)}
-          />
+          {soundDuration && currentTimeState ? (
+            <ProgressBarComponent
+              endTime={soundDuration}
+              progress={currentTimeState / soundDuration}
+              time={currentTimeState.toFixed(2)}
+            />
+          ) : null}
         </View>
       )}
       {lastItem && snippetsLocalAndDb?.length > 0 && (

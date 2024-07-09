@@ -298,10 +298,13 @@ const MusicContent = ({
           forwardSound={forwardSound}
           getTimeStamp={getTimeStamp}
         />
-        <ProgressBarComponent
-          progress={currentTimeState / soundDuration}
-          time={currentTimeState.toFixed(2)}
-        />
+        {soundDuration && currentTimeState ? (
+          <ProgressBarComponent
+            progress={currentTimeState / soundDuration}
+            time={currentTimeState.toFixed(2)}
+            endTime={soundDuration}
+          />
+        ) : null}
       </View>
       {snippetsLocalAndDb?.length > 0 && (
         <SnippetTimeline
