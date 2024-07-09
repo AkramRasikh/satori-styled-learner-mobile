@@ -2,17 +2,7 @@ import React, {useState} from 'react';
 import Clipboard from '@react-native-clipboard/clipboard';
 import {Text, TouchableOpacity, View} from 'react-native';
 import HighlightTextZone from './HighlightTextZone';
-
-const filterElementsById = (elements, targetId) => {
-  const filteredElements = React.Children.toArray(elements).filter(
-    element => React.isValidElement(element) && element.props.id === targetId,
-  );
-  // Map filtered elements to strings
-  const elementTexts = filteredElements.map(element => element.props.children);
-
-  // Join strings with ', '
-  return elementTexts.join(', ');
-};
+import {filterElementsById} from '../utils/filter-elements-by-id';
 
 const SatoriLine = ({
   id,
@@ -30,10 +20,11 @@ const SatoriLine = ({
   engMaster,
   isPlaying,
   pauseSound,
+  preLoadedSafeText,
 }) => {
   const [showEng, setShowEng] = useState(false);
   const [showNotes, setShowNotes] = useState(false);
-  const safeText = getSafeText(topicSentence.targetLang);
+  const safeText = preLoadedSafeText || getSafeText(topicSentence.targetLang);
 
   const filteredElements = filterElementsById(safeText, 'targetWord');
 

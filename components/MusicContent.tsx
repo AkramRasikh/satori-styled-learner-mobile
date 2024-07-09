@@ -42,6 +42,7 @@ const MusicContent = ({
   const [engMaster, setEngMaster] = useState(false);
   const [highlightMode, setHighlightMode] = useState(false);
   const [highlightedIndices, setHighlightedIndices] = useState([]);
+  const [formattedData, setFormattedData] = useState([]);
 
   const snippetsLocalAndDb = useMemo(() => {
     return mergeAndRemoveDuplicates(
@@ -105,6 +106,17 @@ const MusicContent = ({
     );
   };
 
+  const formatTextForTargetWords = () => {
+    const formattedText = topicData.map(sentence => {
+      return {
+        ...sentence,
+        safeText: getSafeText(sentence.targetLang),
+      };
+    });
+
+    return formattedText;
+  };
+
   useEffect(() => {
     setThisTopicsWords(
       getThisTopicsWords({
@@ -113,6 +125,8 @@ const MusicContent = ({
         japaneseLoadedWords,
       }),
     );
+    // format safe text!
+    setFormattedData(formatTextForTargetWords());
   }, []);
 
   const playFromThisSentence = id => {
@@ -220,7 +234,7 @@ const MusicContent = ({
               flexWrap: 'wrap',
             }}>
             <Text style={{fontSize: 20}}>
-              {topicData?.map((topicSentence, index) => {
+              {formattedData?.map((topicSentence, index) => {
                 if (topicSentence.targetLang === '') return null;
                 const id = topicSentence.id;
                 const focusThisSentence = id === masterPlay;
@@ -261,6 +275,7 @@ const MusicContent = ({
                         engMaster={engMaster}
                         isPlaying={isPlaying}
                         pauseSound={pauseSound}
+                        preLoadedSafeText={topicSentence.safeText}
                       />
                     </Text>
                   </ConditionalWrapper>
