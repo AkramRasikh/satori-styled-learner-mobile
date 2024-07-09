@@ -68,10 +68,6 @@ const MusicContent = ({
   useMasterAudioLoad({soundRef, url});
 
   useEffect(() => {
-    console.log('## japaneseLoadedWords', {
-      currentLength: japaneseLoadedWords?.length,
-      init: initJapaneseWordsList,
-    });
     if (japaneseLoadedWords?.length !== initJapaneseWordsList) {
       setUpdateWordList(true);
       setInitJapaneseWordsList(japaneseLoadedWords.length);
