@@ -14,6 +14,7 @@ import {addSnippetAPI, deleteSnippetAPI} from './api/snippet';
 import TrackPlayer, {Capability} from 'react-native-track-player';
 import saveWordAPI from './api/save-word';
 import SongComponent from './components/SongComponent';
+import {getTopicsToStudy} from './api/words-to-study';
 
 function App(): React.JSX.Element {
   const [data, setData] = useState<any>(null);
@@ -25,6 +26,7 @@ function App(): React.JSX.Element {
   const [masterSnippetState, setMasterSnippetState] = useState([]);
   const [newWordsAdded, setNewWordsAdded] = useState([]);
   const [showOtherTopics, setShowOtherTopics] = useState(true);
+  const [topicsToStudyState, setTopicsToStudyState] = useState(null);
   const [japaneseLoadedSongsState, setJapaneseLoadedSongsState] = useState([]);
 
   useEffect(() => {
@@ -62,6 +64,8 @@ function App(): React.JSX.Element {
     const fetchData = async () => {
       try {
         const results = await getAllData();
+        const topicsToStudy = await getTopicsToStudy();
+        setTopicsToStudyState(topicsToStudy);
         const japaneseLoadedSongs = results?.japaneseLoadedSongs.filter(
           item => item !== null,
         );
@@ -215,6 +219,9 @@ function App(): React.JSX.Element {
               const hasUnifiedMP3File = japaneseLoadedContentFullMP3s.some(
                 mp3 => mp3.name === topic,
               );
+              const numberOfWordsToStudy = topicsToStudyState[topic];
+              // console.log('## topicsToStudyState::', topicsToStudyState);
+
               return (
                 <View key={topic}>
                   <TouchableOpacity
@@ -230,7 +237,10 @@ function App(): React.JSX.Element {
                         selectedTopic === topic ? 'green' : 'transparent',
                     }}>
                     <Text>
-                      {topic} {!hasUnifiedMP3File ? '🔕' : ''}
+                      {topic} {!hasUnifiedMP3File ? '🔕' : ''}{' '}
+                      {numberOfWordsToStudy ? (
+                        <span>{numberOfWordsToStudy}</span>
+                      ) : null}
                     </Text>
                   </TouchableOpacity>
                 </View>
