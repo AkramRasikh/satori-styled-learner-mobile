@@ -14,7 +14,10 @@ import {addSnippetAPI, deleteSnippetAPI} from './api/snippet';
 import TrackPlayer, {Capability} from 'react-native-track-player';
 import saveWordAPI from './api/save-word';
 import SongComponent from './components/SongComponent';
-import {getTopicsToStudy} from './api/words-to-study';
+import {
+  getThisTopicsWordsToStudyAPI,
+  getTopicsToStudy,
+} from './api/words-to-study';
 
 function App(): React.JSX.Element {
   const [data, setData] = useState<any>(null);
@@ -28,6 +31,9 @@ function App(): React.JSX.Element {
   const [showOtherTopics, setShowOtherTopics] = useState(true);
   const [topicsToStudyState, setTopicsToStudyState] = useState(null);
   const [japaneseLoadedSongsState, setJapaneseLoadedSongsState] = useState([]);
+  const [japaneseWordsToStudyState, setJapaneseWordsToStudyState] = useState(
+    {},
+  );
 
   useEffect(() => {
     async function setupPlayer() {
@@ -149,6 +155,18 @@ function App(): React.JSX.Element {
     }
   };
 
+  const getThisTopicsWordsFunc = async topic => {
+    try {
+      const res = await getThisTopicsWordsToStudyAPI({topic});
+      setJapaneseWordsToStudyState({
+        ...japaneseWordsToStudyState,
+        topic: res,
+      });
+    } catch (error) {
+      console.log('## getThisTopicsWordsFunc Err:', error);
+    }
+  };
+
   const handleOtherTopics = () => {
     setShowOtherTopics(!showOtherTopics);
     setSelectedTopic('');
@@ -220,7 +238,6 @@ function App(): React.JSX.Element {
                 mp3 => mp3.name === topic,
               );
               const numberOfWordsToStudy = topicsToStudyState[topic];
-              // console.log('## topicsToStudyState::', topicsToStudyState);
 
               return (
                 <View key={topic}>
@@ -239,7 +256,7 @@ function App(): React.JSX.Element {
                     <Text>
                       {topic} {!hasUnifiedMP3File ? '🔕' : ''}{' '}
                       {numberOfWordsToStudy ? (
-                        <span>{numberOfWordsToStudy}</span>
+                        <Text>({numberOfWordsToStudy})</Text>
                       ) : null}
                     </Text>
                   </TouchableOpacity>
@@ -295,6 +312,9 @@ function App(): React.JSX.Element {
               removeSnippet={removeSnippet}
               saveWordFirebase={saveWordFirebase}
               handleOtherTopics={handleOtherTopics}
+              hasWordsToStudy={topicsToStudyState[selectedTopic]}
+              japaneseWordsToStudyState={japaneseWordsToStudyState}
+              getThisTopicsWordsFunc={getThisTopicsWordsFunc}
             />
           ) : selectedSong ? (
             <SongComponent

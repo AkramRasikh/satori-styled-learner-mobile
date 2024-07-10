@@ -1,6 +1,7 @@
 import {View} from 'react-native';
 import TopicContent from './TopicContent';
 import TopicHeader from './TopicHeader';
+import {useEffect} from 'react';
 
 const TopicComponent = ({
   topicName,
@@ -15,7 +16,19 @@ const TopicComponent = ({
   removeSnippet,
   saveWordFirebase,
   handleOtherTopics,
+  hasWordsToStudy,
+  japaneseWordsToStudyState,
+  getThisTopicsWordsFunc,
 }) => {
+  useEffect(() => {
+    const prefixName = topicName.split('-')[0];
+    if (
+      hasWordsToStudy &&
+      !japaneseWordsToStudyState?.hasOwnProperty(prefixName)
+    ) {
+      getThisTopicsWordsFunc(prefixName);
+    }
+  }, []);
   return (
     <View
       style={{
