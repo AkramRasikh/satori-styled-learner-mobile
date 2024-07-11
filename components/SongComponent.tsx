@@ -1,6 +1,7 @@
 import {View} from 'react-native';
 import MusicContent from './MusicContent';
 import TopicHeader from './TopicHeader';
+import {useEffect} from 'react';
 
 const SongComponent = ({
   topicName,
@@ -14,7 +15,18 @@ const SongComponent = ({
   saveWordFirebase,
   topicData,
   handleOtherTopics,
+  japaneseWordsToStudyState,
+  hasWordsToStudy,
+  getThisTopicsWordsFunc,
 }) => {
+  const hasWordsInState = japaneseWordsToStudyState?.hasOwnProperty(topicName);
+
+  useEffect(() => {
+    if (hasWordsToStudy && !hasWordsInState) {
+      getThisTopicsWordsFunc(topicName, true);
+    }
+  }, []);
+
   return (
     <View
       style={{
@@ -35,6 +47,9 @@ const SongComponent = ({
         snippetsForSelectedTopic={snippetsForSelectedTopic}
         saveWordFirebase={saveWordFirebase}
         topicData={topicData}
+        wordsToStudy={
+          hasWordsInState ? japaneseWordsToStudyState[topicName] : null
+        }
       />
     </View>
   );

@@ -17,6 +17,7 @@ import useAudioTextSync from '../hooks/useAudioTextSync';
 import useContentControls from '../hooks/useContentControls';
 import LongPressedWord from './LongPressedWord';
 import LineContainer from './LineContainer';
+import WordStudySection from './WordStudySection';
 
 const MusicContent = ({
   topicName,
@@ -29,6 +30,7 @@ const MusicContent = ({
   topicData,
   setStructuredUnifiedData,
   structuredUnifiedData,
+  wordsToStudy,
 }) => {
   const [masterPlay, setMasterPlay] = useState('');
   const [currentTimeState, setCurrentTimeState] = useState(0);
@@ -47,6 +49,7 @@ const MusicContent = ({
   const [formattedData, setFormattedData] = useState([]);
   const [initJapaneseWordsList, setInitJapaneseWordsList] = useState(null);
   const [updateWordList, setUpdateWordList] = useState(false);
+  const [showWordStudyList, setShowWordStudyList] = useState(true);
 
   const isAlreadyLoaded = structuredUnifiedData[topicName];
   const snippetsLocalAndDb = useMemo(() => {
@@ -184,6 +187,9 @@ const MusicContent = ({
 
   return (
     <View>
+      {showWordStudyList && wordsToStudy ? (
+        <WordStudySection wordsToStudy={wordsToStudy} />
+      ) : null}
       <DisplaySettings
         seperateLines={seperateLines}
         setSeparateLines={setSeparateLines}
@@ -199,6 +205,8 @@ const MusicContent = ({
         setIsFlowingSentences={setIsFlowingSentences}
         setEngMaster={setEngMaster}
         engMaster={engMaster}
+        showWordStudyList={showWordStudyList}
+        setShowWordStudyList={setShowWordStudyList}
       />
       {openTopicWords && thisTopicsWords?.length > 0 ? (
         <TopicWordList thisTopicsWords={thisTopicsWords} />
@@ -232,7 +240,6 @@ const MusicContent = ({
           setHighlightMode={setHighlightMode}
         />
       </ScrollView>
-
       <View ref={audioControlsRef}>
         <SoundComponent
           soundRef={soundRef}

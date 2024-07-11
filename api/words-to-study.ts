@@ -23,8 +23,11 @@ export const getTopicsToStudy = async () => {
   }
 };
 
-export const getThisTopicsWordsToStudyAPI = async ({topic}) => {
-  const url = BACKEND_ENDPOINT + '/get-japanese-words-topic';
+export const getThisTopicsWordsToStudyAPI = async ({topic, isMusic}) => {
+  const param = isMusic
+    ? '/get-japanese-words-song'
+    : '/get-japanese-words-topic';
+  const url = BACKEND_ENDPOINT + param;
 
   try {
     const response = await fetch(url, {

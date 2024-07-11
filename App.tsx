@@ -155,9 +155,9 @@ function App(): React.JSX.Element {
     }
   };
 
-  const getThisTopicsWordsFunc = async topic => {
+  const getThisTopicsWordsFunc = async (topic, isMusic) => {
     try {
-      const res = await getThisTopicsWordsToStudyAPI({topic});
+      const res = await getThisTopicsWordsToStudyAPI({topic, isMusic});
       setJapaneseWordsToStudyState({
         ...japaneseWordsToStudyState,
         [topic]: res,
@@ -273,6 +273,8 @@ function App(): React.JSX.Element {
         {!topicOrSongSelected || showOtherTopics ? (
           <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
             {japaneseLoadedSongsState?.map(songData => {
+              const numberOfWordsToStudy = topicsToStudyState[songData.title];
+
               return (
                 <View key={songData.id}>
                   <TouchableOpacity
@@ -289,7 +291,12 @@ function App(): React.JSX.Element {
                           ? 'green'
                           : 'transparent',
                     }}>
-                    <Text>{songData.title}</Text>
+                    <Text>
+                      {songData.title}{' '}
+                      {numberOfWordsToStudy ? (
+                        <Text>({numberOfWordsToStudy})</Text>
+                      ) : null}
+                    </Text>
                   </TouchableOpacity>
                 </View>
               );
@@ -329,6 +336,9 @@ function App(): React.JSX.Element {
               saveWordFirebase={saveWordFirebase}
               topicData={formattedContent}
               handleOtherTopics={handleOtherTopics}
+              japaneseWordsToStudyState={japaneseWordsToStudyState}
+              hasWordsToStudy={topicsToStudyState[selectedSong]}
+              getThisTopicsWordsFunc={getThisTopicsWordsFunc}
             />
           ) : null}
         </View>
