@@ -18,6 +18,7 @@ import {getThisTopicsWords} from '../helper-functions/get-this-topics-words';
 import useAudioTextSync from '../hooks/useAudioTextSync';
 import LineContainer from './LineContainer';
 import SafeTextComponent from './SafeTextComponent';
+import WordStudySection from './WordStudySection';
 
 const TopicContent = ({
   topicName,
@@ -31,6 +32,7 @@ const TopicContent = ({
   removeSnippet,
   snippetsForSelectedTopic,
   saveWordFirebase,
+  wordsToStudy,
 }) => {
   const [masterPlay, setMasterPlay] = useState('');
   const [currentTimeState, setCurrentTimeState] = useState(0);
@@ -49,6 +51,7 @@ const TopicContent = ({
   const [formattedData, setFormattedData] = useState([]);
   const [initJapaneseWordsList, setInitJapaneseWordsList] = useState(null);
   const [updateWordList, setUpdateWordList] = useState(false);
+  const [showWordStudyList, setShowWordStudyList] = useState(true);
 
   const topicData = japaneseLoadedContent[topicName];
   const hasUnifiedMP3File = japaneseLoadedContentFullMP3s.some(
@@ -217,6 +220,9 @@ const TopicContent = ({
 
   return (
     <View>
+      {showWordStudyList && wordsToStudy ? (
+        <WordStudySection wordsToStudy={wordsToStudy} />
+      ) : null}
       <DisplaySettings
         seperateLines={seperateLines}
         setSeparateLines={setSeparateLines}
@@ -232,6 +238,8 @@ const TopicContent = ({
         setIsFlowingSentences={setIsFlowingSentences}
         engMaster={engMaster}
         setEngMaster={setEngMaster}
+        showWordStudyList={showWordStudyList}
+        setShowWordStudyList={setShowWordStudyList}
       />
       {openTopicWords && thisTopicsWords?.length > 0 ? (
         <TopicWordList thisTopicsWords={thisTopicsWords} />

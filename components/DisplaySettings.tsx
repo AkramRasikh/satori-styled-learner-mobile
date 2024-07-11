@@ -16,6 +16,8 @@ const DisplaySettings = ({
   setIsFlowingSentences,
   engMaster,
   setEngMaster,
+  showWordStudyList,
+  setShowWordStudyList,
 }) => {
   return (
     <View
@@ -80,6 +82,15 @@ const DisplaySettings = ({
           Word list
         </Text>
         <SwitchButton isOn={openTopicWords} setIsOn={setOpenTopicWords} />
+      </View>
+      <View>
+        <Text
+          style={{
+            alignSelf: 'center',
+          }}>
+          Cards
+        </Text>
+        <SwitchButton isOn={showWordStudyList} setIsOn={setShowWordStudyList} />
       </View>
       <View>
         <Text

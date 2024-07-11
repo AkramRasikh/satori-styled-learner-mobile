@@ -20,15 +20,15 @@ const TopicComponent = ({
   japaneseWordsToStudyState,
   getThisTopicsWordsFunc,
 }) => {
+  const prefixName = topicName.split('-')[0];
+  const hasWordsInState = japaneseWordsToStudyState?.hasOwnProperty(prefixName);
+
   useEffect(() => {
-    const prefixName = topicName.split('-')[0];
-    if (
-      hasWordsToStudy &&
-      !japaneseWordsToStudyState?.hasOwnProperty(prefixName)
-    ) {
+    if (hasWordsToStudy && !hasWordsInState) {
       getThisTopicsWordsFunc(prefixName);
     }
   }, []);
+
   return (
     <View
       style={{
@@ -50,6 +50,9 @@ const TopicComponent = ({
         snippetsForSelectedTopic={snippetsForSelectedTopic}
         removeSnippet={removeSnippet}
         saveWordFirebase={saveWordFirebase}
+        wordsToStudy={
+          hasWordsInState ? japaneseWordsToStudyState[prefixName] : null
+        }
       />
     </View>
   );

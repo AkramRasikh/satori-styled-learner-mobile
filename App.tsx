@@ -160,7 +160,7 @@ function App(): React.JSX.Element {
       const res = await getThisTopicsWordsToStudyAPI({topic});
       setJapaneseWordsToStudyState({
         ...japaneseWordsToStudyState,
-        topic: res,
+        [topic]: res,
       });
     } catch (error) {
       console.log('## getThisTopicsWordsFunc Err:', error);
