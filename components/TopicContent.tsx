@@ -17,8 +17,8 @@ import useContentControls from '../hooks/useContentControls';
 import {getThisTopicsWords} from '../helper-functions/get-this-topics-words';
 import useAudioTextSync from '../hooks/useAudioTextSync';
 import LineContainer from './LineContainer';
-import SafeTextComponent from './SafeTextComponent';
 import WordStudySection from './WordStudySection';
+import LongPressedWord from './LongPressedWord';
 
 const TopicContent = ({
   topicName,
@@ -38,7 +38,7 @@ const TopicContent = ({
   const [currentTimeState, setCurrentTimeState] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isFlowingSentences, setIsFlowingSentences] = useState(true);
-  const [longPressedWord, setLongPressedWord] = useState();
+  const [longPressedWord, setLongPressedWord] = useState([]);
   const [miniSnippets, setMiniSnippets] = useState([]);
   const [thisTopicsWords, setThisTopicsWords] = useState([]);
   const [openTopicWords, setOpenTopicWords] = useState(false);
@@ -249,18 +249,9 @@ const TopicContent = ({
       {openTopicWords && thisTopicsWords?.length > 0 ? (
         <TopicWordList thisTopicsWords={thisTopicsWords} />
       ) : null}
-      {longPressedWord ? (
-        <View
-          style={{
-            marginBottom: 15,
-            borderTopColor: 'gray',
-            borderTopWidth: 2,
-            padding: 5,
-          }}>
-          <Text>{getLongPressedWordData()}</Text>
-        </View>
+      {longPressedWord?.length ? (
+        <LongPressedWord getLongPressedWordData={getLongPressedWordData} />
       ) : null}
-
       <ScrollView
         contentInsetAdjustmentBehavior="automatic"
         style={{

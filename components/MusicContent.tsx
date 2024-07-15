@@ -11,7 +11,6 @@ import SnippetTimeline from './SnippetTimeline';
 import SnippetContainer from './SnippetContainer';
 import DisplaySettings from './DisplaySettings';
 import TopicWordList from './TopicWordList';
-import SafeTextComponent from './SafeTextComponent';
 import {getThisTopicsWords} from '../helper-functions/get-this-topics-words';
 import useAudioTextSync from '../hooks/useAudioTextSync';
 import useContentControls from '../hooks/useContentControls';
@@ -36,7 +35,7 @@ const MusicContent = ({
   const [currentTimeState, setCurrentTimeState] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isFlowingSentences, setIsFlowingSentences] = useState(true);
-  const [longPressedWord, setLongPressedWord] = useState();
+  const [longPressedWord, setLongPressedWord] = useState([]);
   const [miniSnippets, setMiniSnippets] = useState([]);
   const [thisTopicsWords, setThisTopicsWords] = useState([]);
   const [openTopicWords, setOpenTopicWords] = useState(false);
@@ -123,13 +122,18 @@ const MusicContent = ({
   });
 
   const getSafeText = targetText => {
-    return (
-      <SafeTextComponent
-        underlineWordsInSentence={underlineWordsInSentence}
-        targetText={targetText}
-        onLongPress={onLongPress}
-      />
-    );
+    const textSegments = underlineWordsInSentence(targetText);
+    return textSegments.map((segment, index) => {
+      return (
+        <Text
+          key={index}
+          id={segment.id}
+          style={[segment.style]}
+          onLongPress={() => onLongPress(segment.text)}>
+          {segment.text}
+        </Text>
+      );
+    });
   };
 
   const {
@@ -211,7 +215,7 @@ const MusicContent = ({
       {openTopicWords && thisTopicsWords?.length > 0 ? (
         <TopicWordList thisTopicsWords={thisTopicsWords} />
       ) : null}
-      {longPressedWord ? (
+      {longPressedWord?.length ? (
         <LongPressedWord getLongPressedWordData={getLongPressedWordData} />
       ) : null}
       <ScrollView
@@ -238,6 +242,7 @@ const MusicContent = ({
           highlightMode={highlightMode}
           setIsPlaying={setIsPlaying}
           setHighlightMode={setHighlightMode}
+          onLongPress={onLongPress}
         />
       </ScrollView>
       <View ref={audioControlsRef}>

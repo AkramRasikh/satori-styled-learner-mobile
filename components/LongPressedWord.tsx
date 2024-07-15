@@ -9,7 +9,7 @@ const LongPressedWord = ({getLongPressedWordData}) => {
         borderTopWidth: 2,
         padding: 5,
       }}>
-      <Text>Long Pressed: {getLongPressedWordData()}</Text>
+      <Text>{getLongPressedWordData()}</Text>
     </View>
   );
 };
