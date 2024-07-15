@@ -96,13 +96,18 @@ const TopicContent = ({
   }, [japaneseLoadedWords, initJapaneseWordsList]);
 
   const getSafeText = targetText => {
-    return (
-      <SafeTextComponent
-        underlineWordsInSentence={underlineWordsInSentence}
-        targetText={targetText}
-        onLongPress={onLongPress}
-      />
-    );
+    const textSegments = underlineWordsInSentence(targetText);
+    return textSegments.map((segment, index) => {
+      return (
+        <Text
+          key={index}
+          id={segment.id}
+          style={[segment.style]}
+          onLongPress={() => onLongPress(segment.text)}>
+          {segment.text}
+        </Text>
+      );
+    });
   };
 
   const orderedContent = topicData.map((item, index) => {
