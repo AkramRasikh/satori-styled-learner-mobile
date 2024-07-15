@@ -34,11 +34,11 @@ const useContentControls = ({
   };
 
   const onLongPress = text => {
-    const longPressedText = japaneseLoadedWords.find(
-      word => word.surfaceForm === text,
+    const longPressedTexts = japaneseLoadedWords.filter(word =>
+      text.includes(word.surfaceForm),
     );
-    if (longPressedText) {
-      setLongPressedWord(longPressedText);
+    if (longPressedTexts.length > 0) {
+      setLongPressedWord(longPressedTexts);
     }
   };
   const formatTextForTargetWords = () => {
@@ -72,14 +72,30 @@ const useContentControls = ({
   };
 
   const getLongPressedWordData = () => {
-    const surfaceForm = longPressedWord.surfaceForm;
-    const baseForm = longPressedWord.baseForm;
-    const phonetic = longPressedWord.phonetic;
-    const definition = longPressedWord.definition;
+    return longPressedWord.map((word, index) => {
+      const surfaceForm = word.surfaceForm;
+      const baseForm = word.baseForm;
+      const phonetic = word.phonetic;
+      const definition = word.definition;
 
-    return (
-      surfaceForm + '...' + baseForm + '...' + phonetic + '...' + definition
-    );
+      const isLastInArr = index + 1 === longPressedWord.length;
+
+      const newLine = !isLastInArr ? '\n' : '';
+      const indexToNumber = index + 1;
+
+      return (
+        indexToNumber +
+        ') ' +
+        surfaceForm +
+        ', ' +
+        baseForm +
+        ', ' +
+        phonetic +
+        ', ' +
+        definition +
+        newLine
+      );
+    });
   };
 
   return {
