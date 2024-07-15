@@ -285,6 +285,7 @@ const TopicContent = ({
           highlightMode={highlightMode}
           setIsPlaying={setIsPlaying}
           setHighlightMode={setHighlightMode}
+          onLongPress={onLongPress}
         />
       </ScrollView>
       {hasUnifiedMP3File && (

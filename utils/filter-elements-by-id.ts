@@ -5,8 +5,5 @@ export const filterElementsById = (elements, targetId) => {
     element => React.isValidElement(element) && element.props.id === targetId,
   );
   // Map filtered elements to strings
-  const elementTexts = filteredElements.map(element => element.props.children);
-
-  // Join strings with ', '
-  return elementTexts.join(', ');
+  return filteredElements.map(element => element.props.children);
 };

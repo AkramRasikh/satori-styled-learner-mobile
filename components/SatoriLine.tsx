@@ -22,6 +22,7 @@ const SatoriLine = ({
   safeText,
   textWidth,
   setHighlightMode,
+  onLongPress,
 }) => {
   const [showEng, setShowEng] = useState(false);
   const [showNotes, setShowNotes] = useState(false);
@@ -90,10 +91,25 @@ const SatoriLine = ({
       {wordTest && filteredElements.length > 0 ? (
         <View
           style={{
-            paddingTop: 10,
+            paddingTop: 5,
+            paddingBottom: 5,
             width: textWidth,
           }}>
-          <Text style={{fontSize: 20}}>Target Words: {filteredElements}</Text>
+          <Text style={{fontSize: 20}}>
+            Target Words:{' '}
+            {filteredElements?.map((wordEl, index) => {
+              const isLastInArr = index + 1 === filteredElements.length;
+              return (
+                <View key={index}>
+                  <TouchableOpacity onLongPress={() => onLongPress(wordEl)}>
+                    <Text>
+                      {wordEl} {!isLastInArr ? ', ' : ''}
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              );
+            })}
+          </Text>
         </View>
       ) : wordTest && filteredElements.length === 0 ? (
         <View
