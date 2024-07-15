@@ -329,8 +329,8 @@ export const MiniSnippet = ({
         <View
           style={{
             backgroundColor: isPlaying ? 'green' : 'red',
-            padding: 10,
-            borderRadius: 10,
+            padding: 5,
+            borderRadius: 5,
           }}>
           {isPlaying ? (
             <TouchableOpacity onPress={pauseSound}>
