@@ -226,6 +226,21 @@ function App(): React.JSX.Element {
 
   const topicOrSongSelected = selectedTopic || selectedSong;
 
+  const generalTopicObj = {};
+  topics.forEach(item => {
+    const numberOfWordsToStudy = topicsToStudyState[item];
+    const splitWord = item.split('-').slice(0, -1).join('-');
+    const existsInObj = generalTopicObj[splitWord];
+    if (existsInObj) {
+      const newNumber =
+        generalTopicObj[splitWord] +
+        (numberOfWordsToStudy ? numberOfWordsToStudy : 0);
+      generalTopicObj[splitWord] = newNumber;
+    } else {
+      generalTopicObj[splitWord] = numberOfWordsToStudy || 0;
+    }
+  });
+
   return (
     <SafeAreaView style={{backgroundColor: '#D3D3D3'}}>
       <ScrollView
@@ -238,6 +253,7 @@ function App(): React.JSX.Element {
                 mp3 => mp3.name === topic,
               );
               const numberOfWordsToStudy = topicsToStudyState[topic];
+              const generalTopicName = topic.split('-').slice(0, -1).join('-');
 
               return (
                 <View key={topic}>
@@ -254,7 +270,7 @@ function App(): React.JSX.Element {
                         selectedTopic === topic ? 'green' : 'transparent',
                     }}>
                     <Text>
-                      {topic} {!hasUnifiedMP3File ? '🔕' : ''}{' '}
+                      {generalTopicName} {!hasUnifiedMP3File ? '🔕' : ''}{' '}
                       {numberOfWordsToStudy ? (
                         <Text>({numberOfWordsToStudy})</Text>
                       ) : null}
