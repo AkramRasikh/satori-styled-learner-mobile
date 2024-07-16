@@ -34,6 +34,7 @@ function App(): React.JSX.Element {
   const [japaneseWordsToStudyState, setJapaneseWordsToStudyState] = useState(
     {},
   );
+  const [generalTopicState, setGeneralTopicState] = useState('');
 
   useEffect(() => {
     async function setupPlayer() {
@@ -119,6 +120,10 @@ function App(): React.JSX.Element {
       setSelectedTopic(topic);
     }
     setShowOtherTopics(false);
+  };
+
+  const handleShowGeneralTopic = generalTopic => {
+    setGeneralTopicState(generalTopic);
   };
 
   const handleShowMusic = song => {
@@ -241,19 +246,71 @@ function App(): React.JSX.Element {
     }
   });
 
+  const generalTopicObjKeys = Object.keys(generalTopicObj);
+
+  const topicsToDisplay = topics.filter(topic => {
+    const generalTopicName = topic.split('-').slice(0, -1).join('-');
+    if (generalTopicName === generalTopicState) {
+      return true;
+    } else {
+      false;
+    }
+  });
+
   return (
     <SafeAreaView style={{backgroundColor: '#D3D3D3'}}>
       <ScrollView
         contentInsetAdjustmentBehavior="automatic"
         style={{padding: 10}}>
+        {selectedSong || selectedTopic || generalTopicState === '' ? null : (
+          <View>
+            <TouchableOpacity
+              onPress={() => handleShowGeneralTopic('')}
+              style={{
+                backgroundColor: '#CCCCCC',
+                borderColor: 'black',
+                borderRadius: 10,
+                padding: 10,
+              }}>
+              <Text>More Topics</Text>
+            </TouchableOpacity>
+          </View>
+        )}
+        {!generalTopicState && (
+          <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
+            {generalTopicObjKeys?.map(generalTopic => {
+              const numberOfWordsToStudy = generalTopicObj[generalTopic];
+              return (
+                <View key={generalTopic}>
+                  <TouchableOpacity
+                    onPress={() => handleShowGeneralTopic(generalTopic)}
+                    style={{
+                      borderWidth: 1,
+                      borderColor: '#999999',
+                      borderRadius: 20,
+                      paddingVertical: 10,
+                      paddingHorizontal: 15,
+                      margin: 5,
+                    }}>
+                    <Text>
+                      {generalTopic}{' '}
+                      {numberOfWordsToStudy ? (
+                        <Text>({numberOfWordsToStudy})</Text>
+                      ) : null}
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              );
+            })}
+          </View>
+        )}
         {!topicOrSongSelected || showOtherTopics ? (
           <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
-            {topics?.map(topic => {
+            {topicsToDisplay?.map(topic => {
               const hasUnifiedMP3File = japaneseLoadedContentFullMP3s.some(
                 mp3 => mp3.name === topic,
               );
               const numberOfWordsToStudy = topicsToStudyState[topic];
-              const generalTopicName = topic.split('-').slice(0, -1).join('-');
 
               return (
                 <View key={topic}>
@@ -270,7 +327,7 @@ function App(): React.JSX.Element {
                         selectedTopic === topic ? 'green' : 'transparent',
                     }}>
                     <Text>
-                      {generalTopicName} {!hasUnifiedMP3File ? '🔕' : ''}{' '}
+                      {topic} {!hasUnifiedMP3File ? '🔕' : ''}{' '}
                       {numberOfWordsToStudy ? (
                         <Text>({numberOfWordsToStudy})</Text>
                       ) : null}
