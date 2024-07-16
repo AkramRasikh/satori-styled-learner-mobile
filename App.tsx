@@ -251,7 +251,7 @@ function App(): React.JSX.Element {
             </TouchableOpacity>
           </View>
         )}
-        {!generalTopicState && (
+        {!generalTopicState && !selectedSong && (
           <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
             {generalTopicObjKeys?.map(generalTopic => {
               const numberOfWordsToStudy = generalTopicObj[generalTopic];
@@ -313,12 +313,12 @@ function App(): React.JSX.Element {
             })}
           </View>
         ) : null}
-        {!topicOrSongSelected ? (
+        {!topicOrSongSelected && !generalTopicState ? (
           <View style={{padding: 10}}>
             <Text style={{textDecorationLine: 'underline'}}>Songs:</Text>
           </View>
         ) : null}
-        {!topicOrSongSelected || showOtherTopics ? (
+        {(!topicOrSongSelected || showOtherTopics) && !generalTopicState ? (
           <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
             {japaneseLoadedSongsState?.map(songData => {
               const numberOfWordsToStudy = topicsToStudyState[songData.title];
