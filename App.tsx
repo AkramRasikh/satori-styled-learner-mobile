@@ -11,13 +11,13 @@ import {getAllData} from './api/load-content';
 import TopicComponent from './components/TopicComponent';
 import {makeArrayUnique} from './hooks/useHighlightWordToWordBank';
 import {addSnippetAPI, deleteSnippetAPI} from './api/snippet';
-import TrackPlayer, {Capability} from 'react-native-track-player';
 import saveWordAPI from './api/save-word';
 import SongComponent from './components/SongComponent';
 import {
   getThisTopicsWordsToStudyAPI,
   getTopicsToStudy,
 } from './api/words-to-study';
+import useSetupPlayer from './hooks/useSetupPlayer';
 
 function App(): React.JSX.Element {
   const [data, setData] = useState<any>(null);
@@ -36,36 +36,7 @@ function App(): React.JSX.Element {
   );
   const [generalTopicState, setGeneralTopicState] = useState('');
 
-  useEffect(() => {
-    async function setupPlayer() {
-      await TrackPlayer.setupPlayer();
-      await TrackPlayer.updateOptions({
-        stopWithApp: false,
-        capabilities: [
-          Capability.Play,
-          Capability.Pause,
-          Capability.SeekTo,
-          Capability.JumpForward,
-          Capability.JumpBackward,
-        ],
-        compactCapabilities: [Capability.Play, Capability.Pause],
-        notificationCapabilities: [
-          Capability.Play,
-          Capability.Pause,
-          Capability.SeekTo,
-          Capability.JumpForward,
-          Capability.JumpBackward,
-        ],
-      });
-    }
-
-    setupPlayer();
-
-    return () => {
-      TrackPlayer.stop();
-      console.log('## unmount background APP');
-    };
-  }, []);
+  useSetupPlayer();
 
   useEffect(() => {
     const fetchData = async () => {
