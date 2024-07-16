@@ -263,7 +263,11 @@ function App(): React.JSX.Element {
         contentInsetAdjustmentBehavior="automatic"
         style={{padding: 10}}>
         {selectedSong || selectedTopic || generalTopicState === '' ? null : (
-          <View>
+          <View
+            style={{
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
             <TouchableOpacity
               onPress={() => handleShowGeneralTopic('')}
               style={{
