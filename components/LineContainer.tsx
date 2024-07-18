@@ -77,7 +77,7 @@ const LineContainer = ({
                     isPlaying={isPlaying}
                     pauseSound={pauseSound}
                     safeText={topicSentence.safeText}
-                    textWidth={width * 0.9}
+                    textWidth={seperateLines ? width * 0.9 : width}
                     setHighlightMode={setHighlightMode}
                     onLongPress={onLongPress}
                   />

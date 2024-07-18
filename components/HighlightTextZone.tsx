@@ -1,5 +1,5 @@
 import Clipboard from '@react-native-clipboard/clipboard';
-import React, {useRef} from 'react';
+import React, {useState, useRef} from 'react';
 import {
   StyleSheet,
   Text,
@@ -16,8 +16,10 @@ const HighlightTextZone = ({
   sentenceIndex,
   saveWordFirebase,
   setHighlightMode,
+  textWidth,
 }) => {
   const startRef = useRef(null);
+  const [initialLineLocationY, setInitialLineLocationY] = useState(null);
 
   const sentencePrefix = sentenceIndex + '-';
 
@@ -26,12 +28,27 @@ const HighlightTextZone = ({
       onStartShouldSetPanResponder: () => true,
       onMoveShouldSetPanResponder: () => true,
       onPanResponderGrant: evt => {
-        startRef.current = calculateIndex(evt.nativeEvent.locationX);
-        setHighlightedIndices([sentencePrefix + startRef.current]);
+        if (evt.nativeEvent.locationY && evt.nativeEvent.locationX) {
+          const numberOfLines = Math.floor(evt.nativeEvent.locationY / 24);
+          const linesToMoreWidth = numberOfLines * textWidth * 0.9;
+          setInitialLineLocationY(evt.nativeEvent.locationY);
+          startRef.current = calculateIndexX(
+            evt.nativeEvent.locationX + linesToMoreWidth,
+          );
+          setHighlightedIndices([sentencePrefix + startRef.current]);
+        }
       },
       onPanResponderMove: evt => {
-        const currentIndex = calculateIndex(evt.nativeEvent.locationX);
-        updateHighlightedIndices(sentencePrefix + currentIndex);
+        if (evt.nativeEvent.locationY && evt.nativeEvent.locationX) {
+          const numberOfLines = Math.floor(
+            (evt.nativeEvent.locationY - initialLineLocationY) / 24,
+          );
+          const linesToMoreWidth = numberOfLines * textWidth * 0.9;
+          const currentIndex = calculateIndexX(
+            evt.nativeEvent.locationX + linesToMoreWidth,
+          );
+          updateHighlightedIndices(sentencePrefix + currentIndex);
+        }
       },
     }),
   ).current;
@@ -57,7 +74,7 @@ const HighlightTextZone = ({
   const highlightedText = extractHighlightedText(text, highlightedIndices);
 
   // Estimate the character index based on the x-coordinate
-  const calculateIndex = x => {
+  const calculateIndexX = x => {
     // Adjust this value based on actual character width in your font
     const charWidth = 16;
     return Math.floor(x / charWidth);
@@ -153,10 +170,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     lineHeight: 24,
     backgroundColor: '#add8e6',
-  },
-  modalOption: {
-    fontSize: 18,
-    padding: 5,
   },
 });
 

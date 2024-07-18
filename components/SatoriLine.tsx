@@ -74,6 +74,7 @@ const SatoriLine = ({
           setHighlightedIndices={setHighlightedIndices}
           saveWordFirebase={saveWordFirebase}
           setHighlightMode={setHighlightMode}
+          textWidth={textWidth}
         />
       ) : (
         safeText
