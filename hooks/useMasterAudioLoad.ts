@@ -1,9 +1,18 @@
 import {useEffect, useState} from 'react';
 import Sound from 'react-native-sound';
 
-const useMasterAudioLoad = ({soundRef, url}) => {
+const useMasterAudioLoad = ({
+  soundRef,
+  url,
+  hasAlreadyBeenUnifiedAudioInstance,
+}) => {
   const [soundState, setSoundState] = useState(null);
+
   useEffect(() => {
+    if (hasAlreadyBeenUnifiedAudioInstance?.isLoaded()) {
+      return;
+    }
+
     if (!url) {
       return;
     }
@@ -34,9 +43,9 @@ const useMasterAudioLoad = ({soundRef, url}) => {
         soundRef.current.release();
       }
     };
-  }, [url]); // Only depend on the URL to prevent unnecessary reloads
+  }, [url, hasAlreadyBeenUnifiedAudioInstance]); // Only depend on the URL to prevent unnecessary reloads
 
-  return soundState;
+  return hasAlreadyBeenUnifiedAudioInstance || soundState;
 };
 
 export default useMasterAudioLoad;

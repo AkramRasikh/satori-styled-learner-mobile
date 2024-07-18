@@ -58,6 +58,10 @@ const TopicContent = ({
     mp3 => mp3.name === topicName,
   );
 
+  const hasAlreadyBeenUnified = structuredUnifiedData[topicName]?.content;
+  const hasAlreadyBeenUnifiedAudioInstance =
+    structuredUnifiedData[topicName]?.audioInstance;
+
   const snippetsLocalAndDb = useMemo(() => {
     return mergeAndRemoveDuplicates(
       snippetsForSelectedTopic?.sort((a, b) => a.pointInAudio - b.pointInAudio),
@@ -74,7 +78,11 @@ const TopicContent = ({
   const soundRefLoaded = soundRef?.current?.isLoaded();
   const soundDuration = soundRef?.current?._duration || 0;
 
-  useMasterAudioLoad({soundRef, url});
+  const audioInstance = useMasterAudioLoad({
+    soundRef,
+    url,
+    hasAlreadyBeenUnifiedAudioInstance,
+  });
 
   const {playSound, pauseSound, rewindSound, forwardSound} = useSoundHook({
     url,
@@ -116,8 +124,6 @@ const TopicContent = ({
       position: index,
     };
   });
-
-  const hasAlreadyBeenUnified = structuredUnifiedData[topicName];
 
   const durations = useGetCombinedAudioData({
     hasUnifiedMP3File,
@@ -181,10 +187,14 @@ const TopicContent = ({
   const lastItem = durations[durations?.length - 1];
 
   useEffect(() => {
-    if (!hasAlreadyBeenUnified && durationsLengths === topicDataLengths) {
+    if (
+      !hasAlreadyBeenUnified &&
+      durationsLengths === topicDataLengths &&
+      audioInstance?.isLoaded()
+    ) {
       setStructuredUnifiedData(prevState => ({
         ...prevState,
-        [topicName]: durations,
+        [topicName]: {content: durations, audioInstance},
       }));
     }
   }, [
@@ -196,6 +206,7 @@ const TopicContent = ({
     hasAlreadyBeenUnified,
     setStructuredUnifiedData,
     topicDataLengths,
+    audioInstance,
   ]);
 
   useAudioTextSync({
