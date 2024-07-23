@@ -33,7 +33,7 @@ const useGetCombinedAudioData = ({
 
   useEffect(() => {
     const fetchDurations = async () => {
-      const durationsPromises = audioFiles.map((item, index) => {
+      const durationsPromises = audioFiles.map(item => {
         const url = getFirebaseAudioURL(item.id);
         return new Promise(resolve => {
           const sound = new Sound(url, '', error => {
