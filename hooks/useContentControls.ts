@@ -15,7 +15,12 @@ const useContentControls = ({
   currentTimeState,
   url,
   pauseSound,
+  isText,
 }) => {
+  const timeDataWithinSnippet = (thisItem, currentTimeState) => {
+    const pointInAudioInSnippet = currentTimeState - thisItem.startAt;
+    return pointInAudioInSnippet;
+  };
   const getTimeStamp = () => {
     const id = topicName + '-' + generateRandomId();
     const thisItem = topicData.find(item => item.id === masterPlay);
@@ -23,7 +28,13 @@ const useContentControls = ({
     const itemToSave = {
       id,
       sentenceId: masterPlay,
-      pointInAudio: currentTimeState,
+      pointInAudio: isText
+        ? timeDataWithinSnippet(thisItem, currentTimeState)
+        : currentTimeState,
+      isIsolated: isText ? true : false,
+      endAt: thisItem.endAt,
+      startAt: thisItem.startAt,
+      pointOfAudioOnClick: currentTimeState,
       url,
       targetLang,
       topicName,

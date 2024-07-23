@@ -4,6 +4,13 @@ import {Text} from 'react-native-paper';
 import useSoundHook from '../hooks/useSoundHook';
 import ProgressBarComponent from './Progress';
 
+const getStartTime = (adjustableStartTime, pointInAudio) => {
+  if (isFinite(adjustableStartTime)) {
+    return adjustableStartTime;
+  }
+  return pointInAudio;
+};
+
 const Snippet = ({
   snippet,
   setMasterAudio,
@@ -21,10 +28,12 @@ const Snippet = ({
   const [currentTimeState, setCurrentTimeState] = useState(0);
 
   const pointInAudio = snippet.pointInAudio;
+  const isIsolated = snippet?.isIsolated;
+  const snippetStartAtLimit = snippet?.startAt;
+  const snippetEndAtLimit = snippet?.endAt;
+  const pointOfAudioOnClick = snippet?.pointOfAudioOnClick;
 
-  const startTime = isFinite(adjustableStartTime)
-    ? adjustableStartTime
-    : pointInAudio;
+  const startTime = getStartTime(adjustableStartTime, pointInAudio);
 
   const [progressTime, setProgressTime] = useState(startTime);
 
@@ -81,10 +90,14 @@ const Snippet = ({
 
   useEffect(() => {
     if (!adjustableStartTime) {
-      const provStartTime = pointInAudio - 0.5;
-      setAdjustableStartTime(provStartTime < 0 ? pointInAudio : provStartTime);
+      setAdjustableStartTime(pointOfAudioOnClick);
     }
-  }, [adjustableStartTime, pointInAudio, setAdjustableStartTime]);
+  }, [
+    adjustableStartTime,
+    pointInAudio,
+    pointOfAudioOnClick,
+    setAdjustableStartTime,
+  ]);
 
   const {playSound, pauseSound} = useSoundHook({
     url,
@@ -101,17 +114,46 @@ const Snippet = ({
   });
 
   const handleSetEarlierTime = forward => {
-    const newAdjustableTime = forward
-      ? adjustableStartTime - 1
-      : adjustableStartTime + 1;
-    setAdjustableStartTime(newAdjustableTime);
+    const currentTimeWithPointInAudio = adjustableStartTime;
+    const rewind = !forward;
+    if (forward) {
+      const newForwardedTime = currentTimeWithPointInAudio + 0.5;
+      const newForwardWithDuration = newForwardedTime + adjustableDuration;
+      if (
+        newForwardedTime < snippetEndAtLimit &&
+        newForwardWithDuration < snippetEndAtLimit
+      ) {
+        setAdjustableStartTime(newForwardedTime);
+      } else {
+        setAdjustableStartTime(snippetEndAtLimit);
+      }
+    } else if (rewind) {
+      const newRewindTime = currentTimeWithPointInAudio - 0.5;
+      if (newRewindTime > snippetStartAtLimit) {
+        setAdjustableStartTime(newRewindTime);
+      } else {
+        setAdjustableStartTime(snippetStartAtLimit);
+      }
+    }
   };
 
   const handleSetDuration = increase => {
-    const newAdjustableDuration = increase
-      ? adjustableDuration + 1
-      : adjustableDuration - 1;
-    setAdjustableDuration(newAdjustableDuration);
+    const decrease = !increase;
+
+    if (increase) {
+      const newAdjustableDuration = adjustableDuration + 0.5;
+      const newTimeWithDuration = adjustableStartTime + newAdjustableDuration;
+      if (newTimeWithDuration < snippetEndAtLimit) {
+        setAdjustableDuration(newAdjustableDuration);
+      }
+    } else if (decrease) {
+      const newAdjustableDuration = adjustableDuration - 0.5;
+      if (newAdjustableDuration > 0) {
+        setAdjustableDuration(newAdjustableDuration);
+      } else {
+        setAdjustableDuration(0.5);
+      }
+    }
   };
 
   const handleDelete = () => {
@@ -121,6 +163,8 @@ const Snippet = ({
   const handleAddingSnippet = () => {
     const formattedSnippet = {
       ...snippet,
+      index,
+      isIsolated,
       pointInAudio: adjustableStartTime,
       duration: adjustableDuration,
     };
@@ -229,13 +273,13 @@ const Snippet = ({
             justifyContent: 'space-between',
           }}>
           <View style={{flex: 1}}>
-            <TouchableOpacity onPress={() => handleSetEarlierTime(true)}>
+            <TouchableOpacity onPress={() => handleSetEarlierTime(false)}>
               <Text>-1 ⏪</Text>
             </TouchableOpacity>
           </View>
           <Text>{adjustableStartTime?.toFixed(2)}</Text>
           <View style={{flex: 1}}>
-            <TouchableOpacity onPress={() => handleSetEarlierTime(false)}>
+            <TouchableOpacity onPress={() => handleSetEarlierTime(true)}>
               <Text>+1 ⏩ </Text>
             </TouchableOpacity>
           </View>

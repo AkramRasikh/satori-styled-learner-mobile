@@ -153,6 +153,7 @@ const TopicContent = ({
     currentTimeState,
     url,
     pauseSound,
+    isText: true,
   });
 
   useEffect(() => {
