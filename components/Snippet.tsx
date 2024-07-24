@@ -1,8 +1,11 @@
-import {useEffect, useRef, useState} from 'react';
+import {useRef, useState} from 'react';
 import {TouchableOpacity, View} from 'react-native';
 import {Text} from 'react-native-paper';
 import useSoundHook from '../hooks/useSoundHook';
 import ProgressBarComponent from './Progress';
+import useSnippetHook from '../hooks/useSnippetHook';
+import useSnippetControls from '../hooks/useSnippetControls';
+import SnippetRemoveSave from './Snippet/SnippetRemoveSave';
 
 const getStartTime = (adjustableStartTime, pointInAudio) => {
   if (isFinite(adjustableStartTime)) {
@@ -24,80 +27,39 @@ const Snippet = ({
   const [isPlaying, setIsPlaying] = useState(false);
   const [adjustableStartTime, setAdjustableStartTime] = useState();
   const [adjustableDuration, setAdjustableDuration] = useState(4);
-  const [progress, setProgress] = useState(0);
   const [currentTimeState, setCurrentTimeState] = useState(0);
 
   const pointInAudio = snippet.pointInAudio;
-  const isIsolated = snippet?.isIsolated;
   const snippetStartAtLimit = snippet?.startAt;
   const snippetEndAtLimit = snippet?.endAt;
   const pointOfAudioOnClick = snippet?.pointOfAudioOnClick;
 
   const startTime = getStartTime(adjustableStartTime, pointInAudio);
 
-  const [progressTime, setProgressTime] = useState(startTime);
-
   const soundRef = useRef(null);
 
-  const id = snippet.id;
   const url = snippet.url;
   const targetLang = snippet.targetLang;
   const duration = snippet.duration;
   const isInDB = snippet?.saved;
   const topicName = snippet.topicName + '-' + pointInAudio.toFixed(2);
 
-  useEffect(() => {
-    if (isPlaying) {
-      const newProgressTime =
-        currentTimeState === 0 ? startTime : currentTimeState;
-      setProgressTime(newProgressTime);
-    }
-  }, [isPlaying, currentTimeState, startTime]);
-
-  useEffect(() => {
-    const getCurrentTimeFunc = () => {
-      soundRef.current.getCurrentTime(currentTime => {
-        if (isInDB) {
-          setProgress((currentTime - pointInAudio) / duration);
-        } else {
-          setProgress((currentTime - adjustableStartTime) / adjustableDuration);
-        }
-        setCurrentTimeState(currentTime);
-      });
-    };
-    const interval = setInterval(() => {
-      if (soundRef.current && soundRef.current?.isPlaying() && isPlaying) {
-        getCurrentTimeFunc();
-      }
-    }, 100);
-
-    return () => clearInterval(interval);
-  }, [
-    soundRef,
-    pointInAudio,
-    duration,
-    adjustableStartTime,
-    adjustableDuration,
-    isInDB,
-    isPlaying,
-  ]);
-
-  useEffect(() => {
-    if (masterAudio && isPlaying) {
-      setMasterAudio(false);
-    }
-  }, [masterAudio, setMasterAudio, isPlaying]);
-
-  useEffect(() => {
-    if (!adjustableStartTime) {
-      setAdjustableStartTime(pointOfAudioOnClick);
-    }
-  }, [
-    adjustableStartTime,
-    pointInAudio,
+  const {progress, progressTime} = useSnippetHook({
+    startTime,
     pointOfAudioOnClick,
+    currentTimeState,
+    setCurrentTimeState,
+    soundRef,
+    setMasterAudio,
+    masterAudio,
+    isPlaying,
+    isInDB,
+    pointInAudio,
+    adjustableStartTime,
+    duration,
+    adjustableDuration,
     setAdjustableStartTime,
-  ]);
+  });
 
   const {playSound, pauseSound} = useSoundHook({
     url,
@@ -113,71 +75,24 @@ const Snippet = ({
     currentTime: currentTimeState,
   });
 
-  const handleSetEarlierTime = forward => {
-    const currentTimeWithPointInAudio = adjustableStartTime;
-    const rewind = !forward;
-    if (forward) {
-      const newForwardedTime = currentTimeWithPointInAudio + 0.5;
-      const newForwardWithDuration = newForwardedTime + adjustableDuration;
-      if (
-        newForwardedTime < snippetEndAtLimit &&
-        newForwardWithDuration < snippetEndAtLimit
-      ) {
-        setAdjustableStartTime(newForwardedTime);
-      } else {
-        setAdjustableStartTime(snippetEndAtLimit);
-      }
-    } else if (rewind) {
-      const newRewindTime = currentTimeWithPointInAudio - 0.5;
-      if (newRewindTime > snippetStartAtLimit) {
-        setAdjustableStartTime(newRewindTime);
-      } else {
-        setAdjustableStartTime(snippetStartAtLimit);
-      }
-    }
-  };
-
-  const handleSetDuration = increase => {
-    const decrease = !increase;
-
-    if (increase) {
-      const newAdjustableDuration = adjustableDuration + 0.5;
-      const newTimeWithDuration = adjustableStartTime + newAdjustableDuration;
-      if (newTimeWithDuration < snippetEndAtLimit) {
-        setAdjustableDuration(newAdjustableDuration);
-      }
-    } else if (decrease) {
-      const newAdjustableDuration = adjustableDuration - 0.5;
-      if (newAdjustableDuration > 0) {
-        setAdjustableDuration(newAdjustableDuration);
-      } else {
-        setAdjustableDuration(0.5);
-      }
-    }
-  };
-
-  const handleDelete = () => {
-    deleteSnippet(id);
-  };
-
-  const handleAddingSnippet = () => {
-    const formattedSnippet = {
-      ...snippet,
-      index,
-      isIsolated,
-      pointInAudio: adjustableStartTime,
-      duration: adjustableDuration,
-    };
-    addSnippet(formattedSnippet);
-  };
-  const handleRemoveSnippet = () => {
-    const formattedSnippet = {
-      ...snippet,
-      pointInAudio: adjustableStartTime,
-      duration: adjustableDuration,
-    };
-    removeSnippet(formattedSnippet);
-  };
+  const {
+    handleDelete,
+    handleAddingSnippet,
+    handleRemoveSnippet,
+    handleSetEarlierTime,
+    handleSetDuration,
+  } = useSnippetControls({
+    adjustableStartTime,
+    adjustableDuration,
+    setAdjustableStartTime,
+    setAdjustableDuration,
+    snippetEndAtLimit,
+    snippetStartAtLimit,
+    deleteSnippet,
+    addSnippet,
+    removeSnippet,
+    snippet,
+  });
 
   const getEndTimeProgress = () => {
     if (isInDB) {
@@ -209,25 +124,11 @@ const Snippet = ({
           width: '100%',
           padding: 10,
         }}>
-        <View
-          style={{
-            flex: 0,
-            justifyContent: 'center',
-            alignItems: 'center',
-            backgroundColor: !isInDB ? 'orange' : 'transparent',
-            padding: 10,
-            borderRadius: 10,
-          }}>
-          {isInDB ? (
-            <TouchableOpacity onPress={handleRemoveSnippet}>
-              <Text>Remove 🧹</Text>
-            </TouchableOpacity>
-          ) : (
-            <TouchableOpacity onPress={handleAddingSnippet}>
-              <Text>Save 🏦</Text>
-            </TouchableOpacity>
-          )}
-        </View>
+        <SnippetRemoveSave
+          isInDB={isInDB}
+          handleRemoveSnippet={handleRemoveSnippet}
+          handleAddingSnippet={handleAddingSnippet}
+        />
         <View
           style={{
             backgroundColor: isPlaying ? 'green' : 'red',
