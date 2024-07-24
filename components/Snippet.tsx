@@ -1,11 +1,15 @@
 import {useRef, useState} from 'react';
-import {TouchableOpacity, View} from 'react-native';
+import {View} from 'react-native';
 import {Text} from 'react-native-paper';
 import useSoundHook from '../hooks/useSoundHook';
 import ProgressBarComponent from './Progress';
 import useSnippetHook from '../hooks/useSnippetHook';
 import useSnippetControls from '../hooks/useSnippetControls';
 import SnippetRemoveSave from './Snippet/SnippetRemoveSave';
+import SnippetPlayControls from './Snippet/SnippetPlayControls';
+import SnippetDelete from './Snippet/SnippetDelete';
+import SnippetTimeRange from './Snippet/SnippetTimeRange';
+import SnippetTimeChangeHandlers from './Snippet/SnippetTimeChangeHandlers';
 
 const getStartTime = (adjustableStartTime, pointInAudio) => {
   if (isFinite(adjustableStartTime)) {
@@ -98,10 +102,14 @@ const Snippet = ({
     if (isInDB) {
       return (pointInAudio + duration).toFixed(2);
     }
-    const tempStateProgress = (
-      adjustableStartTime + adjustableDuration
-    ).toFixed(2);
-    return tempStateProgress;
+    if (adjustableStartTime) {
+      const tempStateProgress = (
+        adjustableStartTime + adjustableDuration
+      ).toFixed(2);
+      return tempStateProgress;
+    }
+
+    return null;
   };
 
   const handlePlay = () => {
@@ -129,73 +137,24 @@ const Snippet = ({
           handleRemoveSnippet={handleRemoveSnippet}
           handleAddingSnippet={handleAddingSnippet}
         />
-        <View
-          style={{
-            backgroundColor: isPlaying ? 'green' : 'red',
-            padding: 10,
-            borderRadius: 10,
-          }}>
-          {isPlaying ? (
-            <TouchableOpacity onPress={pauseSound}>
-              <Text>⏸️ Pause</Text>
-            </TouchableOpacity>
-          ) : (
-            <TouchableOpacity onPress={handlePlay}>
-              <Text>▶️ Play</Text>
-            </TouchableOpacity>
-          )}
-        </View>
-        {!isInDB ? (
-          <View style={{padding: 10}}>
-            <TouchableOpacity onPress={handleDelete}>
-              <Text>❌</Text>
-            </TouchableOpacity>
-          </View>
-        ) : null}
+        <SnippetPlayControls
+          isPlaying={isPlaying}
+          pauseSound={pauseSound}
+          handlePlay={handlePlay}
+        />
+        {!isInDB ? <SnippetDelete handleDelete={handleDelete} /> : null}
         {isInDB ? (
-          <View
-            style={{
-              flex: 0,
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
-            <Text>
-              {pointInAudio.toFixed(2)} ➾ {(pointInAudio + duration).toFixed(2)}
-            </Text>
-          </View>
+          <SnippetTimeRange pointInAudio={pointInAudio} duration={duration} />
         ) : null}
       </View>
       <Text style={{padding: 10}}>{targetLang}</Text>
       {!isInDB ? (
-        <View
-          style={{
-            marginHorizontal: 5,
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-          }}>
-          <View style={{flex: 1}}>
-            <TouchableOpacity onPress={() => handleSetEarlierTime(false)}>
-              <Text>-1 ⏪</Text>
-            </TouchableOpacity>
-          </View>
-          <Text>{adjustableStartTime?.toFixed(2)}</Text>
-          <View style={{flex: 1}}>
-            <TouchableOpacity onPress={() => handleSetEarlierTime(true)}>
-              <Text>+1 ⏩ </Text>
-            </TouchableOpacity>
-          </View>
-          <View style={{flex: 1, borderLeftWidth: 1, borderLeftColor: 'black'}}>
-            <TouchableOpacity onPress={() => handleSetDuration(false)}>
-              <Text>(-1)</Text>
-            </TouchableOpacity>
-          </View>
-          <Text>duration: {adjustableDuration}</Text>
-          <View style={{flex: 1, borderLeftWidth: 1, borderLeftColor: 'black'}}>
-            <TouchableOpacity onPress={() => handleSetDuration(true)}>
-              <Text>(+1)</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
+        <SnippetTimeChangeHandlers
+          handleSetEarlierTime={handleSetEarlierTime}
+          adjustableDuration={adjustableDuration}
+          handleSetDuration={handleSetDuration}
+          adjustableStartTime={adjustableStartTime}
+        />
       ) : null}
       <ProgressBarComponent
         progress={progress}
