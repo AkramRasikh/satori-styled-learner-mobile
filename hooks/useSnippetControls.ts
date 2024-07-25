@@ -61,7 +61,6 @@ const useSnippetControls = ({
     // check if values already there
     const formattedSnippet = {
       ...snippet,
-      // isIsolated,
       pointInAudio: adjustableStartTime,
       duration: adjustableDuration,
     };
