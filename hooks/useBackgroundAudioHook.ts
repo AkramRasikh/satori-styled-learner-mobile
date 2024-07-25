@@ -63,10 +63,10 @@ const useBackgroundAudioHook = ({
         url,
       });
     };
-    if (topicName) {
+    if (topicName && !isSnippet) {
       addTrack();
     }
-  }, [topicName, url, trackAddedRef]);
+  }, [topicName, url, trackAddedRef, isSnippet]);
 
   const handleAppStateChange = async nextAppState => {
     const isPlaying = soundRef.current?.isPlaying();
