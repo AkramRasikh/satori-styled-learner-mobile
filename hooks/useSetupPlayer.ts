@@ -1,12 +1,11 @@
 import {useEffect} from 'react';
 import TrackPlayer, {Capability} from 'react-native-track-player';
 
-const useSetupPlayer = () => {
+const useSetupPlayer = ({isSetupPlayerLoaded, setIsSetupPlayerLoaded}) => {
   useEffect(() => {
     async function setupPlayer() {
       await TrackPlayer.setupPlayer();
       await TrackPlayer.updateOptions({
-        stopWithApp: false,
         capabilities: [
           Capability.Play,
           Capability.Pause,
@@ -23,15 +22,18 @@ const useSetupPlayer = () => {
           Capability.JumpBackward,
         ],
       });
+      setIsSetupPlayerLoaded(true);
     }
 
-    setupPlayer();
+    if (!isSetupPlayerLoaded) {
+      setupPlayer();
+    }
 
     return () => {
       TrackPlayer.stop();
       console.log('## unmount background APP');
     };
-  }, []);
+  }, [isSetupPlayerLoaded, setIsSetupPlayerLoaded]);
 };
 
 export default useSetupPlayer;

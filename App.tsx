@@ -22,6 +22,7 @@ import useSetupPlayer from './hooks/useSetupPlayer';
 function App(): React.JSX.Element {
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [isSetupPlayerLoaded, setIsSetupPlayerLoaded] = useState(false);
   const [error, setError] = useState(null);
   const [structuredUnifiedData, setStructuredUnifiedData] = useState([]);
   const [selectedTopic, setSelectedTopic] = useState('');
@@ -36,7 +37,7 @@ function App(): React.JSX.Element {
   );
   const [generalTopicState, setGeneralTopicState] = useState('');
 
-  useSetupPlayer();
+  useSetupPlayer({isSetupPlayerLoaded, setIsSetupPlayerLoaded});
 
   useEffect(() => {
     const fetchData = async () => {
