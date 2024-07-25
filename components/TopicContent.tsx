@@ -19,6 +19,8 @@ import useAudioTextSync from '../hooks/useAudioTextSync';
 import LineContainer from './LineContainer';
 import WordStudySection from './WordStudySection';
 import LongPressedWord from './LongPressedWord';
+import useInitTopicWordList from '../hooks/useInitTopicWordList';
+import useFormatUnderlyingWords from '../hooks/useFormatUnderlyingWords';
 
 const TopicContent = ({
   topicName,
@@ -164,31 +166,23 @@ const TopicContent = ({
     setCurrentTimeState,
   });
 
-  useEffect(() => {
-    setThisTopicsWords(
-      getThisTopicsWords({
-        pureWordsUnique,
-        topicData,
-        japaneseLoadedWords,
-      }),
-    );
-    setInitJapaneseWordsList(japaneseLoadedWords?.length);
-  }, []);
+  useInitTopicWordList({
+    setThisTopicsWords,
+    getThisTopicsWords,
+    pureWordsUnique,
+    topicData,
+    japaneseLoadedWords,
+    setInitJapaneseWordsList,
+  });
 
-  useEffect(() => {
-    if (formattedData?.length === 0 && durations?.length > 0) {
-      setFormattedData(formatTextForTargetWords());
-    } else if (formattedData?.length > 0 && updateWordList) {
-      setFormattedData(formatTextForTargetWords());
-      setUpdateWordList(false);
-    }
-  }, [
+  useFormatUnderlyingWords({
+    setFormattedData,
+    formatTextForTargetWords,
     formattedData,
     durations,
-    japaneseLoadedWords,
-    formatTextForTargetWords,
+    setUpdateWordList,
     updateWordList,
-  ]);
+  });
 
   const durationsLengths = durations.length;
   const topicDataLengths = topicData?.length;
