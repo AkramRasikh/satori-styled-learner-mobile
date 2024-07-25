@@ -16,6 +16,7 @@ const useContentControls = ({
   url,
   pauseSound,
   isText,
+  setCurrentTimeState,
 }) => {
   const timeDataWithinSnippet = (thisItem, currentTimeState) => {
     const pointInAudioInSnippet = currentTimeState - thisItem.startAt;
@@ -63,12 +64,16 @@ const useContentControls = ({
     return formattedText;
   };
   const playFromThisSentence = id => {
+    console.log('## playFromThisSentence 1');
     if (soundRef.current) {
+      console.log('## playFromThisSentence 2');
       const thisItem = topicData.find(item => item.id === id);
       if (thisItem) {
         soundRef.current.getCurrentTime(() => {
           soundRef.current.setCurrentTime(thisItem.startAt);
         });
+        setCurrentTimeState(thisItem.startAt);
+        console.log('## playFromThisSentence 3');
         soundRef.current.play();
         setIsPlaying(true);
       }

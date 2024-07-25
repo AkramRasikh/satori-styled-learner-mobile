@@ -154,6 +154,7 @@ const TopicContent = ({
     url,
     pauseSound,
     isText: true,
+    setCurrentTimeState,
   });
 
   useEffect(() => {
