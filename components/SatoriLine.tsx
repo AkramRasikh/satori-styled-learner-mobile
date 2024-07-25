@@ -34,7 +34,7 @@ const SatoriLine = ({
   };
 
   const handlePlayThisLine = () => {
-    if (isPlaying) {
+    if (isPlaying && focusThisSentence) {
       pauseSound();
     } else {
       playFromThisSentence(topicSentence.id);
@@ -48,7 +48,7 @@ const SatoriLine = ({
         backgroundColor: focusThisSentence ? 'yellow' : 'transparent',
       }}>
       <TouchableOpacity onPress={handlePlayThisLine}>
-        {isPlaying ? (
+        {isPlaying && focusThisSentence ? (
           <Text style={{marginRight: 5}}>⏸️</Text>
         ) : (
           <Text style={{marginRight: 5}}>▶️</Text>
