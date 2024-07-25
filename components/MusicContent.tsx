@@ -158,6 +158,7 @@ const MusicContent = ({
     currentTimeState,
     url,
     pauseSound,
+    setCurrentTimeState,
   });
 
   useEffect(() => {
