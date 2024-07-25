@@ -31,7 +31,6 @@ const useSetupPlayer = ({isSetupPlayerLoaded, setIsSetupPlayerLoaded}) => {
 
     return () => {
       TrackPlayer.stop();
-      console.log('## unmount background APP');
     };
   }, [isSetupPlayerLoaded, setIsSetupPlayerLoaded]);
 };
