@@ -27,6 +27,7 @@ const useGetCombinedAudioData = ({
   hasUnifiedMP3File,
   audioFiles,
   hasAlreadyBeenUnified,
+  setAudioLoadingProgress,
 }) => {
   const [durations, setDurations] = useState([]);
   const [dataHasBeenFetched, setDataHasBeenFetch] = useState(false);
@@ -42,6 +43,7 @@ const useGetCombinedAudioData = ({
               resolve({id: item.id, duration: 0});
               return;
             }
+            setAudioLoadingProgress?.(prev => (prev += 1));
             const duration = sound.getDuration();
 
             resolve({

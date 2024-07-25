@@ -21,6 +21,8 @@ import WordStudySection from './WordStudySection';
 import LongPressedWord from './LongPressedWord';
 import useInitTopicWordList from '../hooks/useInitTopicWordList';
 import useFormatUnderlyingWords from '../hooks/useFormatUnderlyingWords';
+import TopicContentLoader from './TopicContentLoader';
+import useSetTopicAudioDataInState from '../hooks/useSetTopicAudioDataInState';
 
 const TopicContent = ({
   topicName,
@@ -54,6 +56,7 @@ const TopicContent = ({
   const [initJapaneseWordsList, setInitJapaneseWordsList] = useState(null);
   const [updateWordList, setUpdateWordList] = useState(false);
   const [showWordStudyList, setShowWordStudyList] = useState(true);
+  const [audioLoadingProgress, setAudioLoadingProgress] = useState(0);
 
   const topicData = japaneseLoadedContent[topicName];
   const hasUnifiedMP3File = japaneseLoadedContentFullMP3s.some(
@@ -138,7 +141,13 @@ const TopicContent = ({
     hasUnifiedMP3File,
     audioFiles: orderedContent,
     hasAlreadyBeenUnified,
+    setAudioLoadingProgress,
   });
+
+  const durationsLengths = durations.length;
+  const topicDataLengths = topicData?.length;
+
+  const lastItem = durations[durations?.length - 1];
 
   const {
     onLongPress,
@@ -184,23 +193,7 @@ const TopicContent = ({
     updateWordList,
   });
 
-  const durationsLengths = durations.length;
-  const topicDataLengths = topicData?.length;
-
-  const lastItem = durations[durations?.length - 1];
-
-  useEffect(() => {
-    if (
-      !hasAlreadyBeenUnified &&
-      durationsLengths === topicDataLengths &&
-      audioInstance?.isLoaded()
-    ) {
-      setStructuredUnifiedData(prevState => ({
-        ...prevState,
-        [topicName]: {content: durations, audioInstance},
-      }));
-    }
-  }, [
+  useSetTopicAudioDataInState({
     structuredUnifiedData,
     durationsLengths,
     topicName,
@@ -210,7 +203,7 @@ const TopicContent = ({
     setStructuredUnifiedData,
     topicDataLengths,
     audioInstance,
-  ]);
+  });
 
   useAudioTextSync({
     currentTimeState,
@@ -227,13 +220,10 @@ const TopicContent = ({
 
   if (!soundRefLoaded || formattedData?.length === 0) {
     return (
-      <View
-        style={{
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}>
-        <Text>Loading</Text>
-      </View>
+      <TopicContentLoader
+        audioLoadingProgress={audioLoadingProgress}
+        topicDataLengths={topicDataLengths}
+      />
     );
   }
 
