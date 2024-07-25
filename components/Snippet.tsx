@@ -10,6 +10,7 @@ import SnippetPlayControls from './Snippet/SnippetPlayControls';
 import SnippetDelete from './Snippet/SnippetDelete';
 import SnippetTimeRange from './Snippet/SnippetTimeRange';
 import SnippetTimeChangeHandlers from './Snippet/SnippetTimeChangeHandlers';
+import useSnippetManageAudioStop from '../hooks/useSnippetManageAudioStop';
 
 const getStartTime = (adjustableStartTime, pointInAudio) => {
   if (isFinite(adjustableStartTime)) {
@@ -73,9 +74,15 @@ const Snippet = ({
     topicName,
     isSnippet: true,
     startTime: isInDB ? pointInAudio : adjustableStartTime,
-    duration: isInDB ? duration : adjustableDuration,
     setCurrentTime: setCurrentTimeState,
-    index,
+  });
+
+  useSnippetManageAudioStop({
+    soundRef,
+    isPlaying,
+    setIsPlaying,
+    startTime,
+    duration,
     currentTime: currentTimeState,
   });
 

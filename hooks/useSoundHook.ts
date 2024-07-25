@@ -1,7 +1,6 @@
 import Sound from 'react-native-sound';
 import useBackgroundAudioHook from './useBackgroundAudioHook';
 import useSyncRefAudioAndState from './useSyncRefAudioAndState';
-import useSnippetManageAudioStop from './useSnippetManageAudioStop';
 import useMainAudioControls from './useMainAudioControls';
 
 Sound.setCategory('Playback');
@@ -14,11 +13,8 @@ const useSoundHook = ({
   topicName,
   isSnippet,
   startTime,
-  duration,
   soundInstance,
-  currentTime,
   setCurrentTime,
-  index,
 }) => {
   useBackgroundAudioHook({
     soundInstance,
@@ -33,15 +29,6 @@ const useSoundHook = ({
     soundRef,
     isSnippet,
     setCurrentTime,
-  });
-
-  useSnippetManageAudioStop({
-    soundRef,
-    isPlaying,
-    setIsPlaying,
-    startTime,
-    duration,
-    currentTime,
   });
 
   const {playSound, pauseSound, rewindSound, forwardSound} =

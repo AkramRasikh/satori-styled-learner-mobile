@@ -2,6 +2,7 @@ import {useEffect, useState} from 'react';
 import {TouchableOpacity, View} from 'react-native';
 import {Text} from 'react-native-paper';
 import useSoundHook from '../hooks/useSoundHook';
+import useSnippetManageAudioStop from '../hooks/useSnippetManageAudioStop';
 
 export const MiniSnippet = ({
   snippet,
@@ -48,9 +49,15 @@ export const MiniSnippet = ({
     topicName,
     isSnippet: true,
     startTime: pointInAudio,
-    duration: duration,
     setCurrentTime: setCurrentTimeState,
-    index,
+  });
+
+  useSnippetManageAudioStop({
+    soundRef,
+    isPlaying,
+    setIsPlaying,
+    startTime: pointInAudio,
+    duration,
     currentTime: currentTimeState,
   });
 
