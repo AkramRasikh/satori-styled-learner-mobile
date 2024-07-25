@@ -229,7 +229,7 @@ function App(): React.JSX.Element {
   });
 
   return (
-    <SafeAreaView style={{backgroundColor: '#D3D3D3'}}>
+    <SafeAreaView style={{backgroundColor: '#D3D3D3', minHeight: '100%'}}>
       <ScrollView
         contentInsetAdjustmentBehavior="automatic"
         style={{padding: 10}}>
