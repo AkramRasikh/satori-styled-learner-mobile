@@ -92,6 +92,13 @@ const TopicContent = ({
     topicName,
   });
 
+  const handlePlaySound = () => {
+    if (!isFlowingSentences) {
+      setIsFlowingSentences(true);
+    }
+    playSound();
+  };
+
   const {underlineWordsInSentence} = useHighlightWordToWordBank({
     pureWordsUnique,
   });
@@ -297,7 +304,7 @@ const TopicContent = ({
           <SoundComponent
             soundRef={soundRef}
             isPlaying={isPlaying}
-            playSound={playSound}
+            playSound={handlePlaySound}
             pauseSound={pauseSound}
             rewindSound={rewindSound}
             forwardSound={forwardSound}
