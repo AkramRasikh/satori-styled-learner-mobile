@@ -23,6 +23,7 @@ import useInitTopicWordList from '../hooks/useInitTopicWordList';
 import useFormatUnderlyingWords from '../hooks/useFormatUnderlyingWords';
 import TopicContentLoader from './TopicContentLoader';
 import useSetTopicAudioDataInState from '../hooks/useSetTopicAudioDataInState';
+import ReviewSection from './ReviewSection';
 
 const TopicContent = ({
   topicName,
@@ -58,7 +59,13 @@ const TopicContent = ({
   const [showWordStudyList, setShowWordStudyList] = useState(true);
   const [audioLoadingProgress, setAudioLoadingProgress] = useState(0);
 
-  const topicData = japaneseLoadedContent[topicName];
+  const thisTopicLoadedContent = japaneseLoadedContent.find(
+    contentData => contentData.title === topicName,
+  );
+  const topicData = thisTopicLoadedContent.content;
+  const reviewHistory = thisTopicLoadedContent.reviewHistory;
+  const nextReview = thisTopicLoadedContent.nextReview;
+
   const hasUnifiedMP3File = japaneseLoadedContentFullMP3s.some(
     mp3 => mp3.name === topicName,
   );
@@ -303,6 +310,11 @@ const TopicContent = ({
           ) : null}
         </View>
       )}
+      <ReviewSection
+        topicName={topicName}
+        reviewHistory={reviewHistory}
+        nextReview={nextReview}
+      />
       {lastItem && snippetsLocalAndDb?.length > 0 && (
         <SnippetTimeline
           snippetsLocalAndDb={snippetsLocalAndDb}

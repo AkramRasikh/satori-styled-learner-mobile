@@ -180,7 +180,7 @@ function App(): React.JSX.Element {
   const japaneseLoadedContentFullMP3s = data.japaneseLoadedContentFullMP3s;
   const japaneseLoadedWords = [...data?.japaneseLoadedWords, ...newWordsAdded];
 
-  const topics = Object.keys(japaneseLoadedContent);
+  const topicKeys = japaneseLoadedContent.map(topicData => topicData.title);
   const snippetsForSelectedTopic = masterSnippetState?.filter(
     item => item.topicName === selectedTopic || item.topicName === selectedSong,
   );
@@ -204,7 +204,7 @@ function App(): React.JSX.Element {
   const topicOrSongSelected = selectedTopic || selectedSong;
 
   const generalTopicObj = {};
-  topics.forEach(item => {
+  topicKeys.forEach(item => {
     const numberOfWordsToStudy = topicsToStudyState[item];
     const splitWord = item.split('-').slice(0, -1).join('-');
     const existsInObj = generalTopicObj[splitWord];
@@ -220,7 +220,7 @@ function App(): React.JSX.Element {
 
   const generalTopicObjKeys = Object.keys(generalTopicObj);
 
-  const topicsToDisplay = topics.filter(topic => {
+  const topicsToDisplay = topicKeys.filter(topic => {
     const generalTopicName = topic.split('-').slice(0, -1).join('-');
     if (generalTopicName === generalTopicState) {
       return true;

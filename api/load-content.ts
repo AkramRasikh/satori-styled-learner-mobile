@@ -1,10 +1,10 @@
 import {
-  japaneseContent,
   japaneseContentFullMP3s,
   japaneseSentences,
   japaneseSnippets,
   japaneseSongs,
   japaneseWords,
+  tempContent,
 } from '../refs';
 import {BACKEND_ENDPOINT} from '@env';
 import {getTopicsToStudy} from './words-to-study';
@@ -47,12 +47,12 @@ const loadAllContent = async () => {
       },
       body: JSON.stringify({
         refs: [
-          japaneseContent,
           japaneseWords,
           japaneseSentences,
           japaneseContentFullMP3s,
           japaneseSnippets,
           japaneseSongs,
+          tempContent,
         ],
       }),
     });
@@ -83,8 +83,9 @@ export const getAllData = async () => {
       });
     };
 
-    const japaneseLoadedContent =
-      getNestedObjectData(japaneseContent).japaneseContent;
+    const japaneseLoadedContent = Object.values(
+      getNestedObjectData(tempContent).tempContent,
+    );
     const japaneseLoadedWords =
       getNestedObjectData(japaneseWords).japaneseWords;
     const japaneseLoadedSentences =
@@ -96,11 +97,6 @@ export const getAllData = async () => {
       getNestedObjectData(japaneseSnippets).japaneseSnippets;
     const japaneseLoadedSongs =
       getNestedObjectData(japaneseSongs).japaneseSongs;
-
-    const topics =
-      japaneseLoadedContent && Object.keys(japaneseLoadedContent).length > 0
-        ? Object.keys(japaneseLoadedContent)
-        : [];
 
     const getAdditionalContexts = wordFormsArr => {
       const [baseWord, surfaceWord] = wordFormsArr;
@@ -116,10 +112,8 @@ export const getAllData = async () => {
       });
     };
 
-    const wordsByTopics = topics.map(topic => {
-      const allIdsFromTopicSentences = japaneseLoadedContent[topic].map(
-        item => item.id,
-      );
+    const wordsByTopics = japaneseLoadedContent.map(topic => {
+      const allIdsFromTopicSentences = topic.content.map(item => item.id);
       const filteredWordsThatHaveMatchingContext = japaneseLoadedWords.filter(
         japaneseWord =>
           japaneseWord.contexts.some(context =>
@@ -129,7 +123,7 @@ export const getAllData = async () => {
       const wordsWithAdditionalContextAdded =
         filteredWordsThatHaveMatchingContext.map(japaneseWord => {
           const contexts = japaneseWord.contexts;
-          const originalContext = japaneseLoadedContent[topic].find(
+          const originalContext = topic.content.find(
             contentWidget => contentWidget.id === contexts[0],
           );
 
