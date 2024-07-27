@@ -16,6 +16,7 @@ export const getTopicsToStudy = async () => {
     }
 
     const responseToJSON = await response.json();
+    console.log('## /topics-to-study log');
 
     return responseToJSON;
   } catch (error) {

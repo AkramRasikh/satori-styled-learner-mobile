@@ -43,7 +43,7 @@ function App(): React.JSX.Element {
     const fetchData = async () => {
       try {
         const results = await getAllData();
-        const topicsToStudy = await getTopicsToStudy();
+        const topicsToStudy = results.topicsToStudy;
         setTopicsToStudyState(topicsToStudy);
         const japaneseLoadedSongs = results?.japaneseLoadedSongs.filter(
           item => item !== null,
@@ -161,7 +161,7 @@ function App(): React.JSX.Element {
     }
   };
 
-  if (loading || !data || !data?.japaneseLoadedContent) {
+  if (loading || !data || !data?.japaneseLoadedContent || !topicsToStudyState) {
     return (
       <View
         style={{

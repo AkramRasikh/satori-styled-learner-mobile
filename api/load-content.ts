@@ -7,6 +7,8 @@ import {
   japaneseWords,
 } from '../refs';
 import {BACKEND_ENDPOINT} from '@env';
+import {getTopicsToStudy} from './words-to-study';
+// import tempContentJson from './temp-content.json';
 
 export const loadInContent = async ({ref}) => {
   const url = BACKEND_ENDPOINT + '/firebase-data';
@@ -34,33 +36,66 @@ export const loadInContent = async ({ref}) => {
   }
 };
 
+const loadAllContent = async () => {
+  const url = BACKEND_ENDPOINT + '/firebase-data-mobile';
+
+  try {
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        refs: [
+          japaneseContent,
+          japaneseWords,
+          japaneseSentences,
+          japaneseContentFullMP3s,
+          japaneseSnippets,
+          japaneseSongs,
+        ],
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+
+    const responseToJSON = await response.json();
+
+    return responseToJSON;
+  } catch (error) {
+    console.log('## loadInContent error: ', error);
+  }
+};
+
 export const getAllData = async () => {
   try {
-    const japaneseLoadedContent = await loadInContent({
-      ref: japaneseContent,
-    });
+    const loadedData = await loadAllContent();
+    const topicsToStudy = await getTopicsToStudy();
+
+    const getNestedObjectData = thisRef => {
+      return loadedData.find(el => {
+        const dataKeys = Object.keys(el);
+        if (dataKeys.includes(thisRef)) {
+          return el;
+        }
+      });
+    };
+
+    const japaneseLoadedContent =
+      getNestedObjectData(japaneseContent).japaneseContent;
     const japaneseLoadedWords =
-      (await loadInContent({
-        ref: japaneseWords,
-      })) || [];
+      getNestedObjectData(japaneseWords).japaneseWords;
     const japaneseLoadedSentences =
-      (await loadInContent({
-        ref: japaneseSentences,
-      })) || [];
-
-    const japaneseLoadedContentFullMP3s =
-      (await loadInContent({
-        ref: japaneseContentFullMP3s,
-      })) || [];
-
+      getNestedObjectData(japaneseSentences).japaneseSentences;
+    const japaneseLoadedContentFullMP3s = getNestedObjectData(
+      japaneseContentFullMP3s,
+    ).japaneseContentFullMP3s;
     const japaneseLoadedSnippets =
-      (await loadInContent({
-        ref: japaneseSnippets,
-      })) || [];
+      getNestedObjectData(japaneseSnippets).japaneseSnippets;
     const japaneseLoadedSongs =
-      (await loadInContent({
-        ref: japaneseSongs,
-      })) || [];
+      getNestedObjectData(japaneseSongs).japaneseSongs;
 
     const topics =
       japaneseLoadedContent && Object.keys(japaneseLoadedContent).length > 0
@@ -121,6 +156,7 @@ export const getAllData = async () => {
       japaneseLoadedSnippets,
       japaneseLoadedSongs,
       wordsByTopics,
+      topicsToStudy,
     };
   } catch (error) {
     console.error('Error fetching data:', error);
@@ -132,6 +168,7 @@ export const getAllData = async () => {
       japaneseLoadedContentFullMP3s: [],
       japaneseLoadedSnippets: [],
       japaneseLoadedSongs: [],
+      topicsToStudy: [],
     };
   }
 };
