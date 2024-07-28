@@ -166,19 +166,20 @@ function App(): React.JSX.Element {
 
   const updateTopicMetaData = async ({topicName, fieldToUpdate}) => {
     try {
-      const resBool = await updateCreateReviewHistory({
+      const resObj = await updateCreateReviewHistory({
         ref: tempContent,
         contentEntry: topicName,
         fieldToUpdate,
       });
-      console.log('## updateTopicMetaData:', {resBool});
-      if (resBool) {
+      if (resObj) {
         const thisTopicData = japaneseLoadedContentState.find(
           topic => topic.title === topicName,
         );
-        const newTopicState = {...thisTopicData, ...fieldToUpdate};
-        console.log('## updating contentState, ', {newTopicState});
-        setJapaneseLoadedContentState(prev => [...prev, newTopicState]);
+        const filterTopics = japaneseLoadedContentState.filter(
+          topic => topic.title !== topicName,
+        );
+        const newTopicState = {...thisTopicData, ...resObj};
+        setJapaneseLoadedContentState([...filterTopics, newTopicState]);
       }
     } catch (error) {
       console.log('## error updateTopicMetaData', {error});

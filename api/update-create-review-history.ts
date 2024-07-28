@@ -23,8 +23,9 @@ export const updateCreateReviewHistory = async ({
     if (!response.ok) {
       throw new Error('Network response was not ok');
     }
+    const responseToJSON = await response.json();
 
-    return true;
+    return responseToJSON;
   } catch (error) {
     console.log('## getTopicsToStudy error: ', error);
   }

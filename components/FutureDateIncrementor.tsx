@@ -1,4 +1,4 @@
-import {View, Text, Button, StyleSheet} from 'react-native';
+import {View, Button, StyleSheet} from 'react-native';
 
 const FutureDateIncrementor = ({futureDaysState, setFutureDaysState}) => {
   const increment = () => {
@@ -13,7 +13,6 @@ const FutureDateIncrementor = ({futureDaysState, setFutureDaysState}) => {
 
   return (
     <View>
-      <Text style={styles.countText}>{futureDaysState}</Text>
       <View style={styles.buttonContainer}>
         <Button title="(+)" onPress={increment} />
         <Button title="(-)" onPress={decrement} />
@@ -29,7 +28,6 @@ const styles = StyleSheet.create({
   buttonContainer: {
     flexDirection: 'row',
     gap: 10,
-    width: '100%',
   },
 });
 

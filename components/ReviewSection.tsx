@@ -40,7 +40,7 @@ const ReviewSection = ({
 
   const hasBeenReviewed = reviewHistory?.length > 0;
   const lastReviewText = hasBeenReviewed
-    ? `Last reviewed ${getDaysAgo(
+    ? ` Reviewed ${reviewHistory?.length} times. Last ${getDaysAgo(
         today,
         reviewHistory[reviewHistory.length - 1],
       )} days ago`
@@ -91,6 +91,7 @@ const ReviewSection = ({
         alignItems: 'center',
         gap: 10,
         paddingTop: 10,
+        paddingLeft: 10,
         paddingBottom: 10,
         width: '100%',
         borderTopWidth: 2,
@@ -123,14 +124,18 @@ const ReviewSection = ({
           width: '100%',
           padding: 10,
           gap: 10,
-          opacity: !hasBeenReviewed ? 0.5 : 1,
         }}>
         <Text>{nextReviewText}</Text>
-        <FutureDateIncrementor
-          futureDaysState={futureDaysState}
-          setFutureDaysState={setFutureDaysState}
-        />
-
+      </View>
+      <View
+        style={{
+          flexDirection: 'row',
+          flexWrap: 'wrap',
+          alignSelf: 'flex-start',
+          gap: 10,
+          paddingLeft: 10,
+          opacity: !hasBeenReviewed ? 0.5 : 1,
+        }}>
         <TouchableOpacity
           style={{
             padding: 10,
@@ -140,8 +145,12 @@ const ReviewSection = ({
           }}
           disabled={!hasBeenReviewed}
           onPress={setNextReviewDate}>
-          <Text>Review in {futureDaysState} days</Text>
+          <Text>Set review: {futureDaysState}</Text>
         </TouchableOpacity>
+        <FutureDateIncrementor
+          futureDaysState={futureDaysState}
+          setFutureDaysState={setFutureDaysState}
+        />
       </View>
     </View>
   );
