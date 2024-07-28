@@ -19,6 +19,7 @@ const TopicComponent = ({
   hasWordsToStudy,
   japaneseWordsToStudyState,
   getThisTopicsWordsFunc,
+  updateTopicMetaData,
 }) => {
   const prefixName = topicName.split('-')[0];
   const hasWordsInState = japaneseWordsToStudyState?.hasOwnProperty(prefixName);
@@ -53,6 +54,7 @@ const TopicComponent = ({
         wordsToStudy={
           hasWordsInState ? japaneseWordsToStudyState[prefixName] : null
         }
+        updateTopicMetaData={updateTopicMetaData}
       />
     </View>
   );

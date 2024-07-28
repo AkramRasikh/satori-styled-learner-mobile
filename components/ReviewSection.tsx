@@ -1,6 +1,4 @@
 import {Text, TouchableOpacity, View} from 'react-native';
-import {updateCreateReviewHistory} from '../api/update-create-review-history';
-import {tempContent} from '../refs';
 import {useState} from 'react';
 import FutureDateIncrementor from './FutureDateIncrementor';
 
@@ -30,7 +28,12 @@ const setFutureReviewDate = (today, daysToAdd) => {
   return futureDateWithDays;
 };
 
-const ReviewSection = ({reviewHistory, nextReview, topicName}) => {
+const ReviewSection = ({
+  reviewHistory,
+  nextReview,
+  topicName,
+  updateTopicMetaData,
+}) => {
   const [futureDaysState, setFutureDaysState] = useState(3);
 
   const today = new Date();
@@ -57,9 +60,8 @@ const ReviewSection = ({reviewHistory, nextReview, topicName}) => {
           ? updateExistingReviewHistory()
           : [new Date()],
       };
-      await updateCreateReviewHistory({
-        ref: tempContent,
-        contentEntry: topicName,
+      await updateTopicMetaData({
+        topicName,
         fieldToUpdate,
       });
     } catch (error) {
@@ -69,12 +71,13 @@ const ReviewSection = ({reviewHistory, nextReview, topicName}) => {
 
   const setNextReviewDate = async () => {
     try {
-      await updateCreateReviewHistory({
-        ref: tempContent,
-        contentEntry: topicName,
-        fieldToUpdate: {
-          nextReview: setFutureReviewDate(today, futureDaysState),
-        },
+      const fieldToUpdate = {
+        nextReview: setFutureReviewDate(today, futureDaysState),
+      };
+
+      await updateTopicMetaData({
+        topicName,
+        fieldToUpdate,
       });
     } catch (error) {
       console.log('## error setNextReviewDate', error);

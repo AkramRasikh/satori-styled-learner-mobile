@@ -13,11 +13,10 @@ import {makeArrayUnique} from './hooks/useHighlightWordToWordBank';
 import {addSnippetAPI, deleteSnippetAPI} from './api/snippet';
 import saveWordAPI from './api/save-word';
 import SongComponent from './components/SongComponent';
-import {
-  getThisTopicsWordsToStudyAPI,
-  getTopicsToStudy,
-} from './api/words-to-study';
+import {getThisTopicsWordsToStudyAPI} from './api/words-to-study';
 import useSetupPlayer from './hooks/useSetupPlayer';
+import {updateCreateReviewHistory} from './api/update-create-review-history';
+import {tempContent} from './refs';
 
 function App(): React.JSX.Element {
   const [data, setData] = useState<any>(null);
@@ -32,6 +31,9 @@ function App(): React.JSX.Element {
   const [showOtherTopics, setShowOtherTopics] = useState(true);
   const [topicsToStudyState, setTopicsToStudyState] = useState(null);
   const [japaneseLoadedSongsState, setJapaneseLoadedSongsState] = useState([]);
+  const [japaneseLoadedContentState, setJapaneseLoadedContentState] = useState(
+    [],
+  );
   const [japaneseWordsToStudyState, setJapaneseWordsToStudyState] = useState(
     {},
   );
@@ -48,6 +50,7 @@ function App(): React.JSX.Element {
         const japaneseLoadedSongs = results?.japaneseLoadedSongs.filter(
           item => item !== null,
         );
+        setJapaneseLoadedContentState(results.japaneseLoadedContent);
         setJapaneseLoadedSongsState(japaneseLoadedSongs);
         setData(results);
         const japaneseLoadedSnippetsWithSavedTag =
@@ -161,7 +164,33 @@ function App(): React.JSX.Element {
     }
   };
 
-  if (loading || !data || !data?.japaneseLoadedContent || !topicsToStudyState) {
+  const updateTopicMetaData = async ({topicName, fieldToUpdate}) => {
+    try {
+      const resBool = await updateCreateReviewHistory({
+        ref: tempContent,
+        contentEntry: topicName,
+        fieldToUpdate,
+      });
+      console.log('## updateTopicMetaData:', {resBool});
+      if (resBool) {
+        const thisTopicData = japaneseLoadedContentState.find(
+          topic => topic.title === topicName,
+        );
+        const newTopicState = {...thisTopicData, ...fieldToUpdate};
+        console.log('## updating contentState, ', {newTopicState});
+        setJapaneseLoadedContentState(prev => [...prev, newTopicState]);
+      }
+    } catch (error) {
+      console.log('## error updateTopicMetaData', {error});
+    }
+  };
+
+  if (
+    loading ||
+    !data ||
+    japaneseLoadedContentState?.length === 0 ||
+    !topicsToStudyState
+  ) {
     return (
       <View
         style={{
@@ -176,11 +205,12 @@ function App(): React.JSX.Element {
     );
   }
 
-  const japaneseLoadedContent = data.japaneseLoadedContent;
   const japaneseLoadedContentFullMP3s = data.japaneseLoadedContentFullMP3s;
   const japaneseLoadedWords = [...data?.japaneseLoadedWords, ...newWordsAdded];
 
-  const topicKeys = japaneseLoadedContent.map(topicData => topicData.title);
+  const topicKeys = japaneseLoadedContentState.map(
+    topicData => topicData.title,
+  );
   const snippetsForSelectedTopic = masterSnippetState?.filter(
     item => item.topicName === selectedTopic || item.topicName === selectedSong,
   );
@@ -357,7 +387,7 @@ function App(): React.JSX.Element {
           {selectedTopic ? (
             <TopicComponent
               topicName={selectedTopic}
-              japaneseLoadedContent={japaneseLoadedContent}
+              japaneseLoadedContent={japaneseLoadedContentState}
               japaneseLoadedContentFullMP3s={japaneseLoadedContentFullMP3s}
               pureWordsUnique={getPureWords()}
               structuredUnifiedData={structuredUnifiedData}
@@ -371,6 +401,7 @@ function App(): React.JSX.Element {
               hasWordsToStudy={topicsToStudyState[selectedTopic]}
               japaneseWordsToStudyState={japaneseWordsToStudyState}
               getThisTopicsWordsFunc={getThisTopicsWordsFunc}
+              updateTopicMetaData={updateTopicMetaData}
             />
           ) : selectedSong ? (
             <SongComponent

@@ -38,6 +38,7 @@ const TopicContent = ({
   snippetsForSelectedTopic,
   saveWordFirebase,
   wordsToStudy,
+  updateTopicMetaData,
 }) => {
   const [masterPlay, setMasterPlay] = useState('');
   const [currentTimeState, setCurrentTimeState] = useState(0);
@@ -314,6 +315,7 @@ const TopicContent = ({
         topicName={topicName}
         reviewHistory={reviewHistory}
         nextReview={nextReview}
+        updateTopicMetaData={updateTopicMetaData}
       />
       {lastItem && snippetsLocalAndDb?.length > 0 && (
         <SnippetTimeline
