@@ -18,6 +18,7 @@ import useSetupPlayer from './hooks/useSetupPlayer';
 import {updateCreateReviewHistory} from './api/update-create-review-history';
 import {tempContent} from './refs';
 import MoreTopics from './components/MoreTopics';
+import GeneralTopics from './components/GeneralTopics';
 
 function App(): React.JSX.Element {
   const [data, setData] = useState<any>(null);
@@ -343,37 +344,13 @@ function App(): React.JSX.Element {
           <MoreTopics handleShowGeneralTopic={handleShowGeneralTopic} />
         )}
         {!generalTopicState && !selectedSong && (
-          <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
-            {generalTopicObjKeys?.map(generalTopic => {
-              const numberOfWordsToStudy = generalTopicObj[generalTopic];
-
-              const hasReviewDue = isDueReview(generalTopic, false);
-              const isCoreStatus = isCoreContent(generalTopic, false);
-              return (
-                <View key={generalTopic}>
-                  <TouchableOpacity
-                    onPress={() => handleShowGeneralTopic(generalTopic)}
-                    style={{
-                      borderWidth: 1,
-                      borderColor: '#999999',
-                      borderRadius: 20,
-                      paddingVertical: 10,
-                      paddingHorizontal: 15,
-                      margin: 5,
-                      backgroundColor: hasReviewDue ? '#C34A2C' : 'transparent',
-                    }}>
-                    <Text>
-                      {generalTopic}{' '}
-                      {numberOfWordsToStudy ? (
-                        <Text>({numberOfWordsToStudy})</Text>
-                      ) : null}
-                      {isCoreStatus ? <Text> 🧠</Text> : null}
-                    </Text>
-                  </TouchableOpacity>
-                </View>
-              );
-            })}
-          </View>
+          <GeneralTopics
+            handleShowGeneralTopic={handleShowGeneralTopic}
+            generalTopicObjKeys={generalTopicObjKeys}
+            generalTopicObj={generalTopicObj}
+            isDueReview={isDueReview}
+            isCoreContent={isCoreContent}
+          />
         )}
         {!topicOrSongSelected || showOtherTopics ? (
           <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
