@@ -17,6 +17,7 @@ import {getThisTopicsWordsToStudyAPI} from './api/words-to-study';
 import useSetupPlayer from './hooks/useSetupPlayer';
 import {updateCreateReviewHistory} from './api/update-create-review-history';
 import {tempContent} from './refs';
+import MoreTopics from './components/MoreTopics';
 
 function App(): React.JSX.Element {
   const [data, setData] = useState<any>(null);
@@ -206,6 +207,8 @@ function App(): React.JSX.Element {
     );
   }
 
+  const today = new Date();
+
   const japaneseLoadedContentFullMP3s = data.japaneseLoadedContentFullMP3s;
   const japaneseLoadedWords = [...data?.japaneseLoadedWords, ...newWordsAdded];
 
@@ -260,33 +263,73 @@ function App(): React.JSX.Element {
     }
   });
 
+  const nextReviewCalculation = nextReview => {
+    const differenceInMilliseconds = today - new Date(nextReview);
+
+    const differenceInDays = Math.floor(
+      differenceInMilliseconds / (1000 * 60 * 60 * 24),
+    );
+
+    return differenceInDays;
+  };
+
+  const isDueReview = (topicOption, singular) => {
+    if (singular) {
+      const thisData = japaneseLoadedContentState.find(
+        topicDisplayed => topicDisplayed.title === topicOption,
+      );
+
+      const thisDataNextReview = thisData?.nextReview;
+      if (thisDataNextReview) {
+        const differenceInDays = nextReviewCalculation(thisDataNextReview);
+
+        if (differenceInDays > 0) {
+          return true;
+        }
+      }
+
+      return false;
+    }
+    let subTopicDue: number;
+    // change to forLoop
+    const nextReviewDateDue = japaneseLoadedContentState.some(jpContent => {
+      if (jpContent.title.split('-').slice(0, -1).join('-') === topicOption) {
+        const nextReview = jpContent?.nextReview;
+        if (nextReview) {
+          const differenceInDays = nextReviewCalculation(nextReview);
+          if (differenceInDays) {
+            subTopicDue = differenceInDays;
+            return true;
+          }
+        }
+      }
+    });
+
+    if (!nextReviewDateDue) {
+      return false;
+    }
+
+    if (subTopicDue > 0) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
   return (
     <SafeAreaView style={{backgroundColor: '#D3D3D3', minHeight: '100%'}}>
       <ScrollView
         contentInsetAdjustmentBehavior="automatic"
         style={{padding: 10}}>
         {selectedSong || selectedTopic || generalTopicState === '' ? null : (
-          <View
-            style={{
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
-            <TouchableOpacity
-              onPress={() => handleShowGeneralTopic('')}
-              style={{
-                backgroundColor: '#CCCCCC',
-                borderColor: 'black',
-                borderRadius: 10,
-                padding: 10,
-              }}>
-              <Text>More Topics</Text>
-            </TouchableOpacity>
-          </View>
+          <MoreTopics handleShowGeneralTopic={handleShowGeneralTopic} />
         )}
         {!generalTopicState && !selectedSong && (
           <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
             {generalTopicObjKeys?.map(generalTopic => {
               const numberOfWordsToStudy = generalTopicObj[generalTopic];
+
+              const hasReviewDue = isDueReview(generalTopic, false);
               return (
                 <View key={generalTopic}>
                   <TouchableOpacity
@@ -298,6 +341,7 @@ function App(): React.JSX.Element {
                       paddingVertical: 10,
                       paddingHorizontal: 15,
                       margin: 5,
+                      backgroundColor: hasReviewDue ? '#C34A2C' : 'transparent',
                     }}>
                     <Text>
                       {generalTopic}{' '}
@@ -319,6 +363,8 @@ function App(): React.JSX.Element {
               );
               const numberOfWordsToStudy = topicsToStudyState[topic];
 
+              const thisTopicIsDue = isDueReview(topic, true);
+
               return (
                 <View key={topic}>
                   <TouchableOpacity
@@ -330,8 +376,9 @@ function App(): React.JSX.Element {
                       paddingVertical: 10,
                       paddingHorizontal: 15,
                       margin: 5,
-                      backgroundColor:
-                        selectedTopic === topic ? 'green' : 'transparent',
+                      backgroundColor: thisTopicIsDue
+                        ? '#C34A2C'
+                        : 'transparent',
                     }}>
                     <Text>
                       {topic} {!hasUnifiedMP3File ? '🔕' : ''}{' '}
