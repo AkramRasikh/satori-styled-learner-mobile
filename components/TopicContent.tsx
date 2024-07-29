@@ -58,7 +58,7 @@ const TopicContent = ({
   const [formattedData, setFormattedData] = useState([]);
   const [initJapaneseWordsList, setInitJapaneseWordsList] = useState(null);
   const [updateWordList, setUpdateWordList] = useState(false);
-  const [showWordStudyList, setShowWordStudyList] = useState(true);
+  const [showWordStudyList, setShowWordStudyList] = useState(false);
   const [audioLoadingProgress, setAudioLoadingProgress] = useState(0);
 
   const thisTopicLoadedContent = japaneseLoadedContent.find(
