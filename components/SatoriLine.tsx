@@ -3,6 +3,8 @@ import Clipboard from '@react-native-clipboard/clipboard';
 import {Text, TouchableOpacity, View} from 'react-native';
 import HighlightTextZone from './HighlightTextZone';
 import {filterElementsById} from '../utils/filter-elements-by-id';
+import SatoriLineControls from './SatoriLineControls';
+import SatoriLineReviewSection from './SatoriLineReviewSection';
 
 const SatoriLine = ({
   id,
@@ -26,6 +28,7 @@ const SatoriLine = ({
 }) => {
   const [showEng, setShowEng] = useState(false);
   const [showNotes, setShowNotes] = useState(false);
+  const [showReviewSettings, setShowReviewSettings] = useState(false);
 
   const filteredElements = filterElementsById(safeText, 'targetWord');
 
@@ -41,30 +44,28 @@ const SatoriLine = ({
     }
   };
 
+  const openReviewPortal = () => {
+    setShowReviewSettings(!showReviewSettings);
+  };
+
   return (
     <Text
       selectable={true}
       style={{
         backgroundColor: focusThisSentence ? 'yellow' : 'transparent',
       }}>
-      <TouchableOpacity onPress={handlePlayThisLine}>
-        {isPlaying && focusThisSentence ? (
-          <Text style={{marginRight: 5}}>⏸️</Text>
-        ) : (
-          <Text style={{marginRight: 5}}>▶️</Text>
-        )}
-      </TouchableOpacity>
-      <TouchableOpacity onPress={() => setShowEng(!showEng)}>
-        <Text style={{marginRight: 5}}>🇬🇧</Text>
-      </TouchableOpacity>
-      <TouchableOpacity onPress={copySentence}>
-        <Text style={{marginRight: 5}}>📋</Text>
-      </TouchableOpacity>
-      {topicSentence.notes ? (
-        <TouchableOpacity onPress={() => setShowNotes(!showNotes)}>
-          <Text style={{marginRight: 5}}>☝🏽</Text>
-        </TouchableOpacity>
-      ) : null}
+      <SatoriLineControls
+        handlePlayThisLine={handlePlayThisLine}
+        isPlaying={isPlaying}
+        focusThisSentence={focusThisSentence}
+        copySentence={copySentence}
+        openReviewPortal={openReviewPortal}
+        topicSentence={topicSentence}
+        setShowEng={setShowEng}
+        showEng={showEng}
+        setShowNotes={setShowNotes}
+        showNotes={showNotes}
+      />
       {englishOnly ? null : highlightMode ? (
         <HighlightTextZone
           id={id}
@@ -120,6 +121,9 @@ const SatoriLine = ({
           }}>
           <Text style={{fontSize: 20}}>No words</Text>
         </View>
+      ) : null}
+      {showReviewSettings ? (
+        <SatoriLineReviewSection nextReview={topicSentence?.nextReview} />
       ) : null}
     </Text>
   );
