@@ -316,6 +316,24 @@ function App(): React.JSX.Element {
     }
   };
 
+  const isCoreContent = (topicOption, singular) => {
+    if (singular) {
+      const thisData = japaneseLoadedContentState.find(
+        topicDisplayed => topicDisplayed.title === topicOption,
+      );
+
+      const thisDataIsCoreStatus = thisData?.isCore;
+      return thisDataIsCoreStatus;
+    }
+
+    return japaneseLoadedContentState.some(jpContent => {
+      if (jpContent.title.split('-').slice(0, -1).join('-') === topicOption) {
+        const isCoreStatus = jpContent?.isCore;
+        return isCoreStatus;
+      }
+    });
+  };
+
   return (
     <SafeAreaView style={{backgroundColor: '#D3D3D3', minHeight: '100%'}}>
       <ScrollView
@@ -330,6 +348,7 @@ function App(): React.JSX.Element {
               const numberOfWordsToStudy = generalTopicObj[generalTopic];
 
               const hasReviewDue = isDueReview(generalTopic, false);
+              const isCoreStatus = isCoreContent(generalTopic, false);
               return (
                 <View key={generalTopic}>
                   <TouchableOpacity
@@ -348,6 +367,7 @@ function App(): React.JSX.Element {
                       {numberOfWordsToStudy ? (
                         <Text>({numberOfWordsToStudy})</Text>
                       ) : null}
+                      {isCoreStatus ? <Text> 🧠</Text> : null}
                     </Text>
                   </TouchableOpacity>
                 </View>
@@ -364,6 +384,7 @@ function App(): React.JSX.Element {
               const numberOfWordsToStudy = topicsToStudyState[topic];
 
               const thisTopicIsDue = isDueReview(topic, true);
+              const isCoreStatus = isCoreContent(topic, true);
 
               return (
                 <View key={topic}>
@@ -385,6 +406,7 @@ function App(): React.JSX.Element {
                       {numberOfWordsToStudy ? (
                         <Text>({numberOfWordsToStudy})</Text>
                       ) : null}
+                      {isCoreStatus ? <Text> 🧠</Text> : null}
                     </Text>
                   </TouchableOpacity>
                 </View>
