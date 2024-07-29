@@ -15,6 +15,7 @@ import MoreTopics from './components/MoreTopics';
 import GeneralTopics from './components/GeneralTopics';
 import TopicsToDisplay from './components/TopicsToDisplay';
 import SongSection from './components/SongSection';
+import ToastMessage from './components/ToastMessage';
 
 function App(): React.JSX.Element {
   const [data, setData] = useState<any>(null);
@@ -36,6 +37,7 @@ function App(): React.JSX.Element {
     {},
   );
   const [generalTopicState, setGeneralTopicState] = useState('');
+  const [updatePromptState, setUpdatePromptState] = useState('');
 
   useSetupPlayer({isSetupPlayerLoaded, setIsSetupPlayerLoaded});
 
@@ -183,6 +185,8 @@ function App(): React.JSX.Element {
         );
         const newTopicState = {...thisTopicData, ...resObj};
         setJapaneseLoadedContentState([...filterTopics, newTopicState]);
+        setUpdatePromptState(`${topicName} updated!`);
+        setTimeout(() => setUpdatePromptState(''), 3000);
       }
     } catch (error) {
       console.log('## error updateTopicMetaData', {error});
@@ -338,6 +342,9 @@ function App(): React.JSX.Element {
 
   return (
     <SafeAreaView style={{backgroundColor: '#D3D3D3', minHeight: '100%'}}>
+      {updatePromptState ? (
+        <ToastMessage toastText={updatePromptState} />
+      ) : null}
       <ScrollView
         contentInsetAdjustmentBehavior="automatic"
         style={{padding: 10}}>
