@@ -8,6 +8,7 @@ const SnippetTimeline = ({snippetsLocalAndDb, duration}) => {
           flex: 1,
           justifyContent: 'center',
           alignItems: 'center',
+          paddingTop: 10,
         }}>
         <Text style={{fontStyle: 'italic'}}>
           Snippet Timeline {snippetsLocalAndDb?.length} points

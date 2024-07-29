@@ -24,6 +24,7 @@ import useFormatUnderlyingWords from '../hooks/useFormatUnderlyingWords';
 import TopicContentLoader from './TopicContentLoader';
 import useSetTopicAudioDataInState from '../hooks/useSetTopicAudioDataInState';
 import ReviewSection from './ReviewSection';
+import IsCoreSection from './IsCoreSection';
 
 const TopicContent = ({
   topicName,
@@ -66,6 +67,7 @@ const TopicContent = ({
   const topicData = thisTopicLoadedContent.content;
   const reviewHistory = thisTopicLoadedContent.reviewHistory;
   const nextReview = thisTopicLoadedContent.nextReview;
+  const isCore = thisTopicLoadedContent?.isCore;
 
   const hasUnifiedMP3File = japaneseLoadedContentFullMP3s.some(
     mp3 => mp3.name === topicName,
@@ -316,6 +318,11 @@ const TopicContent = ({
         reviewHistory={reviewHistory}
         nextReview={nextReview}
         updateTopicMetaData={updateTopicMetaData}
+      />
+      <IsCoreSection
+        updateTopicMetaData={updateTopicMetaData}
+        topicName={topicName}
+        isCore={isCore}
       />
       {lastItem && snippetsLocalAndDb?.length > 0 && (
         <SnippetTimeline
