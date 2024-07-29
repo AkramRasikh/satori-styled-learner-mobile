@@ -1,11 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {
-  SafeAreaView,
-  ScrollView,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {SafeAreaView, ScrollView, Text, View} from 'react-native';
 
 import {getAllData} from './api/load-content';
 import TopicComponent from './components/TopicComponent';
@@ -54,7 +48,12 @@ function App(): React.JSX.Element {
         const japaneseLoadedSongs = results?.japaneseLoadedSongs.filter(
           item => item !== null,
         );
-        setJapaneseLoadedContentState(results.japaneseLoadedContent);
+        const japaneseLoadedContent = results.japaneseLoadedContent;
+        setJapaneseLoadedContentState(
+          japaneseLoadedContent.sort((a, b) => {
+            return a.isCore === b.isCore ? 0 : a.isCore ? -1 : 1;
+          }),
+        );
         setJapaneseLoadedSongsState(japaneseLoadedSongs);
         setData(results);
         const japaneseLoadedSnippetsWithSavedTag =
