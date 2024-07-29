@@ -23,6 +23,7 @@ const LineContainer = ({
   setIsPlaying,
   setHighlightMode,
   onLongPress,
+  topicName,
 }) => {
   return (
     <View>
@@ -80,6 +81,7 @@ const LineContainer = ({
                     textWidth={seperateLines ? width * 0.9 : width}
                     setHighlightMode={setHighlightMode}
                     onLongPress={onLongPress}
+                    topicName={topicName}
                   />
                 </Text>
                 <View

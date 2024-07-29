@@ -1,6 +1,5 @@
 import {Text, TouchableOpacity, View} from 'react-native';
 import FutureDateIncrementor from './FutureDateIncrementor';
-import {useState} from 'react';
 
 const nextReviewCalculation = nextReview => {
   const differenceInMilliseconds = new Date() - new Date(nextReview);
@@ -12,9 +11,13 @@ const nextReviewCalculation = nextReview => {
   return differenceInDays;
 };
 
-const SatoriLineReviewSection = ({nextReview}) => {
-  const [futureDaysState, setFutureDaysState] = useState(3);
-
+const SatoriLineReviewSection = ({
+  nextReview,
+  futureDaysState,
+  setFutureDaysState,
+  setNextReviewDate,
+  updateReviewHistory,
+}) => {
   const nextReviewText = nextReview
     ? `Due in ${nextReviewCalculation(nextReview)} days`
     : 'Not reviewed';
@@ -30,6 +33,7 @@ const SatoriLineReviewSection = ({nextReview}) => {
       <View style={{alignSelf: 'center'}}>
         <Text>{nextReviewText}</Text>
         <TouchableOpacity
+          onPress={updateReviewHistory}
           style={{
             marginTop: 3,
             backgroundColor: '#6082B6',
@@ -45,8 +49,16 @@ const SatoriLineReviewSection = ({nextReview}) => {
           futureDaysState={futureDaysState}
           setFutureDaysState={setFutureDaysState}
         />
-        <View style={{alignSelf: 'center'}}>
-          <Text>Review in {futureDaysState} days</Text>
+        <View
+          style={{
+            alignSelf: 'center',
+            backgroundColor: '#6082B6',
+            padding: 5,
+            borderRadius: 10,
+          }}>
+          <TouchableOpacity onPress={setNextReviewDate}>
+            <Text>Review in {futureDaysState} days</Text>
+          </TouchableOpacity>
         </View>
       </View>
     </View>

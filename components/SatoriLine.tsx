@@ -5,6 +5,7 @@ import HighlightTextZone from './HighlightTextZone';
 import {filterElementsById} from '../utils/filter-elements-by-id';
 import SatoriLineControls from './SatoriLineControls';
 import SatoriLineReviewSection from './SatoriLineReviewSection';
+import {updateSentenceDataAPI} from '../api/update-sentence-data';
 
 const SatoriLine = ({
   id,
@@ -25,12 +26,21 @@ const SatoriLine = ({
   textWidth,
   setHighlightMode,
   onLongPress,
+  topicName,
 }) => {
   const [showEng, setShowEng] = useState(false);
   const [showNotes, setShowNotes] = useState(false);
   const [showReviewSettings, setShowReviewSettings] = useState(false);
+  const [futureDaysState, setFutureDaysState] = useState(3);
 
   const filteredElements = filterElementsById(safeText, 'targetWord');
+
+  const today = new Date();
+
+  const reviewHistory = topicSentence?.reviewHistory;
+  const sentenceId = topicSentence?.id;
+
+  const hasBeenReviewed = reviewHistory?.length > 0;
 
   const copySentence = () => {
     Clipboard.setString(topicSentence.targetLang);
@@ -46,6 +56,50 @@ const SatoriLine = ({
 
   const openReviewPortal = () => {
     setShowReviewSettings(!showReviewSettings);
+  };
+
+  const updateExistingReviewHistory = () => {
+    return [...reviewHistory, new Date()];
+  };
+  const updateReviewHistory = async () => {
+    try {
+      const fieldToUpdate = {
+        reviewHistory: hasBeenReviewed
+          ? updateExistingReviewHistory()
+          : [new Date()],
+      };
+      await updateSentenceDataAPI({
+        topicName,
+        sentenceId,
+        fieldToUpdate,
+      });
+    } catch (error) {
+      console.log('## error updateReviewHistory', {error});
+    }
+  };
+
+  const setFutureReviewDate = (today, daysToAdd) => {
+    const futureDateWithDays = new Date(
+      today.setDate(today.getDate() + daysToAdd),
+    );
+
+    return futureDateWithDays;
+  };
+
+  const setNextReviewDate = async () => {
+    try {
+      const fieldToUpdate = {
+        nextReview: setFutureReviewDate(today, futureDaysState),
+      };
+
+      await updateSentenceDataAPI({
+        topicName,
+        sentenceId,
+        fieldToUpdate,
+      });
+    } catch (error) {
+      console.log('## error setNextReviewDate', error);
+    }
   };
 
   return (
@@ -123,7 +177,13 @@ const SatoriLine = ({
         </View>
       ) : null}
       {showReviewSettings ? (
-        <SatoriLineReviewSection nextReview={topicSentence?.nextReview} />
+        <SatoriLineReviewSection
+          nextReview={topicSentence?.nextReview}
+          futureDaysState={futureDaysState}
+          setFutureDaysState={setFutureDaysState}
+          setNextReviewDate={setNextReviewDate}
+          updateReviewHistory={updateReviewHistory}
+        />
       ) : null}
     </Text>
   );
