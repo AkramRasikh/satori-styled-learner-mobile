@@ -19,6 +19,8 @@ import {updateCreateReviewHistory} from './api/update-create-review-history';
 import {tempContent} from './refs';
 import MoreTopics from './components/MoreTopics';
 import GeneralTopics from './components/GeneralTopics';
+import TopicsToDisplay from './components/TopicsToDisplay';
+import SongSection from './components/SongSection';
 
 function App(): React.JSX.Element {
   const [data, setData] = useState<any>(null);
@@ -353,82 +355,24 @@ function App(): React.JSX.Element {
           />
         )}
         {!topicOrSongSelected || showOtherTopics ? (
-          <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
-            {topicsToDisplay?.map(topic => {
-              const hasUnifiedMP3File = japaneseLoadedContentFullMP3s.some(
-                mp3 => mp3.name === topic,
-              );
-              const numberOfWordsToStudy = topicsToStudyState[topic];
-
-              const thisTopicIsDue = isDueReview(topic, true);
-              const isCoreStatus = isCoreContent(topic, true);
-
-              return (
-                <View key={topic}>
-                  <TouchableOpacity
-                    onPress={() => handleShowTopic(topic)}
-                    style={{
-                      borderWidth: 1,
-                      borderColor: '#999999',
-                      borderRadius: 20,
-                      paddingVertical: 10,
-                      paddingHorizontal: 15,
-                      margin: 5,
-                      backgroundColor: thisTopicIsDue
-                        ? '#C34A2C'
-                        : 'transparent',
-                    }}>
-                    <Text>
-                      {topic} {!hasUnifiedMP3File ? '🔕' : ''}{' '}
-                      {numberOfWordsToStudy ? (
-                        <Text>({numberOfWordsToStudy})</Text>
-                      ) : null}
-                      {isCoreStatus ? <Text> 🧠</Text> : null}
-                    </Text>
-                  </TouchableOpacity>
-                </View>
-              );
-            })}
-          </View>
+          <TopicsToDisplay
+            topicsToDisplay={topicsToDisplay}
+            japaneseLoadedContentFullMP3s={japaneseLoadedContentFullMP3s}
+            topicsToStudyState={topicsToStudyState}
+            isDueReview={isDueReview}
+            isCoreContent={isCoreContent}
+            handleShowTopic={handleShowTopic}
+          />
         ) : null}
-        {!topicOrSongSelected && !generalTopicState ? (
-          <View style={{padding: 10}}>
-            <Text style={{textDecorationLine: 'underline'}}>Songs:</Text>
-          </View>
-        ) : null}
-        {(!topicOrSongSelected || showOtherTopics) && !generalTopicState ? (
-          <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
-            {japaneseLoadedSongsState?.map(songData => {
-              const numberOfWordsToStudy = topicsToStudyState[songData.title];
-
-              return (
-                <View key={songData.id}>
-                  <TouchableOpacity
-                    onPress={() => handleShowMusic(songData.title)}
-                    style={{
-                      borderWidth: 1,
-                      borderColor: '#999999',
-                      borderRadius: 20,
-                      paddingVertical: 10,
-                      paddingHorizontal: 15,
-                      margin: 5,
-                      backgroundColor:
-                        selectedTopic === songData.title
-                          ? 'green'
-                          : 'transparent',
-                    }}>
-                    <Text>
-                      {songData.title}{' '}
-                      {numberOfWordsToStudy ? (
-                        <Text>({numberOfWordsToStudy})</Text>
-                      ) : null}
-                    </Text>
-                  </TouchableOpacity>
-                </View>
-              );
-            })}
-          </View>
-        ) : null}
+        <SongSection
+          topicOrSongSelected={topicOrSongSelected}
+          generalTopicState={generalTopicState}
+          japaneseLoadedSongsState={japaneseLoadedSongsState}
+          showOtherTopics={showOtherTopics}
+          topicsToStudyState={topicsToStudyState}
+          selectedTopic={selectedTopic}
+          handleShowMusic={handleShowMusic}
+        />
 
         <View>
           {selectedTopic ? (
