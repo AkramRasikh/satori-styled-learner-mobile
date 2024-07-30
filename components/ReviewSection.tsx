@@ -2,15 +2,6 @@ import {Text, TouchableOpacity, View} from 'react-native';
 import {useState} from 'react';
 import FutureDateIncrementor from './FutureDateIncrementor';
 
-const getDaysAgo = (today, isoDateString) => {
-  const pastDate = new Date(isoDateString);
-  const differenceInMilliseconds = today - pastDate;
-
-  const differenceInDays = Math.floor(
-    differenceInMilliseconds / (1000 * 60 * 60 * 24),
-  );
-  return differenceInDays;
-};
 const getDaysLater = (today, futureDate) => {
   const differenceInMilliseconds = new Date(futureDate) - today;
 
@@ -39,56 +30,47 @@ const ReviewSection = ({
   const today = new Date();
 
   const hasBeenReviewed = reviewHistory?.length > 0;
-  const lastReviewText = hasBeenReviewed
-    ? ` Reviewed ${reviewHistory?.length} times. Last ${getDaysAgo(
-        today,
-        reviewHistory[reviewHistory.length - 1],
-      )} days ago`
-    : 'Not reviewed!';
 
   const nextReviewText = nextReview
     ? `Review due in ${getDaysLater(today, nextReview)} days.`
     : 'No review due';
 
+  const futureStateText =
+    futureDaysState === 0 ? 'No need' : `+${futureDaysState} days`;
+
   const updateExistingReviewHistory = () => {
     return [...reviewHistory, new Date()];
   };
-  const updateReviewHistory = async () => {
-    try {
+
+  const setNextReviewDate = () => {
+    const reviewNotNeeded = futureDaysState === 0;
+
+    if (reviewNotNeeded) {
+      updateTopicMetaData({
+        topicName,
+        fieldToUpdate: {
+          reviewHistory: [],
+          nextReview: null,
+        },
+      });
+    } else {
       const fieldToUpdate = {
         reviewHistory: hasBeenReviewed
           ? updateExistingReviewHistory()
           : [new Date()],
-      };
-      await updateTopicMetaData({
-        topicName,
-        fieldToUpdate,
-      });
-    } catch (error) {
-      console.log('## error updateReviewHistory', {error});
-    }
-  };
-
-  const setNextReviewDate = async () => {
-    try {
-      const fieldToUpdate = {
         nextReview: setFutureReviewDate(today, futureDaysState),
       };
 
-      await updateTopicMetaData({
+      updateTopicMetaData({
         topicName,
         fieldToUpdate,
       });
-    } catch (error) {
-      console.log('## error setNextReviewDate', error);
     }
   };
 
   return (
     <View
       style={{
-        justifyContent: 'center',
-        alignItems: 'center',
         gap: 10,
         paddingTop: 10,
         paddingLeft: 10,
@@ -96,46 +78,15 @@ const ReviewSection = ({
         width: '100%',
         borderTopWidth: 2,
         borderColor: 'black',
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        alignItems: 'center',
+        justifyContent: 'space-between',
       }}>
-      <View
-        style={{
-          flexDirection: 'row',
-          flexWrap: 'wrap',
-          width: '100%',
-          padding: 10,
-          gap: 10,
-        }}>
-        <Text
-          style={{
-            height: '100%',
-          }}>
-          {lastReviewText}
-        </Text>
-        <TouchableOpacity
-          style={{padding: 10, backgroundColor: 'grey', borderRadius: 10}}
-          onPress={updateReviewHistory}>
-          <Text>Reviewed</Text>
-        </TouchableOpacity>
-      </View>
-      <View
-        style={{
-          flexDirection: 'row',
-          flexWrap: 'wrap',
-          width: '100%',
-          padding: 10,
-          gap: 10,
-        }}>
+      <View>
         <Text>{nextReviewText}</Text>
       </View>
-      <View
-        style={{
-          flexDirection: 'row',
-          flexWrap: 'wrap',
-          alignSelf: 'flex-start',
-          gap: 10,
-          paddingLeft: 10,
-          opacity: !hasBeenReviewed ? 0.5 : 1,
-        }}>
+      <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
         <TouchableOpacity
           style={{
             padding: 10,
@@ -143,9 +94,8 @@ const ReviewSection = ({
             borderRadius: 10,
             marginVertical: 'auto',
           }}
-          disabled={!hasBeenReviewed}
           onPress={setNextReviewDate}>
-          <Text>Set review: {futureDaysState}</Text>
+          <Text>{futureStateText}</Text>
         </TouchableOpacity>
         <FutureDateIncrementor
           futureDaysState={futureDaysState}
