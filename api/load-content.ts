@@ -1,14 +1,13 @@
 import {
+  japaneseContent,
   japaneseContentFullMP3s,
   japaneseSentences,
   japaneseSnippets,
   japaneseSongs,
   japaneseWords,
-  tempContent,
 } from '../refs';
 import {BACKEND_ENDPOINT} from '@env';
 import {getTopicsToStudy} from './words-to-study';
-// import tempContentJson from './temp-content.json';
 
 export const loadInContent = async ({ref}) => {
   const url = BACKEND_ENDPOINT + '/firebase-data';
@@ -52,7 +51,7 @@ const loadAllContent = async () => {
           japaneseContentFullMP3s,
           japaneseSnippets,
           japaneseSongs,
-          tempContent,
+          japaneseContent,
         ],
       }),
     });
@@ -83,9 +82,10 @@ export const getAllData = async () => {
       });
     };
 
-    const japaneseLoadedContent = Object.values(
-      getNestedObjectData(tempContent).tempContent,
-    );
+    const japaneseLoadedContent = getNestedObjectData(
+      japaneseContent,
+    ).japaneseContent.filter(item => item !== null);
+
     const japaneseLoadedWords =
       getNestedObjectData(japaneseWords).japaneseWords;
     const japaneseLoadedSentences =

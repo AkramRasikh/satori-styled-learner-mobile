@@ -10,7 +10,7 @@ import SongComponent from './components/SongComponent';
 import {getThisTopicsWordsToStudyAPI} from './api/words-to-study';
 import useSetupPlayer from './hooks/useSetupPlayer';
 import {updateCreateReviewHistory} from './api/update-create-review-history';
-import {tempContent} from './refs';
+import {japaneseContent} from './refs';
 import MoreTopics from './components/MoreTopics';
 import GeneralTopics from './components/GeneralTopics';
 import TopicsToDisplay from './components/TopicsToDisplay';
@@ -174,7 +174,7 @@ function App(): React.JSX.Element {
   const updateTopicMetaData = async ({topicName, fieldToUpdate}) => {
     try {
       const resObj = await updateCreateReviewHistory({
-        ref: tempContent,
+        ref: japaneseContent,
         contentEntry: topicName,
         fieldToUpdate,
       });
