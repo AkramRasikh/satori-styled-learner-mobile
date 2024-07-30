@@ -8,7 +8,12 @@ const getDaysLater = (today, futureDate) => {
   const differenceInDays = Math.floor(
     differenceInMilliseconds / (1000 * 60 * 60 * 24),
   );
-  return differenceInDays;
+  if (differenceInDays === 0) {
+    return `Due in ${Math.floor(
+      differenceInMilliseconds / (1000 * 60 * 60),
+    )} hours`;
+  }
+  return `Due in +${differenceInDays} days`;
 };
 
 const setFutureReviewDate = (today, daysToAdd) => {
@@ -32,7 +37,7 @@ const ReviewSection = ({
   const hasBeenReviewed = reviewHistory?.length > 0;
 
   const nextReviewText = nextReview
-    ? `Review due in ${getDaysLater(today, nextReview)} days.`
+    ? getDaysLater(today, nextReview)
     : 'No review due';
 
   const futureStateText =
