@@ -42,7 +42,7 @@ const SatoriLine = ({
 
   const hasBeenReviewed = reviewHistory?.length > 0;
 
-  const hasBeenMarkedAsDifficult = Boolean(topicSentence?.nextReview);
+  const hasBeenMarkedAsDifficult = topicSentence?.nextReview;
 
   const copySentence = () => {
     Clipboard.setString(topicSentence.targetLang);
@@ -112,7 +112,7 @@ const SatoriLine = ({
       selectable={true}
       style={{
         backgroundColor: focusThisSentence ? 'yellow' : 'transparent',
-        color: hasBeenMarkedAsDifficult ? '#8B0000' : 'auto',
+        color: hasBeenMarkedAsDifficult ? '#8B0000' : 'black',
       }}>
       <SatoriLineControls
         handlePlayThisLine={handlePlayThisLine}
