@@ -14,6 +14,7 @@ export const getTopicsToStudy = async () => {
     if (!response.ok) {
       throw new Error('Network response was not ok');
     }
+    console.log('## getTopicsToStudy log needed for some reason');
 
     const responseToJSON = await response.json();
 
