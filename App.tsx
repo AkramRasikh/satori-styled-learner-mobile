@@ -202,7 +202,6 @@ function App(): React.JSX.Element {
         sentenceId,
         fieldToUpdate,
       });
-      console.log('## updateSentenceData', {resObj});
 
       if (resObj) {
         const thisTopicDataIndex = japaneseLoadedContentState.findIndex(
