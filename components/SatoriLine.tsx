@@ -5,7 +5,6 @@ import HighlightTextZone from './HighlightTextZone';
 import {filterElementsById} from '../utils/filter-elements-by-id';
 import SatoriLineControls from './SatoriLineControls';
 import SatoriLineReviewSection from './SatoriLineReviewSection';
-import {updateSentenceDataAPI} from '../api/update-sentence-data';
 
 const SatoriLine = ({
   id,
@@ -27,6 +26,7 @@ const SatoriLine = ({
   setHighlightMode,
   onLongPress,
   topicName,
+  updateSentenceData,
 }) => {
   const [showEng, setShowEng] = useState(false);
   const [showNotes, setShowNotes] = useState(false);
@@ -61,21 +61,17 @@ const SatoriLine = ({
   const updateExistingReviewHistory = () => {
     return [...reviewHistory, new Date()];
   };
-  const updateReviewHistory = async () => {
-    try {
-      const fieldToUpdate = {
-        reviewHistory: hasBeenReviewed
-          ? updateExistingReviewHistory()
-          : [new Date()],
-      };
-      await updateSentenceDataAPI({
-        topicName,
-        sentenceId,
-        fieldToUpdate,
-      });
-    } catch (error) {
-      console.log('## error updateReviewHistory', {error});
-    }
+  const updateReviewHistory = () => {
+    const fieldToUpdate = {
+      reviewHistory: hasBeenReviewed
+        ? updateExistingReviewHistory()
+        : [new Date()],
+    };
+    updateSentenceData({
+      topicName,
+      sentenceId,
+      fieldToUpdate,
+    });
   };
 
   const setFutureReviewDate = (today, daysToAdd) => {
@@ -86,20 +82,16 @@ const SatoriLine = ({
     return futureDateWithDays;
   };
 
-  const setNextReviewDate = async () => {
-    try {
-      const fieldToUpdate = {
-        nextReview: setFutureReviewDate(today, futureDaysState),
-      };
+  const setNextReviewDate = () => {
+    const fieldToUpdate = {
+      nextReview: setFutureReviewDate(today, futureDaysState),
+    };
 
-      await updateSentenceDataAPI({
-        topicName,
-        sentenceId,
-        fieldToUpdate,
-      });
-    } catch (error) {
-      console.log('## error setNextReviewDate', error);
-    }
+    updateSentenceData({
+      topicName,
+      sentenceId,
+      fieldToUpdate,
+    });
   };
 
   return (

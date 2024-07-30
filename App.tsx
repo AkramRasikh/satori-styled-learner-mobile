@@ -16,6 +16,7 @@ import GeneralTopics from './components/GeneralTopics';
 import TopicsToDisplay from './components/TopicsToDisplay';
 import SongSection from './components/SongSection';
 import ToastMessage from './components/ToastMessage';
+import {updateSentenceDataAPI} from './api/update-sentence-data';
 
 function App(): React.JSX.Element {
   const [data, setData] = useState<any>(null);
@@ -38,6 +39,7 @@ function App(): React.JSX.Element {
   );
   const [generalTopicState, setGeneralTopicState] = useState('');
   const [updatePromptState, setUpdatePromptState] = useState('');
+  const [triggerSentenceIdUpdate, setTriggerSentenceIdUpdate] = useState('');
 
   useSetupPlayer({isSetupPlayerLoaded, setIsSetupPlayerLoaded});
 
@@ -190,6 +192,55 @@ function App(): React.JSX.Element {
       }
     } catch (error) {
       console.log('## error updateTopicMetaData', {error});
+    }
+  };
+
+  const updateSentenceData = async ({topicName, sentenceId, fieldToUpdate}) => {
+    try {
+      const resObj = await updateSentenceDataAPI({
+        topicName,
+        sentenceId,
+        fieldToUpdate,
+      });
+      console.log('## updateSentenceData', {resObj});
+
+      if (resObj) {
+        const thisTopicDataIndex = japaneseLoadedContentState.findIndex(
+          topic => topic.title === topicName,
+        );
+
+        const thisTopicData = japaneseLoadedContentState[thisTopicDataIndex];
+
+        const thisTopicUpdateContent = thisTopicData.content.map(
+          sentenceData => {
+            if (sentenceData.id === sentenceId) {
+              return {
+                ...sentenceData,
+                ...resObj,
+              };
+            }
+            return sentenceData;
+          },
+        );
+
+        const newTopicState = {
+          ...thisTopicData,
+          content: thisTopicUpdateContent,
+        };
+
+        const filteredTopics = japaneseLoadedContentState.map(topic => {
+          if (topic.title !== topicName) {
+            return topic;
+          }
+          return newTopicState;
+        });
+        setJapaneseLoadedContentState(filteredTopics);
+        setUpdatePromptState(`${topicName} updated!`);
+        setTimeout(() => setUpdatePromptState(''), 3000);
+        setTriggerSentenceIdUpdate(sentenceId);
+      }
+    } catch (error) {
+      console.log('## updateSentenceData', {error});
     }
   };
 
@@ -399,6 +450,9 @@ function App(): React.JSX.Element {
               japaneseWordsToStudyState={japaneseWordsToStudyState}
               getThisTopicsWordsFunc={getThisTopicsWordsFunc}
               updateTopicMetaData={updateTopicMetaData}
+              updateSentenceData={updateSentenceData}
+              triggerSentenceIdUpdate={triggerSentenceIdUpdate}
+              setTriggerSentenceIdUpdate={setTriggerSentenceIdUpdate}
             />
           ) : selectedSong ? (
             <SongComponent

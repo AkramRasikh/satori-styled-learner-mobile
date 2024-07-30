@@ -2,7 +2,7 @@ import {Text, TouchableOpacity, View} from 'react-native';
 import FutureDateIncrementor from './FutureDateIncrementor';
 
 const nextReviewCalculation = nextReview => {
-  const differenceInMilliseconds = new Date() - new Date(nextReview);
+  const differenceInMilliseconds = new Date(nextReview) - new Date();
 
   const differenceInDays = Math.floor(
     differenceInMilliseconds / (1000 * 60 * 60 * 24),

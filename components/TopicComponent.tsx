@@ -20,6 +20,9 @@ const TopicComponent = ({
   japaneseWordsToStudyState,
   getThisTopicsWordsFunc,
   updateTopicMetaData,
+  updateSentenceData,
+  triggerSentenceIdUpdate,
+  setTriggerSentenceIdUpdate,
 }) => {
   const prefixName = topicName.split('-')[0];
   const hasWordsInState = japaneseWordsToStudyState?.hasOwnProperty(prefixName);
@@ -55,6 +58,9 @@ const TopicComponent = ({
           hasWordsInState ? japaneseWordsToStudyState[prefixName] : null
         }
         updateTopicMetaData={updateTopicMetaData}
+        updateSentenceData={updateSentenceData}
+        triggerSentenceIdUpdate={triggerSentenceIdUpdate}
+        setTriggerSentenceIdUpdate={setTriggerSentenceIdUpdate}
       />
     </View>
   );

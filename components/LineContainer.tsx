@@ -24,6 +24,7 @@ const LineContainer = ({
   setHighlightMode,
   onLongPress,
   topicName,
+  updateSentenceData,
 }) => {
   return (
     <View>
@@ -82,6 +83,7 @@ const LineContainer = ({
                     setHighlightMode={setHighlightMode}
                     onLongPress={onLongPress}
                     topicName={topicName}
+                    updateSentenceData={updateSentenceData}
                   />
                 </Text>
                 <View

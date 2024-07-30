@@ -40,6 +40,9 @@ const TopicContent = ({
   saveWordFirebase,
   wordsToStudy,
   updateTopicMetaData,
+  updateSentenceData,
+  triggerSentenceIdUpdate,
+  setTriggerSentenceIdUpdate,
 }) => {
   const [masterPlay, setMasterPlay] = useState('');
   const [currentTimeState, setCurrentTimeState] = useState(0);
@@ -64,9 +67,11 @@ const TopicContent = ({
   const thisTopicLoadedContent = japaneseLoadedContent.find(
     contentData => contentData.title === topicName,
   );
+
   const topicData = thisTopicLoadedContent.content;
   const reviewHistory = thisTopicLoadedContent.reviewHistory;
   const nextReview = thisTopicLoadedContent.nextReview;
+
   const isCore = thisTopicLoadedContent?.isCore;
 
   const hasUnifiedMP3File = japaneseLoadedContentFullMP3s.some(
@@ -228,6 +233,33 @@ const TopicContent = ({
     setMasterPlay,
   });
 
+  useEffect(() => {
+    if (triggerSentenceIdUpdate) {
+      // find sentenceId in content
+      const shouldTriggerFormatDataUpdate = topicData.find(
+        sentenceData => sentenceData.id === triggerSentenceIdUpdate,
+      );
+      if (shouldTriggerFormatDataUpdate) {
+        const updatedFormattedData = formattedData.map(item => {
+          if (triggerSentenceIdUpdate !== item.id) {
+            return item;
+          }
+          return {
+            ...item,
+            ...shouldTriggerFormatDataUpdate,
+          };
+        });
+        setFormattedData(updatedFormattedData);
+        setTriggerSentenceIdUpdate('');
+      }
+    }
+  }, [
+    triggerSentenceIdUpdate,
+    formattedData,
+    topicData,
+    setTriggerSentenceIdUpdate,
+  ]);
+
   if (!soundRefLoaded || formattedData?.length === 0) {
     return (
       <TopicContentLoader
@@ -292,6 +324,7 @@ const TopicContent = ({
           setHighlightMode={setHighlightMode}
           onLongPress={onLongPress}
           topicName={topicName}
+          updateSentenceData={updateSentenceData}
         />
       </ScrollView>
       {hasUnifiedMP3File && (
