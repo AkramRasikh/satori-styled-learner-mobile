@@ -8,7 +8,13 @@ const nextReviewCalculation = nextReview => {
     differenceInMilliseconds / (1000 * 60 * 60 * 24),
   );
 
-  return differenceInDays;
+  if (differenceInDays === 0) {
+    return `Due in ${Math.floor(
+      differenceInMilliseconds / (1000 * 60 * 60),
+    )} hours`;
+  }
+
+  return `Due in +${differenceInDays} days`;
 };
 
 const SatoriLineReviewSection = ({
@@ -16,40 +22,28 @@ const SatoriLineReviewSection = ({
   futureDaysState,
   setFutureDaysState,
   setNextReviewDate,
-  updateReviewHistory,
 }) => {
   const nextReviewText = nextReview
-    ? `Due in ${nextReviewCalculation(nextReview)} days`
+    ? nextReviewCalculation(nextReview)
     : 'Not reviewed';
 
   const reviewText =
     nextReview && futureDaysState === 0
-      ? 'Review from reviews?'
-      : `Review in ${futureDaysState} days`;
+      ? 'No need'
+      : `+ ${futureDaysState} days`;
   return (
     <View
       style={{
         flexDirection: 'row',
         flexWrap: 'wrap',
         paddingVertical: 5,
-        justifyContent: 'space-around',
+        justifyContent: 'space-between',
         width: '100%',
       }}>
       <View style={{alignSelf: 'center'}}>
         <Text>{nextReviewText}</Text>
-        <TouchableOpacity
-          onPress={updateReviewHistory}
-          style={{
-            marginTop: 3,
-            backgroundColor: '#6082B6',
-            padding: 5,
-            borderRadius: 10,
-            margin: 'auto',
-          }}>
-          <Text>Reviewed</Text>
-        </TouchableOpacity>
       </View>
-      <View style={{flexDirection: 'row', flexWrap: 'wrap', gap: 10}}>
+      <View style={{flexDirection: 'row', flexWrap: 'wrap', gap: 5}}>
         <FutureDateIncrementor
           futureDaysState={futureDaysState}
           setFutureDaysState={setFutureDaysState}

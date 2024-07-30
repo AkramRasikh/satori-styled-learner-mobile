@@ -63,18 +63,6 @@ const SatoriLine = ({
   const updateExistingReviewHistory = () => {
     return [...reviewHistory, new Date()];
   };
-  const updateReviewHistory = () => {
-    const fieldToUpdate = {
-      reviewHistory: hasBeenReviewed
-        ? updateExistingReviewHistory()
-        : [new Date()],
-    };
-    updateSentenceData({
-      topicName,
-      sentenceId,
-      fieldToUpdate,
-    });
-  };
 
   const setFutureReviewDate = (today, daysToAdd) => {
     const futureDateWithDays = new Date(
@@ -97,6 +85,9 @@ const SatoriLine = ({
     } else {
       const fieldToUpdate = {
         nextReview: setFutureReviewDate(today, futureDaysState),
+        reviewHistory: hasBeenReviewed
+          ? updateExistingReviewHistory()
+          : [new Date()],
       };
 
       updateSentenceData({
@@ -105,6 +96,7 @@ const SatoriLine = ({
         fieldToUpdate,
       });
     }
+    setShowReviewSettings(false);
   };
 
   return (
@@ -188,7 +180,6 @@ const SatoriLine = ({
           futureDaysState={futureDaysState}
           setFutureDaysState={setFutureDaysState}
           setNextReviewDate={setNextReviewDate}
-          updateReviewHistory={updateReviewHistory}
         />
       ) : null}
     </Text>
