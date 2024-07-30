@@ -21,6 +21,11 @@ const SatoriLineReviewSection = ({
   const nextReviewText = nextReview
     ? `Due in ${nextReviewCalculation(nextReview)} days`
     : 'Not reviewed';
+
+  const reviewText =
+    nextReview && futureDaysState === 0
+      ? 'Review from reviews?'
+      : `Review in ${futureDaysState} days`;
   return (
     <View
       style={{
@@ -57,7 +62,7 @@ const SatoriLineReviewSection = ({
             borderRadius: 10,
           }}>
           <TouchableOpacity onPress={setNextReviewDate}>
-            <Text>Review in {futureDaysState} days</Text>
+            <Text>{reviewText}</Text>
           </TouchableOpacity>
         </View>
       </View>

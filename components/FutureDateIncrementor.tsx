@@ -6,7 +6,7 @@ const FutureDateIncrementor = ({futureDaysState, setFutureDaysState}) => {
   };
 
   const decrement = () => {
-    if (futureDaysState > 1) {
+    if (futureDaysState >= 1) {
       setFutureDaysState(futureDaysState - 1);
     }
   };

@@ -85,15 +85,26 @@ const SatoriLine = ({
   };
 
   const setNextReviewDate = () => {
-    const fieldToUpdate = {
-      nextReview: setFutureReviewDate(today, futureDaysState),
-    };
+    if (futureDaysState === 0) {
+      updateSentenceData({
+        topicName,
+        sentenceId,
+        fieldToUpdate: {
+          nextReview: null,
+          reviewHistory: [],
+        },
+      });
+    } else {
+      const fieldToUpdate = {
+        nextReview: setFutureReviewDate(today, futureDaysState),
+      };
 
-    updateSentenceData({
-      topicName,
-      sentenceId,
-      fieldToUpdate,
-    });
+      updateSentenceData({
+        topicName,
+        sentenceId,
+        fieldToUpdate,
+      });
+    }
   };
 
   return (
