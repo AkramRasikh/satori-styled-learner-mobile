@@ -16,8 +16,9 @@ const TopicsToDisplay = ({
         );
         const numberOfWordsToStudy = topicsToStudyState[topic];
 
-        const thisTopicIsDue = isDueReview(topic, true);
+        const thisTopicIsDue = isDueReview(topic, true, true);
         const isCoreStatus = isCoreContent(topic, true);
+        const thisTopicIsUpcoming = isDueReview(topic, true, false);
 
         return (
           <View key={topic}>
@@ -30,7 +31,11 @@ const TopicsToDisplay = ({
                 paddingVertical: 10,
                 paddingHorizontal: 15,
                 margin: 5,
-                backgroundColor: thisTopicIsDue ? '#C34A2C' : 'transparent',
+                backgroundColor: thisTopicIsDue
+                  ? '#C34A2C'
+                  : thisTopicIsUpcoming
+                  ? '#ADD8E6'
+                  : 'transparent',
               }}>
               <Text>
                 {topic} {!hasUnifiedMP3File ? '🔕' : ''}{' '}

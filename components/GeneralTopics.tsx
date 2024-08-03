@@ -12,8 +12,9 @@ const GeneralTopics = ({
       {generalTopicObjKeys?.map(generalTopic => {
         const numberOfWordsToStudy = generalTopicObj[generalTopic];
 
-        const hasReviewDue = isDueReview(generalTopic, false);
+        const hasReviewDue = isDueReview(generalTopic, false, true);
         const isCoreStatus = isCoreContent(generalTopic, false);
+        const thisTopicIsUpcoming = isDueReview(generalTopic, false, false);
         return (
           <View key={generalTopic}>
             <TouchableOpacity
@@ -25,7 +26,11 @@ const GeneralTopics = ({
                 paddingVertical: 10,
                 paddingHorizontal: 15,
                 margin: 5,
-                backgroundColor: hasReviewDue ? '#C34A2C' : 'transparent',
+                backgroundColor: hasReviewDue
+                  ? '#C34A2C'
+                  : thisTopicIsUpcoming
+                  ? '#ADD8E6'
+                  : 'transparent',
               }}>
               <Text>
                 {generalTopic}{' '}

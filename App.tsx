@@ -329,7 +329,7 @@ function App(): React.JSX.Element {
     return differenceInDays;
   };
 
-  const isDueReview = (topicOption, singular) => {
+  const isDueReview = (topicOption, singular, isReview) => {
     if (singular) {
       const thisData = japaneseLoadedContentState.find(
         topicDisplayed => topicDisplayed.title === topicOption,
@@ -338,8 +338,10 @@ function App(): React.JSX.Element {
       const thisDataNextReview = thisData?.nextReview;
       if (thisDataNextReview) {
         const differenceInDays = nextReviewCalculation(thisDataNextReview);
-
-        if (differenceInDays > 0) {
+        const condition = isReview
+          ? differenceInDays > 0
+          : differenceInDays < 0;
+        if (condition) {
           return true;
         }
       }
@@ -365,7 +367,9 @@ function App(): React.JSX.Element {
       return false;
     }
 
-    if (subTopicDue > 0) {
+    const condition = isReview ? subTopicDue > 0 : subTopicDue < 0;
+
+    if (condition) {
       return true;
     } else {
       return false;
