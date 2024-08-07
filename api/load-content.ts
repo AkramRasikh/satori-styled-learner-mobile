@@ -7,6 +7,8 @@ import {
   japaneseWords,
 } from '../refs';
 import {BACKEND_ENDPOINT} from '@env';
+import mockTopicsToStudy from '../mock-firestore/mock-topics-to-study.json';
+import mockGetAllRes from '../mock-firestore/mock-get-all-res.json';
 import {getTopicsToStudy} from './words-to-study';
 
 export const loadInContent = async ({ref}) => {
@@ -69,9 +71,14 @@ const loadAllContent = async () => {
 };
 
 export const getAllData = async () => {
+  const withMock = process.env.USE_MOCK_DB;
+
   try {
-    const loadedData = await loadAllContent();
-    const topicsToStudy = await getTopicsToStudy();
+    const loadedData = withMock ? mockGetAllRes : await loadAllContent();
+
+    const topicsToStudy = withMock
+      ? mockTopicsToStudy
+      : await getTopicsToStudy();
 
     const getNestedObjectData = thisRef => {
       return loadedData.find(el => {
