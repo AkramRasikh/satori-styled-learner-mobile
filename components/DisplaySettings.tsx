@@ -21,6 +21,7 @@ const DisplaySettings = ({
 }) => {
   return (
     <View
+      testID="display-settings"
       style={{
         gap: 5,
         flexDirection: 'row',

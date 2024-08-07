@@ -5,6 +5,7 @@ const TopicContentLoader = ({audioLoadingProgress, topicDataLengths}) => {
   const loadingProgress = audioLoadingProgress / topicDataLengths;
   return (
     <View
+      testID="topic-loader"
       style={{
         justifyContent: 'center',
         alignItems: 'center',

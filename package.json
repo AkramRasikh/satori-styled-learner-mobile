@@ -9,7 +9,8 @@
     "start": "react-native start",
     "start-local": "cross-env USE_MOCK_DB=true react-native start",
     "local": "/Users/akramrasikh/projects/SatoriNativeApp/node_modules/.generated/launchPackager.command; exit",
-    "test": "jest"
+    "test": "jest",
+    "test-e2e": "detox test -c ios.sim.debug"
   },
   "dependencies": {
     "@react-native-clipboard/clipboard": "^1.10.0",
@@ -56,7 +57,7 @@
         "binaryPath": "ios/build/Build/Products/Debug-iphonesimulator/SatoriNativeApp.app",
         "build": "xcodebuild -workspace ios/SatoriNativeApp.xcworkspace -scheme SatoriNativeApp -configuration Debug -sdk iphonesimulator -derivedDataPath ios/build",
         "device": {
-          "type": "iPhone SE (3rd generation)"
+          "type": "iPhone 15"
         }
       }
     }

@@ -16,7 +16,7 @@ const GeneralTopics = ({
         const isCoreStatus = isCoreContent(generalTopic, false);
         const thisTopicIsUpcoming = isDueReview(generalTopic, false, false);
         return (
-          <View key={generalTopic}>
+          <View key={generalTopic} testID={generalTopic}>
             <TouchableOpacity
               onPress={() => handleShowGeneralTopic(generalTopic)}
               style={{
@@ -33,7 +33,7 @@ const GeneralTopics = ({
                   : 'transparent',
               }}>
               <Text>
-                {generalTopic}{' '}
+                <Text>{generalTopic}</Text>{' '}
                 {numberOfWordsToStudy ? (
                   <Text>({numberOfWordsToStudy})</Text>
                 ) : null}

@@ -21,7 +21,7 @@ const TopicsToDisplay = ({
         const thisTopicIsUpcoming = isDueReview(topic, true, false);
 
         return (
-          <View key={topic}>
+          <View key={topic} testID={topic}>
             <TouchableOpacity
               onPress={() => handleShowTopic(topic)}
               style={{
