@@ -396,6 +396,9 @@ function App(): React.JSX.Element {
 
   return (
     <SafeAreaView style={{backgroundColor: '#D3D3D3', minHeight: '100%'}}>
+      <View>
+        <Text>Siu</Text>
+      </View>
       {updatePromptState ? (
         <ToastMessage toastText={updatePromptState} />
       ) : null}

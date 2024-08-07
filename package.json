@@ -36,6 +36,7 @@
     "babel-plugin-transform-inline-environment-variables": "^0.4.4",
     "babel-preset-react-native": "^4.0.1",
     "cross-env": "^7.0.3",
+    "detox": "^20.25.2",
     "eslint": "^8.19.0",
     "jest": "^29.6.3",
     "prettier": "2.8.8",
@@ -45,5 +46,19 @@
   "engines": {
     "node": ">=18"
   },
-  "packageManager": "yarn@3.6.4"
+  "packageManager": "yarn@3.6.4",
+  "detox": {
+    "testRunner": "jest",
+    "runnerConfig": "e2e/config.json",
+    "configurations": {
+      "ios.sim.debug": {
+        "type": "ios.simulator",
+        "binaryPath": "ios/build/Build/Products/Debug-iphonesimulator/SatoriNativeApp.app",
+        "build": "xcodebuild -workspace ios/SatoriNativeApp.xcworkspace -scheme SatoriNativeApp -configuration Debug -sdk iphonesimulator -derivedDataPath ios/build",
+        "device": {
+          "type": "iPhone SE (3rd generation)"
+        }
+      }
+    }
+  }
 }
