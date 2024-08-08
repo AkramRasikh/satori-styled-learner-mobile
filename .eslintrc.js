@@ -5,5 +5,6 @@ module.exports = {
     device: 'readonly',
     element: 'readonly',
     by: 'readonly',
+    waitFor: 'readonly',
   },
 };

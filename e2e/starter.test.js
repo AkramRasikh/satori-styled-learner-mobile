@@ -7,7 +7,7 @@ describe('App', () => {
     await device.reloadReactNative();
   });
 
-  it('should render the topics -> subtopics -> bilingual text', async () => {
+  it('should render the topics -> subtopics -> bilingual text -> play audio', async () => {
     const foodTopic = 'food';
     const moreTopics = 'More Topics';
     const displaySettingsId = 'display-settings';
