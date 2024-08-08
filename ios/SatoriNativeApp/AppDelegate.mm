@@ -3,6 +3,7 @@
 #import <React/RCTRootView.h>
 #import <AVFoundation/AVFoundation.h>
 #import <MediaPlayer/MediaPlayer.h>
+#import <RNGestureHandler.h> // Correct import if necessary
 
 @implementation AppDelegate
 
