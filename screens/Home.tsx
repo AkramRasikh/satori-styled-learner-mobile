@@ -17,6 +17,7 @@ import TopicsToDisplay from '../components/TopicsToDisplay';
 import SongSection from '../components/SongSection';
 import ToastMessage from '../components/ToastMessage';
 import {updateSentenceDataAPI} from '../api/update-sentence-data';
+import {TouchableOpacity} from 'react-native-gesture-handler';
 
 function Home({navigation}): React.JSX.Element {
   const [data, setData] = useState<any>(null);
@@ -394,23 +395,10 @@ function Home({navigation}): React.JSX.Element {
     });
   };
 
-  const showNaviBtn = false;
+  const showNaviBtn = !(generalTopicState || selectedSong || selectedTopic);
 
   return (
     <SafeAreaView style={{backgroundColor: '#D3D3D3', minHeight: '100%'}}>
-      {showNaviBtn ? (
-        <View
-          style={{
-            justifyContent: 'center',
-            alignItems: 'center',
-            marginBottom: 100,
-          }}>
-          <Button
-            title="Go to DifficultSentences Screen"
-            onPress={() => navigation.navigate('DifficultSentences')}
-          />
-        </View>
-      ) : null}
       {updatePromptState ? (
         <ToastMessage toastText={updatePromptState} />
       ) : null}
@@ -420,6 +408,23 @@ function Home({navigation}): React.JSX.Element {
         {selectedSong || selectedTopic || generalTopicState === '' ? null : (
           <MoreTopics handleShowGeneralTopic={handleShowGeneralTopic} />
         )}
+        {showNaviBtn ? (
+          <View>
+            <TouchableOpacity
+              style={{
+                borderWidth: 1,
+                borderColor: '#999999',
+                borderRadius: 20,
+                paddingVertical: 10,
+                paddingHorizontal: 15,
+                margin: 5,
+                backgroundColor: 'transparent',
+              }}
+              onPress={() => navigation.navigate('DifficultSentences')}>
+              <Text style={{textAlign: 'center'}}>Sentence reps 🤓🏋🏽‍♂️</Text>
+            </TouchableOpacity>
+          </View>
+        ) : null}
         {!generalTopicState && !selectedSong && (
           <GeneralTopics
             handleShowGeneralTopic={handleShowGeneralTopic}
