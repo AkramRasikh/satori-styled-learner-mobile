@@ -15,6 +15,7 @@ export const getTopicsToStudy = async () => {
       throw new Error('Network response was not ok');
     }
     console.log('## getTopicsToStudy log needed for some reason');
+    // console.log('## getTopicsToStudy log needed for some reason');
 
     const responseToJSON = await response.json();
 
@@ -49,6 +50,6 @@ export const getThisTopicsWordsToStudyAPI = async ({topic, isMusic}) => {
 
     return responseToJSON;
   } catch (error) {
-    console.log('## getTopicsToStudy error: ', error);
+    console.log('## getThisTopicsWordsToStudyAPI error: ', error);
   }
 };
