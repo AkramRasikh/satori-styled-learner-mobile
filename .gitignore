@@ -76,4 +76,4 @@ yarn-error.log
 # env
 .env
 .env.local-dev
-.env.dev
+.env.development
