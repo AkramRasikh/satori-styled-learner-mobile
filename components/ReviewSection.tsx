@@ -1,9 +1,11 @@
 import {Text, TouchableOpacity, View} from 'react-native';
 import {useState} from 'react';
 import FutureDateIncrementor from './FutureDateIncrementor';
+import {isSameDay} from '../utils/check-same-date';
 
 const getDaysLater = (today, futureDate) => {
-  const differenceInMilliseconds = new Date(futureDate) - today;
+  const futureDateObj = new Date(futureDate);
+  const differenceInMilliseconds = futureDateObj - today;
 
   const differenceInDays = Math.floor(
     differenceInMilliseconds / (1000 * 60 * 60 * 24),
@@ -13,6 +15,15 @@ const getDaysLater = (today, futureDate) => {
       differenceInMilliseconds / (1000 * 60 * 60),
     )} hours`;
   }
+
+  if (isSameDay(today, futureDateObj)) {
+    return 'Due today';
+  }
+
+  if (differenceInDays < -1) {
+    return `Due ${differenceInDays} days ago`;
+  }
+
   return `Due in +${differenceInDays} days`;
 };
 
