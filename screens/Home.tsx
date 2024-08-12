@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Button, SafeAreaView, ScrollView, Text, View} from 'react-native';
+import {SafeAreaView, ScrollView, Text, View} from 'react-native';
 
 import {getAllData} from '../api/load-content';
 import TopicComponent from '../components/TopicComponent';
@@ -18,6 +18,7 @@ import SongSection from '../components/SongSection';
 import ToastMessage from '../components/ToastMessage';
 import {updateSentenceDataAPI} from '../api/update-sentence-data';
 import {TouchableOpacity} from 'react-native-gesture-handler';
+import {isSameDay} from '../utils/check-same-date';
 
 function Home({navigation}): React.JSX.Element {
   const [data, setData] = useState<any>(null);
@@ -321,11 +322,16 @@ function Home({navigation}): React.JSX.Element {
   });
 
   const nextReviewCalculation = nextReview => {
-    const differenceInMilliseconds = today - new Date(nextReview);
+    const nextReviewDate = new Date(nextReview);
+    const differenceInMilliseconds = today - nextReviewDate;
 
     const differenceInDays = Math.floor(
       differenceInMilliseconds / (1000 * 60 * 60 * 24),
     );
+
+    if (isSameDay(today, nextReviewDate)) {
+      return true;
+    }
 
     return differenceInDays;
   };
