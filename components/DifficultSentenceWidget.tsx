@@ -91,6 +91,7 @@ const Content = ({topic, isCore, targetLang, baseLang}) => {
 };
 
 const DifficultSentenceWidget = ({sentence}) => {
+  // const DifficultSentenceWidget = ({sentence, getDaysLater}) => {
   // const [loadURL, setLoadURL] = useState(false);
   const id = sentence.id;
   const topic = sentence.topic;
