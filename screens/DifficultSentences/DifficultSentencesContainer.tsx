@@ -5,6 +5,8 @@ import DifficultSentenceWidget from '../../components/DifficultSentenceWidget';
 const DifficultSentencesContainer = ({
   difficultSentencesState,
 }): React.JSX.Element => {
+  const todayDateObj = new Date();
+
   return (
     <SafeAreaView style={{backgroundColor: '#D3D3D3', minHeight: '100%'}}>
       <View style={{padding: 10}}>
@@ -18,6 +20,7 @@ const DifficultSentencesContainer = ({
                 <DifficultSentenceWidget
                   key={sentence.id}
                   sentence={sentence}
+                  todayDateObj={todayDateObj}
                 />
               );
             })}
