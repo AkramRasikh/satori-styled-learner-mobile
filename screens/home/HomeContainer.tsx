@@ -1,30 +1,28 @@
 import React, {useEffect, useState} from 'react';
 import {SafeAreaView, ScrollView, Text, View} from 'react-native';
 
-import {getAllData} from '../api/load-content';
-import TopicComponent from '../components/TopicComponent';
-import {makeArrayUnique} from '../hooks/useHighlightWordToWordBank';
-import {addSnippetAPI, deleteSnippetAPI} from '../api/snippet';
-import saveWordAPI from '../api/save-word';
-import SongComponent from '../components/SongComponent';
-import {getThisTopicsWordsToStudyAPI} from '../api/words-to-study';
-import useSetupPlayer from '../hooks/useSetupPlayer';
-import {updateCreateReviewHistory} from '../api/update-create-review-history';
-import {japaneseContent} from '../refs';
-import MoreTopics from '../components/MoreTopics';
-import GeneralTopics from '../components/GeneralTopics';
-import TopicsToDisplay from '../components/TopicsToDisplay';
-import SongSection from '../components/SongSection';
-import ToastMessage from '../components/ToastMessage';
-import {updateSentenceDataAPI} from '../api/update-sentence-data';
+import TopicComponent from '../../components/TopicComponent';
+import {makeArrayUnique} from '../../hooks/useHighlightWordToWordBank';
+import {addSnippetAPI, deleteSnippetAPI} from '../../api/snippet';
+import saveWordAPI from '../../api/save-word';
+import SongComponent from '../../components/SongComponent';
+import {getThisTopicsWordsToStudyAPI} from '../../api/words-to-study';
+import useSetupPlayer from '../../hooks/useSetupPlayer';
+import {updateCreateReviewHistory} from '../../api/update-create-review-history';
+import {japaneseContent} from '../../refs';
+import MoreTopics from '../../components/MoreTopics';
+import GeneralTopics from '../../components/GeneralTopics';
+import TopicsToDisplay from '../../components/TopicsToDisplay';
+import SongSection from '../../components/SongSection';
+import ToastMessage from '../../components/ToastMessage';
+import {updateSentenceDataAPI} from '../../api/update-sentence-data';
 import {TouchableOpacity} from 'react-native-gesture-handler';
-import {isSameDay} from '../utils/check-same-date';
+import {isSameDay} from '../../utils/check-same-date';
 
-function Home({navigation}): React.JSX.Element {
+function Home({navigation, homeScreenData}): React.JSX.Element {
   const [data, setData] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
   const [isSetupPlayerLoaded, setIsSetupPlayerLoaded] = useState(false);
-  const [error, setError] = useState(null);
+
   const [structuredUnifiedData, setStructuredUnifiedData] = useState([]);
   const [selectedTopic, setSelectedTopic] = useState('');
   const [selectedSong, setSelectedSong] = useState('');
@@ -46,37 +44,26 @@ function Home({navigation}): React.JSX.Element {
   useSetupPlayer({isSetupPlayerLoaded, setIsSetupPlayerLoaded});
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const results = await getAllData();
-        const topicsToStudy = results.topicsToStudy;
-        setTopicsToStudyState(topicsToStudy);
-        const japaneseLoadedSongs = results?.japaneseLoadedSongs.filter(
-          item => item !== null,
-        );
-        const japaneseLoadedContent = results.japaneseLoadedContent;
-        setJapaneseLoadedContentState(
-          japaneseLoadedContent.sort((a, b) => {
-            return a.isCore === b.isCore ? 0 : a.isCore ? -1 : 1;
-          }),
-        );
-        setJapaneseLoadedSongsState(japaneseLoadedSongs);
-        setData(results);
-        const japaneseLoadedSnippetsWithSavedTag =
-          results.japaneseLoadedSnippets?.map(item => ({
-            ...item,
-            saved: true,
-          }));
-        setMasterSnippetState(japaneseLoadedSnippetsWithSavedTag);
-      } catch (error) {
-        console.log('## Home error: ', error);
-        setError(error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
+    const results = homeScreenData;
+    const topicsToStudy = results.topicsToStudy;
+    setTopicsToStudyState(topicsToStudy);
+    const japaneseLoadedSongs = results?.japaneseLoadedSongs.filter(
+      item => item !== null,
+    );
+    const japaneseLoadedContent = results.japaneseLoadedContent;
+    setJapaneseLoadedContentState(
+      japaneseLoadedContent.sort((a, b) => {
+        return a.isCore === b.isCore ? 0 : a.isCore ? -1 : 1;
+      }),
+    );
+    setJapaneseLoadedSongsState(japaneseLoadedSongs);
+    setData(results);
+    const japaneseLoadedSnippetsWithSavedTag =
+      results.japaneseLoadedSnippets?.map(item => ({
+        ...item,
+        saved: true,
+      }));
+    setMasterSnippetState(japaneseLoadedSnippetsWithSavedTag);
   }, []);
 
   const getPureWords = () => {
@@ -246,7 +233,6 @@ function Home({navigation}): React.JSX.Element {
   };
 
   if (
-    loading ||
     !data ||
     japaneseLoadedContentState?.length === 0 ||
     !topicsToStudyState
