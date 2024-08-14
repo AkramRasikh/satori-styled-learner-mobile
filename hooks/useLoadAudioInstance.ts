@@ -2,11 +2,19 @@ import {useEffect, useState} from 'react';
 import Sound from 'react-native-sound';
 
 const useLoadAudioInstance = ({soundRef, url}) => {
-  const [soundState, setSoundState] = useState(null);
+  const [triggerHook, setTriggerHook] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(false);
 
   const triggerLoadURL = () => {
+    setTriggerHook(true);
+  };
+
+  useEffect(() => {
+    if (!triggerHook || !url) {
+      return;
+    }
+
     if (soundRef?.current?.isLoaded()) {
-      setSoundState(soundRef.current);
       return;
     }
     const soundInstance = new Sound(url, '', error => {
@@ -21,28 +29,17 @@ const useLoadAudioInstance = ({soundRef, url}) => {
           soundInstance.getNumberOfChannels(),
       );
       soundRef.current = soundInstance;
-      setSoundState(soundInstance);
+      setIsLoaded(true);
     });
-  };
 
-  useEffect(() => {
-    if (!url) {
-      return;
-    }
-
-    // If already loaded, do not reload
-    if (soundRef?.current?.isLoaded()) {
-      setSoundState(soundRef.current);
-      return;
-    }
     return () => {
       if (soundRef.current) {
         soundRef.current.release();
       }
     };
-  }, [soundState, soundRef]);
+  }, [triggerHook, soundRef]);
 
-  return {triggerLoadURL, soundState};
+  return {triggerLoadURL, isLoaded};
 };
 
 export default useLoadAudioInstance;

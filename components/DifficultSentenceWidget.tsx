@@ -1,40 +1,20 @@
 import {Text, TouchableOpacity, View} from 'react-native';
 import useLoadAudioInstance from '../hooks/useLoadAudioInstance';
-import {useEffect, useRef, useState} from 'react';
+import {useRef, useState} from 'react';
 import {getFirebaseAudioURL} from '../hooks/useGetCombinedAudioData';
 import useSoundHook from '../hooks/useSoundHook';
-import ProgressBarComponent from './Progress';
 import {isSameDay} from '../utils/check-same-date';
 
 const SoundWidget = ({soundRef, url, topicName}) => {
   const [isPlaying, setIsPlaying] = useState(false);
-  // const [currentTimeState, setCurrentTimeState] = useState(0);
+  const {playSound, pauseSound} = useSoundHook({
+    url,
+    soundRef,
+    isPlaying,
+    setIsPlaying,
+    topicName,
+  });
 
-  // console.log('## soundRef', soundRef.current.isLoaded());
-
-  // useEffect(() => {
-  //   const getCurrentTimeFunc = () => {
-  //     soundRef.current.getCurrentTime(currentTime => {
-  //       setCurrentTimeState(currentTime);
-  //     });
-  //   };
-  //   const interval = setInterval(() => {
-  //     if (soundRef.current && soundRef.current?.isPlaying() && isPlaying) {
-  //       getCurrentTimeFunc();
-  //     }
-  //   }, 100);
-
-  //   return () => clearInterval(interval);
-  // }, [soundRef, isPlaying]);
-
-  // const {playSound, pauseSound} = useSoundHook({
-  //   url,
-  //   soundRef,
-  //   isPlaying,
-  //   setIsPlaying,
-  //   topicName,
-  //   isSnippet: true,
-  // });
   return (
     <View
       style={{
@@ -62,11 +42,6 @@ const SoundWidget = ({soundRef, url, topicName}) => {
           )}
         </View>
       </View>
-      {/* <ProgressBarComponent
-        progress={10}
-        time={(1).toFixed(2)}
-        endTime={soundRef.current.duration}
-      /> */}
     </View>
   );
 };
@@ -142,8 +117,6 @@ const Content = ({
 };
 
 const DifficultSentenceWidget = ({sentence, todayDateObj}) => {
-  // const DifficultSentenceWidget = ({sentence, getDaysLater}) => {
-  // const [loadURL, setLoadURL] = useState(false);
   const id = sentence.id;
   const topic = sentence.topic;
   const isCore = sentence?.isCore;
@@ -151,23 +124,10 @@ const DifficultSentenceWidget = ({sentence, todayDateObj}) => {
   const targetLang = sentence.targetLang;
   const nextReview = sentence?.nextReview;
 
-  // const soundRef = useRef();
-  // const url = getFirebaseAudioURL(id);
+  const soundRef = useRef();
+  const url = getFirebaseAudioURL(id);
 
-  // const {triggerLoadURL, soundState} = useLoadAudioInstance({soundRef, url});
-
-  // const loadURLfunc = () => {
-  //   if (!soundState) {
-  //     triggerLoadURL();
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   if (soundState) {
-  //     setLoadURL(true);
-  //     soundRef.current = soundState;
-  //   }
-  // }, [soundState, soundRef, loadURL]);
+  const {triggerLoadURL, isLoaded} = useLoadAudioInstance({soundRef, url});
 
   return (
     <View
@@ -186,6 +146,15 @@ const DifficultSentenceWidget = ({sentence, todayDateObj}) => {
         nextReview={nextReview}
         todayDateObj={todayDateObj}
       />
+      {isLoaded ? (
+        <SoundWidget soundRef={soundRef} url={url} topicName={topic} />
+      ) : (
+        <View>
+          <TouchableOpacity onPress={triggerLoadURL}>
+            <Text>Load URL</Text>
+          </TouchableOpacity>
+        </View>
+      )}
     </View>
   );
 };
