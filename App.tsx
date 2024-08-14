@@ -6,7 +6,7 @@ import {SafeAreaProvider} from 'react-native-safe-area-context';
 import DifficultSentences from './screens/DifficultSentences';
 import {getAllData} from './api/load-content';
 import Home from './screens/home';
-import {loadDifficultSentences} from './api/load-difficult-sentences';
+import {DataProvider} from './context/Data/DataProvider';
 
 enableScreens();
 
@@ -22,10 +22,8 @@ function App(): React.JSX.Element {
     const fetchData = async () => {
       try {
         const allStudyDataRes = await getAllData();
-        const allDifficultSentencesRes = await loadDifficultSentences();
 
         setHomeScreenData(allStudyDataRes);
-        setDifficultSentencesState(allDifficultSentencesRes);
       } catch (error) {
         console.log('## App error: ', error);
         setAppError(error);
@@ -38,33 +36,31 @@ function App(): React.JSX.Element {
   }, []);
 
   return (
-    <SafeAreaProvider>
-      <NavigationContainer>
-        <Stack.Navigator
-          initialRouteName="Home" // This sets the default screen
-          screenOptions={{headerShown: false}} // Optional: Hide headers
-        >
-          <Stack.Screen name="Home">
-            {props => (
-              <Home
-                {...props}
-                homeScreenData={homeScreenData}
-                appIsLoading={appIsLoading}
-              />
-            )}
-          </Stack.Screen>
-          <Stack.Screen name="DifficultSentences">
-            {props => (
-              <DifficultSentences
-                {...props}
-                difficultSentencesState={difficultSentencesState}
-                appIsLoading={appIsLoading}
-              />
-            )}
-          </Stack.Screen>
-        </Stack.Navigator>
-      </NavigationContainer>
-    </SafeAreaProvider>
+    <DataProvider>
+      <SafeAreaProvider>
+        <NavigationContainer>
+          <Stack.Navigator
+            initialRouteName="Home" // This sets the default screen
+            screenOptions={{headerShown: false}} // Optional: Hide headers
+          >
+            <Stack.Screen name="Home">
+              {props => (
+                <Home
+                  {...props}
+                  homeScreenData={homeScreenData}
+                  appIsLoading={appIsLoading}
+                />
+              )}
+            </Stack.Screen>
+            <Stack.Screen name="DifficultSentences">
+              {props => (
+                <DifficultSentences {...props} appIsLoading={appIsLoading} />
+              )}
+            </Stack.Screen>
+          </Stack.Navigator>
+        </NavigationContainer>
+      </SafeAreaProvider>
+    </DataProvider>
   );
 }
 
