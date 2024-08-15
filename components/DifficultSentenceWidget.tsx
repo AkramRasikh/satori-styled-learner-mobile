@@ -15,6 +15,7 @@ const SoundWidget = ({soundRef, url, topicName}) => {
     setIsPlaying,
     topicName,
   });
+  const jumpAudioValue = 2;
 
   return (
     <SoundSmallSize
@@ -22,9 +23,9 @@ const SoundWidget = ({soundRef, url, topicName}) => {
       isPlaying={isPlaying}
       playSound={playSound}
       pauseSound={pauseSound}
-      rewindSound={() => rewindSound(2)}
-      forwardSound={() => forwardSound(2)}
-      jumpAudioValue={2}
+      rewindSound={() => rewindSound(jumpAudioValue)}
+      forwardSound={() => forwardSound(jumpAudioValue)}
+      jumpAudioValue={jumpAudioValue}
     />
   );
 };
