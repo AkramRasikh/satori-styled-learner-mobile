@@ -3,8 +3,8 @@ import useLoadAudioInstance from '../hooks/useLoadAudioInstance';
 import {useRef, useState} from 'react';
 import {getFirebaseAudioURL} from '../hooks/useGetCombinedAudioData';
 import useSoundHook from '../hooks/useSoundHook';
-import SoundComponent from './Sound';
 import DifficultSentenceContent from './DifficultSentenceContent';
+import SoundSmallSize from './SoundSmallSize';
 
 const SoundWidget = ({soundRef, url, topicName}) => {
   const [isPlaying, setIsPlaying] = useState(false);
@@ -17,7 +17,7 @@ const SoundWidget = ({soundRef, url, topicName}) => {
   });
 
   return (
-    <SoundComponent
+    <SoundSmallSize
       soundRef={soundRef}
       isPlaying={isPlaying}
       playSound={playSound}
