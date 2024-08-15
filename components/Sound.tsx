@@ -10,6 +10,7 @@ const SoundComponent = ({
   rewindSound,
   forwardSound,
   getTimeStamp,
+  jumpAudioValue,
 }) => {
   return (
     <View
@@ -39,7 +40,7 @@ const SoundComponent = ({
           paddingLeft: 10,
         }}>
         <Button
-          title="-5s"
+          title={jumpAudioValue ? `-${jumpAudioValue}s` : '-5s'}
           onPress={rewindSound}
           disabled={!soundRef.current}
         />
@@ -52,7 +53,7 @@ const SoundComponent = ({
           paddingLeft: 10,
         }}>
         <Button
-          title="+5s"
+          title={jumpAudioValue ? `+${jumpAudioValue}s` : '+5s'}
           onPress={forwardSound}
           disabled={!soundRef.current}
         />

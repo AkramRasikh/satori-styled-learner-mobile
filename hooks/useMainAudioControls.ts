@@ -46,10 +46,10 @@ const useMainAudioControls = ({
     }
   };
 
-  const rewindSound = () => {
+  const rewindSound = rewindNum => {
     if (soundRef.current) {
       soundRef.current.getCurrentTime(seconds => {
-        let newTime = seconds - 5;
+        let newTime = seconds - (rewindNum || 5);
         if (newTime < 0) newTime = 0;
         soundRef.current.setCurrentTime(newTime);
         console.log(`Rewind to ${newTime} seconds`);
@@ -57,10 +57,10 @@ const useMainAudioControls = ({
     }
   };
 
-  const forwardSound = () => {
+  const forwardSound = forwardNum => {
     if (soundRef.current) {
       soundRef.current.getCurrentTime(seconds => {
-        let newTime = seconds + 5;
+        let newTime = seconds + (forwardNum || 5);
         const duration = soundRef.current.getDuration();
         if (newTime > duration) newTime = duration;
         soundRef.current.setCurrentTime(newTime);

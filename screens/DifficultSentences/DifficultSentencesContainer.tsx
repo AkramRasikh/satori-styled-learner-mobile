@@ -4,6 +4,8 @@ import DifficultSentenceWidget from '../../components/DifficultSentenceWidget';
 
 const DifficultSentencesContainer = ({
   difficultSentencesState,
+  saveAudioInstance,
+  audioTempState,
 }): React.JSX.Element => {
   const todayDateObj = new Date();
 
@@ -21,6 +23,8 @@ const DifficultSentencesContainer = ({
                   key={sentence.id}
                   sentence={sentence}
                   todayDateObj={todayDateObj}
+                  saveAudioInstance={saveAudioInstance}
+                  audioTempState={audioTempState}
                 />
               );
             })}

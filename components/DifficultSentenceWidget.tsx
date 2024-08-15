@@ -4,10 +4,11 @@ import {useRef, useState} from 'react';
 import {getFirebaseAudioURL} from '../hooks/useGetCombinedAudioData';
 import useSoundHook from '../hooks/useSoundHook';
 import {isSameDay} from '../utils/check-same-date';
+import SoundComponent from './Sound';
 
 const SoundWidget = ({soundRef, url, topicName}) => {
   const [isPlaying, setIsPlaying] = useState(false);
-  const {playSound, pauseSound} = useSoundHook({
+  const {playSound, pauseSound, forwardSound, rewindSound} = useSoundHook({
     url,
     soundRef,
     isPlaying,
@@ -16,33 +17,15 @@ const SoundWidget = ({soundRef, url, topicName}) => {
   });
 
   return (
-    <View
-      style={{
-        alignItems: 'center',
-      }}>
-      <View
-        style={{
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-        }}>
-        <View
-          style={{
-            backgroundColor: isPlaying ? 'green' : 'red',
-            padding: 5,
-            borderRadius: 5,
-          }}>
-          {isPlaying ? (
-            <TouchableOpacity onPress={pauseSound}>
-              <Text>⏸️ Pause</Text>
-            </TouchableOpacity>
-          ) : (
-            <TouchableOpacity onPress={playSound}>
-              <Text>▶️ Play</Text>
-            </TouchableOpacity>
-          )}
-        </View>
-      </View>
-    </View>
+    <SoundComponent
+      soundRef={soundRef}
+      isPlaying={isPlaying}
+      playSound={playSound}
+      pauseSound={pauseSound}
+      rewindSound={() => rewindSound(2)}
+      forwardSound={() => forwardSound(2)}
+      jumpAudioValue={2}
+    />
   );
 };
 
@@ -127,7 +110,10 @@ const DifficultSentenceWidget = ({sentence, todayDateObj}) => {
   const soundRef = useRef();
   const url = getFirebaseAudioURL(id);
 
-  const {triggerLoadURL, isLoaded} = useLoadAudioInstance({soundRef, url});
+  const {triggerLoadURL, isLoaded} = useLoadAudioInstance({
+    soundRef,
+    url,
+  });
 
   return (
     <View
