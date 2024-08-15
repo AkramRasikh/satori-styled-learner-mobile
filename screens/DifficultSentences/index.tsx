@@ -8,6 +8,8 @@ const DifficultSentences = (): React.JSX.Element => {
 
   const dataProviderIsLoading = data.dataProviderIsLoading;
   const difficultSentencesState = data.difficultSentencesState;
+  const saveAudioInstance = data.saveAudioInstance;
+  const audioTempState = data.audioTempState;
 
   if (dataProviderIsLoading || !difficultSentencesState.length) {
     return <LoadingScreen>Loading difficult sentences...</LoadingScreen>;
@@ -16,6 +18,8 @@ const DifficultSentences = (): React.JSX.Element => {
   return (
     <DifficultSentencesContainer
       difficultSentencesState={difficultSentencesState}
+      saveAudioInstance={saveAudioInstance}
+      audioTempState={audioTempState}
     />
   );
 };

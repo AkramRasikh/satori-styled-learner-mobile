@@ -7,9 +7,20 @@ export const DataContext = createContext(null);
 
 export const DataProvider = ({children}: PropsWithChildren<{}>) => {
   const [difficultSentencesState, setDifficultSentencesState] = useState([]);
+  const [audioTempState, setAudioTempState] = useState({});
   const [homeScreenData, setHomeScreenData] = useState(null);
   const [dataProviderIsLoading, setDataProviderIsLoading] = useState(true);
   const [provdiderError, setProvdiderError] = useState(null);
+
+  const saveAudioInstance = (audioId, soundInstance) => {
+    const isInAudioTempState = audioTempState[audioId];
+    if (!isInAudioTempState) {
+      setAudioTempState(prevState => ({
+        ...prevState,
+        [audioId]: soundInstance,
+      }));
+    }
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -36,6 +47,8 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
         dataProviderIsLoading,
         provdiderError,
         homeScreenData,
+        saveAudioInstance,
+        audioTempState,
       }}>
       {children}
     </DataContext.Provider>
