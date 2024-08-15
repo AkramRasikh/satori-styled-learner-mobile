@@ -10,7 +10,6 @@ const useLoadAudioInstance = ({soundRef, url}) => {
   };
 
   useEffect(() => {
-    // should theoretically listen in on isLoaded but needs to be recalled again for some reason
     if (!triggerHook || !url) {
       return;
     }
