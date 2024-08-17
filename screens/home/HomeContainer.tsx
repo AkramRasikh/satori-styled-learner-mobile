@@ -19,7 +19,11 @@ import {updateSentenceDataAPI} from '../../api/update-sentence-data';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {isSameDay} from '../../utils/check-same-date';
 
-function Home({navigation, homeScreenData}): React.JSX.Element {
+function Home({
+  navigation,
+  homeScreenData,
+  japaneseLoadedContentMaster,
+}): React.JSX.Element {
   const [data, setData] = useState<any>(null);
   const [isSetupPlayerLoaded, setIsSetupPlayerLoaded] = useState(false);
 
@@ -44,13 +48,19 @@ function Home({navigation, homeScreenData}): React.JSX.Element {
   useSetupPlayer({isSetupPlayerLoaded, setIsSetupPlayerLoaded});
 
   useEffect(() => {
+    if (japaneseLoadedContentMaster) {
+      setJapaneseLoadedContentState(japaneseLoadedContentMaster);
+    }
+  }, [japaneseLoadedContentMaster]);
+
+  useEffect(() => {
     const results = homeScreenData;
     const topicsToStudy = results.topicsToStudy;
     setTopicsToStudyState(topicsToStudy);
     const japaneseLoadedSongs = results?.japaneseLoadedSongs.filter(
       item => item !== null,
     );
-    const japaneseLoadedContent = results.japaneseLoadedContent;
+    const japaneseLoadedContent = japaneseLoadedContentMaster;
     setJapaneseLoadedContentState(
       japaneseLoadedContent.sort((a, b) => {
         return a.isCore === b.isCore ? 0 : a.isCore ? -1 : 1;

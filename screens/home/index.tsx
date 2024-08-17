@@ -9,6 +9,7 @@ const Home = ({navigation}): React.JSX.Element => {
   const dataProviderIsLoading = data.dataProviderIsLoading;
   const provdiderError = data.provdiderError;
   const homeScreenData = data.homeScreenData;
+  const japaneseLoadedContentMaster = data.japaneseLoadedContentMaster;
 
   if (!homeScreenData || dataProviderIsLoading) {
     return <LoadingScreen>Loading data...</LoadingScreen>;
@@ -18,7 +19,11 @@ const Home = ({navigation}): React.JSX.Element => {
   }
 
   return (
-    <HomeContainer navigation={navigation} homeScreenData={homeScreenData} />
+    <HomeContainer
+      navigation={navigation}
+      homeScreenData={homeScreenData}
+      japaneseLoadedContentMaster={japaneseLoadedContentMaster}
+    />
   );
 };
 

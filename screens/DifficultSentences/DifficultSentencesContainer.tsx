@@ -9,12 +9,14 @@ import {
 import DifficultSentenceWidget from '../../components/DifficultSentenceWidget';
 import LoadingScreen from '../../components/LoadingScreen';
 import {sortByDueDate} from '../../utils/sort-by-due-date';
+import ToastMessage from '../../components/ToastMessage';
 
 const DifficultSentencesContainer = ({
   difficultSentencesState,
   saveAudioInstance,
   audioTempState,
   updateSentenceData,
+  updatePromptState,
 }): React.JSX.Element => {
   const [toggleableSentencesState, setToggleableSentencesState] = useState([]);
   const todayDateObj = new Date();
@@ -50,6 +52,9 @@ const DifficultSentencesContainer = ({
         minHeight: '100%',
         marginBottom: 30,
       }}>
+      {updatePromptState ? (
+        <ToastMessage toastText={updatePromptState} />
+      ) : null}
       <View style={{padding: 10}}>
         <View>
           <Text>Difficult Sentences: ({difficultSentencesState.length})</Text>
