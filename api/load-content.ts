@@ -121,7 +121,7 @@ export const getAllData = async () => {
     };
 
     const wordsByTopics = japaneseLoadedContent.map(topic => {
-      const allIdsFromTopicSentences = topic.content.map(item => item.id);
+      const allIdsFromTopicSentences = topic.content.map(item => item?.id);
       const filteredWordsThatHaveMatchingContext = japaneseLoadedWords.filter(
         japaneseWord =>
           japaneseWord.contexts.some(context =>

@@ -87,7 +87,11 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
         const allDifficultSentencesRes = await loadDifficultSentences();
         const allStudyDataRes = await getAllData();
         setHomeScreenData(allStudyDataRes);
-        setJapaneseLoadedContentMaster(allStudyDataRes.japaneseLoadedContent);
+        setJapaneseLoadedContentMaster(
+          allStudyDataRes.japaneseLoadedContent.sort((a, b) => {
+            return a.isCore === b.isCore ? 0 : a.isCore ? -1 : 1;
+          }),
+        );
         setDifficultSentencesState(allDifficultSentencesRes);
       } catch (error) {
         console.log('## DataProvider error: ', error);

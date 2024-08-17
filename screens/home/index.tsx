@@ -11,7 +11,11 @@ const Home = ({navigation}): React.JSX.Element => {
   const homeScreenData = data.homeScreenData;
   const japaneseLoadedContentMaster = data.japaneseLoadedContentMaster;
 
-  if (!homeScreenData || dataProviderIsLoading) {
+  if (
+    !homeScreenData ||
+    dataProviderIsLoading ||
+    !japaneseLoadedContentMaster
+  ) {
     return <LoadingScreen>Loading data...</LoadingScreen>;
   }
   if (provdiderError) {
