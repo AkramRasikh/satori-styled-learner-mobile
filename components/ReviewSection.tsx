@@ -27,7 +27,7 @@ const getDaysLater = (today, futureDate) => {
   return `Due in +${differenceInDays} days`;
 };
 
-const setFutureReviewDate = (today, daysToAdd) => {
+export const setFutureReviewDate = (today, daysToAdd) => {
   const futureDateWithDays = new Date(
     today.setDate(today.getDate() + daysToAdd),
   );

@@ -2,6 +2,7 @@ import React from 'react';
 import {createContext, PropsWithChildren, useEffect, useState} from 'react';
 import {loadDifficultSentences} from '../../api/load-difficult-sentences';
 import {getAllData} from '../../api/load-content';
+import {updateSentenceDataAPI} from '../../api/update-sentence-data';
 
 export const DataContext = createContext(null);
 
@@ -19,6 +20,18 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
         ...prevState,
         [audioId]: soundInstance,
       }));
+    }
+  };
+
+  const updateSentenceData = async ({topicName, sentenceId, fieldToUpdate}) => {
+    try {
+      await updateSentenceDataAPI({
+        topicName,
+        sentenceId,
+        fieldToUpdate,
+      });
+    } catch (error) {
+      console.log('## updateSentenceData', {error});
     }
   };
 
@@ -49,6 +62,7 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
         homeScreenData,
         saveAudioInstance,
         audioTempState,
+        updateSentenceData,
       }}>
       {children}
     </DataContext.Provider>

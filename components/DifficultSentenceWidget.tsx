@@ -5,6 +5,8 @@ import {getFirebaseAudioURL} from '../hooks/useGetCombinedAudioData';
 import useSoundHook from '../hooks/useSoundHook';
 import DifficultSentenceContent from './DifficultSentenceContent';
 import SoundSmallSize from './SoundSmallSize';
+import SatoriLineReviewSection from './SatoriLineReviewSection';
+import {setFutureReviewDate} from './ReviewSection';
 
 const SoundWidget = ({soundRef, url, topicName}) => {
   const [isPlaying, setIsPlaying] = useState(false);
@@ -30,13 +32,48 @@ const SoundWidget = ({soundRef, url, topicName}) => {
   );
 };
 
-const DifficultSentenceWidget = ({sentence, todayDateObj}) => {
+const DifficultSentenceWidget = ({
+  sentence,
+  todayDateObj,
+  updateSentenceData,
+}) => {
+  const [futureDaysState, setFutureDaysState] = useState(3);
+  const [showReviewSettings, setShowReviewSettings] = useState(false);
+
   const id = sentence.id;
   const topic = sentence.topic;
   const isCore = sentence?.isCore;
   const baseLang = sentence.baseLang;
   const targetLang = sentence.targetLang;
   const nextReview = sentence?.nextReview;
+  const hasBeenReviewed = sentence?.reviewHistory?.length > 0;
+  const updateExistingReviewHistory = () => {
+    return [...sentence?.reviewHistory, new Date()];
+  };
+  const setNextReviewDate = () => {
+    const reviewNotNeeded = futureDaysState === 0;
+    if (reviewNotNeeded) {
+      updateSentenceData({
+        topicName: topic,
+        sentenceId: id,
+        fieldToUpdate: {
+          reviewHistory: [],
+          nextReview: null,
+        },
+      });
+    } else {
+      updateSentenceData({
+        topicName: topic,
+        sentenceId: id,
+        fieldToUpdate: {
+          reviewHistory: hasBeenReviewed
+            ? updateExistingReviewHistory()
+            : [new Date()],
+          nextReview: setFutureReviewDate(todayDateObj, futureDaysState),
+        },
+      });
+    }
+  };
 
   const soundRef = useRef();
   const url = getFirebaseAudioURL(id);
@@ -61,6 +98,7 @@ const DifficultSentenceWidget = ({sentence, todayDateObj}) => {
         targetLang={targetLang}
         baseLang={baseLang}
         nextReview={nextReview}
+        setShowReviewSettings={setShowReviewSettings}
         todayDateObj={todayDateObj}
       />
       {isLoaded ? (
@@ -72,6 +110,15 @@ const DifficultSentenceWidget = ({sentence, todayDateObj}) => {
           </TouchableOpacity>
         </View>
       )}
+      {showReviewSettings ? (
+        <SatoriLineReviewSection
+          nextReview={nextReview}
+          futureDaysState={futureDaysState}
+          showReviewSettings={showReviewSettings}
+          setFutureDaysState={setFutureDaysState}
+          setNextReviewDate={setNextReviewDate}
+        />
+      ) : null}
     </View>
   );
 };

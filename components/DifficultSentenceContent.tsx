@@ -1,4 +1,4 @@
-import {Text, View} from 'react-native';
+import {Text, TouchableOpacity, View} from 'react-native';
 
 import {isSameDay} from '../utils/check-same-date';
 
@@ -9,6 +9,8 @@ const DifficultSentenceContent = ({
   baseLang,
   nextReview,
   todayDateObj,
+  setShowReviewSettings,
+  showReviewSettings,
 }) => {
   const thisNextReviewObj = new Date(nextReview);
 
@@ -66,7 +68,10 @@ const DifficultSentenceContent = ({
         <Text>{baseLang}</Text>
       </View>
       <View>
-        <Text>{dueText}</Text>
+        <TouchableOpacity
+          onPress={() => setShowReviewSettings(!showReviewSettings)}>
+          <Text>{dueText} 😓</Text>
+        </TouchableOpacity>
       </View>
     </>
   );

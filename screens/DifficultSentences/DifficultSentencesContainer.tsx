@@ -14,6 +14,7 @@ const DifficultSentencesContainer = ({
   difficultSentencesState,
   saveAudioInstance,
   audioTempState,
+  updateSentenceData,
 }): React.JSX.Element => {
   const [toggleableSentencesState, setToggleableSentencesState] = useState([]);
   const todayDateObj = new Date();
@@ -81,6 +82,7 @@ const DifficultSentencesContainer = ({
                   todayDateObj={todayDateObj}
                   saveAudioInstance={saveAudioInstance}
                   audioTempState={audioTempState}
+                  updateSentenceData={updateSentenceData}
                 />
               );
             })}
