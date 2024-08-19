@@ -15,8 +15,6 @@ const GeneralTopics = ({
 
         const hasReviewDue = isDueGeneralTopic(generalTopic);
 
-        console.log('## ', {[generalTopic]: hasReviewDue});
-
         const isCoreStatus = isCoreContent(generalTopic, false);
         const thisTopicIsUpcoming = isDueReview(generalTopic, false, false);
         return (
