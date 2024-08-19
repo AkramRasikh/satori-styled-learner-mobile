@@ -26,7 +26,13 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
     }
   };
 
+  const filterDifficultSentenceOut = sentenceIdToRemove =>
+    difficultSentencesState.filter(
+      sentence => sentence.id !== sentenceIdToRemove,
+    );
+
   const updateSentenceData = async ({topicName, sentenceId, fieldToUpdate}) => {
+    const isRemoveFromDifficultSentences = fieldToUpdate?.nextReview === null;
     try {
       const resObj = await updateSentenceDataAPI({
         topicName,
@@ -34,16 +40,18 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
         fieldToUpdate,
       });
 
-      const updatedSentences = difficultSentencesState.map(item => {
-        if (item.id === sentenceId) {
-          return {
-            ...item,
-            ...resObj,
-          };
-        }
+      const updatedSentences = isRemoveFromDifficultSentences
+        ? filterDifficultSentenceOut(sentenceId)
+        : difficultSentencesState.map(item => {
+            if (item.id === sentenceId) {
+              return {
+                ...item,
+                ...resObj,
+              };
+            }
 
-        return item;
-      });
+            return item;
+          });
       const thisTopicDataIndex = japaneseLoadedContentMaster.findIndex(
         topic => topic.title === topicName,
       );
