@@ -10,6 +10,7 @@ import DifficultSentenceWidget from '../../components/DifficultSentenceWidget';
 import LoadingScreen from '../../components/LoadingScreen';
 import {sortByDueDate} from '../../utils/sort-by-due-date';
 import ToastMessage from '../../components/ToastMessage';
+import {calculateDueDate} from '../../utils/get-date-due-status';
 
 const DifficultSentencesContainer = ({
   difficultSentencesState,
@@ -21,6 +22,7 @@ const DifficultSentencesContainer = ({
   const [toggleableSentencesState, setToggleableSentencesState] = useState([]);
   const todayDateObj = new Date();
   const [isSortedByDue, setIsSortedByDue] = useState(false);
+  const [isShowDueOnly, setIsShowDueOnly] = useState(false);
 
   const sortSentencesByDueDate = () => {
     if (!isSortedByDue) {
@@ -33,7 +35,29 @@ const DifficultSentencesContainer = ({
     }
   };
 
+  const showDueOnlyFunc = () => {
+    if (!isShowDueOnly) {
+      const filteredForDueOnly = [...toggleableSentencesState].filter(
+        sentence => {
+          const dueStatus = calculateDueDate({
+            todayDateObj,
+            nextReview: sentence.nextReview,
+          });
+          if (dueStatus < 1) {
+            return true;
+          }
+        },
+      );
+      setToggleableSentencesState(filteredForDueOnly);
+      setIsShowDueOnly(!isShowDueOnly);
+    } else {
+      setToggleableSentencesState(difficultSentencesState);
+      setIsShowDueOnly(!isShowDueOnly);
+    }
+  };
+
   const btnText = isSortedByDue ? '↕ In Due order ✅' : '↕ In Core order 🧠';
+  const btnDueText = `Show only due ${isShowDueOnly ? '✅' : '❌'}`;
 
   useEffect(() => {
     if (difficultSentencesState?.length > 0) {
@@ -57,7 +81,10 @@ const DifficultSentencesContainer = ({
       ) : null}
       <View style={{padding: 10, paddingBottom: 30}}>
         <View>
-          <Text>Difficult Sentences: ({difficultSentencesState.length})</Text>
+          <Text>
+            Difficult Sentences: ({toggleableSentencesState.length}/
+            {difficultSentencesState.length})
+          </Text>
         </View>
         <View
           style={{
@@ -74,6 +101,14 @@ const DifficultSentencesContainer = ({
             onPress={sortSentencesByDueDate}>
             <Text>{btnText}</Text>
           </TouchableOpacity>
+          <TouchableOpacity
+            style={{
+              padding: 5,
+              borderRadius: 10,
+            }}
+            onPress={showDueOnlyFunc}>
+            <Text>{btnDueText}</Text>
+          </TouchableOpacity>
         </View>
         <ScrollView
           contentInsetAdjustmentBehavior="automatic"
@@ -81,6 +116,10 @@ const DifficultSentencesContainer = ({
           <View style={{marginTop: 10}}>
             {toggleableSentencesState.map((sentence, index) => {
               const isLastEl = toggleableSentencesState.length === index + 1;
+              const dueStatus = calculateDueDate({
+                todayDateObj,
+                nextReview: sentence.nextReview,
+              });
               return (
                 <DifficultSentenceWidget
                   key={sentence.id}
@@ -89,6 +128,7 @@ const DifficultSentencesContainer = ({
                   saveAudioInstance={saveAudioInstance}
                   audioTempState={audioTempState}
                   updateSentenceData={updateSentenceData}
+                  dueStatus={dueStatus}
                   isLastEl={isLastEl}
                 />
               );
