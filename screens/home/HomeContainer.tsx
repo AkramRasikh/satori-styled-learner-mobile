@@ -331,30 +331,69 @@ function Home({
 
     return differenceInDays;
   };
+  const nextReviewCalculationGeneralTopic = nextReview => {
+    const nextReviewDate = new Date(nextReview);
+    const differenceInMilliseconds = nextReviewDate - today;
+
+    const differenceInDays = Math.floor(
+      differenceInMilliseconds / (1000 * 60 * 60 * 24),
+    );
+
+    return differenceInDays;
+  };
+
+  const isDueReviewSingular = ({topicOption, isReview}) => {
+    const thisData = japaneseLoadedContentState.find(
+      topicDisplayed => topicDisplayed.title === topicOption,
+    );
+
+    const thisDataNextReview = thisData?.nextReview;
+    if (thisDataNextReview) {
+      const differenceInDays = nextReviewCalculation(thisDataNextReview);
+      const condition = isReview ? differenceInDays > 0 : differenceInDays < 0;
+      if (condition) {
+        return true;
+      }
+    }
+
+    return false;
+  };
+
+  const isDueGeneralTopic = topicOption => {
+    const nextReviewDateDue = japaneseLoadedContentState.some(jpContent => {
+      const generalTopicName = jpContent.title
+        .split('-')
+        .slice(0, -1)
+        .join('-');
+
+      if (generalTopicName === topicOption) {
+        const nextReview = jpContent?.nextReview;
+        if (nextReview) {
+          const differenceInDays =
+            nextReviewCalculationGeneralTopic(nextReview);
+          if (differenceInDays <= 0) {
+            return true;
+          }
+        }
+      }
+    });
+
+    return nextReviewDateDue;
+  };
 
   const isDueReview = (topicOption, singular, isReview) => {
     if (singular) {
-      const thisData = japaneseLoadedContentState.find(
-        topicDisplayed => topicDisplayed.title === topicOption,
-      );
-
-      const thisDataNextReview = thisData?.nextReview;
-      if (thisDataNextReview) {
-        const differenceInDays = nextReviewCalculation(thisDataNextReview);
-        const condition = isReview
-          ? differenceInDays > 0
-          : differenceInDays < 0;
-        if (condition) {
-          return true;
-        }
-      }
-
-      return false;
+      return isDueReviewSingular({topicOption, isReview});
     }
     let subTopicDue: number;
     // change to forLoop
     const nextReviewDateDue = japaneseLoadedContentState.some(jpContent => {
-      if (jpContent.title.split('-').slice(0, -1).join('-') === topicOption) {
+      const generalTopicName = jpContent.title
+        .split('-')
+        .slice(0, -1)
+        .join('-');
+
+      if (generalTopicName === topicOption) {
         const nextReview = jpContent?.nextReview;
         if (nextReview) {
           const differenceInDays = nextReviewCalculation(nextReview);
@@ -434,6 +473,7 @@ function Home({
             generalTopicObj={generalTopicObj}
             isDueReview={isDueReview}
             isCoreContent={isCoreContent}
+            isDueGeneralTopic={isDueGeneralTopic}
           />
         )}
         {!topicOrSongSelected || showOtherTopics ? (
