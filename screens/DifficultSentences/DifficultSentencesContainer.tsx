@@ -55,7 +55,7 @@ const DifficultSentencesContainer = ({
       {updatePromptState ? (
         <ToastMessage toastText={updatePromptState} />
       ) : null}
-      <View style={{padding: 10}}>
+      <View style={{padding: 10, paddingBottom: 30}}>
         <View>
           <Text>Difficult Sentences: ({difficultSentencesState.length})</Text>
         </View>
@@ -79,7 +79,8 @@ const DifficultSentencesContainer = ({
           contentInsetAdjustmentBehavior="automatic"
           style={{paddingBottom: 30}}>
           <View style={{marginTop: 10}}>
-            {toggleableSentencesState.map(sentence => {
+            {toggleableSentencesState.map((sentence, index) => {
+              const isLastEl = toggleableSentencesState.length === index + 1;
               return (
                 <DifficultSentenceWidget
                   key={sentence.id}
@@ -88,6 +89,7 @@ const DifficultSentencesContainer = ({
                   saveAudioInstance={saveAudioInstance}
                   audioTempState={audioTempState}
                   updateSentenceData={updateSentenceData}
+                  isLastEl={isLastEl}
                 />
               );
             })}

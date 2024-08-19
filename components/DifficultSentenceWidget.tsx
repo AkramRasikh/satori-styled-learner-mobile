@@ -36,6 +36,7 @@ const DifficultSentenceWidget = ({
   sentence,
   todayDateObj,
   updateSentenceData,
+  isLastEl,
 }) => {
   const [futureDaysState, setFutureDaysState] = useState(3);
   const [showReviewSettings, setShowReviewSettings] = useState(false);
@@ -91,6 +92,7 @@ const DifficultSentenceWidget = ({
         flexDirection: 'column',
         gap: 10,
         marginBottom: 10,
+        paddingBottom: isLastEl ? 100 : 0,
       }}>
       <DifficultSentenceContent
         topic={topic}
