@@ -7,6 +7,7 @@ import DifficultSentenceContent from './DifficultSentenceContent';
 import SoundSmallSize from './SoundSmallSize';
 import SatoriLineReviewSection from './SatoriLineReviewSection';
 import {setFutureReviewDate} from './ReviewSection';
+import {isSameDay} from '../utils/check-same-date';
 
 const SoundWidget = ({soundRef, url, topicName}) => {
   const [isPlaying, setIsPlaying] = useState(false);
@@ -40,6 +41,7 @@ const DifficultSentenceWidget = ({
 }) => {
   const [futureDaysState, setFutureDaysState] = useState(3);
   const [showReviewSettings, setShowReviewSettings] = useState(false);
+  let dueColorState;
 
   const id = sentence.id;
   const topic = sentence.topic;
@@ -84,6 +86,50 @@ const DifficultSentenceWidget = ({
     url,
   });
 
+  const thisNextReviewObj = new Date(nextReview);
+
+  const getAdjustedDifferenceInDays = (dateA, dateB) => {
+    const oneDayInMilliseconds = 24 * 60 * 60 * 1000; // Hours * minutes * seconds * milliseconds
+    const differenceInTime = dateB - dateA; // Difference in milliseconds
+    const differenceInDays = Math.floor(
+      differenceInTime / oneDayInMilliseconds,
+    );
+
+    // Check if the dates are on different calendar days
+    const isDifferentCalendarDay =
+      dateA.getDate() !== dateB.getDate() ||
+      dateA.getMonth() !== dateB.getMonth() ||
+      dateA.getFullYear() !== dateB.getFullYear();
+
+    // If dates are on different calendar days, acknowledge it as a full day difference
+    if (isDifferentCalendarDay) {
+      return differenceInDays + 1;
+    }
+
+    return differenceInDays;
+  };
+  const calculateDueDate = () => {
+    if (isSameDay(todayDateObj, thisNextReviewObj)) {
+      dueColorState = '#FFBF00';
+      return `Due today`;
+    }
+
+    const daysDifference = getAdjustedDifferenceInDays(
+      todayDateObj,
+      thisNextReviewObj,
+    );
+
+    if (daysDifference < 0) {
+      dueColorState = '#8B0000';
+      return `Due ${Math.abs(daysDifference)} days ago`;
+    }
+
+    dueColorState = 'green';
+    return `Due in ${daysDifference} days`;
+  };
+
+  const dueText = calculateDueDate();
+
   return (
     <View
       key={id}
@@ -99,9 +145,9 @@ const DifficultSentenceWidget = ({
         isCore={isCore}
         targetLang={targetLang}
         baseLang={baseLang}
-        nextReview={nextReview}
         setShowReviewSettings={setShowReviewSettings}
-        todayDateObj={todayDateObj}
+        dueText={dueText}
+        dueColorState={dueColorState}
       />
       {isLoaded ? (
         <SoundWidget soundRef={soundRef} url={url} topicName={topic} />
