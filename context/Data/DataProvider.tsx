@@ -1,6 +1,5 @@
 import React from 'react';
 import {createContext, PropsWithChildren, useEffect, useState} from 'react';
-import {loadDifficultSentences} from '../../api/load-difficult-sentences';
 import {getAllData} from '../../api/load-content';
 import {updateSentenceDataAPI} from '../../api/update-sentence-data';
 
@@ -24,6 +23,26 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
         [audioId]: soundInstance,
       }));
     }
+  };
+
+  const getSentencesMarkedAsDifficult = data => {
+    const difficultSentences = [];
+    data.forEach(contentWidget => {
+      const thisTopic = contentWidget.title;
+      const isCore = contentWidget.isCore;
+      const content = contentWidget.content;
+      content.forEach(sentenceInContent => {
+        if (sentenceInContent?.nextReview) {
+          difficultSentences.push({
+            topic: thisTopic,
+            isCore,
+            ...sentenceInContent,
+          });
+        }
+      });
+    });
+
+    return difficultSentences;
   };
 
   const filterDifficultSentenceOut = sentenceIdToRemove =>
@@ -92,7 +111,6 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const allDifficultSentencesRes = await loadDifficultSentences();
         const allStudyDataRes = await getAllData();
         setHomeScreenData(allStudyDataRes);
         setJapaneseLoadedContentMaster(
@@ -100,7 +118,9 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
             return a.isCore === b.isCore ? 0 : a.isCore ? -1 : 1;
           }),
         );
-        setDifficultSentencesState(allDifficultSentencesRes);
+        setDifficultSentencesState(
+          getSentencesMarkedAsDifficult(allStudyDataRes.japaneseLoadedContent),
+        );
       } catch (error) {
         console.log('## DataProvider error: ', error);
         setProvdiderError(error);
