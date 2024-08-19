@@ -11,6 +11,7 @@ import LoadingScreen from '../../components/LoadingScreen';
 import {sortByDueDate} from '../../utils/sort-by-due-date';
 import ToastMessage from '../../components/ToastMessage';
 import {calculateDueDate} from '../../utils/get-date-due-status';
+import {getGeneralTopicName} from '../../utils/get-general-topic-name';
 
 const DifficultSentencesContainer = ({
   difficultSentencesState,
@@ -23,6 +24,7 @@ const DifficultSentencesContainer = ({
   const todayDateObj = new Date();
   const [isSortedByDue, setIsSortedByDue] = useState(false);
   const [isShowDueOnly, setIsShowDueOnly] = useState(false);
+  const [topicsAvailableState, setTopicsAvailableState] = useState([]);
 
   const sortSentencesByDueDate = () => {
     if (!isSortedByDue) {
@@ -64,6 +66,20 @@ const DifficultSentencesContainer = ({
       setToggleableSentencesState(difficultSentencesState);
     }
   }, [difficultSentencesState]);
+  useEffect(() => {
+    if (toggleableSentencesState?.length > 0) {
+      const topicsArr = [];
+      toggleableSentencesState.forEach(sentenceData => {
+        const sentenceTopic = getGeneralTopicName(sentenceData.topic);
+        if (!topicsArr.includes(sentenceTopic)) {
+          topicsArr.push(sentenceTopic);
+        }
+      });
+      setTopicsAvailableState(topicsArr);
+    } else {
+      setTopicsAvailableState([]);
+    }
+  }, [toggleableSentencesState]);
 
   if (toggleableSentencesState.length === 0) {
     return <LoadingScreen>Getting ready!</LoadingScreen>;
@@ -109,6 +125,30 @@ const DifficultSentencesContainer = ({
             onPress={showDueOnlyFunc}>
             <Text>{btnDueText}</Text>
           </TouchableOpacity>
+        </View>
+        <View
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            flexWrap: 'wrap',
+            gap: 5,
+            alignSelf: 'center',
+            marginBottom: 5,
+          }}>
+          {topicsAvailableState?.map(generalTopic => {
+            return (
+              <TouchableOpacity
+                key={generalTopic}
+                style={{
+                  borderColor: 'black',
+                  borderWidth: 1,
+                  padding: 5,
+                  borderRadius: 5,
+                }}>
+                <Text>{generalTopic}</Text>
+              </TouchableOpacity>
+            );
+          })}
         </View>
         <ScrollView
           contentInsetAdjustmentBehavior="automatic"
