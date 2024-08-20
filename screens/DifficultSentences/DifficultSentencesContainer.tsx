@@ -11,7 +11,8 @@ import LoadingScreen from '../../components/LoadingScreen';
 import {sortByDueDate} from '../../utils/sort-by-due-date';
 import ToastMessage from '../../components/ToastMessage';
 import {calculateDueDate} from '../../utils/get-date-due-status';
-import {getGeneralTopicName} from '../../utils/get-general-topic-name';
+// import {getGeneralTopicName} from '../../utils/get-general-topic-name';
+// import {getThisTopicsWords} from '../../helper-functions/get-this-topics-words';
 
 const DifficultSentencesContainer = ({
   difficultSentencesState,
@@ -24,18 +25,34 @@ const DifficultSentencesContainer = ({
   const todayDateObj = new Date();
   const [isSortedByDue, setIsSortedByDue] = useState(false);
   const [isShowDueOnly, setIsShowDueOnly] = useState(false);
-  const [topicsAvailableState, setTopicsAvailableState] = useState([]);
+  // const [topicsAvailableState, setTopicsAvailableState] = useState([]);
+  // const [selectedTopic, setSelectedTopic] = useState('');
 
   const sortSentencesByDueDate = () => {
-    if (!isSortedByDue) {
-      const sortedByDueDate = [...toggleableSentencesState].sort(sortByDueDate);
-      setToggleableSentencesState(sortedByDueDate);
-      setIsSortedByDue(true);
-    } else {
-      setToggleableSentencesState(difficultSentencesState);
-      setIsSortedByDue(false);
-    }
+    // if (!isSortedByDue) {
+    const sortedByDueDate = [...toggleableSentencesState].sort(sortByDueDate);
+    setToggleableSentencesState(sortedByDueDate);
+    setIsSortedByDue(true);
+    // } else {
+    //   setToggleableSentencesState(difficultSentencesState);
+    //   setIsSortedByDue(false);
+    // }
   };
+
+  // const getBySelectedTopic = () => {};
+
+  // useEffect(() => {
+  //   if (selectedTopic) {
+  //     const thisTopicsSentences = [...toggleableSentencesState].filter(
+  //       sentenceData =>
+  //         getThisTopicsWords(sentenceData.topic) === selectedTopic,
+  //     );
+
+  //     setToggleableSentencesState(thisTopicsSentences);
+  //   } else {
+  //     setToggleableSentencesState(difficultSentencesState);
+  //   }
+  // }, [selectedTopic, toggleableSentencesState]);
 
   const showDueOnlyFunc = () => {
     if (!isShowDueOnly) {
@@ -66,20 +83,20 @@ const DifficultSentencesContainer = ({
       setToggleableSentencesState(difficultSentencesState);
     }
   }, [difficultSentencesState]);
-  useEffect(() => {
-    if (toggleableSentencesState?.length > 0) {
-      const topicsArr = [];
-      toggleableSentencesState.forEach(sentenceData => {
-        const sentenceTopic = getGeneralTopicName(sentenceData.topic);
-        if (!topicsArr.includes(sentenceTopic)) {
-          topicsArr.push(sentenceTopic);
-        }
-      });
-      setTopicsAvailableState(topicsArr);
-    } else {
-      setTopicsAvailableState([]);
-    }
-  }, [toggleableSentencesState]);
+  // useEffect(() => {
+  //   if (toggleableSentencesState?.length > 0) {
+  //     const topicsArr = [];
+  //     toggleableSentencesState.forEach(sentenceData => {
+  //       const sentenceTopic = getGeneralTopicName(sentenceData.topic);
+  //       if (!topicsArr.includes(sentenceTopic)) {
+  //         topicsArr.push(sentenceTopic);
+  //       }
+  //     });
+  //     setTopicsAvailableState(topicsArr);
+  //   } else {
+  //     setTopicsAvailableState([]);
+  //   }
+  // }, [toggleableSentencesState]);
 
   if (toggleableSentencesState.length === 0) {
     return <LoadingScreen>Getting ready!</LoadingScreen>;
@@ -110,6 +127,7 @@ const DifficultSentencesContainer = ({
             justifyContent: 'space-around',
           }}>
           <TouchableOpacity
+            // eslint-disable-next-line react-native/no-inline-styles
             style={{
               padding: 5,
               borderRadius: 10,
@@ -126,7 +144,7 @@ const DifficultSentencesContainer = ({
             <Text>{btnDueText}</Text>
           </TouchableOpacity>
         </View>
-        <View
+        {/* <View
           style={{
             display: 'flex',
             flexDirection: 'row',
@@ -144,12 +162,13 @@ const DifficultSentencesContainer = ({
                   borderWidth: 1,
                   padding: 5,
                   borderRadius: 5,
-                }}>
+                }}
+                onPress={() => setSelectedTopic(generalTopic)}>
                 <Text>{generalTopic}</Text>
               </TouchableOpacity>
             );
           })}
-        </View>
+        </View> */}
         <ScrollView
           contentInsetAdjustmentBehavior="automatic"
           style={{paddingBottom: 30}}>
