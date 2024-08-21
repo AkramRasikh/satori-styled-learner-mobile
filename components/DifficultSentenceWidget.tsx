@@ -11,14 +11,15 @@ import {getDueDateText} from '../utils/get-date-due-status';
 
 const SoundWidget = ({soundRef, url, topicName}) => {
   const [isPlaying, setIsPlaying] = useState(false);
+  const jumpAudioValue = 2;
   const {playSound, pauseSound, forwardSound, rewindSound} = useSoundHook({
     url,
     soundRef,
     isPlaying,
     setIsPlaying,
     topicName,
+    rewindForwardInterval: jumpAudioValue,
   });
-  const jumpAudioValue = 2;
 
   return (
     <SoundSmallSize
