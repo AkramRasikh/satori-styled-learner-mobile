@@ -1,6 +1,6 @@
 import {Text, TouchableOpacity, View} from 'react-native';
 import useLoadAudioInstance from '../hooks/useLoadAudioInstance';
-import {useRef, useState} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import {getFirebaseAudioURL} from '../hooks/useGetCombinedAudioData';
 import useSoundHook from '../hooks/useSoundHook';
 import DifficultSentenceContent from './DifficultSentenceContent';
@@ -8,6 +8,7 @@ import SoundSmallSize from './SoundSmallSize';
 import SatoriLineReviewSection from './SatoriLineReviewSection';
 import {setFutureReviewDate} from './ReviewSection';
 import {getDueDateText} from '../utils/get-date-due-status';
+import useMP3File from '../hooks/useMP3File';
 
 const SoundWidget = ({soundRef, url, topicName}) => {
   const [isPlaying, setIsPlaying] = useState(false);
@@ -82,10 +83,22 @@ const DifficultSentenceWidget = ({
   const soundRef = useRef();
   const url = getFirebaseAudioURL(id);
 
+  const {loadFile, filePath} = useMP3File(id);
+
   const {triggerLoadURL, isLoaded} = useLoadAudioInstance({
     soundRef,
-    url,
+    url: filePath,
   });
+
+  useEffect(() => {
+    if (filePath) {
+      triggerLoadURL();
+    }
+  }, [filePath]);
+
+  const handleLoad = () => {
+    loadFile(id, url);
+  };
 
   const {dueColorState, text} = getDueDateText(dueStatus);
 
@@ -112,7 +125,8 @@ const DifficultSentenceWidget = ({
         <SoundWidget soundRef={soundRef} url={url} topicName={topic} />
       ) : (
         <View>
-          <TouchableOpacity onPress={triggerLoadURL}>
+          <TouchableOpacity onPress={handleLoad}>
+            {/* <TouchableOpacity onPress={loadFiletriggerLoadURL}> */}
             <Text>Load URL</Text>
           </TouchableOpacity>
         </View>
