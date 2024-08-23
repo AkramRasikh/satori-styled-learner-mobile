@@ -9,17 +9,12 @@ const useSetTopicAudioDataInState = ({
   hasAlreadyBeenUnified,
   setStructuredUnifiedData,
   topicDataLengths,
-  audioInstance,
 }) => {
   useEffect(() => {
-    if (
-      !hasAlreadyBeenUnified &&
-      durationsLengths === topicDataLengths &&
-      audioInstance?.isLoaded()
-    ) {
+    if (!hasAlreadyBeenUnified && durationsLengths === topicDataLengths) {
       setStructuredUnifiedData(prevState => ({
         ...prevState,
-        [topicName]: {content: durations, audioInstance},
+        [topicName]: {content: durations},
       }));
     }
   }, [
@@ -31,7 +26,6 @@ const useSetTopicAudioDataInState = ({
     hasAlreadyBeenUnified,
     setStructuredUnifiedData,
     topicDataLengths,
-    audioInstance,
   ]);
 };
 

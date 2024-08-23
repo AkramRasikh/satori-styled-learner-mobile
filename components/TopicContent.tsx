@@ -8,7 +8,6 @@ import useGetCombinedAudioData, {
 import ProgressBarComponent from './Progress';
 import useHighlightWordToWordBank from '../hooks/useHighlightWordToWordBank';
 import {mergeAndRemoveDuplicates} from '../utils/merge-and-remove-duplicates';
-import useMasterAudioLoad from '../hooks/useMasterAudioLoad';
 import SnippetTimeline from './SnippetTimeline';
 import SnippetContainer from './SnippetContainer';
 import DisplaySettings from './DisplaySettings';
@@ -25,6 +24,8 @@ import TopicContentLoader from './TopicContentLoader';
 import useSetTopicAudioDataInState from '../hooks/useSetTopicAudioDataInState';
 import ReviewSection from './ReviewSection';
 import IsCoreSection from './IsCoreSection';
+import useMP3File from '../hooks/useMP3File';
+import useLoadAudioInstance from '../hooks/useLoadAudioInstance';
 
 const TopicContent = ({
   topicName,
@@ -79,9 +80,6 @@ const TopicContent = ({
   );
 
   const hasAlreadyBeenUnified = structuredUnifiedData[topicName]?.content;
-  const hasAlreadyBeenUnifiedAudioInstance =
-    structuredUnifiedData[topicName]?.audioInstance;
-
   const snippetsLocalAndDb = useMemo(() => {
     return mergeAndRemoveDuplicates(
       snippetsForSelectedTopic?.sort((a, b) => a.pointInAudio - b.pointInAudio),
@@ -98,11 +96,26 @@ const TopicContent = ({
   const soundRefLoaded = soundRef?.current?.isLoaded();
   const soundDuration = soundRef?.current?._duration || 0;
 
-  const audioInstance = useMasterAudioLoad({
+  const {loadFile, filePath} = useMP3File(topicName);
+
+  const {triggerLoadURL, isLoaded} = useLoadAudioInstance({
     soundRef,
-    url,
-    hasAlreadyBeenUnifiedAudioInstance,
+    url: filePath,
   });
+
+  useEffect(() => {
+    if (filePath) {
+      triggerLoadURL();
+    }
+  }, [filePath]);
+
+  const handleLoad = () => {
+    loadFile(topicName, url);
+  };
+
+  useEffect(() => {
+    handleLoad();
+  }, []);
 
   const {playSound, pauseSound, rewindSound, forwardSound} = useSoundHook({
     url,
@@ -217,7 +230,6 @@ const TopicContent = ({
     hasAlreadyBeenUnified,
     setStructuredUnifiedData,
     topicDataLengths,
-    audioInstance,
   });
 
   useAudioTextSync({
@@ -260,7 +272,7 @@ const TopicContent = ({
     setTriggerSentenceIdUpdate,
   ]);
 
-  if (!soundRefLoaded || formattedData?.length === 0) {
+  if (!isLoaded || formattedData?.length === 0) {
     return (
       <TopicContentLoader
         audioLoadingProgress={audioLoadingProgress}
