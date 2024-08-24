@@ -30,7 +30,6 @@ import useLoadAudioInstance from '../hooks/useLoadAudioInstance';
 const TopicContent = ({
   topicName,
   japaneseLoadedContent,
-  japaneseLoadedContentFullMP3s,
   pureWordsUnique,
   structuredUnifiedData,
   setStructuredUnifiedData,
@@ -75,9 +74,7 @@ const TopicContent = ({
 
   const isCore = thisTopicLoadedContent?.isCore;
 
-  const hasUnifiedMP3File = japaneseLoadedContentFullMP3s.some(
-    mp3 => mp3.name === topicName,
-  );
+  const hasUnifiedMP3File = thisTopicLoadedContent.hasAudio;
 
   const hasAlreadyBeenUnified = structuredUnifiedData[topicName]?.content;
   const snippetsLocalAndDb = useMemo(() => {

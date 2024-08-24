@@ -1,6 +1,5 @@
 import {
   japaneseContent,
-  japaneseContentFullMP3s,
   japaneseSentences,
   japaneseSnippets,
   japaneseSongs,
@@ -51,7 +50,6 @@ const loadAllContent = async () => {
         refs: [
           japaneseWords,
           japaneseSentences,
-          japaneseContentFullMP3s,
           japaneseSnippets,
           japaneseSongs,
           japaneseContent,
@@ -98,9 +96,6 @@ export const getAllData = async () => {
       getNestedObjectData(japaneseWords).japaneseWords;
     const japaneseLoadedSentences =
       getNestedObjectData(japaneseSentences).japaneseSentences;
-    const japaneseLoadedContentFullMP3s = getNestedObjectData(
-      japaneseContentFullMP3s,
-    ).japaneseContentFullMP3s;
     const japaneseLoadedSnippets =
       getNestedObjectData(japaneseSnippets).japaneseSnippets;
     const japaneseLoadedSongs =
@@ -154,7 +149,6 @@ export const getAllData = async () => {
       japaneseLoadedContent,
       japaneseLoadedWords,
       japaneseLoadedSentences,
-      japaneseLoadedContentFullMP3s,
       japaneseLoadedSnippets,
       japaneseLoadedSongs,
       wordsByTopics,
@@ -167,7 +161,6 @@ export const getAllData = async () => {
       contextHelperData: [],
       wordsByTopics: [],
       japaneseLoadedSentences: [],
-      japaneseLoadedContentFullMP3s: [],
       japaneseLoadedSnippets: [],
       japaneseLoadedSongs: [],
       topicsToStudy: [],

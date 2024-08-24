@@ -263,7 +263,6 @@ function Home({
 
   const today = new Date();
 
-  const japaneseLoadedContentFullMP3s = data.japaneseLoadedContentFullMP3s;
   const japaneseLoadedWords = [...data?.japaneseLoadedWords, ...newWordsAdded];
 
   const topicKeys = japaneseLoadedContentState.map(
@@ -316,6 +315,12 @@ function Home({
       false;
     }
   });
+
+  // quickFix
+  const hasAudioCheck = topicKey =>
+    japaneseLoadedContentState.some(
+      key => key.title === topicKey && key.hasAudio,
+    );
 
   const nextReviewCalculation = nextReview => {
     const nextReviewDate = new Date(nextReview);
@@ -479,11 +484,11 @@ function Home({
         {!topicOrSongSelected || showOtherTopics ? (
           <TopicsToDisplay
             topicsToDisplay={topicsToDisplay}
-            japaneseLoadedContentFullMP3s={japaneseLoadedContentFullMP3s}
             topicsToStudyState={topicsToStudyState}
             isDueReview={isDueReview}
             isCoreContent={isCoreContent}
             handleShowTopic={handleShowTopic}
+            hasAudioCheck={hasAudioCheck}
           />
         ) : null}
         <SongSection
@@ -501,7 +506,6 @@ function Home({
             <TopicComponent
               topicName={selectedTopic}
               japaneseLoadedContent={japaneseLoadedContentState}
-              japaneseLoadedContentFullMP3s={japaneseLoadedContentFullMP3s}
               pureWordsUnique={getPureWords()}
               structuredUnifiedData={structuredUnifiedData}
               setStructuredUnifiedData={setStructuredUnifiedData}

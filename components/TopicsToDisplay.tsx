@@ -2,18 +2,16 @@ import {Text, TouchableOpacity, View} from 'react-native';
 
 const TopicsToDisplay = ({
   topicsToDisplay,
-  japaneseLoadedContentFullMP3s,
   topicsToStudyState,
   isDueReview,
   isCoreContent,
   handleShowTopic,
+  hasAudioCheck,
 }) => {
   return (
     <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
       {topicsToDisplay?.map(topic => {
-        const hasUnifiedMP3File = japaneseLoadedContentFullMP3s.some(
-          mp3 => mp3.name === topic,
-        );
+        const hasUnifiedMP3File = hasAudioCheck(topic);
         const numberOfWordsToStudy = topicsToStudyState[topic];
 
         const thisTopicIsDue = isDueReview(topic, true, true);

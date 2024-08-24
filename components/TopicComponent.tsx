@@ -6,7 +6,6 @@ import {useEffect} from 'react';
 const TopicComponent = ({
   topicName,
   japaneseLoadedContent,
-  japaneseLoadedContentFullMP3s,
   pureWordsUnique,
   structuredUnifiedData,
   setStructuredUnifiedData,
@@ -45,7 +44,6 @@ const TopicComponent = ({
       <TopicContent
         topicName={topicName}
         japaneseLoadedContent={japaneseLoadedContent}
-        japaneseLoadedContentFullMP3s={japaneseLoadedContentFullMP3s}
         pureWordsUnique={pureWordsUnique}
         structuredUnifiedData={structuredUnifiedData}
         setStructuredUnifiedData={setStructuredUnifiedData}
