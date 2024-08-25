@@ -336,16 +336,6 @@ function Home({
 
     return differenceInDays;
   };
-  const nextReviewCalculationGeneralTopic = nextReview => {
-    const nextReviewDate = new Date(nextReview);
-    const differenceInMilliseconds = nextReviewDate - today;
-
-    const differenceInDays = Math.floor(
-      differenceInMilliseconds / (1000 * 60 * 60 * 24),
-    );
-
-    return differenceInDays;
-  };
 
   const isDueReviewSingular = ({topicOption, isReview}) => {
     const thisData = japaneseLoadedContentState.find(
@@ -372,11 +362,11 @@ function Home({
         .join('-');
 
       if (generalTopicName === topicOption) {
-        const nextReview = jpContent?.nextReview;
-        if (nextReview) {
-          const differenceInDays =
-            nextReviewCalculationGeneralTopic(nextReview);
-          if (differenceInDays <= 0) {
+        const thisDataNextReview = jpContent?.nextReview;
+        if (thisDataNextReview) {
+          const differenceInDays = nextReviewCalculation(thisDataNextReview);
+          const condition = differenceInDays > 0;
+          if (condition) {
             return true;
           }
         }
