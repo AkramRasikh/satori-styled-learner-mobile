@@ -7,6 +7,7 @@ const TopicsToDisplay = ({
   isCoreContent,
   handleShowTopic,
   hasAudioCheck,
+  isNeedsFutureReview,
 }) => {
   return (
     <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
@@ -16,7 +17,10 @@ const TopicsToDisplay = ({
 
         const thisTopicIsDue = isDueReview(topic, true, true);
         const isCoreStatus = isCoreContent(topic, true);
-        const thisTopicIsUpcoming = isDueReview(topic, true, false);
+        const thisTopicIsUpcoming = isNeedsFutureReview({
+          topicOption: topic,
+          singular: true,
+        });
 
         return (
           <View key={topic} testID={topic}>

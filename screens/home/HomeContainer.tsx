@@ -18,6 +18,11 @@ import ToastMessage from '../../components/ToastMessage';
 import {updateSentenceDataAPI} from '../../api/update-sentence-data';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {isSameDay} from '../../utils/check-same-date';
+import {
+  checkIsFutureReviewNeeded,
+  isUpForReview,
+} from '../../utils/is-up-for-review';
+import {getGeneralTopicName} from '../../utils/get-general-topic-name';
 
 function Home({
   navigation,
@@ -342,16 +347,10 @@ function Home({
       topicDisplayed => topicDisplayed.title === topicOption,
     );
 
-    const thisDataNextReview = thisData?.nextReview;
-    if (thisDataNextReview) {
-      const differenceInDays = nextReviewCalculation(thisDataNextReview);
-      const condition = isReview ? differenceInDays > 0 : differenceInDays < 0;
-      if (condition) {
-        return true;
-      }
-    }
+    const nextReview = thisData?.nextReview;
 
-    return false;
+    return isUpForReview({nextReview, todayDate: today});
+    // then check if is upcoming
   };
 
   const isDueGeneralTopic = topicOption => {
@@ -376,41 +375,53 @@ function Home({
     return nextReviewDateDue;
   };
 
+  const isNeedsFutureReview = ({topicOption, singular}) => {
+    const isHobbies = topicOption === 'hobbies-01';
+    if (singular) {
+      const thisData = japaneseLoadedContentState.find(
+        topicDisplayed => topicDisplayed.title === topicOption,
+      );
+
+      const nextReview = thisData?.nextReview;
+
+      const res = checkIsFutureReviewNeeded({nextReview, todayDate: today});
+      if (isHobbies) {
+        console.log('## ', {res});
+      }
+      return res;
+    }
+
+    const nextReviewDateDueForGeneralTopicDue = japaneseLoadedContentState.some(
+      jpContent => {
+        const generalTopicName = getGeneralTopicName(jpContent.title);
+
+        if (generalTopicName === topicOption) {
+          const nextReview = jpContent?.nextReview;
+          return checkIsFutureReviewNeeded({nextReview, todayDate: today});
+        }
+      },
+    );
+
+    return nextReviewDateDueForGeneralTopicDue;
+  };
+
   const isDueReview = (topicOption, singular, isReview) => {
     if (singular) {
       return isDueReviewSingular({topicOption, isReview});
     }
-    let subTopicDue: number;
     // change to forLoop
-    const nextReviewDateDue = japaneseLoadedContentState.some(jpContent => {
-      const generalTopicName = jpContent.title
-        .split('-')
-        .slice(0, -1)
-        .join('-');
+    const nextReviewDateDueForGeneralTopicDue = japaneseLoadedContentState.some(
+      jpContent => {
+        const generalTopicName = getGeneralTopicName(jpContent.title);
 
-      if (generalTopicName === topicOption) {
-        const nextReview = jpContent?.nextReview;
-        if (nextReview) {
-          const differenceInDays = nextReviewCalculation(nextReview);
-          if (differenceInDays) {
-            subTopicDue = differenceInDays;
-            return true;
-          }
+        if (generalTopicName === topicOption) {
+          const nextReview = jpContent?.nextReview;
+          return isUpForReview({nextReview, todayDate: today});
         }
-      }
-    });
+      },
+    );
 
-    if (!nextReviewDateDue) {
-      return false;
-    }
-
-    const condition = isReview ? subTopicDue > 0 : subTopicDue < 0;
-
-    if (condition) {
-      return true;
-    } else {
-      return false;
-    }
+    return nextReviewDateDueForGeneralTopicDue;
   };
 
   const isCoreContent = (topicOption, singular) => {
@@ -468,7 +479,7 @@ function Home({
             generalTopicObj={generalTopicObj}
             isDueReview={isDueReview}
             isCoreContent={isCoreContent}
-            isDueGeneralTopic={isDueGeneralTopic}
+            isNeedsFutureReview={isNeedsFutureReview}
           />
         )}
         {!topicOrSongSelected || showOtherTopics ? (
@@ -479,6 +490,7 @@ function Home({
             isCoreContent={isCoreContent}
             handleShowTopic={handleShowTopic}
             hasAudioCheck={hasAudioCheck}
+            isNeedsFutureReview={isNeedsFutureReview}
           />
         ) : null}
         <SongSection

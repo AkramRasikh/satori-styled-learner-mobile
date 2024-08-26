@@ -6,17 +6,19 @@ const GeneralTopics = ({
   generalTopicObj,
   isDueReview,
   isCoreContent,
-  isDueGeneralTopic,
+  isNeedsFutureReview,
 }) => {
   return (
     <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
       {generalTopicObjKeys?.map(generalTopic => {
         const numberOfWordsToStudy = generalTopicObj[generalTopic];
 
-        const hasReviewDue = isDueGeneralTopic(generalTopic);
-
         const isCoreStatus = isCoreContent(generalTopic, false);
-        const thisTopicIsUpcoming = isDueReview(generalTopic, false, false);
+        const hasReviewDue = isDueReview(generalTopic, false, true);
+        const thisTopicIsUpcoming = isNeedsFutureReview({
+          topicOption: generalTopic,
+          singular: false,
+        });
         return (
           <View key={generalTopic} testID={generalTopic}>
             <TouchableOpacity
