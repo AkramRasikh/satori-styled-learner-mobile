@@ -19,12 +19,14 @@ const SoundComponent = ({
         justifyContent: 'space-between',
         alignItems: 'center',
         padding: 10,
+        gap: 10,
       }}>
       <View
         style={{
-          marginHorizontal: 5,
+          flex: 1,
+          alignItems: 'center',
           backgroundColor: isPlaying ? 'green' : 'red',
-          borderRadius: 10,
+          borderRadius: 15,
         }}>
         {isPlaying ? (
           <Button title="⏸️" onPress={pauseSound} disabled={!isPlaying} />
@@ -34,10 +36,8 @@ const SoundComponent = ({
       </View>
       <View
         style={{
-          marginHorizontal: 5,
-          borderLeftColor: 'black',
-          borderLeftWidth: 1,
-          paddingLeft: 10,
+          flex: 1,
+          alignItems: 'center',
         }}>
         <Button
           title={jumpAudioValue ? `-${jumpAudioValue}s` : '-5s'}
@@ -47,10 +47,8 @@ const SoundComponent = ({
       </View>
       <View
         style={{
-          marginHorizontal: 5,
-          borderLeftColor: 'black',
-          borderLeftWidth: 1,
-          paddingLeft: 10,
+          flex: 1,
+          alignItems: 'center',
         }}>
         <Button
           title={jumpAudioValue ? `+${jumpAudioValue}s` : '+5s'}
@@ -62,12 +60,10 @@ const SoundComponent = ({
         <TouchableOpacity
           onPress={getTimeStamp}
           style={{
-            marginHorizontal: 5,
-            borderLeftColor: 'black',
-            borderLeftWidth: 1,
-            paddingLeft: 10,
+            flex: 1,
+            alignItems: 'center',
           }}>
-          <Text style={{marginRight: 5}}>🤏🏾</Text>
+          <Text>🤏🏾</Text>
         </TouchableOpacity>
       ) : null}
     </View>
