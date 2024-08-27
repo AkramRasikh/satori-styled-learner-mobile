@@ -1,5 +1,11 @@
 import {useEffect, useMemo, useRef, useState} from 'react';
-import {View, Text, ScrollView, Dimensions} from 'react-native';
+import {
+  View,
+  Text,
+  ScrollView,
+  Dimensions,
+  TouchableOpacity,
+} from 'react-native';
 import SoundComponent from './Sound';
 import useSoundHook from '../hooks/useSoundHook';
 import useGetCombinedAudioData, {
@@ -26,6 +32,7 @@ import ReviewSection from './ReviewSection';
 import IsCoreSection from './IsCoreSection';
 import useMP3File from '../hooks/useMP3File';
 import useLoadAudioInstance from '../hooks/useLoadAudioInstance';
+import AdhocSentenceContainer from './AdhocSentenceContainer';
 
 const TopicContent = ({
   topicName,
@@ -62,6 +69,7 @@ const TopicContent = ({
   const [initJapaneseWordsList, setInitJapaneseWordsList] = useState(null);
   const [updateWordList, setUpdateWordList] = useState(false);
   const [showWordStudyList, setShowWordStudyList] = useState(false);
+  const [showAdhocSentence, setShowAdhocSentence] = useState(false);
   const [audioLoadingProgress, setAudioLoadingProgress] = useState(0);
 
   const thisTopicLoadedContent = japaneseLoadedContent.find(
@@ -153,6 +161,11 @@ const TopicContent = ({
         </Text>
       );
     });
+  };
+
+  const handleAddAdhocSentence = () => {
+    setShowAdhocSentence(true);
+    pauseSound();
   };
 
   const orderedContent = topicData.map((item, index) => {
@@ -278,6 +291,15 @@ const TopicContent = ({
     );
   }
 
+  if (showAdhocSentence) {
+    return (
+      <AdhocSentenceContainer
+        topicName={topicName}
+        setShowAdhocSentence={setShowAdhocSentence}
+      />
+    );
+  }
+
   return (
     <View>
       {showWordStudyList && wordsToStudy ? (
@@ -367,6 +389,19 @@ const TopicContent = ({
         topicName={topicName}
         isCore={isCore}
       />
+      {/* showAdhocSentence, setShowAdhocSentence */}
+      <View
+        style={{
+          display: 'flex',
+          flexDirection: 'row',
+          flexWrap: 'wrap',
+          justifyContent: 'center',
+          marginVertical: 10,
+        }}>
+        <TouchableOpacity onPress={handleAddAdhocSentence}>
+          <Text>(+) Add Adhoc sentence</Text>
+        </TouchableOpacity>
+      </View>
       {lastItem && snippetsLocalAndDb?.length > 0 && (
         <SnippetTimeline
           snippetsLocalAndDb={snippetsLocalAndDb}
