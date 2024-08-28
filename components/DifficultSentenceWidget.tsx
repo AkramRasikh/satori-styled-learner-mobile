@@ -51,6 +51,7 @@ const DifficultSentenceWidget = ({
   const baseLang = sentence.baseLang;
   const targetLang = sentence.targetLang;
   const nextReview = sentence?.nextReview;
+  const isAdhoc = sentence?.isAdhoc;
   const hasBeenReviewed = sentence?.reviewHistory?.length > 0;
   const updateExistingReviewHistory = () => {
     return [...sentence?.reviewHistory, new Date()];
@@ -59,6 +60,7 @@ const DifficultSentenceWidget = ({
     const reviewNotNeeded = futureDaysState === 0;
     if (reviewNotNeeded) {
       updateSentenceData({
+        isAdhoc,
         topicName: topic,
         sentenceId: id,
         fieldToUpdate: {
@@ -68,6 +70,7 @@ const DifficultSentenceWidget = ({
       });
     } else {
       updateSentenceData({
+        isAdhoc,
         topicName: topic,
         sentenceId: id,
         fieldToUpdate: {

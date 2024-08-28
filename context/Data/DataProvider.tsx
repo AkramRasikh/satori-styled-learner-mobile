@@ -4,6 +4,7 @@ import {getAllData} from '../../api/load-content';
 import {updateSentenceDataAPI} from '../../api/update-sentence-data';
 import addAdhocSentenceAPI from '../../api/add-adhoc-sentence';
 import {setFutureReviewDate} from '../../components/ReviewSection';
+import updateAdhocSentenceAPI from '../../api/update-adhoc-sentence';
 
 export const DataContext = createContext(null);
 
@@ -51,12 +52,15 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
     adhocSentences.forEach(contentWidget => {
       const thisTopic = contentWidget.topic;
       const isCore = contentWidget?.isCore;
-      difficultSentences.push({
-        topic: thisTopic,
-        isCore,
-        isAdhoc: true,
-        ...contentWidget,
-      });
+      const nextReview = contentWidget?.nextReview;
+      if (nextReview) {
+        difficultSentences.push({
+          topic: thisTopic,
+          isCore,
+          isAdhoc: true,
+          ...contentWidget,
+        });
+      }
     });
     return difficultSentences;
   };
@@ -66,14 +70,73 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
       sentence => sentence.id !== sentenceIdToRemove,
     );
 
-  const updateSentenceData = async ({topicName, sentenceId, fieldToUpdate}) => {
-    const isRemoveFromDifficultSentences = fieldToUpdate?.nextReview === null;
+  const updateLoadedContentStateAfterSentenceUpdate = ({
+    sentenceId,
+    topicName,
+    resObj,
+  }) => {
+    const thisTopicDataIndex = japaneseLoadedContentMaster.findIndex(
+      topic => topic.title === topicName,
+    );
+
+    const thisTopicData = japaneseLoadedContentMaster[thisTopicDataIndex];
+
+    const thisTopicUpdateContent = thisTopicData.content.map(sentenceData => {
+      if (sentenceData.id === sentenceId) {
+        return {
+          ...sentenceData,
+          ...resObj,
+        };
+      }
+      return sentenceData;
+    });
+
+    const newTopicState = {
+      ...thisTopicData,
+      content: thisTopicUpdateContent,
+    };
+
+    const filteredTopics = japaneseLoadedContentMaster.map(topic => {
+      if (topic.title !== topicName) {
+        return topic;
+      }
+      return newTopicState;
+    });
+
+    setJapaneseLoadedContentMaster(filteredTopics);
+  };
+
+  const handleUpdateAdhocSentenceDifficult = async ({
+    sentenceId,
+    fieldToUpdate,
+  }) => {
     try {
-      const resObj = await updateSentenceDataAPI({
-        topicName,
-        sentenceId,
-        fieldToUpdate,
-      });
+      const res = await updateAdhocSentenceAPI({sentenceId, fieldToUpdate});
+      return {
+        isAdhoc: true,
+        ...res,
+      };
+    } catch (error) {
+      console.log('## handleUpdateAdhocSentenceDifficult ', error);
+    }
+  };
+
+  const updateSentenceData = async ({
+    topicName,
+    sentenceId,
+    fieldToUpdate,
+    isAdhoc,
+  }) => {
+    const isRemoveFromDifficultSentences =
+      !isAdhoc && fieldToUpdate?.nextReview === null;
+    try {
+      const resObj = isAdhoc
+        ? await handleUpdateAdhocSentenceDifficult({sentenceId, fieldToUpdate})
+        : await updateSentenceDataAPI({
+            topicName,
+            sentenceId,
+            fieldToUpdate,
+          });
 
       const updatedSentences = isRemoveFromDifficultSentences
         ? filterDifficultSentenceOut(sentenceId)
@@ -87,35 +150,11 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
 
             return item;
           });
-      const thisTopicDataIndex = japaneseLoadedContentMaster.findIndex(
-        topic => topic.title === topicName,
-      );
 
-      const thisTopicData = japaneseLoadedContentMaster[thisTopicDataIndex];
+      if (!isAdhoc) {
+        updateLoadedContentStateAfterSentenceUpdate({topicName, sentenceId});
+      }
 
-      const thisTopicUpdateContent = thisTopicData.content.map(sentenceData => {
-        if (sentenceData.id === sentenceId) {
-          return {
-            ...sentenceData,
-            ...resObj,
-          };
-        }
-        return sentenceData;
-      });
-
-      const newTopicState = {
-        ...thisTopicData,
-        content: thisTopicUpdateContent,
-      };
-
-      const filteredTopics = japaneseLoadedContentMaster.map(topic => {
-        if (topic.title !== topicName) {
-          return topic;
-        }
-        return newTopicState;
-      });
-
-      setJapaneseLoadedContentMaster(filteredTopics);
       setDifficultSentencesState(updatedSentences);
       setUpdatePromptState(`${topicName} updated!`);
       setTimeout(() => setUpdatePromptState(''), 3000);
