@@ -2,6 +2,8 @@ import React from 'react';
 import {createContext, PropsWithChildren, useEffect, useState} from 'react';
 import {getAllData} from '../../api/load-content';
 import {updateSentenceDataAPI} from '../../api/update-sentence-data';
+import addAdhocSentenceAPI from '../../api/add-adhoc-sentence';
+import {setFutureReviewDate} from '../../components/ReviewSection';
 
 export const DataContext = createContext(null);
 
@@ -14,6 +16,7 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
   const [dataProviderIsLoading, setDataProviderIsLoading] = useState(true);
   const [provdiderError, setProvdiderError] = useState(null);
   const [updatePromptState, setUpdatePromptState] = useState('');
+  const [isAdhocDataLoading, setIsAdhocDataLoading] = useState(false);
 
   const saveAudioInstance = (audioId, soundInstance) => {
     const isInAudioTempState = audioTempState[audioId];
@@ -108,6 +111,35 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
     }
   };
 
+  const addAdhocSentenceFunc = async ({baseLang, context, topic, tags}) => {
+    try {
+      const adhocObject = await addAdhocSentenceAPI({
+        baseLang,
+        context,
+        topic,
+        tags,
+        nextReview: setFutureReviewDate(new Date(), 3),
+      });
+      setIsAdhocDataLoading(true);
+
+      return adhocObject;
+    } catch (error) {
+      setProvdiderError('Error adding adhoc sentence');
+      setTimeout(() => setProvdiderError(null), 3000);
+    } finally {
+      setIsAdhocDataLoading(false);
+    }
+    //   {
+    //     "adhocSentence": {
+    //         "baseLang": "They say you should wait at least an hour after waking up before having a coffee. Your body naturally wakes itself up in this period and it is better not to interfere in this process",
+    //         "context": "I read somewhere that its better to wait for your body to naturally wake up due to naturally increasing cortisol levels."
+    //     },
+    //     "topic": "coffee",
+    //     "tags": ["coffee"],
+    //     "nextReview": "new Date()"
+    // }
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -144,6 +176,8 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
         updateSentenceData,
         updatePromptState,
         japaneseLoadedContentMaster,
+        addAdhocSentenceFunc,
+        isAdhocDataLoading,
       }}>
       {children}
     </DataContext.Provider>
