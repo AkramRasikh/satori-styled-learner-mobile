@@ -10,7 +10,7 @@ import {setFutureReviewDate} from './ReviewSection';
 import {getDueDateText} from '../utils/get-date-due-status';
 import useMP3File from '../hooks/useMP3File';
 
-const SoundWidget = ({soundRef, url, topicName}) => {
+export const SoundWidget = ({soundRef, url, topicName}) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const jumpAudioValue = 2;
   const {playSound, pauseSound, forwardSound, rewindSound} = useSoundHook({
