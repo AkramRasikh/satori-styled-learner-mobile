@@ -54,6 +54,7 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
       difficultSentences.push({
         topic: thisTopic,
         isCore,
+        isAdhoc: true,
         ...contentWidget,
       });
     });
