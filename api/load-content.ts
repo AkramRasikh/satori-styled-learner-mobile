@@ -1,4 +1,5 @@
 import {
+  japaneseAdhocSentences,
   japaneseContent,
   japaneseSentences,
   japaneseSnippets,
@@ -53,6 +54,7 @@ const loadAllContent = async () => {
           japaneseSnippets,
           japaneseSongs,
           japaneseContent,
+          japaneseAdhocSentences,
         ],
       }),
     });
@@ -100,6 +102,9 @@ export const getAllData = async () => {
       getNestedObjectData(japaneseSnippets).japaneseSnippets;
     const japaneseLoadedSongs =
       getNestedObjectData(japaneseSongs).japaneseSongs;
+    const japaneseAdhocLoadedSentences = getNestedObjectData(
+      japaneseAdhocSentences,
+    ).japaneseAdhocSentences;
 
     const getAdditionalContexts = wordFormsArr => {
       const [baseWord, surfaceWord] = wordFormsArr;
@@ -151,6 +156,7 @@ export const getAllData = async () => {
       japaneseLoadedSentences,
       japaneseLoadedSnippets,
       japaneseLoadedSongs,
+      japaneseAdhocLoadedSentences,
       wordsByTopics,
       topicsToStudy,
     };
@@ -163,6 +169,7 @@ export const getAllData = async () => {
       japaneseLoadedSentences: [],
       japaneseLoadedSnippets: [],
       japaneseLoadedSongs: [],
+      japaneseAdhocLoadedSentences: [],
       topicsToStudy: [],
     };
   }

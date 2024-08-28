@@ -28,9 +28,12 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
     }
   };
 
-  const getSentencesMarkedAsDifficult = data => {
+  const getSentencesMarkedAsDifficult = (
+    dataFromJapaneseContent,
+    adhocSentences,
+  ) => {
     const difficultSentences = [];
-    data.forEach(contentWidget => {
+    dataFromJapaneseContent.forEach(contentWidget => {
       const thisTopic = contentWidget.title;
       const isCore = contentWidget.isCore;
       const content = contentWidget.content;
@@ -45,6 +48,15 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
       });
     });
 
+    adhocSentences.forEach(contentWidget => {
+      const thisTopic = contentWidget.topic;
+      const isCore = contentWidget?.isCore;
+      difficultSentences.push({
+        topic: thisTopic,
+        isCore,
+        ...contentWidget,
+      });
+    });
     return difficultSentences;
   };
 
@@ -144,6 +156,8 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
     const fetchData = async () => {
       try {
         const allStudyDataRes = await getAllData();
+        const japaneseAdhocLoadedSentences =
+          allStudyDataRes.japaneseAdhocLoadedSentences;
         setHomeScreenData(allStudyDataRes);
         setJapaneseLoadedContentMaster(
           allStudyDataRes.japaneseLoadedContent.sort((a, b) => {
@@ -151,7 +165,10 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
           }),
         );
         setDifficultSentencesState(
-          getSentencesMarkedAsDifficult(allStudyDataRes.japaneseLoadedContent),
+          getSentencesMarkedAsDifficult(
+            allStudyDataRes.japaneseLoadedContent,
+            japaneseAdhocLoadedSentences,
+          ),
         );
       } catch (error) {
         console.log('## DataProvider error: ', error);
