@@ -31,7 +31,7 @@ const DifficultSentenceContent = ({
         </Text>
       </View>
       <View>
-        <Text>{targetLang}</Text>
+        <Text selectable={true}>{targetLang}</Text>
       </View>
       <View>
         <Text>{baseLang}</Text>
