@@ -135,13 +135,7 @@ const AdhocSentenceContainer = ({setShowAdhocSentence, topicName}) => {
   //   baseLang: 'base ting',
   //   nextReview: '2024-09-18T16:52:41.965Z',
   // }
-  const [adhocObjectData, setAdhocObjectData] = useState({
-    id: '7ef64c2f-9ec2-45dd-9d89-2610428bd1e6',
-    notes: 'notes',
-    targetLang: 'target ting',
-    baseLang: 'base ting',
-    nextReview: '2024-09-18T16:52:41.965Z',
-  });
+  const [adhocObjectData, setAdhocObjectData] = useState(null);
   const {addAdhocSentenceFunc, isAdhocDataLoading} = useData();
 
   useEffect(() => {
