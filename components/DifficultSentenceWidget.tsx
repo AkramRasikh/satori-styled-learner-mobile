@@ -108,6 +108,7 @@ const DifficultSentenceWidget = ({
         },
       });
     }
+    setShowReviewSettings(false);
   };
 
   const soundRef = useRef();
@@ -156,7 +157,6 @@ const DifficultSentenceWidget = ({
       ) : (
         <View>
           <TouchableOpacity onPress={handleLoad}>
-            {/* <TouchableOpacity onPress={loadFiletriggerLoadURL}> */}
             <Text>Load URL</Text>
           </TouchableOpacity>
         </View>
