@@ -216,6 +216,20 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
     }
   };
 
+  const addSnippetsToDifficultSentences = (
+    allInitDifficultSentences,
+    japaneseLoadedSnippetsWithSavedTag,
+  ) => {
+    return allInitDifficultSentences.map(sentenceData => {
+      return {
+        ...sentenceData,
+        snippets: japaneseLoadedSnippetsWithSavedTag.filter(
+          snippetData => snippetData.sentenceId === sentenceData.id,
+        ),
+      };
+    });
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -223,13 +237,14 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
         const japaneseAdhocLoadedSentences =
           allStudyDataRes.japaneseAdhocLoadedSentences;
         const japaneseLoadedSnippets = allStudyDataRes.japaneseLoadedSnippets;
-        setHomeScreenData(allStudyDataRes);
-        setJapaneseSnippetsState(
-          japaneseLoadedSnippets?.map(item => ({
+        const japaneseLoadedSnippetsWithSavedTag = japaneseLoadedSnippets?.map(
+          item => ({
             ...item,
             saved: true,
-          })),
+          }),
         );
+        setHomeScreenData(allStudyDataRes);
+        setJapaneseSnippetsState(japaneseLoadedSnippetsWithSavedTag);
         setJapaneseLoadedContentMaster(
           allStudyDataRes.japaneseLoadedContent.sort((a, b) => {
             return a.isCore === b.isCore ? 0 : a.isCore ? -1 : 1;
@@ -240,7 +255,11 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
           allStudyDataRes.japaneseLoadedContent,
           japaneseAdhocLoadedSentences,
         ).sort(sortByDueDate);
-        setDifficultSentencesState(allInitDifficultSentences);
+        const difficultSentencesWithSnippets = addSnippetsToDifficultSentences(
+          allInitDifficultSentences,
+          japaneseLoadedSnippetsWithSavedTag,
+        );
+        setDifficultSentencesState(difficultSentencesWithSnippets);
       } catch (error) {
         console.log('## DataProvider error: ', error);
         setProvdiderError(error);
