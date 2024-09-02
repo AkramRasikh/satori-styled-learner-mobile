@@ -3,7 +3,6 @@ import {SafeAreaView, ScrollView, Text, View} from 'react-native';
 
 import TopicComponent from '../../components/TopicComponent';
 import {makeArrayUnique} from '../../hooks/useHighlightWordToWordBank';
-import {addSnippetAPI, deleteSnippetAPI} from '../../api/snippet';
 import saveWordAPI from '../../api/save-word';
 import SongComponent from '../../components/SongComponent';
 import {getThisTopicsWordsToStudyAPI} from '../../api/words-to-study';
@@ -28,6 +27,9 @@ function Home({
   navigation,
   homeScreenData,
   japaneseLoadedContentMaster,
+  japaneseSnippetsState,
+  addSnippet,
+  removeSnippet,
 }): React.JSX.Element {
   const [data, setData] = useState<any>(null);
   const [isSetupPlayerLoaded, setIsSetupPlayerLoaded] = useState(false);
@@ -35,7 +37,6 @@ function Home({
   const [structuredUnifiedData, setStructuredUnifiedData] = useState([]);
   const [selectedTopic, setSelectedTopic] = useState('');
   const [selectedSong, setSelectedSong] = useState('');
-  const [masterSnippetState, setMasterSnippetState] = useState([]);
   const [newWordsAdded, setNewWordsAdded] = useState([]);
   const [showOtherTopics, setShowOtherTopics] = useState(true);
   const [topicsToStudyState, setTopicsToStudyState] = useState(null);
@@ -73,12 +74,6 @@ function Home({
     );
     setJapaneseLoadedSongsState(japaneseLoadedSongs);
     setData(results);
-    const japaneseLoadedSnippetsWithSavedTag =
-      results.japaneseLoadedSnippets?.map(item => ({
-        ...item,
-        saved: true,
-      }));
-    setMasterSnippetState(japaneseLoadedSnippetsWithSavedTag);
   }, []);
 
   const getPureWords = () => {
@@ -122,15 +117,6 @@ function Home({
     setShowOtherTopics(false);
   };
 
-  const addSnippet = async snippetData => {
-    try {
-      const res = await addSnippetAPI({contentEntry: snippetData});
-      setMasterSnippetState(prev => [...prev, {...res, saved: true}]);
-    } catch (error) {
-      console.log('## error adding snippet (Home.tsx)');
-    }
-  };
-
   const saveWordFirebase = async ({
     highlightedWord,
     highlightedWordSentenceId,
@@ -162,17 +148,6 @@ function Home({
     setShowOtherTopics(!showOtherTopics);
     setSelectedTopic('');
     setSelectedSong('');
-  };
-  const removeSnippet = async snippetData => {
-    try {
-      const res = await deleteSnippetAPI({contentEntry: snippetData});
-      const updatedSnippets = masterSnippetState.filter(
-        item => item.id !== res.id,
-      );
-      setMasterSnippetState(updatedSnippets);
-    } catch (error) {
-      console.log('## error adding snippet (Home.tsx)');
-    }
   };
 
   const updateTopicMetaData = async ({topicName, fieldToUpdate}) => {
@@ -273,7 +248,7 @@ function Home({
   const topicKeys = japaneseLoadedContentState.map(
     topicData => topicData.title,
   );
-  const snippetsForSelectedTopic = masterSnippetState?.filter(
+  const snippetsForSelectedTopic = japaneseSnippetsState?.filter(
     item => item.topicName === selectedTopic || item.topicName === selectedSong,
   );
 

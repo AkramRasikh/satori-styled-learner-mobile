@@ -5,6 +5,7 @@ import {updateSentenceDataAPI} from '../../api/update-sentence-data';
 import addAdhocSentenceAPI from '../../api/add-adhoc-sentence';
 import {setFutureReviewDate} from '../../components/ReviewSection';
 import updateAdhocSentenceAPI from '../../api/update-adhoc-sentence';
+import {addSnippetAPI, deleteSnippetAPI} from '../../api/snippet';
 
 export const DataContext = createContext(null);
 
@@ -14,6 +15,7 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
   const [homeScreenData, setHomeScreenData] = useState(null);
   const [japaneseLoadedContentMaster, setJapaneseLoadedContentMaster] =
     useState([]);
+  const [japaneseSnippetsState, setJapaneseSnippetsState] = useState([]);
   const [dataProviderIsLoading, setDataProviderIsLoading] = useState(true);
   const [provdiderError, setProvdiderError] = useState(null);
   const [updatePromptState, setUpdatePromptState] = useState('');
@@ -192,13 +194,41 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
     // }
   };
 
+  const addSnippet = async snippetData => {
+    try {
+      const res = await addSnippetAPI({contentEntry: snippetData});
+      setJapaneseSnippetsState(prev => [...prev, {...res, saved: true}]);
+    } catch (error) {
+      console.log('## error adding snippet (Home.tsx)');
+    }
+  };
+
+  const removeSnippet = async snippetData => {
+    try {
+      const res = await deleteSnippetAPI({contentEntry: snippetData});
+      const updatedSnippets = japaneseSnippetsState.filter(
+        item => item.id !== res.id,
+      );
+      setJapaneseSnippetsState(updatedSnippets);
+    } catch (error) {
+      console.log('## error adding snippet (Home.tsx)');
+    }
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       try {
         const allStudyDataRes = await getAllData();
         const japaneseAdhocLoadedSentences =
           allStudyDataRes.japaneseAdhocLoadedSentences;
+        const japaneseLoadedSnippets = allStudyDataRes.japaneseLoadedSnippets;
         setHomeScreenData(allStudyDataRes);
+        setJapaneseSnippetsState(
+          japaneseLoadedSnippets?.map(item => ({
+            ...item,
+            saved: true,
+          })),
+        );
         setJapaneseLoadedContentMaster(
           allStudyDataRes.japaneseLoadedContent.sort((a, b) => {
             return a.isCore === b.isCore ? 0 : a.isCore ? -1 : 1;
@@ -235,6 +265,9 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
         japaneseLoadedContentMaster,
         addAdhocSentenceFunc,
         isAdhocDataLoading,
+        japaneseSnippetsState,
+        addSnippet,
+        removeSnippet,
       }}>
       {children}
     </DataContext.Provider>

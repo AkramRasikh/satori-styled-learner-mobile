@@ -10,6 +10,9 @@ const Home = ({navigation}): React.JSX.Element => {
   const provdiderError = data.provdiderError;
   const homeScreenData = data.homeScreenData;
   const japaneseLoadedContentMaster = data.japaneseLoadedContentMaster;
+  const japaneseSnippetsState = data.japaneseSnippetsState;
+  const addSnippet = data.addSnippet;
+  const removeSnippet = data.removeSnippet;
 
   if (
     !homeScreenData ||
@@ -27,6 +30,9 @@ const Home = ({navigation}): React.JSX.Element => {
       navigation={navigation}
       homeScreenData={homeScreenData}
       japaneseLoadedContentMaster={japaneseLoadedContentMaster}
+      japaneseSnippetsState={japaneseSnippetsState}
+      addSnippet={addSnippet}
+      removeSnippet={removeSnippet}
     />
   );
 };
