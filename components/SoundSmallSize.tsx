@@ -1,6 +1,5 @@
 import React from 'react';
-import {Button, TouchableOpacity, View} from 'react-native';
-import {Text} from 'react-native-paper';
+import {Button, View} from 'react-native';
 
 const SoundSmallSize = ({
   soundRef,
