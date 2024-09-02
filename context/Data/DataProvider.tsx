@@ -6,6 +6,7 @@ import addAdhocSentenceAPI from '../../api/add-adhoc-sentence';
 import {setFutureReviewDate} from '../../components/ReviewSection';
 import updateAdhocSentenceAPI from '../../api/update-adhoc-sentence';
 import {addSnippetAPI, deleteSnippetAPI} from '../../api/snippet';
+import {sortByDueDate} from '../../utils/sort-by-due-date';
 
 export const DataContext = createContext(null);
 
@@ -234,12 +235,12 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
             return a.isCore === b.isCore ? 0 : a.isCore ? -1 : 1;
           }),
         );
-        setDifficultSentencesState(
-          getSentencesMarkedAsDifficult(
-            allStudyDataRes.japaneseLoadedContent,
-            japaneseAdhocLoadedSentences,
-          ),
-        );
+
+        const allInitDifficultSentences = getSentencesMarkedAsDifficult(
+          allStudyDataRes.japaneseLoadedContent,
+          japaneseAdhocLoadedSentences,
+        ).sort(sortByDueDate);
+        setDifficultSentencesState(allInitDifficultSentences);
       } catch (error) {
         console.log('## DataProvider error: ', error);
         setProvdiderError(error);

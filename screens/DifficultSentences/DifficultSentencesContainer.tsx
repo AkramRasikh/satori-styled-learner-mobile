@@ -11,6 +11,7 @@ import LoadingScreen from '../../components/LoadingScreen';
 import {sortByDueDate} from '../../utils/sort-by-due-date';
 import ToastMessage from '../../components/ToastMessage';
 import {calculateDueDate} from '../../utils/get-date-due-status';
+import PillButton from '../../components/PillButton';
 // import {getGeneralTopicName} from '../../utils/get-general-topic-name';
 // import {getThisTopicsWords} from '../../helper-functions/get-this-topics-words';
 
@@ -23,21 +24,10 @@ const DifficultSentencesContainer = ({
 }): React.JSX.Element => {
   const [toggleableSentencesState, setToggleableSentencesState] = useState([]);
   const todayDateObj = new Date();
-  const [isSortedByDue, setIsSortedByDue] = useState(false);
+
   const [isShowDueOnly, setIsShowDueOnly] = useState(false);
   // const [topicsAvailableState, setTopicsAvailableState] = useState([]);
   // const [selectedTopic, setSelectedTopic] = useState('');
-
-  const sortSentencesByDueDate = () => {
-    // if (!isSortedByDue) {
-    const sortedByDueDate = [...toggleableSentencesState].sort(sortByDueDate);
-    setToggleableSentencesState(sortedByDueDate);
-    setIsSortedByDue(true);
-    // } else {
-    //   setToggleableSentencesState(difficultSentencesState);
-    //   setIsSortedByDue(false);
-    // }
-  };
 
   // const getBySelectedTopic = () => {};
 
@@ -75,7 +65,7 @@ const DifficultSentencesContainer = ({
     }
   };
 
-  const btnText = isSortedByDue ? '↕ In Due order ✅' : '↕ In Core order 🧠';
+  const btnText = '↕ In Due order ✅';
   const btnDueText = `Show only due ${isShowDueOnly ? '✅' : '❌'}`;
 
   useEffect(() => {
@@ -121,29 +111,18 @@ const DifficultSentencesContainer = ({
         </View>
         <View
           style={{
-            padding: 10,
             display: 'flex',
             flexDirection: 'row',
             justifyContent: 'space-around',
+            alignItems: 'center',
+            padding: 5,
           }}>
-          <TouchableOpacity
-            // eslint-disable-next-line react-native/no-inline-styles
-            style={{
-              padding: 5,
-              borderRadius: 10,
-            }}
-            onPress={sortSentencesByDueDate}>
-            <Text>{btnText}</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={{
-              padding: 5,
-              borderRadius: 10,
-            }}
-            onPress={showDueOnlyFunc}>
-            <Text>{btnDueText}</Text>
-          </TouchableOpacity>
+          <PillButton
+            isShowDueOnly={isShowDueOnly}
+            showDueOnlyFunc={showDueOnlyFunc}
+          />
         </View>
+
         {/* <View
           style={{
             display: 'flex',
