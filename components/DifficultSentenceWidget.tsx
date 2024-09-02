@@ -20,10 +20,11 @@ const ThisSnippetContainer = ({
   setCurrentTimeState,
   currentTimeState,
   snippet,
-  isPlaying,
-  setIsPlaying,
   url,
+  masterAudio,
+  setMasterAudio,
 }) => {
+  const [isPlaying, setIsPlaying] = useState(false);
   const [adjustableStartTime, setAdjustableStartTime] = useState(
     snippet.pointInAudio,
   );
@@ -31,6 +32,12 @@ const ThisSnippetContainer = ({
 
   const soundDuration = soundRef.current._duration;
   const isInDB = false;
+
+  useEffect(() => {
+    if (masterAudio && isPlaying) {
+      setMasterAudio(false);
+    }
+  }, [masterAudio, setMasterAudio, isPlaying]);
 
   const {
     // handleDelete,
@@ -79,6 +86,7 @@ const ThisSnippetContainer = ({
       adjustableStartTime={adjustableStartTime}
       playSound={playSound}
       pauseSound={pauseSound}
+      isPlaying={isPlaying}
     />
   );
 };
@@ -93,6 +101,8 @@ export const SoundWidget = ({
   setIsPlaying,
   currentTimeState,
   setCurrentTimeState,
+  masterAudio,
+  setMasterAudio,
 }) => {
   const jumpAudioValue = 2;
   const soundDuration = soundRef.current._duration;
@@ -297,8 +307,8 @@ const DifficultSentenceWidget = ({
           snippet={miniSnippets[0]}
           setCurrentTimeState={setCurrentTimeState}
           currentTimeState={currentTimeState}
-          isPlaying={isPlaying}
-          setIsPlaying={setIsPlaying}
+          masterAudio={isPlaying}
+          setMasterAudio={setIsPlaying}
           url={url}
         />
       ) : null}
