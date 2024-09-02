@@ -68,7 +68,7 @@ export const MiniSnippetTimeChangeHandlers = ({
             alignSelf: 'center',
             padding: 5,
           }}>
-          {true ? (
+          {isPlaying ? (
             <TouchableOpacity onPress={pauseSound} disabled={!isPlaying}>
               <Text>⏸️</Text>
             </TouchableOpacity>

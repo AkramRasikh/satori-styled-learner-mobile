@@ -10,10 +10,97 @@ import {setFutureReviewDate} from './ReviewSection';
 import {getDueDateText} from '../utils/get-date-due-status';
 import useMP3File from '../hooks/useMP3File';
 import ProgressBarComponent from './Progress';
+import {generateRandomId} from '../utils/generate-random-id';
+import useSnippetControls from '../hooks/useSnippetControls';
+import {MiniSnippetTimeChangeHandlers} from './Snippet/SnippetTimeChangeHandlers';
+import useSnippetManageAudioStop from '../hooks/useSnippetManageAudioStop';
 
-export const SoundWidget = ({soundRef, url, topicName}) => {
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [currentTimeState, setCurrentTimeState] = useState(2);
+const ThisSnippetContainer = ({
+  soundRef,
+  setCurrentTimeState,
+  currentTimeState,
+  snippet,
+  isPlaying,
+  setIsPlaying,
+  url,
+}) => {
+  const [adjustableStartTime, setAdjustableStartTime] = useState(
+    snippet.pointInAudio,
+  );
+  const [adjustableDuration, setAdjustableDuration] = useState(4);
+
+  const soundDuration = soundRef.current._duration;
+  const isInDB = false;
+
+  const {
+    // handleDelete,
+    // handleAddingSnippet,
+    // handleRemoveSnippet,
+    handleSetEarlierTime,
+    handleSetDuration,
+  } = useSnippetControls({
+    adjustableStartTime,
+    adjustableDuration,
+    setAdjustableStartTime,
+    setAdjustableDuration,
+    snippetEndAtLimit: soundDuration,
+    snippetStartAtLimit: 0,
+    deleteSnippet: () => {},
+    addSnippet: () => {},
+    removeSnippet: () => {},
+    snippet,
+  });
+
+  const {playSound, pauseSound} = useSoundHook({
+    url,
+    soundRef,
+    isPlaying,
+    setIsPlaying,
+    topicName: snippet.topicName,
+    isSnippet: true,
+    startTime: isInDB ? pointInAudio : adjustableStartTime,
+    setCurrentTime: setCurrentTimeState,
+  });
+
+  useSnippetManageAudioStop({
+    soundRef,
+    isPlaying,
+    setIsPlaying,
+    startTime: isInDB ? pointInAudio : adjustableStartTime,
+    duration: isInDB ? durationInDB : adjustableDuration,
+    currentTime: currentTimeState,
+  });
+
+  return (
+    <MiniSnippetTimeChangeHandlers
+      handleSetEarlierTime={handleSetEarlierTime}
+      adjustableDuration={adjustableDuration}
+      handleSetDuration={handleSetDuration}
+      adjustableStartTime={adjustableStartTime}
+      playSound={playSound}
+      pauseSound={pauseSound}
+    />
+  );
+};
+
+export const SoundWidget = ({
+  soundRef,
+  url,
+  topicName,
+  handleSnippet,
+  sentence,
+  isPlaying,
+  setIsPlaying,
+  currentTimeState,
+  setCurrentTimeState,
+}) => {
+  const jumpAudioValue = 2;
+  const soundDuration = soundRef.current._duration;
+
+  // const pointInAudio = sentence?.pointInAudio;
+  // const snippetStartAtLimit = sentence?.startAt;
+  // const snippetEndAtLimit = sentence?.endAt;
+  // const pointOfAudioOnClick = sentence?.pointOfAudioOnClick;
 
   useEffect(() => {
     const getCurrentTimeFunc = () => {
@@ -28,10 +115,12 @@ export const SoundWidget = ({soundRef, url, topicName}) => {
     }, 100);
 
     return () => clearInterval(interval);
-  }, [soundRef, soundDuration, setCurrentTimeState]);
+  }, [soundRef, setCurrentTimeState]);
 
-  const jumpAudioValue = 2;
-  const soundDuration = soundRef.current._duration;
+  const handleSnippetFunc = () => {
+    handleSnippet(currentTimeState);
+    pauseSound();
+  };
 
   const {playSound, pauseSound, forwardSound, rewindSound} = useSoundHook({
     url,
@@ -44,6 +133,13 @@ export const SoundWidget = ({soundRef, url, topicName}) => {
 
   return (
     <View>
+      <ProgressBarComponent
+        endTime={soundDuration}
+        progress={currentTimeState / soundDuration}
+        time={currentTimeState.toFixed(2)}
+        noMargin
+        noPadding
+      />
       <SoundSmallSize
         soundRef={soundRef}
         isPlaying={isPlaying}
@@ -52,11 +148,7 @@ export const SoundWidget = ({soundRef, url, topicName}) => {
         rewindSound={() => rewindSound(jumpAudioValue)}
         forwardSound={() => forwardSound(jumpAudioValue)}
         jumpAudioValue={jumpAudioValue}
-      />
-      <ProgressBarComponent
-        endTime={soundDuration}
-        progress={currentTimeState / soundDuration}
-        time={currentTimeState.toFixed(2)}
+        handleSnippet={handleSnippetFunc}
       />
     </View>
   );
@@ -69,8 +161,11 @@ const DifficultSentenceWidget = ({
   isLastEl,
   dueStatus,
 }) => {
+  const [currentTimeState, setCurrentTimeState] = useState(0);
   const [futureDaysState, setFutureDaysState] = useState(3);
   const [showReviewSettings, setShowReviewSettings] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [miniSnippets, setMiniSnippets] = useState([]);
 
   const id = sentence.id;
   const topic = sentence.topic;
@@ -80,9 +175,26 @@ const DifficultSentenceWidget = ({
   const nextReview = sentence?.nextReview;
   const isAdhoc = sentence?.isAdhoc;
   const hasBeenReviewed = sentence?.reviewHistory?.length > 0;
+  const soundRef = useRef();
+
+  const handleSnippet = currentTime => {
+    const snippetId = topic + '-' + generateRandomId();
+    const itemToSave = {
+      id: snippetId,
+      sentenceId: id,
+      pointInAudio: currentTime,
+      isIsolated: true,
+      pointOfAudioOnClick: currentTime,
+      url,
+      topicName: topic,
+    };
+    setMiniSnippets(prev => [...prev, itemToSave]);
+  };
+
   const updateExistingReviewHistory = () => {
     return [...sentence?.reviewHistory, new Date()];
   };
+
   const setNextReviewDate = () => {
     const reviewNotNeeded = futureDaysState === 0;
     if (reviewNotNeeded) {
@@ -111,7 +223,6 @@ const DifficultSentenceWidget = ({
     setShowReviewSettings(false);
   };
 
-  const soundRef = useRef();
   const url = getFirebaseAudioURL(id);
 
   const {loadFile, filePath} = useMP3File(id);
@@ -153,7 +264,17 @@ const DifficultSentenceWidget = ({
         dueColorState={dueColorState}
       />
       {isLoaded ? (
-        <SoundWidget soundRef={soundRef} url={url} topicName={topic} />
+        <SoundWidget
+          soundRef={soundRef}
+          url={url}
+          topicName={topic}
+          handleSnippet={handleSnippet}
+          sentence={sentence}
+          isPlaying={isPlaying}
+          setIsPlaying={setIsPlaying}
+          currentTimeState={currentTimeState}
+          setCurrentTimeState={setCurrentTimeState}
+        />
       ) : (
         <View>
           <TouchableOpacity onPress={handleLoad}>
@@ -168,6 +289,17 @@ const DifficultSentenceWidget = ({
           showReviewSettings={showReviewSettings}
           setFutureDaysState={setFutureDaysState}
           setNextReviewDate={setNextReviewDate}
+        />
+      ) : null}
+      {miniSnippets?.length > 0 ? (
+        <ThisSnippetContainer
+          soundRef={soundRef}
+          snippet={miniSnippets[0]}
+          setCurrentTimeState={setCurrentTimeState}
+          currentTimeState={currentTimeState}
+          isPlaying={isPlaying}
+          setIsPlaying={setIsPlaying}
+          url={url}
         />
       ) : null}
     </View>

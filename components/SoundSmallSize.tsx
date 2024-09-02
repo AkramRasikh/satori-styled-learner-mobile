@@ -1,5 +1,5 @@
 import React from 'react';
-import {Button, View} from 'react-native';
+import {Button, Text, TouchableOpacity, View} from 'react-native';
 
 const SoundSmallSize = ({
   soundRef,
@@ -9,6 +9,7 @@ const SoundSmallSize = ({
   rewindSound,
   forwardSound,
   jumpAudioValue,
+  handleSnippet,
 }) => {
   return (
     <View
@@ -54,6 +55,14 @@ const SoundSmallSize = ({
           disabled={!soundRef.current}
         />
       </View>
+      <TouchableOpacity
+        onPress={handleSnippet}
+        style={{
+          flex: 1,
+          alignItems: 'center',
+        }}>
+        <Text>✂️</Text>
+      </TouchableOpacity>
     </View>
   );
 };
