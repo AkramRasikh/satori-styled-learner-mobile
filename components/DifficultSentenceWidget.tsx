@@ -9,10 +9,30 @@ import SatoriLineReviewSection from './SatoriLineReviewSection';
 import {setFutureReviewDate} from './ReviewSection';
 import {getDueDateText} from '../utils/get-date-due-status';
 import useMP3File from '../hooks/useMP3File';
+import ProgressBarComponent from './Progress';
 
 export const SoundWidget = ({soundRef, url, topicName}) => {
   const [isPlaying, setIsPlaying] = useState(false);
+  const [currentTimeState, setCurrentTimeState] = useState(2);
+
+  useEffect(() => {
+    const getCurrentTimeFunc = () => {
+      soundRef.current.getCurrentTime(currentTime => {
+        setCurrentTimeState(currentTime);
+      });
+    };
+    const interval = setInterval(() => {
+      if (soundRef.current?.isPlaying()) {
+        getCurrentTimeFunc();
+      }
+    }, 100);
+
+    return () => clearInterval(interval);
+  }, [soundRef, soundDuration, setCurrentTimeState]);
+
   const jumpAudioValue = 2;
+  const soundDuration = soundRef.current._duration;
+
   const {playSound, pauseSound, forwardSound, rewindSound} = useSoundHook({
     url,
     soundRef,
@@ -23,15 +43,22 @@ export const SoundWidget = ({soundRef, url, topicName}) => {
   });
 
   return (
-    <SoundSmallSize
-      soundRef={soundRef}
-      isPlaying={isPlaying}
-      playSound={playSound}
-      pauseSound={pauseSound}
-      rewindSound={() => rewindSound(jumpAudioValue)}
-      forwardSound={() => forwardSound(jumpAudioValue)}
-      jumpAudioValue={jumpAudioValue}
-    />
+    <View>
+      <SoundSmallSize
+        soundRef={soundRef}
+        isPlaying={isPlaying}
+        playSound={playSound}
+        pauseSound={pauseSound}
+        rewindSound={() => rewindSound(jumpAudioValue)}
+        forwardSound={() => forwardSound(jumpAudioValue)}
+        jumpAudioValue={jumpAudioValue}
+      />
+      <ProgressBarComponent
+        endTime={soundDuration}
+        progress={currentTimeState / soundDuration}
+        time={currentTimeState.toFixed(2)}
+      />
+    </View>
   );
 };
 
