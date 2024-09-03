@@ -12,9 +12,9 @@ import useMP3File from '../hooks/useMP3File';
 import ProgressBarComponent from './Progress';
 import {generateRandomId} from '../utils/generate-random-id';
 import useSnippetControls from '../hooks/useSnippetControls';
-import {MiniSnippetTimeChangeHandlers} from './Snippet/SnippetTimeChangeHandlers';
 import useSnippetManageAudioStop from '../hooks/useSnippetManageAudioStop';
 import {mergeAndRemoveDuplicates} from '../utils/merge-and-remove-duplicates';
+import MiniSnippetTimeChangeHandlers from './MiniSnippetTimeChangeHandlers';
 
 const ThisSnippetContainer = ({
   soundRef,
