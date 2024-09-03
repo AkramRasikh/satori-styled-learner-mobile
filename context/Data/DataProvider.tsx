@@ -176,7 +176,6 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
         nextReview: setFutureReviewDate(new Date(), 3),
       });
       setIsAdhocDataLoading(true);
-
       return adhocObject;
     } catch (error) {
       setProvdiderError('Error adding adhoc sentence');
@@ -184,15 +183,6 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
     } finally {
       setIsAdhocDataLoading(false);
     }
-    //   {
-    //     "adhocSentence": {
-    //         "baseLang": "They say you should wait at least an hour after waking up before having a coffee. Your body naturally wakes itself up in this period and it is better not to interfere in this process",
-    //         "context": "I read somewhere that its better to wait for your body to naturally wake up due to naturally increasing cortisol levels."
-    //     },
-    //     "topic": "coffee",
-    //     "tags": ["coffee"],
-    //     "nextReview": "new Date()"
-    // }
   };
 
   const addSnippet = async snippetData => {
