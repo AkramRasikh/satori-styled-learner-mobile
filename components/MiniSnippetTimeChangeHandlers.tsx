@@ -112,10 +112,10 @@ const MiniSnippetTimeChangeHandlers = ({
       </View>
       <View
         style={{
-          flex: 2,
-          marginHorizontal: 5,
-          flexDirection: 'row',
-          justifyContent: 'space-between',
+          flex: !isSaved ? 2 : undefined,
+          marginHorizontal: !isSaved ? 5 : undefined,
+          flexDirection: !isSaved ? 'row' : undefined,
+          justifyContent: !isSaved ? 'space-between' : undefined,
         }}>
         {!isSaved ? (
           <View
@@ -139,13 +139,7 @@ const MiniSnippetTimeChangeHandlers = ({
               <Button onPress={handleRemoveFromTempSnippets} title="❌" />
             </View>
           ) : (
-            <TouchableOpacity
-              onPress={handleRemoveSnippet}
-              style={{
-                alignItems: 'flex-end',
-              }}>
-              <Text>❌</Text>
-            </TouchableOpacity>
+            <Button onPress={handleRemoveSnippet} title="❌" />
           )}
         </View>
       </View>

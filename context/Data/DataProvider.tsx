@@ -236,7 +236,6 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
   };
 
   const removeSnippet = async ({snippetId, sentenceId}) => {
-    console.log('## removeSnippet Provider', {snippetId, sentenceId});
     try {
       const deletedSnippetId = await deleteSnippetAPI({snippetId});
       const updatedSnippets = japaneseSnippetsState.filter(
@@ -251,7 +250,6 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
         const updatedDifficultSentencesWithSnippet =
           difficultSentencesState.map(diffSentence => {
             if (diffSentence.id === sentenceId) {
-              console.log('## updatingggg REMOVE');
               const hasSnippets = diffSentence?.snippets?.length > 0;
               return {
                 ...diffSentence,

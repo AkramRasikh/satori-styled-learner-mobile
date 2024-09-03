@@ -205,10 +205,6 @@ const DifficultSentenceWidget = ({
   addSnippet,
   removeSnippet,
 }) => {
-  if (sentence.topic === 'food') {
-    console.log('## ', sentence);
-  }
-
   const [currentTimeState, setCurrentTimeState] = useState(0);
   const [futureDaysState, setFutureDaysState] = useState(3);
   const [showReviewSettings, setShowReviewSettings] = useState(false);
@@ -231,11 +227,6 @@ const DifficultSentenceWidget = ({
       miniSnippets,
     );
   }, [sentence, miniSnippets]);
-
-  if (sentence.topic === 'food') {
-    console.log('## saved snippets:', sentence?.snippets?.length);
-    // console.log('## ', {snippetsLocalAndDb});
-  }
 
   const handleSnippet = currentTime => {
     const snippetId = topic + '-' + generateRandomId();
