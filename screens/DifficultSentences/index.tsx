@@ -12,6 +12,8 @@ const DifficultSentences = (): React.JSX.Element => {
   const audioTempState = data.audioTempState;
   const updateSentenceData = data.updateSentenceData;
   const updatePromptState = data.updatePromptState;
+  const addSnippet = data.addSnippet;
+  const removeSnippet = data.removeSnippet;
 
   if (dataProviderIsLoading || !difficultSentencesState.length) {
     return <LoadingScreen>Loading difficult sentences...</LoadingScreen>;
@@ -24,6 +26,8 @@ const DifficultSentences = (): React.JSX.Element => {
       audioTempState={audioTempState}
       updateSentenceData={updateSentenceData}
       updatePromptState={updatePromptState}
+      addSnippet={addSnippet}
+      removeSnippet={removeSnippet}
     />
   );
 };
