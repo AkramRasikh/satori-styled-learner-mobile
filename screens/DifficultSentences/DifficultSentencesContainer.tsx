@@ -21,6 +21,8 @@ const DifficultSentencesContainer = ({
   audioTempState,
   updateSentenceData,
   updatePromptState,
+  addSnippet,
+  removeSnippet,
 }): React.JSX.Element => {
   const [toggleableSentencesState, setToggleableSentencesState] = useState([]);
   const todayDateObj = new Date();
@@ -168,6 +170,8 @@ const DifficultSentencesContainer = ({
                   updateSentenceData={updateSentenceData}
                   dueStatus={dueStatus}
                   isLastEl={isLastEl}
+                  addSnippet={addSnippet}
+                  removeSnippet={removeSnippet}
                 />
               );
             })}

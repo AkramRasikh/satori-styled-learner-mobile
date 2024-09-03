@@ -1,6 +1,6 @@
 import {Text, TouchableOpacity, View} from 'react-native';
 import useLoadAudioInstance from '../hooks/useLoadAudioInstance';
-import {useEffect, useRef, useState} from 'react';
+import {useEffect, useMemo, useRef, useState} from 'react';
 import {getFirebaseAudioURL} from '../hooks/useGetCombinedAudioData';
 import useSoundHook from '../hooks/useSoundHook';
 import DifficultSentenceContent from './DifficultSentenceContent';
@@ -14,6 +14,7 @@ import {generateRandomId} from '../utils/generate-random-id';
 import useSnippetControls from '../hooks/useSnippetControls';
 import {MiniSnippetTimeChangeHandlers} from './Snippet/SnippetTimeChangeHandlers';
 import useSnippetManageAudioStop from '../hooks/useSnippetManageAudioStop';
+import {mergeAndRemoveDuplicates} from '../utils/merge-and-remove-duplicates';
 
 const ThisSnippetContainer = ({
   soundRef,
@@ -23,6 +24,10 @@ const ThisSnippetContainer = ({
   url,
   masterAudio,
   setMasterAudio,
+  index,
+  addSnippet,
+  removeSnippet,
+  setMiniSnippets,
 }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [adjustableStartTime, setAdjustableStartTime] = useState(
@@ -31,7 +36,7 @@ const ThisSnippetContainer = ({
   const [adjustableDuration, setAdjustableDuration] = useState(4);
 
   const soundDuration = soundRef.current._duration;
-  const isInDB = false;
+  const isSaved = snippet?.saved;
 
   useEffect(() => {
     if (masterAudio && isPlaying) {
@@ -39,13 +44,36 @@ const ThisSnippetContainer = ({
     }
   }, [masterAudio, setMasterAudio, isPlaying]);
 
-  const {
-    // handleDelete,
-    // handleAddingSnippet,
-    // handleRemoveSnippet,
-    handleSetEarlierTime,
-    handleSetDuration,
-  } = useSnippetControls({
+  const handleSaveSnippet = async () => {
+    const formattedSnippet = {
+      ...snippet,
+      pointInAudio: adjustableStartTime,
+      duration: adjustableDuration,
+    };
+    try {
+      const thisSnippetDataFromAPI = await addSnippet(formattedSnippet);
+      setMiniSnippets(prev =>
+        prev.filter(
+          snippetData => snippetData.id !== thisSnippetDataFromAPI.id,
+        ),
+      );
+    } catch (error) {
+      console.log('## handleSaveSnippet', error);
+    }
+  };
+
+  const handleRemoveSnippet = async () => {
+    try {
+      await removeSnippet({
+        snippetId: snippet.id,
+        sentenceId: snippet.sentenceId,
+      });
+    } catch (error) {
+      console.log('## handleRemoveSnippet', error);
+    }
+  };
+
+  const {handleSetEarlierTime, handleSetDuration} = useSnippetControls({
     adjustableStartTime,
     adjustableDuration,
     setAdjustableStartTime,
@@ -65,7 +93,7 @@ const ThisSnippetContainer = ({
     setIsPlaying,
     topicName: snippet.topicName,
     isSnippet: true,
-    startTime: isInDB ? pointInAudio : adjustableStartTime,
+    startTime: isSaved ? snippet.pointInAudio : adjustableStartTime,
     setCurrentTime: setCurrentTimeState,
   });
 
@@ -73,20 +101,24 @@ const ThisSnippetContainer = ({
     soundRef,
     isPlaying,
     setIsPlaying,
-    startTime: isInDB ? pointInAudio : adjustableStartTime,
-    duration: isInDB ? durationInDB : adjustableDuration,
+    startTime: isSaved ? snippet.pointInAudio : adjustableStartTime,
+    duration: isSaved ? snippet.duration : adjustableDuration,
     currentTime: currentTimeState,
   });
 
   return (
     <MiniSnippetTimeChangeHandlers
       handleSetEarlierTime={handleSetEarlierTime}
+      handleSaveSnippet={handleSaveSnippet}
+      handleRemoveSnippet={handleRemoveSnippet}
       adjustableDuration={adjustableDuration}
       handleSetDuration={handleSetDuration}
       adjustableStartTime={adjustableStartTime}
       playSound={playSound}
       pauseSound={pauseSound}
       isPlaying={isPlaying}
+      indexList={index}
+      isSaved={isSaved}
     />
   );
 };
@@ -144,7 +176,7 @@ export const SoundWidget = ({
   return (
     <View>
       <ProgressBarComponent
-        endTime={soundDuration}
+        endTime={soundDuration.toFixed(2)}
         progress={currentTimeState / soundDuration}
         time={currentTimeState.toFixed(2)}
         noMargin
@@ -170,7 +202,13 @@ const DifficultSentenceWidget = ({
   updateSentenceData,
   isLastEl,
   dueStatus,
+  addSnippet,
+  removeSnippet,
 }) => {
+  if (sentence.topic === 'food') {
+    console.log('## ', sentence);
+  }
+
   const [currentTimeState, setCurrentTimeState] = useState(0);
   const [futureDaysState, setFutureDaysState] = useState(3);
   const [showReviewSettings, setShowReviewSettings] = useState(false);
@@ -186,6 +224,18 @@ const DifficultSentenceWidget = ({
   const isAdhoc = sentence?.isAdhoc;
   const hasBeenReviewed = sentence?.reviewHistory?.length > 0;
   const soundRef = useRef();
+
+  const snippetsLocalAndDb = useMemo(() => {
+    return mergeAndRemoveDuplicates(
+      sentence?.snippets?.sort((a, b) => a.pointInAudio - b.pointInAudio),
+      miniSnippets,
+    );
+  }, [sentence, miniSnippets]);
+
+  if (sentence.topic === 'food') {
+    console.log('## saved snippets:', sentence?.snippets?.length);
+    // console.log('## ', {snippetsLocalAndDb});
+  }
 
   const handleSnippet = currentTime => {
     const snippetId = topic + '-' + generateRandomId();
@@ -301,17 +351,26 @@ const DifficultSentenceWidget = ({
           setNextReviewDate={setNextReviewDate}
         />
       ) : null}
-      {miniSnippets?.length > 0 ? (
-        <ThisSnippetContainer
-          soundRef={soundRef}
-          snippet={miniSnippets[0]}
-          setCurrentTimeState={setCurrentTimeState}
-          currentTimeState={currentTimeState}
-          masterAudio={isPlaying}
-          setMasterAudio={setIsPlaying}
-          url={url}
-        />
-      ) : null}
+      {isLoaded && snippetsLocalAndDb?.length > 0
+        ? snippetsLocalAndDb?.map((snippetData, index) => {
+            return (
+              <ThisSnippetContainer
+                key={snippetData.id}
+                index={index}
+                soundRef={soundRef}
+                snippet={snippetData}
+                setCurrentTimeState={setCurrentTimeState}
+                currentTimeState={currentTimeState}
+                masterAudio={isPlaying}
+                setMasterAudio={setIsPlaying}
+                addSnippet={addSnippet}
+                removeSnippet={removeSnippet}
+                setMiniSnippets={setMiniSnippets}
+                url={url}
+              />
+            );
+          })
+        : null}
     </View>
   );
 };

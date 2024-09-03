@@ -5,10 +5,15 @@ export const MiniSnippetTimeChangeHandlers = ({
   adjustableDuration,
   handleSetDuration,
   adjustableStartTime,
+  handleSaveSnippet,
+  handleRemoveSnippet,
   pauseSound,
   playSound,
   isPlaying,
+  indexList,
+  isSaved,
 }) => {
+  const listText = indexList + 1 + ') ';
   const earlierTimeTitle = '⏪';
   const laterTimeTitle = '⏩';
   return (
@@ -17,6 +22,19 @@ export const MiniSnippetTimeChangeHandlers = ({
         flexDirection: 'row',
         justifyContent: 'space-between',
       }}>
+      <View
+        style={{
+          alignItems: 'center',
+          marginHorizontal: 'auto',
+          alignSelf: 'center',
+        }}>
+        <Text
+          style={{
+            alignItems: 'center',
+          }}>
+          {listText}
+        </Text>
+      </View>
       <View
         style={{
           flex: 1,
@@ -39,42 +57,57 @@ export const MiniSnippetTimeChangeHandlers = ({
           flexDirection: 'row',
           justifyContent: 'space-between',
         }}>
-        <View style={{flex: 1}}>
-          <Button
-            onPress={() => handleSetEarlierTime(false)}
-            title={earlierTimeTitle}
-          />
-        </View>
-        <View style={{flex: 1}}>
-          <Button
-            onPress={() => handleSetEarlierTime(true)}
-            title={laterTimeTitle}
-          />
-        </View>
+        {!isSaved ? (
+          <>
+            <View style={{flex: 1}}>
+              <Button
+                onPress={() => handleSetEarlierTime(false)}
+                title={earlierTimeTitle}
+              />
+            </View>
+            <View style={{flex: 1}}>
+              <Button
+                onPress={() => handleSetEarlierTime(true)}
+                title={laterTimeTitle}
+              />
+            </View>
+            <View style={{flex: 1, alignSelf: 'center'}}>
+              <TouchableOpacity onPress={() => handleSetDuration(false)}>
+                <Text>-0.5</Text>
+              </TouchableOpacity>
+            </View>
+            <View style={{flex: 1, alignSelf: 'center'}}>
+              <TouchableOpacity onPress={() => handleSetDuration(true)}>
+                <Text>+0.5</Text>
+              </TouchableOpacity>
+            </View>
+            <View
+              style={{
+                backgroundColor: isPlaying ? 'green' : 'red',
+                borderRadius: 5,
+                alignSelf: 'center',
+                padding: 5,
+              }}>
+              {isPlaying ? (
+                <TouchableOpacity onPress={pauseSound} disabled={!isPlaying}>
+                  <Text>⏸️</Text>
+                </TouchableOpacity>
+              ) : (
+                <TouchableOpacity onPress={playSound} disabled={isPlaying}>
+                  <Text>▶️</Text>
+                </TouchableOpacity>
+              )}
+            </View>
+          </>
+        ) : null}
         <View style={{flex: 1, alignSelf: 'center'}}>
-          <TouchableOpacity onPress={() => handleSetDuration(false)}>
-            <Text>-0.5</Text>
-          </TouchableOpacity>
-        </View>
-        <View style={{flex: 1, alignSelf: 'center'}}>
-          <TouchableOpacity onPress={() => handleSetDuration(true)}>
-            <Text>+0.5</Text>
-          </TouchableOpacity>
-        </View>
-        <View
-          style={{
-            backgroundColor: isPlaying ? 'green' : 'red',
-            borderRadius: 5,
-            alignSelf: 'center',
-            padding: 5,
-          }}>
-          {isPlaying ? (
-            <TouchableOpacity onPress={pauseSound} disabled={!isPlaying}>
-              <Text>⏸️</Text>
+          {!isSaved ? (
+            <TouchableOpacity onPress={handleSaveSnippet}>
+              <Text>➕</Text>
             </TouchableOpacity>
           ) : (
-            <TouchableOpacity onPress={playSound} disabled={isPlaying}>
-              <Text>▶️</Text>
+            <TouchableOpacity onPress={handleRemoveSnippet}>
+              <Text>❌</Text>
             </TouchableOpacity>
           )}
         </View>

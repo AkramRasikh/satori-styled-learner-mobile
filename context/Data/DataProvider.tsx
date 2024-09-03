@@ -197,22 +197,77 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
 
   const addSnippet = async snippetData => {
     try {
-      const res = await addSnippetAPI({contentEntry: snippetData});
-      setJapaneseSnippetsState(prev => [...prev, {...res, saved: true}]);
+      const snippetDataFromAPI = await addSnippetAPI({
+        contentEntry: snippetData,
+      });
+      setJapaneseSnippetsState(prev => [
+        ...prev,
+        {...snippetDataFromAPI, saved: true},
+      ]);
+
+      const thisSnippetsSentence = snippetDataFromAPI.sentenceId;
+      const isInDiffSentenceArr = difficultSentencesState.some(
+        diffSentence => diffSentence.id === thisSnippetsSentence,
+      );
+      if (isInDiffSentenceArr) {
+        const updatedDifficultSentencesWithSnippet =
+          difficultSentencesState.map(diffSentence => {
+            if (diffSentence.id === thisSnippetsSentence) {
+              const hasSnippets = diffSentence?.snippets?.length > 0;
+              return {
+                ...diffSentence,
+                snippets: hasSnippets
+                  ? [
+                      ...diffSentence.snippets,
+                      {...snippetDataFromAPI, saved: true},
+                    ]
+                  : [{...snippetDataFromAPI, saved: true}],
+              };
+            }
+            return diffSentence;
+          });
+        setDifficultSentencesState(updatedDifficultSentencesWithSnippet);
+      }
+
+      return snippetDataFromAPI;
     } catch (error) {
-      console.log('## error adding snippet (Home.tsx)');
+      console.log('## error adding snippet (DataProvider.tsx)');
     }
   };
 
-  const removeSnippet = async snippetData => {
+  const removeSnippet = async ({snippetId, sentenceId}) => {
+    console.log('## removeSnippet Provider', {snippetId, sentenceId});
     try {
-      const res = await deleteSnippetAPI({contentEntry: snippetData});
+      const deletedSnippetId = await deleteSnippetAPI({snippetId});
       const updatedSnippets = japaneseSnippetsState.filter(
-        item => item.id !== res.id,
+        item => item.id !== deletedSnippetId,
       );
       setJapaneseSnippetsState(updatedSnippets);
+
+      const isInDiffSentenceArr = difficultSentencesState.some(
+        diffSentence => diffSentence.id === sentenceId,
+      );
+      if (isInDiffSentenceArr) {
+        const updatedDifficultSentencesWithSnippet =
+          difficultSentencesState.map(diffSentence => {
+            if (diffSentence.id === sentenceId) {
+              console.log('## updatingggg REMOVE');
+              const hasSnippets = diffSentence?.snippets?.length > 0;
+              return {
+                ...diffSentence,
+                snippets: hasSnippets
+                  ? diffSentence.snippets.filter(
+                      nestedSnippet => nestedSnippet.id !== deletedSnippetId,
+                    )
+                  : [],
+              };
+            }
+            return diffSentence;
+          });
+        setDifficultSentencesState(updatedDifficultSentencesWithSnippet);
+      }
     } catch (error) {
-      console.log('## error adding snippet (Home.tsx)');
+      console.log('## error removeSnippet (DataProvider.tsx)');
     }
   };
 
