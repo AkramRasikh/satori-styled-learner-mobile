@@ -25,7 +25,7 @@ export const addSnippetAPI = async ({contentEntry}) => {
     console.log('## addSnippet error: ', error);
   }
 };
-export const deleteSnippetAPI = async ({contentEntry}) => {
+export const deleteSnippetAPI = async ({snippetId}) => {
   const url = BACKEND_ENDPOINT + '/delete-snippet';
 
   try {
@@ -36,7 +36,7 @@ export const deleteSnippetAPI = async ({contentEntry}) => {
       },
       body: JSON.stringify({
         ref: japaneseSnippets,
-        contentEntry,
+        snippetId,
       }),
     });
 
@@ -44,7 +44,7 @@ export const deleteSnippetAPI = async ({contentEntry}) => {
       throw new Error('Network response was not ok');
     }
 
-    return contentEntry;
+    return snippetId;
   } catch (error) {
     console.log('## addSnippet error: ', error);
   }
