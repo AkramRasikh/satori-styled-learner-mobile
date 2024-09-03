@@ -67,12 +67,7 @@ const useSnippetControls = ({
     addSnippet(formattedSnippet);
   };
   const handleRemoveSnippet = () => {
-    const formattedSnippet = {
-      ...snippet,
-      pointInAudio: adjustableStartTime,
-      duration: adjustableDuration,
-    };
-    removeSnippet(formattedSnippet);
+    removeSnippet({snippetId: snippet.id, sentenceId: snippet.sentenceId});
   };
 
   return {
