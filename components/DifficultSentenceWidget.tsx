@@ -62,6 +62,12 @@ const ThisSnippetContainer = ({
     }
   };
 
+  const handleRemoveFromTempSnippets = () => {
+    setMiniSnippets(prev =>
+      prev.filter(snippetData => snippetData.id !== snippet.id),
+    );
+  };
+
   const handleRemoveSnippet = async () => {
     try {
       await removeSnippet({
@@ -111,6 +117,7 @@ const ThisSnippetContainer = ({
       handleSetEarlierTime={handleSetEarlierTime}
       handleSaveSnippet={handleSaveSnippet}
       handleRemoveSnippet={handleRemoveSnippet}
+      handleRemoveFromTempSnippets={handleRemoveFromTempSnippets}
       adjustableDuration={adjustableDuration}
       handleSetDuration={handleSetDuration}
       adjustableStartTime={adjustableStartTime}
