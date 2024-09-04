@@ -8,6 +8,7 @@ import {SafeAreaProvider} from 'react-native-safe-area-context';
 import DifficultSentences from './screens/DifficultSentences';
 import Home from './screens/home';
 import {DataProvider} from './context/Data/DataProvider';
+import WordStudy from './screens/WordStudy';
 
 enableScreens();
 
@@ -53,6 +54,9 @@ function App(): React.JSX.Element {
           >
             <Stack.Screen name="Home">
               {props => <Home {...props} />}
+            </Stack.Screen>
+            <Stack.Screen name="WordStudy">
+              {props => <WordStudy {...props} />}
             </Stack.Screen>
             <Stack.Screen name="DifficultSentences">
               {() => <DifficultSentences />}

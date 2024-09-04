@@ -431,9 +431,15 @@ function Home({
           <MoreTopics handleShowGeneralTopic={handleShowGeneralTopic} />
         )}
         {showNaviBtn ? (
-          <View>
+          <View
+            style={{
+              display: 'flex',
+              flexDirection: 'row',
+              justifyContent: 'space-around',
+            }}>
             <TouchableOpacity
               style={{
+                flex: 1,
                 borderWidth: 1,
                 borderColor: '#999999',
                 borderRadius: 20,
@@ -443,7 +449,21 @@ function Home({
                 backgroundColor: 'transparent',
               }}
               onPress={() => navigation.navigate('DifficultSentences')}>
-              <Text style={{textAlign: 'center'}}>Sentence reps 🤓🏋🏽‍♂️</Text>
+              <Text style={{textAlign: 'center'}}>Sentences 🤓🏋🏽‍♂️</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={{
+                flex: 1,
+                borderWidth: 1,
+                borderColor: '#999999',
+                borderRadius: 20,
+                paddingVertical: 10,
+                paddingHorizontal: 15,
+                margin: 5,
+                backgroundColor: 'transparent',
+              }}
+              onPress={() => navigation.navigate('WordStudy')}>
+              <Text style={{textAlign: 'center'}}>Words 🤓🏋🏽‍♂️</Text>
             </TouchableOpacity>
           </View>
         ) : null}

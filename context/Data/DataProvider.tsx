@@ -17,6 +17,7 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
   const [japaneseLoadedContentMaster, setJapaneseLoadedContentMaster] =
     useState([]);
   const [japaneseSnippetsState, setJapaneseSnippetsState] = useState([]);
+  const [japaneseWordsState, setJapaneseWordsState] = useState([]);
   const [dataProviderIsLoading, setDataProviderIsLoading] = useState(true);
   const [provdiderError, setProvdiderError] = useState(null);
   const [updatePromptState, setUpdatePromptState] = useState('');
@@ -303,6 +304,7 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
           japaneseLoadedSnippetsWithSavedTag,
         );
         setDifficultSentencesState(difficultSentencesWithSnippets);
+        setJapaneseWordsState(allStudyDataRes.japaneseLoadedWords);
       } catch (error) {
         console.log('## DataProvider error: ', error);
         setProvdiderError(error);
@@ -331,6 +333,7 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
         japaneseSnippetsState,
         addSnippet,
         removeSnippet,
+        japaneseWordsState,
       }}>
       {children}
     </DataContext.Provider>
