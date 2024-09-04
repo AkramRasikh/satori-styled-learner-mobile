@@ -35,7 +35,6 @@ const useContentControls = ({
       isIsolated: isText ? true : false,
       endAt: thisItem.endAt,
       startAt: thisItem.startAt,
-      pointOfAudioOnClick: currentTimeState,
       url,
       targetLang,
       topicName,

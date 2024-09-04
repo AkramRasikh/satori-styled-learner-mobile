@@ -16,6 +16,11 @@ import useSnippetManageAudioStop from '../hooks/useSnippetManageAudioStop';
 import {mergeAndRemoveDuplicates} from '../utils/merge-and-remove-duplicates';
 import MiniSnippetTimeChangeHandlers from './MiniSnippetTimeChangeHandlers';
 
+const hasBeenSnippedFromCollectiveURL = snippet => {
+  const snippetURL = snippet.url;
+  return snippetURL.includes(snippet.topicName);
+};
+
 const ThisSnippetContainer = ({
   soundRef,
   setCurrentTimeState,
@@ -30,13 +35,24 @@ const ThisSnippetContainer = ({
   setMiniSnippets,
 }) => {
   const [isPlaying, setIsPlaying] = useState(false);
-  const [adjustableStartTime, setAdjustableStartTime] = useState(
-    snippet.pointInAudio,
-  );
+  const [adjustableStartTime, setAdjustableStartTime] = useState(undefined);
   const [adjustableDuration, setAdjustableDuration] = useState(4);
 
   const soundDuration = soundRef.current._duration;
   const isSaved = snippet?.saved;
+
+  const isFromUnifiedURL = hasBeenSnippedFromCollectiveURL(snippet);
+
+  const getStartTime = () => {
+    if (isFromUnifiedURL && snippet.startAt) {
+      return snippet.pointInAudio - snippet.startAt;
+    }
+    return snippet.pointInAudio;
+  };
+
+  useEffect(() => {
+    setAdjustableStartTime(getStartTime());
+  }, []);
 
   useEffect(() => {
     if (masterAudio && isPlaying) {
@@ -47,6 +63,8 @@ const ThisSnippetContainer = ({
   const handleSaveSnippet = async () => {
     const formattedSnippet = {
       ...snippet,
+      pointOfAudioOnClick: undefined,
+      endAt: undefined,
       pointInAudio: adjustableStartTime,
       duration: adjustableDuration,
     };
@@ -99,7 +117,7 @@ const ThisSnippetContainer = ({
     setIsPlaying,
     topicName: snippet.topicName,
     isSnippet: true,
-    startTime: isSaved ? snippet.pointInAudio : adjustableStartTime,
+    startTime: isSaved ? getStartTime() : adjustableStartTime,
     setCurrentTime: setCurrentTimeState,
   });
 
@@ -107,7 +125,7 @@ const ThisSnippetContainer = ({
     soundRef,
     isPlaying,
     setIsPlaying,
-    startTime: isSaved ? snippet.pointInAudio : adjustableStartTime,
+    startTime: isSaved ? getStartTime() : adjustableStartTime,
     duration: isSaved ? snippet.duration : adjustableDuration,
     currentTime: currentTimeState,
   });
@@ -118,7 +136,7 @@ const ThisSnippetContainer = ({
       handleSaveSnippet={handleSaveSnippet}
       handleRemoveSnippet={handleRemoveSnippet}
       handleRemoveFromTempSnippets={handleRemoveFromTempSnippets}
-      adjustableDuration={adjustableDuration}
+      adjustableDuration={isSaved ? snippet.duration : adjustableDuration}
       handleSetDuration={handleSetDuration}
       adjustableStartTime={adjustableStartTime}
       playSound={playSound}
@@ -149,7 +167,6 @@ export const SoundWidget = ({
   // const pointInAudio = sentence?.pointInAudio;
   // const snippetStartAtLimit = sentence?.startAt;
   // const snippetEndAtLimit = sentence?.endAt;
-  // const pointOfAudioOnClick = sentence?.pointOfAudioOnClick;
 
   useEffect(() => {
     const getCurrentTimeFunc = () => {
@@ -242,7 +259,6 @@ const DifficultSentenceWidget = ({
       sentenceId: id,
       pointInAudio: currentTime,
       isIsolated: true,
-      pointOfAudioOnClick: currentTime,
       url,
       topicName: topic,
     };

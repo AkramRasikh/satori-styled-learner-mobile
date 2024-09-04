@@ -61,6 +61,8 @@ const useSnippetControls = ({
     // check if values already there
     const formattedSnippet = {
       ...snippet,
+      pointOfAudioOnClick: undefined,
+      endAt: undefined,
       pointInAudio: adjustableStartTime,
       duration: adjustableDuration,
     };

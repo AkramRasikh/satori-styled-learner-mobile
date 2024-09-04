@@ -2,7 +2,6 @@ import {useEffect, useState} from 'react';
 
 const useSnippetHook = ({
   startTime,
-  pointOfAudioOnClick,
   currentTimeState,
   setCurrentTimeState,
   soundRef,
@@ -63,14 +62,9 @@ const useSnippetHook = ({
 
   useEffect(() => {
     if (!adjustableStartTime) {
-      setAdjustableStartTime(pointOfAudioOnClick);
+      setAdjustableStartTime(pointInAudio);
     }
-  }, [
-    adjustableStartTime,
-    pointInAudio,
-    pointOfAudioOnClick,
-    setAdjustableStartTime,
-  ]);
+  }, [adjustableStartTime, pointInAudio, setAdjustableStartTime]);
   return {
     progress,
     progressTime,
