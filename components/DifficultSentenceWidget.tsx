@@ -50,6 +50,9 @@ const ThisSnippetContainer = ({
     return snippet.pointInAudio;
   };
 
+  const isSavedAndOutsideOfBoundary =
+    isSaved && adjustableStartTime > soundDuration;
+
   useEffect(() => {
     setAdjustableStartTime(getStartTime());
   }, []);
@@ -144,6 +147,7 @@ const ThisSnippetContainer = ({
       isPlaying={isPlaying}
       indexList={index}
       isSaved={isSaved}
+      isSavedAndOutsideOfBoundary={isSavedAndOutsideOfBoundary}
     />
   );
 };

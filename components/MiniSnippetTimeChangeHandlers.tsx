@@ -63,6 +63,7 @@ const MiniSnippetTimeChangeHandlers = ({
   isPlaying,
   indexList,
   isSaved,
+  isSavedAndOutsideOfBoundary,
 }) => {
   const listText = indexList + 1 + ') ';
 
@@ -75,22 +76,31 @@ const MiniSnippetTimeChangeHandlers = ({
       <View
         style={{
           alignSelf: 'center',
+          opacity: isSavedAndOutsideOfBoundary ? 0.5 : 1,
         }}>
         <Text>{listText}</Text>
       </View>
       <View
         style={{
-          backgroundColor: isPlaying ? 'green' : 'red',
+          backgroundColor: isSavedAndOutsideOfBoundary
+            ? 'transparent'
+            : isPlaying
+            ? 'green'
+            : 'red',
           borderRadius: 5,
           alignSelf: 'center',
           padding: 5,
         }}>
-        {isPlaying ? (
+        {isSavedAndOutsideOfBoundary ? (
+          <Text>🚫</Text>
+        ) : isPlaying ? (
           <TouchableOpacity onPress={pauseSound} disabled={!isPlaying}>
             <Text>⏸️</Text>
           </TouchableOpacity>
         ) : (
-          <TouchableOpacity onPress={playSound} disabled={isPlaying}>
+          <TouchableOpacity
+            onPress={playSound}
+            disabled={isSavedAndOutsideOfBoundary || isPlaying}>
             <Text>▶️</Text>
           </TouchableOpacity>
         )}
@@ -100,6 +110,7 @@ const MiniSnippetTimeChangeHandlers = ({
           flex: 1,
           flexDirection: 'row',
           alignItems: 'center',
+          opacity: isSavedAndOutsideOfBoundary ? 0.5 : 1,
         }}>
         <Text
           style={{
