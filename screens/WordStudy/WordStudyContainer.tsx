@@ -1,6 +1,13 @@
-import React, {useEffect, useState} from 'react';
-import {SafeAreaView, ScrollView, Text, View} from 'react-native';
-import {getGeneralTopicName} from '../../utils/get-general-topic-name';
+import React, {useState} from 'react';
+import {
+  SafeAreaView,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import useFormatWordsToStudy from '../../hooks/useFormatWordsToStudy';
+import AnimatedModal from '../../components/WordModal';
 
 function WordStudyContainer({
   navigation,
@@ -11,80 +18,115 @@ function WordStudyContainer({
   const [tagsState, setTagsState] = useState([]);
   const [generalTopicState, setGeneralTopicState] = useState([]);
   const [wordStudyState, setWordStudyState] = useState([]);
+  const [selectedTopicWords, setSelectedTopicWords] = useState([]);
+  const [selectedTopic, setSelectedTopic] = useState('');
+  const [selectedWord, setSelectedWord] = useState();
 
-  useEffect(() => {
-    const tagsAvailable = [];
-    const generalTopics = [];
-    const wordsForState = [];
+  const wordCategories = [...tagsState, ...generalTopicState];
 
-    const formattedJapaneseWordData = japaneseWordsState.map(wordData => {
-      const thisWordsContext = wordData.contexts;
+  useFormatWordsToStudy({
+    japaneseWordsState,
+    setWordStudyState,
+    setTagsState,
+    setGeneralTopicState,
+    japaneseLoadedContent,
+    japaneseAdhocLoadedSentences,
+  });
 
-      const contextData = [];
+  const handleOpenWordInfo = selectedWordOnClick => {
+    setSelectedWord(selectedWordOnClick);
+  };
 
-      thisWordsContext.forEach(contextId => {
-        japaneseLoadedContent.forEach(contentData => {
-          const content = contentData.content;
-          const generalTopicTitle = getGeneralTopicName(contentData.title);
-          const tags = content?.tags;
+  const handleShowThisCategoriesWords = category => {
+    const thisCategoriesWords = wordStudyState.filter(wordData =>
+      wordData.thisWordsCategories.some(
+        oneCategory => oneCategory === category,
+      ),
+    );
+    setSelectedTopicWords(thisCategoriesWords);
+    setSelectedTopic(category);
+  };
 
-          const contextIdMatchesSentence = content.find(
-            contentSentence => contentSentence.id === contextId,
-          );
-          if (contextIdMatchesSentence) {
-            contextData.push({
-              ...contextIdMatchesSentence,
-              title: generalTopicTitle,
-              tags,
-            });
-            generalTopics.push(generalTopicTitle);
-
-            if (tags) {
-              tagsAvailable.push(tags);
-            }
-          }
-        });
-        // conditionally
-        japaneseAdhocLoadedSentences.forEach(adhocSentenceData => {
-          const generalTopicTitle = adhocSentenceData.topic;
-          const tags = adhocSentenceData?.tags;
-
-          const adhocSentenceDataId = adhocSentenceData.id;
-
-          const matchingContextID = contextId === adhocSentenceDataId;
-
-          if (matchingContextID) {
-            contextData.push({
-              ...adhocSentenceData,
-              title: generalTopicTitle,
-              tags,
-            });
-            generalTopics.push(generalTopicTitle);
-
-            if (tags) {
-              tagsAvailable.push(...tags); // in array
-            }
-          }
-        });
-      });
-
-      return {
-        ...wordData,
-        contextData,
-      };
-    });
-    setWordStudyState(formattedJapaneseWordData);
-  }, []);
+  const hasSelectedTopicWords = selectedTopic && selectedTopicWords?.length > 0;
 
   return (
     <SafeAreaView style={{backgroundColor: '#D3D3D3', minHeight: '100%'}}>
       <ScrollView
         contentInsetAdjustmentBehavior="automatic"
         style={{padding: 10}}>
-        <View>
-          <Text>SIuuuuu</Text>
+        <View
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            flexWrap: 'wrap',
+            gap: 5,
+          }}>
+          {wordCategories?.map((wordCategory, index) => {
+            return (
+              <View
+                key={index}
+                style={{
+                  borderBlockColor: 'black',
+                  borderWidth: 2,
+                  padding: 5,
+                  borderRadius: 5,
+                }}>
+                <TouchableOpacity
+                  onPress={() => handleShowThisCategoriesWords(wordCategory)}>
+                  <Text>{wordCategory}</Text>
+                </TouchableOpacity>
+              </View>
+            );
+          })}
         </View>
+        <View
+          style={{
+            height: 1,
+            backgroundColor: 'black',
+            marginVertical: 10,
+          }}
+        />
+        {hasSelectedTopicWords ? (
+          <View>
+            <View>
+              <Text>{selectedTopic}:</Text>
+            </View>
+            <View
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+                flexWrap: 'wrap',
+                gap: 5,
+              }}>
+              {selectedTopicWords?.map((wordData, index) => {
+                const listTextNumber = index + 1 + ') ';
+                return (
+                  <View
+                    key={wordData.id}
+                    style={{
+                      borderBlockColor: 'black',
+                      borderWidth: 2,
+                      padding: 5,
+                      borderRadius: 5,
+                    }}>
+                    <TouchableOpacity
+                      onPress={() => handleOpenWordInfo(wordData)}>
+                      <Text>
+                        {listTextNumber}
+                        {wordData.baseForm}
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+                );
+              })}
+            </View>
+          </View>
+        ) : null}
       </ScrollView>
+      <AnimatedModal
+        visible={selectedWord}
+        onClose={() => setSelectedWord(null)}
+      />
     </SafeAreaView>
   );
 }
