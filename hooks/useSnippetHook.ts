@@ -14,6 +14,7 @@ const useSnippetHook = ({
   duration,
   adjustableDuration,
   setAdjustableStartTime,
+  pointInAudioOnClick,
 }) => {
   const [progressTime, setProgressTime] = useState(startTime);
   const [progress, setProgress] = useState(0);
@@ -62,9 +63,9 @@ const useSnippetHook = ({
 
   useEffect(() => {
     if (!adjustableStartTime) {
-      setAdjustableStartTime(pointInAudio);
+      setAdjustableStartTime(pointInAudioOnClick);
     }
-  }, [adjustableStartTime, pointInAudio, setAdjustableStartTime]);
+  }, [adjustableStartTime, pointInAudioOnClick, setAdjustableStartTime]);
   return {
     progress,
     progressTime,

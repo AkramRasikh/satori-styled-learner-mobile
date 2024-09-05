@@ -36,6 +36,7 @@ const useContentControls = ({
       endAt: thisItem.endAt,
       startAt: thisItem.startAt,
       url,
+      pointInAudioOnClick: currentTimeState,
       targetLang,
       topicName,
     };

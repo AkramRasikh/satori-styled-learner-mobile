@@ -37,6 +37,7 @@ const Snippet = ({
   const pointInAudio = snippet.pointInAudio;
   const snippetStartAtLimit = snippet?.startAt;
   const snippetEndAtLimit = snippet?.endAt;
+  const pointInAudioOnClick = snippet?.pointInAudioOnClick;
 
   const startTime = getStartTime(adjustableStartTime, pointInAudio);
 
@@ -62,6 +63,7 @@ const Snippet = ({
     duration,
     adjustableDuration,
     setAdjustableStartTime,
+    pointInAudioOnClick,
   });
 
   const {playSound, pauseSound} = useSoundHook({

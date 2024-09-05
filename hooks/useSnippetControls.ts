@@ -60,11 +60,15 @@ const useSnippetControls = ({
   const handleAddingSnippet = () => {
     // check if values already there
     const formattedSnippet = {
-      ...snippet,
-      pointOfAudioOnClick: undefined,
-      endAt: undefined,
+      id: snippet.id,
+      sentenceId: snippet.sentenceId,
       pointInAudio: adjustableStartTime,
       duration: adjustableDuration,
+      startAt: snippet.startAt,
+      isIsolated: snippet.isIsolated,
+      targetLang: snippet.targetLang,
+      topicName: snippet.topicName,
+      url: snippet.url,
     };
     addSnippet(formattedSnippet);
   };
