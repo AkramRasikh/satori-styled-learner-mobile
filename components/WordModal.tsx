@@ -44,26 +44,52 @@ const AnimatedModal = ({visible, onClose}) => {
     }
   }, [visible]);
 
+  if (!visible) {
+    return null;
+  }
+
+  const baseForm = visible.baseForm;
+  const surfaceForm = visible.surfaceForm;
+  const transliteration = visible.transliteration;
+  const definition = visible.definition;
+  const phonetic = visible.phonetic;
+  const sentenceExamples = visible?.contextData;
+
   return (
     <Modal transparent visible={showModal} animationType="none">
       <View style={styles.overlay}>
-        {/* Touchable background to close modal */}
         <TouchableOpacity
           style={styles.background}
           onPress={onClose}
           activeOpacity={1}
         />
-
-        {/* Animated modal content */}
         <Animated.View
           style={[
             styles.modalContainer,
             {opacity: fadeAnim, transform: [{scale: scaleAnim}]},
           ]}>
-          <Text style={styles.modalTitle}>This is a Centered Modal</Text>
+          <Text style={styles.modalTitle}>{baseForm}</Text>
+          <Text style={styles.modalContent}>Surface Form: {surfaceForm}</Text>
+          <Text style={styles.modalContent}>Definition: {definition}</Text>
+          <Text style={styles.modalContent}>Phonetic: {phonetic}</Text>
           <Text style={styles.modalContent}>
-            This modal is centered and animates with a fade and scale effect.
+            Transliteration: {transliteration}
           </Text>
+          <View>
+            {sentenceExamples?.map((exampleSentence, index) => {
+              const exampleNumber = index + 1 + ') ';
+              const baseLang = exampleSentence.baseLang;
+              const targetLang = exampleSentence.targetLang;
+              return (
+                <View key={index}>
+                  <Text style={styles.modalContent}>
+                    {exampleNumber} {baseLang}
+                  </Text>
+                  <Text style={styles.modalContent}>{targetLang}</Text>
+                </View>
+              );
+            })}
+          </View>
           <TouchableOpacity style={styles.closeButton} onPress={onClose}>
             <Text style={styles.closeButtonText}>Close</Text>
           </TouchableOpacity>
@@ -78,7 +104,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Faded background
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   background: {
     position: 'absolute',
@@ -98,6 +124,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 5, // For Android shadow
+    width: '100%',
   },
   modalTitle: {
     fontSize: 20,
