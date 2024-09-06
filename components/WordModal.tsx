@@ -11,6 +11,7 @@ import {getFirebaseAudioURL} from '../hooks/useGetCombinedAudioData';
 import useMP3File from '../hooks/useMP3File';
 import useLoadAudioInstance from '../hooks/useLoadAudioInstance';
 import {SoundWidget} from './DifficultSentenceWidget';
+import useHighlightWordToWordBank from '../hooks/useHighlightWordToWordBank';
 
 const WordStudyAudio = ({sentenceData}) => {
   const [isPlaying, setIsPlaying] = useState(false);
@@ -72,6 +73,16 @@ const AnimatedModal = ({visible, onClose}) => {
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const scaleAnim = useRef(new Animated.Value(0.8)).current;
 
+  const baseForm = visible.baseForm;
+  const surfaceForm = visible.surfaceForm;
+  const transliteration = visible.transliteration;
+  const definition = visible.definition;
+  const phonetic = visible.phonetic;
+  const sentenceExamples = visible?.contextData;
+  const {underlineWordsInSentence} = useHighlightWordToWordBank({
+    pureWordsUnique: [baseForm, surfaceForm],
+  });
+
   useEffect(() => {
     if (visible) {
       setShowModal(true);
@@ -103,16 +114,20 @@ const AnimatedModal = ({visible, onClose}) => {
     }
   }, [visible]);
 
+  const getSafeText = targetText => {
+    const textSegments = underlineWordsInSentence(targetText);
+    return textSegments.map((segment, index) => {
+      return (
+        <Text key={index} id={segment.id} style={[segment.style]}>
+          {segment.text}
+        </Text>
+      );
+    });
+  };
+
   if (!visible) {
     return null;
   }
-
-  const baseForm = visible.baseForm;
-  const surfaceForm = visible.surfaceForm;
-  const transliteration = visible.transliteration;
-  const definition = visible.definition;
-  const phonetic = visible.phonetic;
-  const sentenceExamples = visible?.contextData;
 
   return (
     <Modal transparent visible={showModal} animationType="none">
@@ -144,7 +159,9 @@ const AnimatedModal = ({visible, onClose}) => {
                   <Text style={styles.modalContent}>
                     {exampleNumber} {baseLang}
                   </Text>
-                  <Text style={styles.modalContent}>{targetLang}</Text>
+                  <Text style={styles.modalContent}>
+                    {getSafeText(targetLang)}
+                  </Text>
                   <WordStudyAudio sentenceData={exampleSentence} />
                 </View>
               );

@@ -123,10 +123,12 @@ function WordStudyContainer({
           </View>
         ) : null}
       </ScrollView>
-      <AnimatedModal
-        visible={selectedWord}
-        onClose={() => setSelectedWord(null)}
-      />
+      {selectedWord && (
+        <AnimatedModal
+          visible={selectedWord}
+          onClose={() => setSelectedWord(null)}
+        />
+      )}
     </SafeAreaView>
   );
 }
