@@ -14,6 +14,8 @@ const DifficultSentences = (): React.JSX.Element => {
   const updatePromptState = data.updatePromptState;
   const addSnippet = data.addSnippet;
   const removeSnippet = data.removeSnippet;
+  const japaneseWordsState = data.japaneseWordsState;
+  const pureWords = data.pureWords;
 
   if (dataProviderIsLoading || !difficultSentencesState.length) {
     return <LoadingScreen>Loading difficult sentences...</LoadingScreen>;
@@ -28,6 +30,8 @@ const DifficultSentences = (): React.JSX.Element => {
       updatePromptState={updatePromptState}
       addSnippet={addSnippet}
       removeSnippet={removeSnippet}
+      japaneseWordsState={japaneseWordsState}
+      pureWords={pureWords}
     />
   );
 };

@@ -7,6 +7,7 @@ import {setFutureReviewDate} from '../../components/ReviewSection';
 import updateAdhocSentenceAPI from '../../api/update-adhoc-sentence';
 import {addSnippetAPI, deleteSnippetAPI} from '../../api/snippet';
 import {sortByDueDate} from '../../utils/sort-by-due-date';
+import {makeArrayUnique} from '../../hooks/useHighlightWordToWordBank';
 
 export const DataContext = createContext(null);
 
@@ -186,6 +187,23 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
     }
   };
 
+  const getPureWords = () => {
+    let pureWords = [];
+    const japaneseLoadedWords = [
+      ...japaneseWordsState,
+      // ...newWordsAdded,
+    ];
+
+    japaneseLoadedWords?.forEach(wordData => {
+      pureWords.push(wordData.baseForm);
+      pureWords.push(wordData.surfaceForm);
+    });
+
+    const pureWordsUnique =
+      pureWords?.length > 0 ? makeArrayUnique(pureWords) : [];
+    return pureWordsUnique;
+  };
+
   const addSnippet = async snippetData => {
     try {
       const snippetDataFromAPI = await addSnippetAPI({
@@ -334,6 +352,7 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
         addSnippet,
         removeSnippet,
         japaneseWordsState,
+        pureWords: getPureWords(),
       }}>
       {children}
     </DataContext.Provider>

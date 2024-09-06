@@ -1,4 +1,6 @@
+import {useEffect} from 'react';
 import {Text, TouchableOpacity, View} from 'react-native';
+import useHighlightWordToWordBank from '../hooks/useHighlightWordToWordBank';
 
 const DueColorMarker = ({dueColorState}) => (
   <View
@@ -21,7 +23,29 @@ const DifficultSentenceContent = ({
   setShowReviewSettings,
   showReviewSettings,
   dueColorState,
+  pureWords,
 }) => {
+  useEffect(() => {}, []);
+
+  const {underlineWordsInSentence} = useHighlightWordToWordBank({
+    pureWordsUnique: pureWords,
+  });
+
+  const getSafeText = targetText => {
+    const textSegments = underlineWordsInSentence(targetText);
+    return textSegments.map((segment, index) => {
+      return (
+        <Text
+          key={index}
+          id={segment.id}
+          style={[segment.style]}
+          // onLongPress={() => onLongPress(segment.text)}
+        >
+          {segment.text}
+        </Text>
+      );
+    });
+  };
   return (
     <>
       <View style={{display: 'flex', flexDirection: 'row', gap: 5}}>
@@ -47,7 +71,7 @@ const DifficultSentenceContent = ({
         </View>
       </View>
       <View>
-        <Text selectable={true}>{targetLang}</Text>
+        <Text selectable={true}>{getSafeText(targetLang)}</Text>
       </View>
       <View>
         <Text>{baseLang}</Text>

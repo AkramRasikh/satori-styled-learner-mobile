@@ -23,6 +23,8 @@ const DifficultSentencesContainer = ({
   updatePromptState,
   addSnippet,
   removeSnippet,
+  japaneseWordsState,
+  pureWords,
 }): React.JSX.Element => {
   const [toggleableSentencesState, setToggleableSentencesState] = useState([]);
   const todayDateObj = new Date();
@@ -172,6 +174,7 @@ const DifficultSentencesContainer = ({
                   isLastEl={isLastEl}
                   addSnippet={addSnippet}
                   removeSnippet={removeSnippet}
+                  pureWords={pureWords}
                 />
               );
             })}
