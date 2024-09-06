@@ -10,6 +10,7 @@ const SoundSmallSize = ({
   forwardSound,
   jumpAudioValue,
   handleSnippet,
+  noSnips,
 }) => {
   return (
     <View
@@ -55,14 +56,16 @@ const SoundSmallSize = ({
           disabled={!soundRef.current}
         />
       </View>
-      <TouchableOpacity
-        onPress={handleSnippet}
-        style={{
-          flex: 1,
-          alignItems: 'center',
-        }}>
-        <Text>✂️</Text>
-      </TouchableOpacity>
+      {!noSnips ? (
+        <TouchableOpacity
+          onPress={handleSnippet}
+          style={{
+            flex: 1,
+            alignItems: 'center',
+          }}>
+          <Text>✂️</Text>
+        </TouchableOpacity>
+      ) : null}
     </View>
   );
 };

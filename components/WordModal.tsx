@@ -7,6 +7,65 @@ import {
   TouchableOpacity,
   Animated,
 } from 'react-native';
+import {getFirebaseAudioURL} from '../hooks/useGetCombinedAudioData';
+import useMP3File from '../hooks/useMP3File';
+import useLoadAudioInstance from '../hooks/useLoadAudioInstance';
+import {SoundWidget} from './DifficultSentenceWidget';
+
+const WordStudyAudio = ({sentenceData}) => {
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [currentTimeState, setCurrentTimeState] = useState(0);
+
+  const soundRef = useRef();
+
+  const id = sentenceData.id;
+  const topic = sentenceData.topic;
+  // const isCore = sentenceData?.isCore;
+  // const baseLang = sentenceData.baseLang;
+  // const targetLang = sentenceData.targetLang;
+  // const nextReview = sentenceData?.nextReview;
+  // const isAdhoc = sentenceData?.isAdhoc;
+  // const hasBeenReviewed = sentenceData?.reviewHistory?.length > 0;
+
+  const url = getFirebaseAudioURL(id);
+
+  const {loadFile, filePath} = useMP3File(id);
+
+  const {triggerLoadURL, isLoaded} = useLoadAudioInstance({
+    soundRef,
+    url: filePath,
+  });
+
+  useEffect(() => {
+    if (filePath) {
+      triggerLoadURL();
+    }
+  }, [filePath]);
+
+  const handleLoad = () => {
+    loadFile(id, url);
+  };
+
+  return isLoaded ? (
+    <SoundWidget
+      soundRef={soundRef}
+      url={url}
+      topicName={topic}
+      sentence={sentenceData}
+      isPlaying={isPlaying}
+      setIsPlaying={setIsPlaying}
+      currentTimeState={currentTimeState}
+      setCurrentTimeState={setCurrentTimeState}
+      noSnips
+    />
+  ) : (
+    <View>
+      <TouchableOpacity onPress={handleLoad}>
+        <Text>Load URL</Text>
+      </TouchableOpacity>
+    </View>
+  );
+};
 
 const AnimatedModal = ({visible, onClose}) => {
   const [showModal, setShowModal] = useState(visible);
@@ -86,6 +145,7 @@ const AnimatedModal = ({visible, onClose}) => {
                     {exampleNumber} {baseLang}
                   </Text>
                   <Text style={styles.modalContent}>{targetLang}</Text>
+                  <WordStudyAudio sentenceData={exampleSentence} />
                 </View>
               );
             })}

@@ -164,6 +164,7 @@ export const SoundWidget = ({
   setCurrentTimeState,
   masterAudio,
   setMasterAudio,
+  noSnips,
 }) => {
   const jumpAudioValue = 2;
   const soundDuration = soundRef.current._duration;
@@ -219,6 +220,7 @@ export const SoundWidget = ({
         forwardSound={() => forwardSound(jumpAudioValue)}
         jumpAudioValue={jumpAudioValue}
         handleSnippet={handleSnippetFunc}
+        noSnips={noSnips}
       />
     </View>
   );
