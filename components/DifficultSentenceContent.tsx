@@ -1,4 +1,3 @@
-import {useEffect} from 'react';
 import {Text, TouchableOpacity, View} from 'react-native';
 import useHighlightWordToWordBank from '../hooks/useHighlightWordToWordBank';
 
@@ -29,20 +28,34 @@ const DifficultSentenceContent = ({
     pureWordsUnique: pureWords,
   });
 
+  const handleOpenModal = () => {
+    console.log('## handleOpenModal');
+  };
+
   const getSafeText = targetText => {
     const textSegments = underlineWordsInSentence(targetText);
+    const textSegmentsLength = textSegments.length;
     return textSegments.map((segment, index) => {
+      const isLastEl = textSegmentsLength - 1 === index;
       return (
-        <Text
-          key={index}
-          id={segment.id}
-          style={[segment.style]}
-          // context!!!
-          // onLongPress={() => console.log('## segment.text', segment.text)}
-          // onLongPress={() => onLongPress(segment.text)}
-        >
-          {segment.text}
-        </Text>
+        <>
+          <Text
+            key={index}
+            id={segment.id}
+            selectable={true}
+            style={[segment.style]}
+            // context!!!
+            // onLongPress={() => console.log('## segment.text', segment.text)}
+            // onLongPress={() => onLongPress(segment.text)}
+          >
+            {segment.text}
+          </Text>
+          {isLastEl && (
+            <TouchableOpacity onPress={handleOpenModal}>
+              <Text>🥸</Text>
+            </TouchableOpacity>
+          )}
+        </>
       );
     });
   };
@@ -70,9 +83,7 @@ const DifficultSentenceContent = ({
           </TouchableOpacity>
         </View>
       </View>
-      <View>
-        <Text selectable={true}>{getSafeText(targetLang)}</Text>
-      </View>
+      <Text>{getSafeText(targetLang)}</Text>
       <View>
         <Text>{baseLang}</Text>
       </View>
