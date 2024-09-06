@@ -25,8 +25,6 @@ const DifficultSentenceContent = ({
   dueColorState,
   pureWords,
 }) => {
-  useEffect(() => {}, []);
-
   const {underlineWordsInSentence} = useHighlightWordToWordBank({
     pureWordsUnique: pureWords,
   });
@@ -39,6 +37,8 @@ const DifficultSentenceContent = ({
           key={index}
           id={segment.id}
           style={[segment.style]}
+          // context!!!
+          // onLongPress={() => console.log('## segment.text', segment.text)}
           // onLongPress={() => onLongPress(segment.text)}
         >
           {segment.text}
