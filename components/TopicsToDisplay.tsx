@@ -2,7 +2,6 @@ import {Text, TouchableOpacity, View} from 'react-native';
 
 const TopicsToDisplay = ({
   topicsToDisplay,
-  topicsToStudyState,
   isDueReview,
   isCoreContent,
   handleShowTopic,
@@ -13,8 +12,6 @@ const TopicsToDisplay = ({
     <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
       {topicsToDisplay?.map(topic => {
         const hasUnifiedMP3File = hasAudioCheck(topic);
-        const numberOfWordsToStudy = topicsToStudyState[topic];
-
         const thisTopicIsDue = isDueReview(topic, true, true);
         const isCoreStatus = isCoreContent(topic, true);
         const thisTopicIsUpcoming = isNeedsFutureReview({
@@ -41,9 +38,6 @@ const TopicsToDisplay = ({
               }}>
               <Text>
                 {topic} {!hasUnifiedMP3File ? '🔕' : ''}{' '}
-                {numberOfWordsToStudy ? (
-                  <Text>({numberOfWordsToStudy})</Text>
-                ) : null}
                 {isCoreStatus ? <Text> 🧠</Text> : null}
               </Text>
             </TouchableOpacity>

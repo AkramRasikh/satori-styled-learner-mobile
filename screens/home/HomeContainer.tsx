@@ -16,7 +16,6 @@ import SongSection from '../../components/SongSection';
 import ToastMessage from '../../components/ToastMessage';
 import {updateSentenceDataAPI} from '../../api/update-sentence-data';
 import {TouchableOpacity} from 'react-native-gesture-handler';
-import {isSameDay} from '../../utils/check-same-date';
 import {
   checkIsFutureReviewNeeded,
   isUpForReview,
@@ -302,21 +301,6 @@ function Home({
       key => key.title === topicKey && key.hasAudio,
     );
 
-  const nextReviewCalculation = nextReview => {
-    const nextReviewDate = new Date(nextReview);
-    const differenceInMilliseconds = today - nextReviewDate;
-
-    const differenceInDays = Math.floor(
-      differenceInMilliseconds / (1000 * 60 * 60 * 24),
-    );
-
-    if (isSameDay(today, nextReviewDate)) {
-      return true;
-    }
-
-    return differenceInDays;
-  };
-
   const isDueReviewSingular = ({topicOption, isReview}) => {
     const thisData = japaneseLoadedContentState.find(
       topicDisplayed => topicDisplayed.title === topicOption,
@@ -326,28 +310,6 @@ function Home({
 
     return isUpForReview({nextReview, todayDate: today});
     // then check if is upcoming
-  };
-
-  const isDueGeneralTopic = topicOption => {
-    const nextReviewDateDue = japaneseLoadedContentState.some(jpContent => {
-      const generalTopicName = jpContent.title
-        .split('-')
-        .slice(0, -1)
-        .join('-');
-
-      if (generalTopicName === topicOption) {
-        const thisDataNextReview = jpContent?.nextReview;
-        if (thisDataNextReview) {
-          const differenceInDays = nextReviewCalculation(thisDataNextReview);
-          const condition = differenceInDays > 0;
-          if (condition) {
-            return true;
-          }
-        }
-      }
-    });
-
-    return nextReviewDateDue;
   };
 
   const isNeedsFutureReview = ({topicOption, singular}) => {
@@ -471,7 +433,6 @@ function Home({
           <GeneralTopics
             handleShowGeneralTopic={handleShowGeneralTopic}
             generalTopicObjKeys={generalTopicObjKeys}
-            generalTopicObj={generalTopicObj}
             isDueReview={isDueReview}
             isCoreContent={isCoreContent}
             isNeedsFutureReview={isNeedsFutureReview}
@@ -480,7 +441,6 @@ function Home({
         {!topicOrSongSelected || showOtherTopics ? (
           <TopicsToDisplay
             topicsToDisplay={topicsToDisplay}
-            topicsToStudyState={topicsToStudyState}
             isDueReview={isDueReview}
             isCoreContent={isCoreContent}
             handleShowTopic={handleShowTopic}
