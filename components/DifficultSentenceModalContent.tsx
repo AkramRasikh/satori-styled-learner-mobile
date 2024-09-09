@@ -3,6 +3,7 @@ import {StyleSheet, Text, View} from 'react-native';
 import {DifficultSentenceContentHeader} from './DifficultSentenceContent';
 import HighlightTextZone from './HighlightTextZone';
 import SwitchButton from './SwitchButton';
+import useData from '../context/Data/useData';
 
 const TargetLanguage = ({getSafeText}) => {
   const text = getSafeText();
@@ -38,6 +39,7 @@ const DifficultSentenceModalContent = ({
   const [containerWidth, setContainerWidth] = useState(0);
   const [highlightMode, setHighlightMode] = useState(false);
   const [highlightedIndices, setHighlightedIndices] = useState([]);
+  const {saveWordFirebase} = useData();
 
   const topic = sentenceData.topic;
   const isCore = sentenceData?.isCore;
@@ -89,7 +91,7 @@ const DifficultSentenceModalContent = ({
             text={targetLang}
             highlightedIndices={highlightedIndices}
             setHighlightedIndices={setHighlightedIndices}
-            saveWordFirebase={() => {}}
+            saveWordFirebase={saveWordFirebase}
             // saveWordFirebase={saveWordFirebase}
             setHighlightMode={setHighlightMode}
             textWidth={containerWidth}

@@ -8,6 +8,7 @@ import updateAdhocSentenceAPI from '../../api/update-adhoc-sentence';
 import {addSnippetAPI, deleteSnippetAPI} from '../../api/snippet';
 import {sortByDueDate} from '../../utils/sort-by-due-date';
 import {makeArrayUnique} from '../../hooks/useHighlightWordToWordBank';
+import saveWordAPI from '../../api/save-word';
 
 export const DataContext = createContext(null);
 
@@ -292,6 +293,21 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
     });
   };
 
+  const saveWordFirebase = async ({
+    highlightedWord,
+    highlightedWordSentenceId,
+  }) => {
+    try {
+      const savedWord = await saveWordAPI({
+        highlightedWord,
+        highlightedWordSentenceId,
+      });
+      setJapaneseWordsState(prev => [...prev, savedWord]);
+    } catch (error) {
+      console.log('## saveWordFirebase Provider err', error);
+    }
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -353,6 +369,7 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
         removeSnippet,
         japaneseWordsState,
         pureWords: getPureWords(),
+        saveWordFirebase,
       }}>
       {children}
     </DataContext.Provider>
