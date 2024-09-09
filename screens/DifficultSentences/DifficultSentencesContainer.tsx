@@ -48,33 +48,32 @@ const DifficultSentencesContainer = ({
   //   }
   // }, [selectedTopic, toggleableSentencesState]);
 
+  const showDueInit = arr => {
+    const filteredForDueOnly = [...arr].filter(sentence => {
+      const dueStatus = calculateDueDate({
+        todayDateObj,
+        nextReview: sentence.nextReview,
+      });
+      if (dueStatus < 1) {
+        return true;
+      }
+    });
+    setToggleableSentencesState(filteredForDueOnly);
+    setIsShowDueOnly(!isShowDueOnly);
+  };
+
   const showDueOnlyFunc = () => {
     if (!isShowDueOnly) {
-      const filteredForDueOnly = [...toggleableSentencesState].filter(
-        sentence => {
-          const dueStatus = calculateDueDate({
-            todayDateObj,
-            nextReview: sentence.nextReview,
-          });
-          if (dueStatus < 1) {
-            return true;
-          }
-        },
-      );
-      setToggleableSentencesState(filteredForDueOnly);
-      setIsShowDueOnly(!isShowDueOnly);
+      showDueInit(toggleableSentencesState);
     } else {
       setToggleableSentencesState(difficultSentencesState);
       setIsShowDueOnly(!isShowDueOnly);
     }
   };
 
-  const btnText = '↕ In Due order ✅';
-  const btnDueText = `Show only due ${isShowDueOnly ? '✅' : '❌'}`;
-
   useEffect(() => {
     if (difficultSentencesState?.length > 0) {
-      setToggleableSentencesState(difficultSentencesState);
+      showDueInit(difficultSentencesState);
     }
   }, [difficultSentencesState]);
   // useEffect(() => {
