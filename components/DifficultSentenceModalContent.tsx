@@ -34,6 +34,7 @@ const DifficultSentenceModalContent = ({
   dueColorState,
   dueText,
   getSafeText,
+  showThisWordsDefinitions,
 }) => {
   const [showReviewSettings, setShowReviewSettings] = useState(false);
   const [containerWidth, setContainerWidth] = useState(0);
@@ -45,6 +46,33 @@ const DifficultSentenceModalContent = ({
   const isCore = sentenceData?.isCore;
   const baseLang = sentenceData.baseLang;
   const targetLang = sentenceData.targetLang;
+
+  const getLongPressedWordData = () => {
+    return showThisWordsDefinitions.map((word, index) => {
+      const surfaceForm = word.surfaceForm;
+      const baseForm = word.baseForm;
+      const phonetic = word.phonetic;
+      const definition = word.definition;
+
+      const isLastInArr = index + 1 === showThisWordsDefinitions.length;
+
+      const newLine = !isLastInArr ? '\n' : '';
+      const indexToNumber = index + 1;
+
+      return (
+        indexToNumber +
+        ') ' +
+        surfaceForm +
+        ', ' +
+        baseForm +
+        ', ' +
+        phonetic +
+        ', ' +
+        definition +
+        newLine
+      );
+    });
+  };
 
   const handleLayout = event => {
     setContainerWidth(event.nativeEvent.layout.width);
@@ -80,6 +108,19 @@ const DifficultSentenceModalContent = ({
           }
           showReviewSettings={showReviewSettings}
         />
+      </View>
+      <View>
+        {showThisWordsDefinitions?.length > 0 ? (
+          <View
+            style={{
+              marginBottom: 15,
+              borderTopColor: 'gray',
+              borderTopWidth: 2,
+              padding: 5,
+            }}>
+            <Text>{getLongPressedWordData()}</Text>
+          </View>
+        ) : null}
       </View>
       {highlightMode ? (
         <View

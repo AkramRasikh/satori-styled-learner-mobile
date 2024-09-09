@@ -18,10 +18,46 @@ import MiniSnippetTimeChangeHandlers from './MiniSnippetTimeChangeHandlers';
 import AnimatedModal from './AnimatedModal';
 import DifficultSentenceModalContent from './DifficultSentenceModalContent';
 import useHighlightWordToWordBank from '../hooks/useHighlightWordToWordBank';
+import useData from '../context/Data/useData';
 
 const hasBeenSnippedFromCollectiveURL = snippet => {
   const snippetURL = snippet.url;
   return snippetURL.includes(snippet.topicName);
+};
+
+const DifficultSentenceSnippetContainer = ({
+  isLoaded,
+  soundRef,
+  snippetsLocalAndDb,
+  setCurrentTimeState,
+  currentTimeState,
+  isPlaying,
+  setIsPlaying,
+  addSnippet,
+  removeSnippet,
+  setMiniSnippets,
+  url,
+}) => {
+  return isLoaded && snippetsLocalAndDb?.length > 0
+    ? snippetsLocalAndDb?.map((snippetData, index) => {
+        return (
+          <ThisSnippetContainer
+            key={snippetData.id}
+            index={index}
+            soundRef={soundRef}
+            snippet={snippetData}
+            setCurrentTimeState={setCurrentTimeState}
+            currentTimeState={currentTimeState}
+            masterAudio={isPlaying}
+            setMasterAudio={setIsPlaying}
+            addSnippet={addSnippet}
+            removeSnippet={removeSnippet}
+            setMiniSnippets={setMiniSnippets}
+            url={url}
+          />
+        );
+      })
+    : null;
 };
 
 const ThisSnippetContainer = ({
@@ -282,6 +318,10 @@ const DifficultSentenceWidget = ({
   const [isPlaying, setIsPlaying] = useState(false);
   const [miniSnippets, setMiniSnippets] = useState([]);
   const [sentenceDataInModal, setSentenceDataInModal] = useState(null);
+  const [showThisWordsDefinitions, setShowThisWordsDefinitions] =
+    useState(null);
+
+  const {getThisSentencesWordList} = useData();
 
   const id = sentence.id;
   const topic = sentence.topic;
@@ -293,6 +333,7 @@ const DifficultSentenceWidget = ({
   const hasBeenReviewed = sentence?.reviewHistory?.length > 0;
   const soundRef = useRef();
 
+  const matchedWordList = getThisSentencesWordList(targetLang);
   const snippetsLocalAndDb = useMemo(() => {
     return mergeAndRemoveDuplicates(
       sentence?.snippets?.sort((a, b) => a.pointInAudio - b.pointInAudio),
@@ -372,6 +413,15 @@ const DifficultSentenceWidget = ({
     pureWordsUnique: pureWords,
   });
 
+  const onLongPress = text => {
+    const longPressedTexts = matchedWordList.filter(word =>
+      text.includes(word.surfaceForm),
+    );
+    if (longPressedTexts.length > 0) {
+      setShowThisWordsDefinitions(longPressedTexts);
+    }
+  };
+
   const getSafeText = () => {
     const textSegments = underlineWordsInSentence(targetLang);
     return textSegments.map((segment, index) => {
@@ -383,8 +433,7 @@ const DifficultSentenceWidget = ({
           style={[segment.style]}
           // context!!!
           // onLongPress={() => console.log('## segment.text', segment.text)}
-          // onLongPress={() => onLongPress(segment.text)}
-        >
+          onLongPress={() => onLongPress(segment.text)}>
           {segment.text}
         </Text>
       );
@@ -392,6 +441,8 @@ const DifficultSentenceWidget = ({
   };
 
   const {dueColorState, text} = getDueDateText(dueStatus);
+
+  console.log('## ', {showThisWordsDefinitions});
 
   return (
     <View
@@ -403,6 +454,7 @@ const DifficultSentenceWidget = ({
         marginBottom: 10,
         paddingBottom: isLastEl ? 100 : 0,
       }}>
+      <View></View>
       <DifficultSentenceContent
         topic={topic}
         isCore={isCore}
@@ -436,36 +488,50 @@ const DifficultSentenceWidget = ({
           setNextReviewDate={setNextReviewDate}
         />
       ) : null}
-      {isLoaded && snippetsLocalAndDb?.length > 0
-        ? snippetsLocalAndDb?.map((snippetData, index) => {
-            return (
-              <ThisSnippetContainer
-                key={snippetData.id}
-                index={index}
-                soundRef={soundRef}
-                snippet={snippetData}
-                setCurrentTimeState={setCurrentTimeState}
-                currentTimeState={currentTimeState}
-                masterAudio={isPlaying}
-                setMasterAudio={setIsPlaying}
-                addSnippet={addSnippet}
-                removeSnippet={removeSnippet}
-                setMiniSnippets={setMiniSnippets}
-                url={url}
-              />
-            );
-          })
-        : null}
+      <DifficultSentenceSnippetContainer
+        isLoaded={isLoaded}
+        soundRef={soundRef}
+        snippetsLocalAndDb={snippetsLocalAndDb}
+        setCurrentTimeState={setCurrentTimeState}
+        currentTimeState={currentTimeState}
+        isPlaying={isPlaying}
+        setIsPlaying={setIsPlaying}
+        addSnippet={addSnippet}
+        removeSnippet={removeSnippet}
+        setMiniSnippets={setMiniSnippets}
+        url={url}
+      />
       {sentenceDataInModal && (
         <AnimatedModal
           visible={sentenceDataInModal}
           onClose={() => setSentenceDataInModal(null)}>
-          <DifficultSentenceModalContent
-            sentenceData={sentence}
-            dueColorState={dueColorState}
-            dueText={text}
-            getSafeText={getSafeText}
-          />
+          <>
+            <DifficultSentenceModalContent
+              sentenceData={sentence}
+              dueColorState={dueColorState}
+              dueText={text}
+              getSafeText={getSafeText}
+              showThisWordsDefinitions={showThisWordsDefinitions}
+            />
+            <View
+              style={{
+                width: '100%',
+              }}>
+              <AudioComponent
+                isLoaded={isLoaded}
+                soundRef={soundRef}
+                url={url}
+                topic={topic}
+                handleSnippet={handleSnippet}
+                sentence={sentence}
+                isPlaying={isPlaying}
+                setIsPlaying={setIsPlaying}
+                currentTimeState={currentTimeState}
+                setCurrentTimeState={setCurrentTimeState}
+                handleLoad={handleLoad}
+              />
+            </View>
+          </>
         </AnimatedModal>
       )}
     </View>

@@ -25,6 +25,25 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
   const [updatePromptState, setUpdatePromptState] = useState('');
   const [isAdhocDataLoading, setIsAdhocDataLoading] = useState(false);
 
+  const getPureWords = () => {
+    let pureWords = [];
+    const japaneseLoadedWords = [
+      ...japaneseWordsState,
+      // ...newWordsAdded,
+    ];
+
+    japaneseLoadedWords?.forEach(wordData => {
+      pureWords.push(wordData.baseForm);
+      pureWords.push(wordData.surfaceForm);
+    });
+
+    const pureWordsUnique =
+      pureWords?.length > 0 ? makeArrayUnique(pureWords) : [];
+    return pureWordsUnique;
+  };
+
+  const pureWordsArr = getPureWords();
+
   const saveAudioInstance = (audioId, soundInstance) => {
     const isInAudioTempState = audioTempState[audioId];
     if (!isInAudioTempState) {
@@ -188,23 +207,6 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
     }
   };
 
-  const getPureWords = () => {
-    let pureWords = [];
-    const japaneseLoadedWords = [
-      ...japaneseWordsState,
-      // ...newWordsAdded,
-    ];
-
-    japaneseLoadedWords?.forEach(wordData => {
-      pureWords.push(wordData.baseForm);
-      pureWords.push(wordData.surfaceForm);
-    });
-
-    const pureWordsUnique =
-      pureWords?.length > 0 ? makeArrayUnique(pureWords) : [];
-    return pureWordsUnique;
-  };
-
   const addSnippet = async snippetData => {
     try {
       const snippetDataFromAPI = await addSnippetAPI({
@@ -308,6 +310,26 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
     }
   };
 
+  const getThisSentencesWordList = sentence => {
+    let matchedWordsData = [];
+    japaneseWordsState.forEach(word => {
+      const baseForm = word.baseForm;
+      const surfaceForm = word.surfaceForm;
+      if (sentence.includes(baseForm)) {
+        matchedWordsData.push(word);
+
+        return;
+      }
+
+      if (sentence.includes(surfaceForm)) {
+        matchedWordsData.push(word);
+        return;
+      }
+    });
+
+    return matchedWordsData;
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -350,8 +372,6 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
     fetchData();
   }, []);
 
-  const pureWordsArr = getPureWords();
-
   return (
     <DataContext.Provider
       value={{
@@ -372,6 +392,7 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
         japaneseWordsState,
         pureWords: pureWordsArr,
         saveWordFirebase,
+        getThisSentencesWordList,
       }}>
       {children}
     </DataContext.Provider>
