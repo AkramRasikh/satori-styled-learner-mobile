@@ -1,7 +1,8 @@
 import {useState} from 'react';
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
 import {DifficultSentenceContentHeader} from './DifficultSentenceContent';
 import HighlightTextZone from './HighlightTextZone';
+import SwitchButton from './SwitchButton';
 
 const TargetLanguage = ({text}) => {
   return (
@@ -47,17 +48,35 @@ const DifficultSentenceModalContent = ({
 
   return (
     <View style={{width: '100%', overflow: 'hidden'}}>
-      <TouchableOpacity onPress={() => setHighlightMode(!highlightMode)}>
-        <Text>HighlightMode</Text>
-      </TouchableOpacity>
-      <DifficultSentenceContentHeader
-        topic={topic}
-        dueColorState={dueColorState}
-        isCore={isCore}
-        dueText={dueText}
-        setShowReviewSettings={() => setShowReviewSettings(!showReviewSettings)}
-        showReviewSettings={showReviewSettings}
-      />
+      <View
+        style={{
+          flexDirection: 'row',
+          alignSelf: 'flex-end',
+          marginBottom: 10,
+        }}>
+        <Text
+          style={{
+            alignSelf: 'center',
+          }}>
+          Highlight
+        </Text>
+        <SwitchButton isOn={highlightMode} setIsOn={setHighlightMode} />
+      </View>
+      <View
+        style={{
+          marginBottom: 10,
+        }}>
+        <DifficultSentenceContentHeader
+          topic={topic}
+          dueColorState={dueColorState}
+          isCore={isCore}
+          dueText={dueText}
+          setShowReviewSettings={() =>
+            setShowReviewSettings(!showReviewSettings)
+          }
+          showReviewSettings={showReviewSettings}
+        />
+      </View>
       {highlightMode ? (
         <View
           onLayout={handleLayout} // Attach the onLayout event handler
@@ -86,6 +105,8 @@ const DifficultSentenceModalContent = ({
 const styles = StyleSheet.create({
   text: {
     fontSize: 16,
+    lineHeight: 24,
+    marginBottom: 10,
   },
 });
 
