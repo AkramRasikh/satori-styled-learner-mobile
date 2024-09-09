@@ -19,6 +19,8 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
   const [japaneseLoadedContentMaster, setJapaneseLoadedContentMaster] =
     useState([]);
   const [japaneseSnippetsState, setJapaneseSnippetsState] = useState([]);
+  const [adhocJapaneseSentencesState, setAdhocJapaneseSentencesState] =
+    useState([]);
   const [japaneseWordsState, setJapaneseWordsState] = useState([]);
   const [dataProviderIsLoading, setDataProviderIsLoading] = useState(true);
   const [provdiderError, setProvdiderError] = useState(null);
@@ -198,6 +200,8 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
         nextReview: setFutureReviewDate(new Date(), 3),
       });
       setIsAdhocDataLoading(true);
+      // need to update difficult sentences
+      setAdhocJapaneseSentencesState(prev => [...prev, adhocObject]);
       return adhocObject;
     } catch (error) {
       setProvdiderError('Error adding adhoc sentence');
@@ -361,6 +365,7 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
         );
         setDifficultSentencesState(difficultSentencesWithSnippets);
         setJapaneseWordsState(allStudyDataRes.japaneseLoadedWords);
+        setAdhocJapaneseSentencesState(japaneseAdhocLoadedSentences);
       } catch (error) {
         console.log('## DataProvider error: ', error);
         setProvdiderError(error);
@@ -393,6 +398,7 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
         pureWords: pureWordsArr,
         saveWordFirebase,
         getThisSentencesWordList,
+        adhocJapaneseSentencesState,
       }}>
       {children}
     </DataContext.Provider>

@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import LoadingScreen from '../../components/LoadingScreen';
 import useData from '../../context/Data/useData';
 import WordStudyContainer from './WordStudyContainer';
@@ -9,7 +9,7 @@ const WordStudyScreen = ({navigation}): React.JSX.Element => {
   const dataProviderIsLoading = data.dataProviderIsLoading;
   const provdiderError = data.provdiderError;
   const japaneseWordsState = data.japaneseWordsState;
-  const japaneseAdhocLoadedSentences = data.difficultSentencesState;
+  const japaneseAdhocLoadedSentences = data.adhocJapaneseSentencesState;
   const japaneseLoadedContent = data.japaneseLoadedContentMaster;
 
   if (

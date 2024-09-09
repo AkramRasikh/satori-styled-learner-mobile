@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 import useFormatWordsToStudy from '../../hooks/useFormatWordsToStudy';
 import AnimatedModal from '../../components/WordModal';
+import {makeArrayUnique} from '../../hooks/useHighlightWordToWordBank';
 
 function WordStudyContainer({
   navigation,
@@ -22,7 +23,7 @@ function WordStudyContainer({
   const [selectedTopic, setSelectedTopic] = useState('');
   const [selectedWord, setSelectedWord] = useState();
 
-  const wordCategories = [...tagsState, ...generalTopicState];
+  const wordCategories = makeArrayUnique([...tagsState, ...generalTopicState]);
 
   useFormatWordsToStudy({
     japaneseWordsState,

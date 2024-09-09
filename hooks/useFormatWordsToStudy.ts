@@ -39,7 +39,7 @@ const useFormatWordsToStudy = ({
             }
             thisWordsCategories.push(generalTopicTitle);
 
-            if (!tagsAvailable.includes(tags)) {
+            if (tags && !tagsAvailable.includes(tags)) {
               tagsAvailable.push(tags);
             }
             if (tags) {
@@ -49,9 +49,7 @@ const useFormatWordsToStudy = ({
         });
         // conditionally
         japaneseAdhocLoadedSentences.forEach(adhocSentenceData => {
-          const generalTopicTitle = getGeneralTopicName(
-            adhocSentenceData.topic,
-          );
+          const generalTopicTitle = adhocSentenceData.topic;
           const tags = adhocSentenceData?.tags;
 
           const adhocSentenceDataId = adhocSentenceData.id;
@@ -70,7 +68,7 @@ const useFormatWordsToStudy = ({
 
             if (tags?.length > 0) {
               tags.forEach(singleTag => {
-                if (!tagsAvailable.includes(singleTag)) {
+                if (singleTag && !tagsAvailable.includes(singleTag)) {
                   tagsAvailable.push(singleTag);
                 }
               });
