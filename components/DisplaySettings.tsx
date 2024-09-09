@@ -2,8 +2,6 @@ import {Text, View} from 'react-native';
 import SwitchButton from './SwitchButton';
 
 const DisplaySettings = ({
-  setSeparateLines,
-  seperateLines,
   wordTest,
   setWordTest,
   englishOnly,
@@ -30,15 +28,6 @@ const DisplaySettings = ({
         justifyContent: 'center',
         alignItems: 'center',
       }}>
-      <View>
-        <Text
-          style={{
-            alignSelf: 'center',
-          }}>
-          Seperate
-        </Text>
-        <SwitchButton isOn={seperateLines} setIsOn={setSeparateLines} />
-      </View>
       <View>
         <Text
           style={{

@@ -59,7 +59,6 @@ const TopicContent = ({
   const [miniSnippets, setMiniSnippets] = useState([]);
   const [thisTopicsWords, setThisTopicsWords] = useState([]);
   const [openTopicWords, setOpenTopicWords] = useState(false);
-  const [seperateLines, setSeparateLines] = useState(true);
   const [wordTest, setWordTest] = useState(false);
   const [englishOnly, setEnglishOnly] = useState(false);
   const [engMaster, setEngMaster] = useState(true);
@@ -306,8 +305,6 @@ const TopicContent = ({
         <WordStudySection wordsToStudy={wordsToStudy} />
       ) : null}
       <DisplaySettings
-        seperateLines={seperateLines}
-        setSeparateLines={setSeparateLines}
         wordTest={wordTest}
         setWordTest={setWordTest}
         englishOnly={englishOnly}
@@ -346,7 +343,6 @@ const TopicContent = ({
           isPlaying={isPlaying}
           pauseSound={pauseSound}
           width={width}
-          seperateLines={seperateLines}
           soundRef={soundRef}
           snippetsLocalAndDb={snippetsLocalAndDb}
           masterPlay={masterPlay}

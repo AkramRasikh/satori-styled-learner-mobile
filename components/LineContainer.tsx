@@ -19,7 +19,6 @@ const LineContainer = ({
   snippetsLocalAndDb,
   masterPlay,
   highlightMode,
-  seperateLines,
   setIsPlaying,
   setHighlightMode,
   onLongPress,
@@ -44,18 +43,12 @@ const LineContainer = ({
             );
 
             return (
-              <ConditionalWrapper
-                key={id}
-                condition={seperateLines}
-                wrapper={children => (
-                  <View
-                    style={{
-                      width: width * 0.9,
-                      marginBottom: 10,
-                    }}>
-                    {children}
-                  </View>
-                )}>
+              <View
+                style={{
+                  width: width * 0.9,
+                  marginBottom: 10,
+                }}
+                key={id}>
                 <Text
                   style={{
                     backgroundColor: focusThisSentence
@@ -79,7 +72,7 @@ const LineContainer = ({
                     isPlaying={isPlaying}
                     pauseSound={pauseSound}
                     safeText={topicSentence.safeText}
-                    textWidth={seperateLines ? width * 0.9 : width}
+                    textWidth={width * 0.9}
                     setHighlightMode={setHighlightMode}
                     onLongPress={onLongPress}
                     topicName={topicName}
@@ -105,7 +98,7 @@ const LineContainer = ({
                     );
                   })}
                 </View>
-              </ConditionalWrapper>
+              </View>
             );
           })}
         </Text>
