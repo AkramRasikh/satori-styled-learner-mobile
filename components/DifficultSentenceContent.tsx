@@ -13,6 +13,40 @@ const DueColorMarker = ({dueColorState}) => (
   />
 );
 
+export const DifficultSentenceContentHeader = ({
+  topic,
+  dueColorState,
+  isCore,
+  dueText,
+  setShowReviewSettings,
+  showReviewSettings,
+}) => {
+  return (
+    <View style={{display: 'flex', flexDirection: 'row', gap: 5}}>
+      <DueColorMarker dueColorState={dueColorState} />
+      <View
+        style={{
+          display: 'flex',
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          width: '100%',
+        }}>
+        <Text
+          style={{
+            fontStyle: 'italic',
+            textDecorationLine: 'underline',
+          }}>
+          {topic} {isCore ? '🧠' : ''}
+        </Text>
+        <TouchableOpacity
+          onPress={() => setShowReviewSettings(!showReviewSettings)}>
+          <Text>{dueText} 😓</Text>
+        </TouchableOpacity>
+      </View>
+    </View>
+  );
+};
+
 const DifficultSentenceContent = ({
   topic,
   isCore,
@@ -23,14 +57,11 @@ const DifficultSentenceContent = ({
   showReviewSettings,
   dueColorState,
   pureWords,
+  handleOpenModal,
 }) => {
   const {underlineWordsInSentence} = useHighlightWordToWordBank({
     pureWordsUnique: pureWords,
   });
-
-  const handleOpenModal = () => {
-    console.log('## handleOpenModal');
-  };
 
   const getSafeText = targetText => {
     const textSegments = underlineWordsInSentence(targetText);
@@ -61,28 +92,14 @@ const DifficultSentenceContent = ({
   };
   return (
     <>
-      <View style={{display: 'flex', flexDirection: 'row', gap: 5}}>
-        <DueColorMarker dueColorState={dueColorState} />
-        <View
-          style={{
-            display: 'flex',
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            width: '100%',
-          }}>
-          <Text
-            style={{
-              fontStyle: 'italic',
-              textDecorationLine: 'underline',
-            }}>
-            {topic} {isCore ? '🧠' : ''}
-          </Text>
-          <TouchableOpacity
-            onPress={() => setShowReviewSettings(!showReviewSettings)}>
-            <Text>{dueText} 😓</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
+      <DifficultSentenceContentHeader
+        topic={topic}
+        dueColorState={dueColorState}
+        isCore={isCore}
+        dueText={dueText}
+        showReviewSettings={showReviewSettings}
+        setShowReviewSettings={setShowReviewSettings}
+      />
       <Text>{getSafeText(targetLang)}</Text>
       <View>
         <Text>{baseLang}</Text>

@@ -15,6 +15,8 @@ import useSnippetControls from '../hooks/useSnippetControls';
 import useSnippetManageAudioStop from '../hooks/useSnippetManageAudioStop';
 import {mergeAndRemoveDuplicates} from '../utils/merge-and-remove-duplicates';
 import MiniSnippetTimeChangeHandlers from './MiniSnippetTimeChangeHandlers';
+import AnimatedModal from './AnimatedModal';
+import DifficultSentenceModalContent from './DifficultSentenceModalContent';
 
 const hasBeenSnippedFromCollectiveURL = snippet => {
   const snippetURL = snippet.url;
@@ -226,6 +228,43 @@ export const SoundWidget = ({
   );
 };
 
+const AudioComponent = ({
+  isLoaded,
+  soundRef,
+  url,
+  topic,
+  handleSnippet,
+  sentence,
+  isPlaying,
+  setIsPlaying,
+  currentTimeState,
+  setCurrentTimeState,
+  handleLoad,
+}) => {
+  if (isLoaded) {
+    return (
+      <SoundWidget
+        soundRef={soundRef}
+        url={url}
+        topicName={topic}
+        handleSnippet={handleSnippet}
+        sentence={sentence}
+        isPlaying={isPlaying}
+        setIsPlaying={setIsPlaying}
+        currentTimeState={currentTimeState}
+        setCurrentTimeState={setCurrentTimeState}
+      />
+    );
+  }
+  return (
+    <View>
+      <TouchableOpacity onPress={handleLoad}>
+        <Text>Load URL</Text>
+      </TouchableOpacity>
+    </View>
+  );
+};
+
 const DifficultSentenceWidget = ({
   sentence,
   todayDateObj,
@@ -241,6 +280,7 @@ const DifficultSentenceWidget = ({
   const [showReviewSettings, setShowReviewSettings] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [miniSnippets, setMiniSnippets] = useState([]);
+  const [sentenceDataInModal, setSentenceDataInModal] = useState(null);
 
   const id = sentence.id;
   const topic = sentence.topic;
@@ -304,6 +344,10 @@ const DifficultSentenceWidget = ({
     setShowReviewSettings(false);
   };
 
+  const handleOpenModal = () => {
+    setSentenceDataInModal(sentence);
+  };
+
   const url = getFirebaseAudioURL(id);
 
   const {loadFile, filePath} = useMP3File(id);
@@ -344,26 +388,21 @@ const DifficultSentenceWidget = ({
         dueText={text}
         dueColorState={dueColorState}
         pureWords={pureWords}
+        handleOpenModal={handleOpenModal}
       />
-      {isLoaded ? (
-        <SoundWidget
-          soundRef={soundRef}
-          url={url}
-          topicName={topic}
-          handleSnippet={handleSnippet}
-          sentence={sentence}
-          isPlaying={isPlaying}
-          setIsPlaying={setIsPlaying}
-          currentTimeState={currentTimeState}
-          setCurrentTimeState={setCurrentTimeState}
-        />
-      ) : (
-        <View>
-          <TouchableOpacity onPress={handleLoad}>
-            <Text>Load URL</Text>
-          </TouchableOpacity>
-        </View>
-      )}
+      <AudioComponent
+        isLoaded={isLoaded}
+        soundRef={soundRef}
+        url={url}
+        topic={topic}
+        handleSnippet={handleSnippet}
+        sentence={sentence}
+        isPlaying={isPlaying}
+        setIsPlaying={setIsPlaying}
+        currentTimeState={currentTimeState}
+        setCurrentTimeState={setCurrentTimeState}
+        handleLoad={handleLoad}
+      />
       {showReviewSettings ? (
         <SatoriLineReviewSection
           nextReview={nextReview}
@@ -393,6 +432,17 @@ const DifficultSentenceWidget = ({
             );
           })
         : null}
+      {sentenceDataInModal && (
+        <AnimatedModal
+          visible={sentenceDataInModal}
+          onClose={() => setSentenceDataInModal(null)}>
+          <DifficultSentenceModalContent
+            sentenceData={sentence}
+            dueColorState={dueColorState}
+            dueText={text}
+          />
+        </AnimatedModal>
+      )}
     </View>
   );
 };

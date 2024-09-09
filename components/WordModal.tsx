@@ -68,7 +68,7 @@ const WordStudyAudio = ({sentenceData}) => {
   );
 };
 
-const AnimatedModal = ({visible, onClose}) => {
+const AnimatedWordModal = ({visible, onClose}) => {
   const [showModal, setShowModal] = useState(visible);
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const scaleAnim = useRef(new Animated.Value(0.8)).current;
@@ -223,4 +223,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AnimatedModal;
+export default AnimatedWordModal;
