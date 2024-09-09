@@ -17,6 +17,7 @@ import {mergeAndRemoveDuplicates} from '../utils/merge-and-remove-duplicates';
 import MiniSnippetTimeChangeHandlers from './MiniSnippetTimeChangeHandlers';
 import AnimatedModal from './AnimatedModal';
 import DifficultSentenceModalContent from './DifficultSentenceModalContent';
+import useHighlightWordToWordBank from '../hooks/useHighlightWordToWordBank';
 
 const hasBeenSnippedFromCollectiveURL = snippet => {
   const snippetURL = snippet.url;
@@ -367,6 +368,29 @@ const DifficultSentenceWidget = ({
     loadFile(id, url);
   };
 
+  const {underlineWordsInSentence} = useHighlightWordToWordBank({
+    pureWordsUnique: pureWords,
+  });
+
+  const getSafeText = () => {
+    const textSegments = underlineWordsInSentence(targetLang);
+    return textSegments.map((segment, index) => {
+      return (
+        <Text
+          key={index}
+          id={segment.id}
+          selectable={true}
+          style={[segment.style]}
+          // context!!!
+          // onLongPress={() => console.log('## segment.text', segment.text)}
+          // onLongPress={() => onLongPress(segment.text)}
+        >
+          {segment.text}
+        </Text>
+      );
+    });
+  };
+
   const {dueColorState, text} = getDueDateText(dueStatus);
 
   return (
@@ -440,6 +464,7 @@ const DifficultSentenceWidget = ({
             sentenceData={sentence}
             dueColorState={dueColorState}
             dueText={text}
+            getSafeText={getSafeText}
           />
         </AnimatedModal>
       )}

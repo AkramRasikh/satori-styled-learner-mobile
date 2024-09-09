@@ -4,7 +4,8 @@ import {DifficultSentenceContentHeader} from './DifficultSentenceContent';
 import HighlightTextZone from './HighlightTextZone';
 import SwitchButton from './SwitchButton';
 
-const TargetLanguage = ({text}) => {
+const TargetLanguage = ({getSafeText}) => {
+  const text = getSafeText();
   return (
     <View>
       <Text style={styles.text}>{text}</Text>
@@ -31,6 +32,7 @@ const DifficultSentenceModalContent = ({
   sentenceData,
   dueColorState,
   dueText,
+  getSafeText,
 }) => {
   const [showReviewSettings, setShowReviewSettings] = useState(false);
   const [containerWidth, setContainerWidth] = useState(0);
@@ -94,7 +96,7 @@ const DifficultSentenceModalContent = ({
           />
         </View>
       ) : (
-        <TargetLanguage text={targetLang} />
+        <TargetLanguage getSafeText={getSafeText} />
       )}
       <BaseLanguage text={baseLang} />
       {showReviewSettings && <ReviewSettings />}
