@@ -350,6 +350,8 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
     fetchData();
   }, []);
 
+  const pureWordsArr = getPureWords();
+
   return (
     <DataContext.Provider
       value={{
@@ -368,7 +370,7 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
         addSnippet,
         removeSnippet,
         japaneseWordsState,
-        pureWords: getPureWords(),
+        pureWords: pureWordsArr,
         saveWordFirebase,
       }}>
       {children}
