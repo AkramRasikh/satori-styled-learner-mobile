@@ -58,8 +58,12 @@ const DifficultSentencesContainer = ({
         return true;
       }
     });
-    setToggleableSentencesState(filteredForDueOnly);
-    setIsShowDueOnly(!isShowDueOnly);
+    if (filteredForDueOnly?.length > 0) {
+      setToggleableSentencesState(filteredForDueOnly);
+      setIsShowDueOnly(!isShowDueOnly);
+    } else {
+      setToggleableSentencesState(difficultSentencesState);
+    }
   };
 
   const showDueOnlyFunc = () => {

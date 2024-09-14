@@ -28,12 +28,31 @@ const useGetCombinedAudioData = ({
   audioFiles,
   hasAlreadyBeenUnified,
   setAudioLoadingProgress,
+  isMediaContent,
+  soundDuration,
 }) => {
   const [durations, setDurations] = useState([]);
   const [dataHasBeenFetched, setDataHasBeenFetch] = useState(false);
 
   useEffect(() => {
     const fetchDurations = async () => {
+      if (isMediaContent) {
+        const sortedAudios = audioFiles.map((audioItem, index) => {
+          const isLast = index + 1 === audioFiles.length;
+          const startAt = audioItem.time;
+          const thisDuration = !isLast
+            ? audioFiles[index + 1].time - startAt
+            : soundDuration - startAt;
+          setAudioLoadingProgress?.(prev => (prev += 1));
+          return {
+            ...audioItem,
+            thisDuration,
+            startAt,
+            endAt: startAt + thisDuration,
+          };
+        });
+        setDurations(sortedAudios);
+      }
       const durationsPromises = audioFiles.map(item => {
         const url = getFirebaseAudioURL(item.id);
         return new Promise(resolve => {
@@ -91,6 +110,7 @@ const useGetCombinedAudioData = ({
     dataHasBeenFetched,
     durations,
     hasAlreadyBeenUnified,
+    isMediaContent,
   ]);
 
   if (hasAlreadyBeenUnified?.length > 1) {

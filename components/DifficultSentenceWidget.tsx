@@ -442,8 +442,6 @@ const DifficultSentenceWidget = ({
 
   const {dueColorState, text} = getDueDateText(dueStatus);
 
-  console.log('## ', {showThisWordsDefinitions});
-
   return (
     <View
       key={id}

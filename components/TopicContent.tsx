@@ -80,6 +80,7 @@ const TopicContent = ({
   const nextReview = thisTopicLoadedContent.nextReview;
 
   const isCore = thisTopicLoadedContent?.isCore;
+  const isMediaContent = thisTopicLoadedContent?.origin === 'netflix';
 
   const hasUnifiedMP3File = thisTopicLoadedContent.hasAudio;
 
@@ -179,6 +180,8 @@ const TopicContent = ({
     audioFiles: orderedContent,
     hasAlreadyBeenUnified,
     setAudioLoadingProgress,
+    isMediaContent,
+    soundDuration,
   });
 
   const durationsLengths = durations.length;
@@ -367,7 +370,7 @@ const TopicContent = ({
           />
           {soundDuration && currentTimeState ? (
             <ProgressBarComponent
-              endTime={soundDuration}
+              endTime={soundDuration.toFixed(2)}
               progress={currentTimeState / soundDuration}
               time={currentTimeState.toFixed(2)}
             />
