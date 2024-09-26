@@ -158,7 +158,7 @@ const AdhocSentenceContainer = ({setShowAdhocSentence, topicName}) => {
         baseLang: adhocText,
         context,
         topic,
-        tags,
+        tags: [tags],
       });
       setAdhocObjectData(res);
     } catch (error) {
