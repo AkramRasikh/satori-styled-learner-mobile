@@ -329,8 +329,10 @@ const DifficultSentenceWidget = ({
   const baseLang = sentence.baseLang;
   const targetLang = sentence.targetLang;
   const nextReview = sentence?.nextReview;
+  const isNetflix = sentence.isNetflix;
   const isAdhoc = sentence?.isAdhoc;
   const hasBeenReviewed = sentence?.reviewHistory?.length > 0;
+  const audioId = isNetflix ? topic : id;
   const soundRef = useRef();
 
   const matchedWordList = getThisSentencesWordList(targetLang);
@@ -390,9 +392,9 @@ const DifficultSentenceWidget = ({
     setSentenceDataInModal(sentence);
   };
 
-  const url = getFirebaseAudioURL(id);
+  const url = getFirebaseAudioURL(audioId);
 
-  const {loadFile, filePath} = useMP3File(id);
+  const {loadFile, filePath} = useMP3File(audioId);
 
   const {triggerLoadURL, isLoaded} = useLoadAudioInstance({
     soundRef,
