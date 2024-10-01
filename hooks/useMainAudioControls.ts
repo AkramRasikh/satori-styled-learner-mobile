@@ -5,9 +5,10 @@ const useMainAudioControls = ({
   isSnippet,
   startTime,
   rewindForwardInterval,
+  isMediaContent,
 }) => {
   const playSound = () => {
-    if (isSnippet && soundRef.current) {
+    if ((isMediaContent || isSnippet) && soundRef.current) {
       soundRef.current.setCurrentTime(startTime);
       soundRef.current.getCurrentTime(() => {
         soundRef.current.play(success => {
@@ -31,7 +32,7 @@ const useMainAudioControls = ({
   };
 
   const pauseSound = () => {
-    if (soundRef.current && isPlaying && isSnippet) {
+    if (soundRef.current && isPlaying && (isMediaContent || isSnippet)) {
       stopAudio();
     } else if (soundRef.current && isPlaying) {
       soundRef.current.pause();

@@ -16,6 +16,7 @@ const useSoundHook = ({
   soundInstance,
   setCurrentTime,
   rewindForwardInterval = 5,
+  isMediaContent,
 }) => {
   useBackgroundAudioHook({
     soundInstance,
@@ -40,6 +41,7 @@ const useSoundHook = ({
       isSnippet,
       startTime,
       rewindForwardInterval,
+      isMediaContent,
     });
 
   return {

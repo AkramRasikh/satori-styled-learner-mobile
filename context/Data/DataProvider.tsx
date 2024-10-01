@@ -64,14 +64,16 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
     dataFromJapaneseContent.forEach(contentWidget => {
       const thisTopic = contentWidget.title;
       const isCore = contentWidget.isCore;
-      const isNetflix = contentWidget.origin === 'netflix';
+      const isMediaContent =
+        contentWidget.origin === 'netflix' ||
+        contentWidget.origin === 'youtube';
       const content = contentWidget.content;
       content.forEach(sentenceInContent => {
         if (sentenceInContent?.nextReview) {
           difficultSentences.push({
             topic: thisTopic,
             isCore,
-            isNetflix,
+            isMediaContent,
             ...sentenceInContent,
           });
         }

@@ -52,46 +52,47 @@ const useGetCombinedAudioData = ({
           };
         });
         setDurations(sortedAudios);
-      }
-      const durationsPromises = audioFiles.map(item => {
-        const url = getFirebaseAudioURL(item.id);
-        return new Promise(resolve => {
-          const sound = new Sound(url, '', error => {
-            if (error) {
-              console.log('Failed to load the sound', error);
-              resolve({id: item.id, duration: 0});
-              return;
-            }
-            setAudioLoadingProgress?.(prev => (prev += 1));
-            const duration = sound.getDuration();
+      } else {
+        const durationsPromises = audioFiles.map(item => {
+          const url = getFirebaseAudioURL(item.id);
+          return new Promise(resolve => {
+            const sound = new Sound(url, '', error => {
+              if (error) {
+                console.log('Failed to load the sound', error);
+                resolve({id: item.id, duration: 0});
+                return;
+              }
+              setAudioLoadingProgress?.(prev => (prev += 1));
+              const duration = sound.getDuration();
 
-            resolve({
-              id: item.id,
-              duration,
+              resolve({
+                id: item.id,
+                duration,
+              });
+              sound.release(); // Release the sound resource
             });
-            sound.release(); // Release the sound resource
           });
         });
-      });
 
-      const durationsResults = await Promise.all(durationsPromises);
+        const durationsResults = await Promise.all(durationsPromises);
 
-      let endAt = 0;
+        let endAt = 0;
 
-      const sortedAudios = audioFiles.map(audioItem => {
-        const thisDuration = durationsResults.find(
-          item => item.id === audioItem.id,
-        ).duration;
-        const startAt = endAt;
-        endAt = endAt + thisDuration;
-        return {
-          ...audioItem,
-          thisDuration,
-          startAt,
-          endAt,
-        };
-      });
-      setDurations(sortedAudios);
+        const sortedAudios = audioFiles.map(audioItem => {
+          const thisDuration = durationsResults.find(
+            item => item.id === audioItem.id,
+          ).duration;
+          const startAt = endAt;
+          endAt = endAt + thisDuration;
+          return {
+            ...audioItem,
+            thisDuration,
+            startAt,
+            endAt,
+          };
+        });
+        setDurations(sortedAudios);
+      }
     };
 
     if (

@@ -80,7 +80,9 @@ const TopicContent = ({
   const nextReview = thisTopicLoadedContent.nextReview;
 
   const isCore = thisTopicLoadedContent?.isCore;
-  const isMediaContent = thisTopicLoadedContent?.origin === 'netflix';
+  const isMediaContent =
+    thisTopicLoadedContent?.origin === 'netflix' ||
+    thisTopicLoadedContent?.origin === 'youtube';
 
   const hasUnifiedMP3File = thisTopicLoadedContent.hasAudio;
 

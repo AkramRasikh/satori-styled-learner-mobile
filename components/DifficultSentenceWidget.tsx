@@ -204,6 +204,7 @@ export const SoundWidget = ({
   masterAudio,
   setMasterAudio,
   noSnips,
+  isMediaContent,
 }) => {
   const jumpAudioValue = 2;
   const soundDuration = soundRef.current._duration;
@@ -239,6 +240,8 @@ export const SoundWidget = ({
     setIsPlaying,
     topicName,
     rewindForwardInterval: jumpAudioValue,
+    startTime: isMediaContent ? sentence.time : null,
+    isMediaContent,
   });
 
   return (
@@ -277,6 +280,7 @@ const AudioComponent = ({
   currentTimeState,
   setCurrentTimeState,
   handleLoad,
+  isMediaContent,
 }) => {
   if (isLoaded) {
     return (
@@ -290,6 +294,7 @@ const AudioComponent = ({
         setIsPlaying={setIsPlaying}
         currentTimeState={currentTimeState}
         setCurrentTimeState={setCurrentTimeState}
+        isMediaContent={isMediaContent}
       />
     );
   }
@@ -329,10 +334,10 @@ const DifficultSentenceWidget = ({
   const baseLang = sentence.baseLang;
   const targetLang = sentence.targetLang;
   const nextReview = sentence?.nextReview;
-  const isNetflix = sentence.isNetflix;
+  const isMediaContent = sentence.isMediaContent;
   const isAdhoc = sentence?.isAdhoc;
   const hasBeenReviewed = sentence?.reviewHistory?.length > 0;
-  const audioId = isNetflix ? topic : id;
+  const audioId = isMediaContent ? topic : id;
   const soundRef = useRef();
 
   const matchedWordList = getThisSentencesWordList(targetLang);
@@ -478,6 +483,7 @@ const DifficultSentenceWidget = ({
         currentTimeState={currentTimeState}
         setCurrentTimeState={setCurrentTimeState}
         handleLoad={handleLoad}
+        isMediaContent={isMediaContent}
       />
       {showReviewSettings ? (
         <SatoriLineReviewSection
