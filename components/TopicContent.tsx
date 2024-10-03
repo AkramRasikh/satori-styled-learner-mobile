@@ -75,7 +75,10 @@ const TopicContent = ({
     contentData => contentData.title === topicName,
   );
 
-  const topicData = thisTopicLoadedContent.content;
+  const topicData = thisTopicLoadedContent.content.filter(
+    contentItem => contentItem !== null,
+  );
+
   const reviewHistory = thisTopicLoadedContent.reviewHistory;
   const nextReview = thisTopicLoadedContent.nextReview;
 
