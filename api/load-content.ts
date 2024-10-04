@@ -106,50 +106,6 @@ export const getAllData = async () => {
       japaneseAdhocSentences,
     ).japaneseAdhocSentences;
 
-    const getAdditionalContexts = wordFormsArr => {
-      const [baseWord, surfaceWord] = wordFormsArr;
-
-      return japaneseLoadedSentences.filter(sentence => {
-        if (sentence.matchedWords.includes(baseWord)) {
-          return true;
-        }
-        if (sentence.matchedWords.includes(surfaceWord)) {
-          return true;
-        }
-        return false;
-      });
-    };
-
-    const wordsByTopics = japaneseLoadedContent.map(topic => {
-      const allIdsFromTopicSentences = topic.content.map(item => item?.id);
-      const filteredWordsThatHaveMatchingContext = japaneseLoadedWords.filter(
-        japaneseWord =>
-          japaneseWord.contexts.some(context =>
-            allIdsFromTopicSentences.includes(context),
-          ),
-      );
-      const wordsWithAdditionalContextAdded =
-        filteredWordsThatHaveMatchingContext.map(japaneseWord => {
-          const contexts = japaneseWord.contexts;
-          const originalContext = topic.content.find(
-            contentWidget => contentWidget.id === contexts[0],
-          );
-
-          return {
-            ...japaneseWord,
-            contexts: [
-              originalContext,
-              ...getAdditionalContexts([
-                japaneseWord.baseForm,
-                japaneseWord.surfaceForm,
-              ]),
-            ],
-          };
-        });
-
-      return wordsWithAdditionalContextAdded;
-    });
-
     return {
       japaneseLoadedContent,
       japaneseLoadedWords,
@@ -157,7 +113,6 @@ export const getAllData = async () => {
       japaneseLoadedSnippets,
       japaneseLoadedSongs,
       japaneseAdhocLoadedSentences,
-      wordsByTopics,
       topicsToStudy,
     };
   } catch (error) {
@@ -165,7 +120,6 @@ export const getAllData = async () => {
     return {
       satoriData: [],
       contextHelperData: [],
-      wordsByTopics: [],
       japaneseLoadedSentences: [],
       japaneseLoadedSnippets: [],
       japaneseLoadedSongs: [],
