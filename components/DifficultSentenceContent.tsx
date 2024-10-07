@@ -1,5 +1,6 @@
 import {Text, TouchableOpacity, View} from 'react-native';
 import useHighlightWordToWordBank from '../hooks/useHighlightWordToWordBank';
+import Clipboard from '@react-native-clipboard/clipboard';
 
 const DueColorMarker = ({dueColorState}) => (
   <View
@@ -63,6 +64,10 @@ const DifficultSentenceContent = ({
     pureWordsUnique: pureWords,
   });
 
+  const handleCopyText = () => {
+    Clipboard.setString(targetLang);
+  };
+
   const getSafeText = targetText => {
     const textSegments = underlineWordsInSentence(targetText);
     const textSegmentsLength = textSegments.length;
@@ -82,9 +87,18 @@ const DifficultSentenceContent = ({
             {segment.text}
           </Text>
           {isLastEl && (
-            <TouchableOpacity onPress={handleOpenModal}>
-              <Text>🥸</Text>
-            </TouchableOpacity>
+            <View
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+              }}>
+              <TouchableOpacity onPress={handleOpenModal}>
+                <Text>🥸</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={handleCopyText}>
+                <Text>📋</Text>
+              </TouchableOpacity>
+            </View>
           )}
         </>
       );
