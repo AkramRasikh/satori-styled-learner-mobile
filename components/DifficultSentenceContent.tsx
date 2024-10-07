@@ -1,6 +1,7 @@
 import {Text, TouchableOpacity, View} from 'react-native';
 import useHighlightWordToWordBank from '../hooks/useHighlightWordToWordBank';
 import Clipboard from '@react-native-clipboard/clipboard';
+import useOpenGoogleTranslate from './useOpenGoogleTranslate';
 
 const DueColorMarker = ({dueColorState}) => (
   <View
@@ -64,9 +65,14 @@ const DifficultSentenceContent = ({
   const {underlineWordsInSentence} = useHighlightWordToWordBank({
     pureWordsUnique: pureWords,
   });
+  const {openGoogleTranslateApp} = useOpenGoogleTranslate();
 
   const handleCopyText = () => {
     Clipboard.setString(targetLang);
+  };
+
+  const handleOpenGoogleTranslate = () => {
+    openGoogleTranslateApp(targetLang);
   };
 
   const getSafeText = targetText => {
@@ -98,6 +104,9 @@ const DifficultSentenceContent = ({
               </TouchableOpacity>
               <TouchableOpacity onPress={handleCopyText}>
                 <Text>📋</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={handleOpenGoogleTranslate}>
+                <Text>📚</Text>
               </TouchableOpacity>
             </View>
           )}
