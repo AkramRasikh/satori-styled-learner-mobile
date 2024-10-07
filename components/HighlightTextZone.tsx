@@ -32,9 +32,10 @@ const HighlightTextZone = ({
           const numberOfLines = Math.floor(evt.nativeEvent.locationY / 24);
           const linesToMoreWidth = numberOfLines * textWidth * 0.9;
           setInitialLineLocationY(evt.nativeEvent.locationY);
-          startRef.current = calculateIndexX(
+          const currentIndex = calculateIndexX(
             evt.nativeEvent.locationX + linesToMoreWidth,
           );
+          startRef.current = currentIndex;
           setHighlightedIndices([sentencePrefix + startRef.current]);
         }
       },
@@ -58,8 +59,8 @@ const HighlightTextZone = ({
       return '';
     }
     const chars = sentence.split('');
-    const firstCharacter = indices[0]?.substring(0, 2);
-    const isThisSentenceHighlighted = firstCharacter === sentencePrefix;
+    const [firstCharacter] = indices[0].split('-');
+    const isThisSentenceHighlighted = firstCharacter === sentenceIndex;
     if (!isThisSentenceHighlighted) {
       return '';
     }
@@ -100,14 +101,13 @@ const HighlightTextZone = ({
 
   // Update the highlighted indices based on the drag range
   const updateHighlightedIndices = currentIndex => {
-    const firstCharacter = currentIndex?.slice(0, 2);
+    const [firstCharacter, secondCharacter] = currentIndex?.split('-');
 
-    const isThisSentenceHighlighted = firstCharacter === sentencePrefix;
+    const isThisSentenceHighlighted = Number(firstCharacter) === sentenceIndex;
 
     if (startRef.current !== null && isThisSentenceHighlighted) {
-      const slicedIndex = currentIndex.slice(2);
-      const startIndex = Math.min(startRef.current, slicedIndex);
-      const endIndex = Math.max(startRef.current, slicedIndex);
+      const startIndex = Math.min(startRef.current, secondCharacter);
+      const endIndex = Math.max(startRef.current, secondCharacter);
       const indices = [];
       for (let i = startIndex; i <= endIndex; i++) {
         indices.push(sentenceIndex + '-' + i);
@@ -125,9 +125,8 @@ const HighlightTextZone = ({
         <Text
           key={index}
           style={
-            highlightedIndices.includes(sentencePrefix + index)
-              ? styles.highlight
-              : styles.normal
+            highlightedIndices.includes(sentencePrefix + index) &&
+            styles.highlight
           }>
           {char}
         </Text>
@@ -162,9 +161,6 @@ const styles = StyleSheet.create({
     lineHeight: 24,
     flexDirection: 'row',
     flexWrap: 'wrap',
-  },
-  normal: {
-    fontSize: 16,
   },
   highlight: {
     fontSize: 16,
