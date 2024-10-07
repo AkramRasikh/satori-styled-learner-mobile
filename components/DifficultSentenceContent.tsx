@@ -86,10 +86,12 @@ const DifficultSentenceContent = ({
             key={index}
             id={segment.id}
             selectable={true}
-            style={[segment.style]}
-            // context!!!
-            // onLongPress={() => console.log('## segment.text', segment.text)}
-            // onLongPress={() => onLongPress(segment.text)}
+            style={[
+              segment.style,
+              {
+                lineHeight: 20,
+              },
+            ]}
             onLongPress={() => onLongPress(segment.text)}>
             {segment.text}
           </Text>
@@ -98,6 +100,9 @@ const DifficultSentenceContent = ({
               style={{
                 display: 'flex',
                 flexDirection: 'row',
+                gap: 5,
+                alignSelf: 'center',
+                paddingLeft: 5,
               }}>
               <TouchableOpacity onPress={handleOpenModal}>
                 <Text>🥸</Text>
