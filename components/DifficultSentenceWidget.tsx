@@ -420,10 +420,45 @@ const DifficultSentenceWidget = ({
     pureWordsUnique: pureWords,
   });
 
-  const onLongPress = text => {
+  const getLongPressedWordData = () => {
+    if (!showThisWordsDefinitions) {
+      return;
+    }
+    return showThisWordsDefinitions.map((word, index) => {
+      const surfaceForm = word.surfaceForm;
+      const baseForm = word.baseForm;
+      const phonetic = word.phonetic;
+      const definition = word.definition;
+
+      const isLastInArr = index + 1 === showThisWordsDefinitions.length;
+
+      const newLine = !isLastInArr ? '\n' : '';
+      const indexToNumber = index + 1;
+
+      return (
+        indexToNumber +
+        ') ' +
+        surfaceForm +
+        ', ' +
+        baseForm +
+        ', ' +
+        phonetic +
+        ', ' +
+        definition +
+        newLine
+      );
+    });
+  };
+
+  const generalLongPress = text => {
     const longPressedTexts = matchedWordList.filter(word =>
       text.includes(word.surfaceForm),
     );
+    return longPressedTexts;
+  };
+
+  const onLongPress = text => {
+    const longPressedTexts = generalLongPress(text);
     if (longPressedTexts.length > 0) {
       setShowThisWordsDefinitions(longPressedTexts);
     }
@@ -459,7 +494,18 @@ const DifficultSentenceWidget = ({
         marginBottom: 10,
         paddingBottom: isLastEl ? 100 : 0,
       }}>
-      <View></View>
+      <View>
+        {showThisWordsDefinitions?.length > 0 ? (
+          <View
+            style={{
+              paddingTop: 5,
+              borderTopColor: 'gray',
+              borderTopWidth: 1,
+            }}>
+            <Text>{getLongPressedWordData()}</Text>
+          </View>
+        ) : null}
+      </View>
       <DifficultSentenceContent
         topic={topic}
         isCore={isCore}
@@ -470,6 +516,7 @@ const DifficultSentenceWidget = ({
         dueColorState={dueColorState}
         pureWords={pureWords}
         handleOpenModal={handleOpenModal}
+        onLongPress={onLongPress}
       />
       <AudioComponent
         isLoaded={isLoaded}

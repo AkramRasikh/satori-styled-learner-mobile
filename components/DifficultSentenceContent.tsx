@@ -59,6 +59,7 @@ const DifficultSentenceContent = ({
   dueColorState,
   pureWords,
   handleOpenModal,
+  onLongPress,
 }) => {
   const {underlineWordsInSentence} = useHighlightWordToWordBank({
     pureWordsUnique: pureWords,
@@ -83,7 +84,7 @@ const DifficultSentenceContent = ({
             // context!!!
             // onLongPress={() => console.log('## segment.text', segment.text)}
             // onLongPress={() => onLongPress(segment.text)}
-          >
+            onLongPress={() => onLongPress(segment.text)}>
             {segment.text}
           </Text>
           {isLastEl && (
