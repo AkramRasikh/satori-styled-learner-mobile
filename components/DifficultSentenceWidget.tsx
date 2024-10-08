@@ -316,6 +316,8 @@ const DifficultSentenceWidget = ({
   addSnippet,
   removeSnippet,
   pureWords,
+  sentenceBeingHighlightedState,
+  setSentenceBeingHighlightedState,
 }) => {
   const [currentTimeState, setCurrentTimeState] = useState(0);
   const [futureDaysState, setFutureDaysState] = useState(3);
@@ -511,12 +513,15 @@ const DifficultSentenceWidget = ({
         isCore={isCore}
         targetLang={targetLang}
         baseLang={baseLang}
+        sentenceId={id}
         setShowReviewSettings={setShowReviewSettings}
         dueText={text}
         dueColorState={dueColorState}
         pureWords={pureWords}
         handleOpenModal={handleOpenModal}
         onLongPress={onLongPress}
+        sentenceBeingHighlightedState={sentenceBeingHighlightedState}
+        setSentenceBeingHighlightedState={setSentenceBeingHighlightedState}
       />
       <AudioComponent
         isLoaded={isLoaded}

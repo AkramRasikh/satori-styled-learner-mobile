@@ -2,6 +2,9 @@ import {Text, TouchableOpacity, View} from 'react-native';
 import useHighlightWordToWordBank from '../hooks/useHighlightWordToWordBank';
 import Clipboard from '@react-native-clipboard/clipboard';
 import useOpenGoogleTranslate from './useOpenGoogleTranslate';
+import HighlightTextZone from './HighlightTextZone';
+import {useState} from 'react';
+import useData from '../context/Data/useData';
 
 const DueColorMarker = ({dueColorState}) => (
   <View
@@ -61,14 +64,37 @@ const DifficultSentenceContent = ({
   pureWords,
   handleOpenModal,
   onLongPress,
+  sentenceBeingHighlightedState,
+  setSentenceBeingHighlightedState,
+  sentenceId,
 }) => {
+  const [highlightedIndices, setHighlightedIndices] = useState([]);
+  const [containerWidth, setContainerWidth] = useState(0);
+
+  const {saveWordFirebase} = useData();
+
   const {underlineWordsInSentence} = useHighlightWordToWordBank({
     pureWordsUnique: pureWords,
   });
+
+  const highlightMode = sentenceId === sentenceBeingHighlightedState;
+
   const {openGoogleTranslateApp} = useOpenGoogleTranslate();
 
   const handleCopyText = () => {
     Clipboard.setString(targetLang);
+  };
+
+  const handleLayout = event => {
+    setContainerWidth(event.nativeEvent.layout.width);
+  };
+
+  const handleSettingHighlightmode = () => {
+    if (sentenceId === sentenceBeingHighlightedState) {
+      setSentenceBeingHighlightedState('');
+    } else {
+      setSentenceBeingHighlightedState(sentenceId);
+    }
   };
 
   const handleOpenGoogleTranslate = () => {
@@ -104,8 +130,10 @@ const DifficultSentenceContent = ({
                 alignSelf: 'center',
                 paddingLeft: 5,
               }}>
-              <TouchableOpacity onPress={handleOpenModal}>
-                <Text>🥸</Text>
+              <TouchableOpacity onPress={handleSettingHighlightmode}>
+                <Text>
+                  {sentenceId === sentenceBeingHighlightedState ? '🔵' : '🔴'}
+                </Text>
               </TouchableOpacity>
               <TouchableOpacity onPress={handleCopyText}>
                 <Text>📋</Text>
@@ -129,7 +157,24 @@ const DifficultSentenceContent = ({
         showReviewSettings={showReviewSettings}
         setShowReviewSettings={setShowReviewSettings}
       />
-      <Text>{getSafeText(targetLang)}</Text>
+      {highlightMode ? (
+        <View
+          onLayout={handleLayout} // Attach the onLayout event handler
+        >
+          <HighlightTextZone
+            id={sentenceId}
+            sentenceIndex={0}
+            text={targetLang}
+            highlightedIndices={highlightedIndices}
+            setHighlightedIndices={setHighlightedIndices}
+            saveWordFirebase={saveWordFirebase}
+            setHighlightMode={() => {}}
+            textWidth={containerWidth}
+          />
+        </View>
+      ) : (
+        <Text>{getSafeText(targetLang)}</Text>
+      )}
       <View>
         <Text>{baseLang}</Text>
       </View>

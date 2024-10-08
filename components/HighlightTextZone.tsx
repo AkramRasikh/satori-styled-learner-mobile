@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   PanResponder,
 } from 'react-native';
+import useOpenGoogleTranslate from './useOpenGoogleTranslate';
 
 const HighlightTextZone = ({
   id,
@@ -20,6 +21,7 @@ const HighlightTextZone = ({
 }) => {
   const startRef = useRef(null);
   const [initialLineLocationY, setInitialLineLocationY] = useState(null);
+  const {openGoogleTranslateApp} = useOpenGoogleTranslate();
 
   const sentencePrefix = sentenceIndex + '-';
 
@@ -73,6 +75,10 @@ const HighlightTextZone = ({
   };
 
   const highlightedText = extractHighlightedText(text, highlightedIndices);
+
+  const handleOpenUpGoogle = () => {
+    openGoogleTranslateApp(highlightedText || text);
+  };
 
   // Estimate the character index based on the x-coordinate
   const calculateIndexX = x => {
@@ -146,6 +152,9 @@ const HighlightTextZone = ({
               </TouchableOpacity>
               <TouchableOpacity onPress={handleSaveWord}>
                 <Text>📖</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={handleOpenUpGoogle}>
+                <Text>📚</Text>
               </TouchableOpacity>
             </>
           ) : null}

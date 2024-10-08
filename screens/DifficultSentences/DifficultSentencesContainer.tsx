@@ -27,6 +27,8 @@ const DifficultSentencesContainer = ({
   pureWords,
 }): React.JSX.Element => {
   const [toggleableSentencesState, setToggleableSentencesState] = useState([]);
+  const [sentenceBeingHighlightedState, setSentenceBeingHighlightedState] =
+    useState('');
   const todayDateObj = new Date();
 
   const [isShowDueOnly, setIsShowDueOnly] = useState(false);
@@ -178,6 +180,10 @@ const DifficultSentencesContainer = ({
                   addSnippet={addSnippet}
                   removeSnippet={removeSnippet}
                   pureWords={pureWords}
+                  sentenceBeingHighlightedState={sentenceBeingHighlightedState}
+                  setSentenceBeingHighlightedState={
+                    setSentenceBeingHighlightedState
+                  }
                 />
               );
             })}
