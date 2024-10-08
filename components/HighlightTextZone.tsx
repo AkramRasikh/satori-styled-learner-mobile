@@ -66,11 +66,14 @@ const HighlightTextZone = ({
     if (!isThisSentenceHighlighted) {
       return '';
     }
+
     const mappedIndices = indices
       .map(index => {
-        return chars[index.slice(2)];
+        const [_, indexKey] = index.split('-');
+        return chars[indexKey];
       })
       .join('');
+
     return mappedIndices;
   };
 
