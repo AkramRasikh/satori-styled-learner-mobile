@@ -15,8 +15,6 @@ import useSnippetControls from '../hooks/useSnippetControls';
 import useSnippetManageAudioStop from '../hooks/useSnippetManageAudioStop';
 import {mergeAndRemoveDuplicates} from '../utils/merge-and-remove-duplicates';
 import MiniSnippetTimeChangeHandlers from './MiniSnippetTimeChangeHandlers';
-import AnimatedModal from './AnimatedModal';
-import DifficultSentenceModalContent from './DifficultSentenceModalContent';
 import useHighlightWordToWordBank from '../hooks/useHighlightWordToWordBank';
 import useData from '../context/Data/useData';
 
@@ -324,7 +322,6 @@ const DifficultSentenceWidget = ({
   const [showReviewSettings, setShowReviewSettings] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [miniSnippets, setMiniSnippets] = useState([]);
-  const [sentenceDataInModal, setSentenceDataInModal] = useState(null);
   const [showThisWordsDefinitions, setShowThisWordsDefinitions] =
     useState(null);
 
@@ -393,10 +390,6 @@ const DifficultSentenceWidget = ({
       });
     }
     setShowReviewSettings(false);
-  };
-
-  const handleOpenModal = () => {
-    setSentenceDataInModal(sentence);
   };
 
   const url = getFirebaseAudioURL(audioId);
@@ -518,7 +511,6 @@ const DifficultSentenceWidget = ({
         dueText={text}
         dueColorState={dueColorState}
         pureWords={pureWords}
-        handleOpenModal={handleOpenModal}
         onLongPress={onLongPress}
         sentenceBeingHighlightedState={sentenceBeingHighlightedState}
         setSentenceBeingHighlightedState={setSentenceBeingHighlightedState}
@@ -559,39 +551,6 @@ const DifficultSentenceWidget = ({
         setMiniSnippets={setMiniSnippets}
         url={url}
       />
-      {sentenceDataInModal && (
-        <AnimatedModal
-          visible={sentenceDataInModal}
-          onClose={() => setSentenceDataInModal(null)}>
-          <>
-            <DifficultSentenceModalContent
-              sentenceData={sentence}
-              dueColorState={dueColorState}
-              dueText={text}
-              getSafeText={getSafeText}
-              showThisWordsDefinitions={showThisWordsDefinitions}
-            />
-            <View
-              style={{
-                width: '100%',
-              }}>
-              <AudioComponent
-                isLoaded={isLoaded}
-                soundRef={soundRef}
-                url={url}
-                topic={topic}
-                handleSnippet={handleSnippet}
-                sentence={sentence}
-                isPlaying={isPlaying}
-                setIsPlaying={setIsPlaying}
-                currentTimeState={currentTimeState}
-                setCurrentTimeState={setCurrentTimeState}
-                handleLoad={handleLoad}
-              />
-            </View>
-          </>
-        </AnimatedModal>
-      )}
     </View>
   );
 };

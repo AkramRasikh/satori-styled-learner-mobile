@@ -62,7 +62,6 @@ const DifficultSentenceContent = ({
   showReviewSettings,
   dueColorState,
   pureWords,
-  handleOpenModal,
   onLongPress,
   sentenceBeingHighlightedState,
   setSentenceBeingHighlightedState,
