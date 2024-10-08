@@ -62,23 +62,24 @@ function WordStudyContainer({
             flexWrap: 'wrap',
             gap: 5,
           }}>
-          {wordCategories?.map((wordCategory, index) => {
-            return (
-              <View
-                key={index}
-                style={{
-                  borderBlockColor: 'black',
-                  borderWidth: 2,
-                  padding: 5,
-                  borderRadius: 5,
-                }}>
-                <TouchableOpacity
-                  onPress={() => handleShowThisCategoriesWords(wordCategory)}>
-                  <Text>{wordCategory}</Text>
-                </TouchableOpacity>
-              </View>
-            );
-          })}
+          {!hasSelectedTopicWords &&
+            wordCategories?.map((wordCategory, index) => {
+              return (
+                <View
+                  key={index}
+                  style={{
+                    borderBlockColor: 'black',
+                    borderWidth: 2,
+                    padding: 5,
+                    borderRadius: 5,
+                  }}>
+                  <TouchableOpacity
+                    onPress={() => handleShowThisCategoriesWords(wordCategory)}>
+                    <Text>{wordCategory}</Text>
+                  </TouchableOpacity>
+                </View>
+              );
+            })}
         </View>
         <View
           style={{
@@ -89,8 +90,29 @@ function WordStudyContainer({
         />
         {hasSelectedTopicWords ? (
           <View>
-            <View>
-              <Text>{selectedTopic}:</Text>
+            <View
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                marginBottom: 10,
+                flexWrap: 'wrap',
+              }}>
+              <View
+                style={{
+                  alignSelf: 'center',
+                }}>
+                <Text>{selectedTopic}:</Text>
+              </View>
+              <TouchableOpacity
+                style={{
+                  backgroundColor: 'gray',
+                  padding: 5,
+                  borderRadius: 5,
+                }}
+                onPress={() => setSelectedTopic('')}>
+                <Text>Show More</Text>
+              </TouchableOpacity>
             </View>
             <View
               style={{
