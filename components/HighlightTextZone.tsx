@@ -60,7 +60,7 @@ const HighlightTextZone = ({
     }
     const chars = sentence.split('');
     const [firstCharacter] = indices[0].split('-');
-    const isThisSentenceHighlighted = firstCharacter === sentenceIndex;
+    const isThisSentenceHighlighted = Number(firstCharacter) === sentenceIndex;
     if (!isThisSentenceHighlighted) {
       return '';
     }

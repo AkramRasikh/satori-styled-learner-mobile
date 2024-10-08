@@ -133,7 +133,6 @@ const DifficultSentenceModalContent = ({
             highlightedIndices={highlightedIndices}
             setHighlightedIndices={setHighlightedIndices}
             saveWordFirebase={saveWordFirebase}
-            // saveWordFirebase={saveWordFirebase}
             setHighlightMode={setHighlightMode}
             textWidth={containerWidth}
           />
