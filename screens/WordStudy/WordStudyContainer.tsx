@@ -26,15 +26,14 @@ function WordStudyContainer({
   const [selectedTopicWords, setSelectedTopicWords] = useState([]);
   const [futureDaysState, setFutureDaysState] = useState(3);
   const [selectedTopic, setSelectedTopic] = useState('');
-  const [selectedWordKeyState, setSelectedWordKeyState] = useState();
+  const [selectedWordState, setSelectedWordState] = useState(null);
 
   const wordCategories = makeArrayUnique([...tagsState, ...generalTopicState]);
 
   const {width} = Dimensions?.get('window');
   const todayDateObj = new Date();
 
-  const selectedWord = selectedTopicWords[selectedWordKeyState];
-  const hasBeenReviewed = selectedWord?.reviewHistory?.length > 0;
+  const hasBeenReviewed = selectedWordState?.reviewHistory?.length > 0;
 
   useFormatWordsToStudy({
     japaneseWordsState,
@@ -46,13 +45,13 @@ function WordStudyContainer({
   });
 
   const updateExistingReviewHistory = () => {
-    return [...selectedWord?.reviewHistory, new Date()];
+    return [...selectedWordState?.reviewHistory, new Date()];
   };
 
   const setNextReviewDate = async () => {
     const reviewNotNeeded = futureDaysState === 0;
-    const selectedWordId = selectedWord.id;
-    const wordBaseForm = selectedWord.baseForm;
+    const selectedWordId = selectedWordState.id;
+    const wordBaseForm = selectedWordState.baseForm;
 
     const fieldToUpdate = reviewNotNeeded
       ? {
@@ -189,7 +188,7 @@ function WordStudyContainer({
               }}>
               {selectedTopicWords?.map((wordData, index) => {
                 const listTextNumber = index + 1 + ') ';
-                const isSelectedWord = selectedWordKeyState === index;
+                const isSelectedWord = selectedWordState?.id === wordData.id;
                 return (
                   <View
                     key={wordData.id}
@@ -201,7 +200,7 @@ function WordStudyContainer({
                       width: isSelectedWord ? width * 0.9 : 'auto',
                     }}>
                     <TouchableOpacity
-                      onPress={() => setSelectedWordKeyState(index)}>
+                      onPress={() => setSelectedWordState(wordData)}>
                       <Text
                         style={{
                           fontSize: 24,
@@ -213,7 +212,7 @@ function WordStudyContainer({
                     {isSelectedWord && (
                       <AnimatedWordModal
                         visible={wordData}
-                        onClose={() => setSelectedWordKeyState(undefined)}
+                        onClose={() => setSelectedWordState(null)}
                         futureDaysState={futureDaysState}
                         setFutureDaysState={setFutureDaysState}
                         setNextReviewDate={setNextReviewDate}
