@@ -8,7 +8,7 @@ const ToastMessage = ({toastText}) => {
         alignItems: 'center',
         alignSelf: 'center',
         zIndex: 10,
-        top: 40,
+        top: 50,
         padding: 10,
         backgroundColor: 'white',
         borderRadius: 10,

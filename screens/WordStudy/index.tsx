@@ -11,6 +11,8 @@ const WordStudyScreen = ({navigation}): React.JSX.Element => {
   const japaneseWordsState = data.japaneseWordsState;
   const japaneseAdhocLoadedSentences = data.adhocJapaneseSentencesState;
   const japaneseLoadedContent = data.japaneseLoadedContentMaster;
+  const updateWordData = data.updateWordData;
+  const updatePromptState = data.updatePromptState;
 
   if (
     japaneseWordsState.length === 0 ||
@@ -29,6 +31,8 @@ const WordStudyScreen = ({navigation}): React.JSX.Element => {
       japaneseWordsState={japaneseWordsState}
       japaneseAdhocLoadedSentences={japaneseAdhocLoadedSentences}
       japaneseLoadedContent={japaneseLoadedContent}
+      updateWordData={updateWordData}
+      updatePromptState={updatePromptState}
     />
   );
 };

@@ -1,17 +1,11 @@
 import React, {useState, useEffect, useRef} from 'react';
-import {
-  Modal,
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  Animated,
-} from 'react-native';
+import {View, Text, StyleSheet, TouchableOpacity, Animated} from 'react-native';
 import {getFirebaseAudioURL} from '../hooks/useGetCombinedAudioData';
 import useMP3File from '../hooks/useMP3File';
 import useLoadAudioInstance from '../hooks/useLoadAudioInstance';
 import {SoundWidget} from './DifficultSentenceWidget';
 import useHighlightWordToWordBank from '../hooks/useHighlightWordToWordBank';
+import SatoriLineReviewSection from './SatoriLineReviewSection';
 
 const WordStudyAudio = ({sentenceData}) => {
   const [isPlaying, setIsPlaying] = useState(false);
@@ -68,8 +62,13 @@ const WordStudyAudio = ({sentenceData}) => {
   );
 };
 
-const AnimatedWordModal = ({visible, onClose}) => {
-  const [showModal, setShowModal] = useState(visible);
+const AnimatedWordModal = ({
+  visible,
+  onClose,
+  futureDaysState,
+  setFutureDaysState,
+  setNextReviewDate,
+}) => {
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const scaleAnim = useRef(new Animated.Value(0.8)).current;
 
@@ -84,21 +83,20 @@ const AnimatedWordModal = ({visible, onClose}) => {
   });
 
   useEffect(() => {
-    if (visible) {
-      setShowModal(true);
-      Animated.parallel([
-        Animated.timing(fadeAnim, {
-          toValue: 1,
-          duration: 300,
-          useNativeDriver: true,
-        }),
-        Animated.spring(scaleAnim, {
-          toValue: 1,
-          friction: 8,
-          useNativeDriver: true,
-        }),
-      ]).start();
-    } else {
+    Animated.parallel([
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 300,
+        useNativeDriver: true,
+      }),
+      Animated.spring(scaleAnim, {
+        toValue: 1,
+        friction: 8,
+        useNativeDriver: true,
+      }),
+    ]).start();
+
+    return () => {
       Animated.parallel([
         Animated.timing(fadeAnim, {
           toValue: 0,
@@ -110,9 +108,9 @@ const AnimatedWordModal = ({visible, onClose}) => {
           friction: 8,
           useNativeDriver: true,
         }),
-      ]).start(() => setShowModal(false));
-    }
-  }, [visible]);
+      ]);
+    };
+  }, []);
 
   const getSafeText = targetText => {
     const textSegments = underlineWordsInSentence(targetText);
@@ -125,54 +123,54 @@ const AnimatedWordModal = ({visible, onClose}) => {
     });
   };
 
-  if (!visible) {
-    return null;
-  }
-
   return (
-    <Modal transparent visible={showModal} animationType="none">
-      <View style={styles.overlay}>
-        <TouchableOpacity
-          style={styles.background}
-          onPress={onClose}
-          activeOpacity={1}
+    <View style={styles.overlay}>
+      <TouchableOpacity
+        style={styles.background}
+        onPress={onClose}
+        activeOpacity={1}
+      />
+      <Animated.View
+        style={[
+          styles.modalContainer,
+          {opacity: fadeAnim, transform: [{scale: scaleAnim}]},
+        ]}>
+        <Text style={styles.modalTitle}>{baseForm}</Text>
+        <Text style={styles.modalContent}>Surface Form: {surfaceForm}</Text>
+        <Text style={styles.modalContent}>Definition: {definition}</Text>
+        <Text style={styles.modalContent}>Phonetic: {phonetic}</Text>
+        <Text style={styles.modalContent}>
+          Transliteration: {transliteration}
+        </Text>
+        <View>
+          {sentenceExamples?.map((exampleSentence, index) => {
+            const exampleNumber = index + 1 + ') ';
+            const baseLang = exampleSentence.baseLang;
+            const targetLang = exampleSentence.targetLang;
+            return (
+              <View key={index}>
+                <Text style={styles.modalContent}>
+                  {exampleNumber} {baseLang}
+                </Text>
+                <Text style={styles.modalContent}>
+                  {getSafeText(targetLang)}
+                </Text>
+                <WordStudyAudio sentenceData={exampleSentence} />
+              </View>
+            );
+          })}
+        </View>
+        <TouchableOpacity style={styles.closeButton} onPress={onClose}>
+          <Text style={styles.closeButtonText}>Close</Text>
+        </TouchableOpacity>
+        <SatoriLineReviewSection
+          nextReview={visible?.nextReview}
+          futureDaysState={futureDaysState}
+          setFutureDaysState={setFutureDaysState}
+          setNextReviewDate={setNextReviewDate}
         />
-        <Animated.View
-          style={[
-            styles.modalContainer,
-            {opacity: fadeAnim, transform: [{scale: scaleAnim}]},
-          ]}>
-          <Text style={styles.modalTitle}>{baseForm}</Text>
-          <Text style={styles.modalContent}>Surface Form: {surfaceForm}</Text>
-          <Text style={styles.modalContent}>Definition: {definition}</Text>
-          <Text style={styles.modalContent}>Phonetic: {phonetic}</Text>
-          <Text style={styles.modalContent}>
-            Transliteration: {transliteration}
-          </Text>
-          <View>
-            {sentenceExamples?.map((exampleSentence, index) => {
-              const exampleNumber = index + 1 + ') ';
-              const baseLang = exampleSentence.baseLang;
-              const targetLang = exampleSentence.targetLang;
-              return (
-                <View key={index}>
-                  <Text style={styles.modalContent}>
-                    {exampleNumber} {baseLang}
-                  </Text>
-                  <Text style={styles.modalContent}>
-                    {getSafeText(targetLang)}
-                  </Text>
-                  <WordStudyAudio sentenceData={exampleSentence} />
-                </View>
-              );
-            })}
-          </View>
-          <TouchableOpacity style={styles.closeButton} onPress={onClose}>
-            <Text style={styles.closeButtonText}>Close</Text>
-          </TouchableOpacity>
-        </Animated.View>
-      </View>
-    </Modal>
+      </Animated.View>
+    </View>
   );
 };
 
@@ -181,7 +179,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   background: {
     position: 'absolute',
@@ -194,10 +191,6 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     padding: 20,
     borderRadius: 10,
-    maxWidth: '80%',
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: {width: 0, height: 2},
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 5, // For Android shadow

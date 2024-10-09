@@ -9,6 +9,7 @@ import {addSnippetAPI, deleteSnippetAPI} from '../../api/snippet';
 import {sortByDueDate} from '../../utils/sort-by-due-date';
 import {makeArrayUnique} from '../../hooks/useHighlightWordToWordBank';
 import saveWordAPI from '../../api/save-word';
+import {updateWordAPI} from '../../api/update-word-data';
 
 export const DataContext = createContext(null);
 
@@ -149,6 +150,32 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
       };
     } catch (error) {
       console.log('## handleUpdateAdhocSentenceDifficult ', error);
+    }
+  };
+
+  const updateWordData = async ({wordId, wordBaseForm, fieldToUpdate}) => {
+    try {
+      const updatedWordProperties = await updateWordAPI({
+        wordId,
+        fieldToUpdate,
+      });
+      const japaneseWordsStateUpdated = japaneseWordsState.map(item => {
+        const thisWordId = item.id === wordId;
+        if (thisWordId) {
+          console.log('## ', {thisWordId});
+
+          return {
+            ...item,
+            ...updatedWordProperties,
+          };
+        }
+        return item;
+      });
+      setJapaneseWordsState(japaneseWordsStateUpdated);
+      setUpdatePromptState(`${wordBaseForm} updated!`);
+      setTimeout(() => setUpdatePromptState(''), 3000);
+    } catch (error) {
+      console.log('## updateWordData', {error});
     }
   };
 
@@ -403,6 +430,7 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
         saveWordFirebase,
         getThisSentencesWordList,
         adhocJapaneseSentencesState,
+        updateWordData,
       }}>
       {children}
     </DataContext.Provider>
