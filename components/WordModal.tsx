@@ -15,12 +15,6 @@ const WordStudyAudio = ({sentenceData}) => {
 
   const id = sentenceData.id;
   const topic = sentenceData.topic;
-  // const isCore = sentenceData?.isCore;
-  // const baseLang = sentenceData.baseLang;
-  // const targetLang = sentenceData.targetLang;
-  // const nextReview = sentenceData?.nextReview;
-  // const isAdhoc = sentenceData?.isAdhoc;
-  // const hasBeenReviewed = sentenceData?.reviewHistory?.length > 0;
 
   const url = getFirebaseAudioURL(id);
 
@@ -135,7 +129,18 @@ const AnimatedWordModal = ({
           styles.modalContainer,
           {opacity: fadeAnim, transform: [{scale: scaleAnim}]},
         ]}>
-        <Text style={styles.modalTitle}>{baseForm}</Text>
+        <View
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            marginBottom: 10,
+          }}>
+          <Text style={styles.modalTitle}>{baseForm}</Text>
+          <TouchableOpacity style={styles.closeButton} onPress={onClose}>
+            <Text style={styles.closeButtonText}>Close</Text>
+          </TouchableOpacity>
+        </View>
         <Text style={styles.modalContent}>Surface Form: {surfaceForm}</Text>
         <Text style={styles.modalContent}>Definition: {definition}</Text>
         <Text style={styles.modalContent}>Phonetic: {phonetic}</Text>
@@ -160,9 +165,6 @@ const AnimatedWordModal = ({
             );
           })}
         </View>
-        <TouchableOpacity style={styles.closeButton} onPress={onClose}>
-          <Text style={styles.closeButtonText}>Close</Text>
-        </TouchableOpacity>
         <SatoriLineReviewSection
           nextReview={visible?.nextReview}
           futureDaysState={futureDaysState}
@@ -197,20 +199,21 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   modalTitle: {
-    fontSize: 20,
+    fontSize: 26,
     fontWeight: 'bold',
-    marginBottom: 10,
+    alignSelf: 'center',
   },
   modalContent: {
     fontSize: 16,
     marginBottom: 20,
   },
   closeButton: {
-    padding: 10,
+    padding: 5,
     backgroundColor: '#007BFF',
     borderRadius: 5,
   },
   closeButtonText: {
+    textAlign: 'right',
     color: '#fff',
     fontSize: 16,
   },
