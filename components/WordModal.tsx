@@ -6,6 +6,7 @@ import useLoadAudioInstance from '../hooks/useLoadAudioInstance';
 import {SoundWidget} from './DifficultSentenceWidget';
 import useHighlightWordToWordBank from '../hooks/useHighlightWordToWordBank';
 import SatoriLineReviewSection from './SatoriLineReviewSection';
+import SRSToggles from './SRSToggles';
 
 const WordStudyAudio = ({sentenceData}) => {
   const [isPlaying, setIsPlaying] = useState(false);
@@ -171,6 +172,7 @@ const AnimatedWordModal = ({
           setFutureDaysState={setFutureDaysState}
           setNextReviewDate={setNextReviewDate}
         />
+        <SRSToggles />
       </Animated.View>
     </View>
   );
