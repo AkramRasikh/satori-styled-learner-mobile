@@ -106,6 +106,10 @@ function WordStudyContainer({
     }
   };
 
+  const handleShowDueCards = () => {
+    console.log('## handleShowDueCards');
+  };
+
   const handleShowThisCategoriesWords = category => {
     const thisCategoriesWords = wordStudyState.filter(wordData =>
       wordData.thisWordsCategories.some(
@@ -150,6 +154,25 @@ function WordStudyContainer({
       <ScrollView
         contentInsetAdjustmentBehavior="automatic"
         style={{padding: 10}}>
+        {!hasSelectedTopicWords && (
+          <View
+            style={{
+              justifyContent: 'center',
+              alignItems: 'center',
+              marginBottom: 10,
+            }}>
+            <TouchableOpacity
+              style={{
+                backgroundColor: '#CCCCCC',
+                borderColor: 'black',
+                borderRadius: 10,
+                padding: 10,
+              }}
+              onPress={handleShowDueCards}>
+              <Text>Due Cards: {dueCardsState.length}</Text>
+            </TouchableOpacity>
+          </View>
+        )}
         <View
           style={{
             display: 'flex',
