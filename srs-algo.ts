@@ -144,7 +144,7 @@ export const getEmptyCard = () => {
   return card;
 };
 
-export const reviewCardAlgo = ({contentType, card, grade}) => {
+export const reviewDataAlgo = ({contentType, card, grade}) => {
   const f = initFsrs({contentType});
 
   const nextReview = f.repeat(card, new Date()) as any;
@@ -187,7 +187,7 @@ export const reviewCardAlgo = ({contentType, card, grade}) => {
 //   ease: 2.5,
 //   interval: 0,
 // };
-// reviewCard({ contentType: 'vocab', grade: 4, card: oldExistingCard });
+// reviewData({ contentType: 'vocab', grade: 4, card: oldExistingCard });
 
 // const repeatObj = {
 //   '1': {

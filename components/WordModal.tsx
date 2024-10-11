@@ -5,8 +5,8 @@ import useMP3File from '../hooks/useMP3File';
 import useLoadAudioInstance from '../hooks/useLoadAudioInstance';
 import {SoundWidget} from './DifficultSentenceWidget';
 import useHighlightWordToWordBank from '../hooks/useHighlightWordToWordBank';
-import SatoriLineReviewSection from './SatoriLineReviewSection';
 import SRSToggles from './SRSToggles';
+import DeleteWordSection from './DeleteWordSection';
 
 const WordStudyAudio = ({sentenceData}) => {
   const [isPlaying, setIsPlaying] = useState(false);
@@ -63,16 +63,19 @@ const AnimatedWordModal = ({
   futureDaysState,
   setFutureDaysState,
   setNextReviewDate,
+  deleteWord,
 }) => {
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const scaleAnim = useRef(new Animated.Value(0.8)).current;
 
+  const id = visible.id;
   const baseForm = visible.baseForm;
   const surfaceForm = visible.surfaceForm;
   const transliteration = visible.transliteration;
   const definition = visible.definition;
   const phonetic = visible.phonetic;
   const sentenceExamples = visible?.contextData;
+  const reviewData = visible?.reviewData;
   const {underlineWordsInSentence} = useHighlightWordToWordBank({
     pureWordsUnique: [baseForm, surfaceForm],
   });
@@ -166,13 +169,8 @@ const AnimatedWordModal = ({
             );
           })}
         </View>
-        <SatoriLineReviewSection
-          nextReview={visible?.nextReview}
-          futureDaysState={futureDaysState}
-          setFutureDaysState={setFutureDaysState}
-          setNextReviewDate={setNextReviewDate}
-        />
-        <SRSToggles />
+        <SRSToggles reviewData={reviewData} id={id} baseForm={baseForm} />
+        <DeleteWordSection deleteWord={deleteWord} />
       </Animated.View>
     </View>
   );
