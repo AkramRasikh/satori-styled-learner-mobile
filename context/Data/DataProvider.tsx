@@ -10,6 +10,7 @@ import {sortByDueDate} from '../../utils/sort-by-due-date';
 import {makeArrayUnique} from '../../hooks/useHighlightWordToWordBank';
 import saveWordAPI from '../../api/save-word';
 import {updateWordAPI} from '../../api/update-word-data';
+import {deleteWordAPI} from '../../api/delete-word';
 
 export const DataContext = createContext(null);
 
@@ -176,6 +177,22 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
       setTimeout(() => setUpdatePromptState(''), 3000);
     } catch (error) {
       console.log('## updateWordData', {error});
+    }
+  };
+
+  const deleteWord = async ({wordId, wordBaseForm}) => {
+    try {
+      await deleteWordAPI({wordId});
+      const japaneseWordsStateUpdated = japaneseWordsState.filter(
+        item => item.id !== wordId,
+      );
+      setJapaneseWordsState(japaneseWordsStateUpdated);
+      setUpdatePromptState(`${wordBaseForm} deleted!`);
+      setTimeout(() => setUpdatePromptState(''), 3000);
+    } catch (error) {
+      setUpdatePromptState(`Error deleting ${wordBaseForm} 😟!`);
+      setTimeout(() => setUpdatePromptState(''), 3000);
+      console.log('## deleteWord', {error});
     }
   };
 
@@ -431,6 +448,7 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
         getThisSentencesWordList,
         adhocJapaneseSentencesState,
         updateWordData,
+        deleteWord,
       }}>
       {children}
     </DataContext.Provider>

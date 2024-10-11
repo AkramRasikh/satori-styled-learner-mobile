@@ -12,6 +12,7 @@ import {makeArrayUnique} from '../../hooks/useHighlightWordToWordBank';
 import AnimatedWordModal from '../../components/WordModal';
 import {setFutureReviewDate} from '../../components/ReviewSection';
 import ToastMessage from '../../components/ToastMessage';
+import useData from '../../context/Data/useData';
 
 function WordStudyContainer({
   japaneseWordsState,
@@ -32,6 +33,7 @@ function WordStudyContainer({
 
   const {width} = Dimensions?.get('window');
   const todayDateObj = new Date();
+  const {deleteWord} = useData();
 
   const hasBeenReviewed = selectedWordState?.reviewHistory?.length > 0;
 
@@ -106,6 +108,21 @@ function WordStudyContainer({
     setSelectedTopic(category);
   };
 
+  const handleDeleteWord = async () => {
+    if (!selectedWordState) {
+      return;
+    }
+    const selectedWordId = selectedWordState.id;
+    const wordBaseForm = selectedWordState.baseForm;
+    try {
+      await deleteWord({
+        wordId: selectedWordId,
+        wordBaseForm,
+      });
+    } catch (error) {
+      console.log('## Error handleDeleteWord', {error});
+    }
+  };
   const hasSelectedTopicWords = selectedTopic && selectedTopicWords?.length > 0;
 
   return (
@@ -216,6 +233,7 @@ function WordStudyContainer({
                         futureDaysState={futureDaysState}
                         setFutureDaysState={setFutureDaysState}
                         setNextReviewDate={setNextReviewDate}
+                        deleteWord={handleDeleteWord}
                       />
                     )}
                   </View>
