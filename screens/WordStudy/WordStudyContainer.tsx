@@ -119,6 +119,11 @@ function WordStudyContainer({
         wordId: selectedWordId,
         wordBaseForm,
       });
+      const updatedSelectedTopicWords = selectedTopicWords.filter(
+        item => item.id !== selectedWordId,
+      );
+      setSelectedWordState(null);
+      setSelectedTopicWords(updatedSelectedTopicWords);
     } catch (error) {
       console.log('## Error handleDeleteWord', {error});
     }
