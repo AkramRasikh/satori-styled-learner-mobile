@@ -9,9 +9,11 @@ const useFormatWordsToStudy = ({
   setGeneralTopicState,
   japaneseLoadedContent,
   japaneseAdhocLoadedSentences,
+  setDueCardsState,
 }) => {
   const timeNow = new Date();
   useEffect(() => {
+    const dueCards = [];
     const tagsAvailable = [];
     const generalTopics = [];
 
@@ -89,16 +91,22 @@ const useFormatWordsToStudy = ({
         });
       });
 
-      return {
+      const fullWordData = {
         ...wordData,
         contextData,
         isCardDue: isCardDueBool,
         thisWordsCategories,
       };
+
+      if (isCardDueBool && dueCards) {
+        dueCards.push(fullWordData);
+      }
+      return fullWordData;
     });
     setWordStudyState(formattedJapaneseWordData);
     setTagsState(tagsAvailable);
     setGeneralTopicState(generalTopics);
+    setDueCardsState(dueCards);
   }, []);
 };
 export default useFormatWordsToStudy;

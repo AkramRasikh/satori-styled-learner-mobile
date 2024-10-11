@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from 'react';
 import {
-  Dimensions,
   SafeAreaView,
   ScrollView,
   Text,
@@ -9,16 +8,16 @@ import {
 } from 'react-native';
 import useFormatWordsToStudy from '../../hooks/useFormatWordsToStudy';
 import {makeArrayUnique} from '../../hooks/useHighlightWordToWordBank';
-import AnimatedWordModal from '../../components/WordModal';
-import {setFutureReviewDate} from '../../components/ReviewSection';
 import ToastMessage from '../../components/ToastMessage';
 import useData from '../../context/Data/useData';
+import SelectedTopicWordsSection from '../../components/SelectedTopicWordsSection';
+import SelectedCategoriesWordsSection from '../../components/SelectedCategoriesSection';
+import FlashcardsWordsSection from '../../components/FlashcardsWordsSection';
 
 function WordStudyContainer({
   japaneseWordsState,
   japaneseAdhocLoadedSentences,
   japaneseLoadedContent,
-  updateWordData,
   updatePromptState,
 }): React.JSX.Element {
   const [tagsState, setTagsState] = useState([]);
@@ -26,17 +25,15 @@ function WordStudyContainer({
   const [wordStudyState, setWordStudyState] = useState([]);
   const [dueCardsState, setDueCardsState] = useState([]);
   const [selectedTopicWords, setSelectedTopicWords] = useState([]);
-  const [futureDaysState, setFutureDaysState] = useState(3);
   const [selectedTopic, setSelectedTopic] = useState('');
   const [selectedWordState, setSelectedWordState] = useState(null);
+  const [showDueCardsState, setShowDueCardsState] = useState(false);
 
   const wordCategories = makeArrayUnique([...tagsState, ...generalTopicState]);
 
-  const {width} = Dimensions?.get('window');
-  const todayDateObj = new Date();
   const {deleteWord} = useData();
 
-  const hasBeenReviewed = selectedWordState?.reviewHistory?.length > 0;
+  const hasSelectedTopicWords = selectedTopic && selectedTopicWords?.length > 0;
 
   useFormatWordsToStudy({
     japaneseWordsState,
@@ -45,69 +42,20 @@ function WordStudyContainer({
     setGeneralTopicState,
     japaneseLoadedContent,
     japaneseAdhocLoadedSentences,
+    setDueCardsState,
   });
 
   useEffect(() => {
-    if (wordStudyState.length > 0) {
-      const dueCardsForReview = wordStudyState.filter(card => card.isCardDue);
-      setDueCardsState(dueCardsForReview);
+    if (showDueCardsState && dueCardsState?.length === 0) {
+      setShowDueCardsState(false);
     }
-  }, [wordStudyState]);
-
-  const updateExistingReviewHistory = () => {
-    return [...selectedWordState?.reviewHistory, new Date()];
-  };
-
-  const setNextReviewDate = async () => {
-    const reviewNotNeeded = futureDaysState === 0;
-    const selectedWordId = selectedWordState.id;
-    const wordBaseForm = selectedWordState.baseForm;
-
-    const fieldToUpdate = reviewNotNeeded
-      ? {
-          reviewHistory: [],
-          nextReview: null,
-        }
-      : {
-          reviewHistory: hasBeenReviewed
-            ? updateExistingReviewHistory()
-            : [new Date()],
-          nextReview: setFutureReviewDate(todayDateObj, futureDaysState),
-        };
-
-    try {
-      if (reviewNotNeeded) {
-        await updateWordData({
-          wordId: selectedWordId,
-          wordBaseForm,
-          fieldToUpdate,
-        });
-      } else {
-        await updateWordData({
-          wordId: selectedWordId,
-          wordBaseForm,
-          fieldToUpdate,
-        });
-      }
-
-      const updatedSelectedTopicWords = selectedTopicWords.map(item => {
-        const thisWord = item.id === selectedWordId;
-        if (thisWord) {
-          return {
-            ...item,
-            ...fieldToUpdate,
-          };
-        }
-        return item;
-      });
-      setSelectedTopicWords(updatedSelectedTopicWords);
-    } catch (error) {
-      console.log('## setNextReviewDate error', error);
-    }
-  };
+  }, [wordStudyState, dueCardsState]);
 
   const handleShowDueCards = () => {
-    console.log('## handleShowDueCards');
+    if (dueCardsState?.length === 0) {
+      return;
+    }
+    setShowDueCardsState(true);
   };
 
   const handleShowThisCategoriesWords = category => {
@@ -140,7 +88,6 @@ function WordStudyContainer({
       console.log('## Error handleDeleteWord', {error});
     }
   };
-  const hasSelectedTopicWords = selectedTopic && selectedTopicWords?.length > 0;
 
   return (
     <SafeAreaView
@@ -173,115 +120,22 @@ function WordStudyContainer({
             </TouchableOpacity>
           </View>
         )}
-        <View
-          style={{
-            display: 'flex',
-            flexDirection: 'row',
-            flexWrap: 'wrap',
-            gap: 5,
-          }}>
-          {!hasSelectedTopicWords &&
-            wordCategories?.map((wordCategory, index) => {
-              return (
-                <View
-                  key={index}
-                  style={{
-                    borderBlockColor: 'black',
-                    borderWidth: 2,
-                    padding: 5,
-                    borderRadius: 5,
-                  }}>
-                  <TouchableOpacity
-                    onPress={() => handleShowThisCategoriesWords(wordCategory)}>
-                    <Text>{wordCategory}</Text>
-                  </TouchableOpacity>
-                </View>
-              );
-            })}
-        </View>
-        <View
-          style={{
-            height: 1,
-            backgroundColor: 'black',
-            marginVertical: 10,
-          }}
+        {showDueCardsState && <FlashcardsWordsSection />}
+        <SelectedCategoriesWordsSection
+          hasSelectedTopicWords={hasSelectedTopicWords}
+          wordCategories={wordCategories}
+          handleShowThisCategoriesWords={handleShowThisCategoriesWords}
         />
         {hasSelectedTopicWords ? (
           <View>
-            <View
-              style={{
-                display: 'flex',
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                marginBottom: 10,
-                flexWrap: 'wrap',
-              }}>
-              <View
-                style={{
-                  alignSelf: 'center',
-                }}>
-                <Text>{selectedTopic}:</Text>
-              </View>
-              <TouchableOpacity
-                style={{
-                  backgroundColor: 'gray',
-                  padding: 5,
-                  borderRadius: 5,
-                }}
-                onPress={() => setSelectedTopic('')}>
-                <Text>Other Topics</Text>
-              </TouchableOpacity>
-            </View>
-            <View
-              style={{
-                display: 'flex',
-                flexDirection: 'row',
-                flexWrap: 'wrap',
-                gap: 5,
-              }}>
-              {selectedTopicWords?.map((wordData, index) => {
-                const listTextNumber = index + 1 + ') ';
-                const isSelectedWord = selectedWordState?.id === wordData.id;
-                const isCardDue = wordData?.isCardDue;
-                if (index === 0) {
-                  console.log('## ', {wordData});
-                }
-
-                return (
-                  <View
-                    key={wordData.id}
-                    style={{
-                      borderBlockColor: 'black',
-                      borderWidth: 2,
-                      padding: 5,
-                      borderRadius: 5,
-                      width: isSelectedWord ? width * 0.9 : 'auto',
-                      backgroundColor: isCardDue && 'pink',
-                    }}>
-                    <TouchableOpacity
-                      onPress={() => setSelectedWordState(wordData)}>
-                      <Text
-                        style={{
-                          fontSize: 24,
-                        }}>
-                        {listTextNumber}
-                        {wordData.baseForm}
-                      </Text>
-                    </TouchableOpacity>
-                    {isSelectedWord && (
-                      <AnimatedWordModal
-                        visible={wordData}
-                        onClose={() => setSelectedWordState(null)}
-                        futureDaysState={futureDaysState}
-                        setFutureDaysState={setFutureDaysState}
-                        setNextReviewDate={setNextReviewDate}
-                        deleteWord={handleDeleteWord}
-                      />
-                    )}
-                  </View>
-                );
-              })}
-            </View>
+            <SelectedTopicWordsSection
+              selectedTopicWords={selectedTopicWords}
+              selectedWordState={selectedWordState}
+              setSelectedWordState={setSelectedWordState}
+              handleDeleteWord={handleDeleteWord}
+              selectedTopic={selectedTopic}
+              setSelectedTopic={setSelectedTopic}
+            />
           </View>
         ) : null}
       </ScrollView>

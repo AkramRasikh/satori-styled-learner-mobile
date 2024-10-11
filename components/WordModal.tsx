@@ -57,14 +57,7 @@ const WordStudyAudio = ({sentenceData}) => {
   );
 };
 
-const AnimatedWordModal = ({
-  visible,
-  onClose,
-  futureDaysState,
-  setFutureDaysState,
-  setNextReviewDate,
-  deleteWord,
-}) => {
+const AnimatedWordModal = ({visible, onClose, deleteWord}) => {
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const scaleAnim = useRef(new Animated.Value(0.8)).current;
 
