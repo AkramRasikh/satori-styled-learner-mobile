@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   Dimensions,
   SafeAreaView,
@@ -24,6 +24,7 @@ function WordStudyContainer({
   const [tagsState, setTagsState] = useState([]);
   const [generalTopicState, setGeneralTopicState] = useState([]);
   const [wordStudyState, setWordStudyState] = useState([]);
+  const [dueCardsState, setDueCardsState] = useState([]);
   const [selectedTopicWords, setSelectedTopicWords] = useState([]);
   const [futureDaysState, setFutureDaysState] = useState(3);
   const [selectedTopic, setSelectedTopic] = useState('');
@@ -45,6 +46,13 @@ function WordStudyContainer({
     japaneseLoadedContent,
     japaneseAdhocLoadedSentences,
   });
+
+  useEffect(() => {
+    if (wordStudyState.length > 0) {
+      const dueCardsForReview = wordStudyState.filter(card => card.isCardDue);
+      setDueCardsState(dueCardsForReview);
+    }
+  }, [wordStudyState]);
 
   const updateExistingReviewHistory = () => {
     return [...selectedWordState?.reviewHistory, new Date()];
@@ -211,6 +219,11 @@ function WordStudyContainer({
               {selectedTopicWords?.map((wordData, index) => {
                 const listTextNumber = index + 1 + ') ';
                 const isSelectedWord = selectedWordState?.id === wordData.id;
+                const isCardDue = wordData?.isCardDue;
+                if (index === 0) {
+                  console.log('## ', {wordData});
+                }
+
                 return (
                   <View
                     key={wordData.id}
@@ -220,6 +233,7 @@ function WordStudyContainer({
                       padding: 5,
                       borderRadius: 5,
                       width: isSelectedWord ? width * 0.9 : 'auto',
+                      backgroundColor: isCardDue && 'pink',
                     }}>
                     <TouchableOpacity
                       onPress={() => setSelectedWordState(wordData)}>

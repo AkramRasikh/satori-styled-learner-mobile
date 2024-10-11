@@ -1,5 +1,6 @@
 import {useEffect} from 'react';
 import {getGeneralTopicName} from '../utils/get-general-topic-name';
+import {isCardDue} from '../utils/is-card-due';
 
 const useFormatWordsToStudy = ({
   japaneseWordsState,
@@ -9,13 +10,18 @@ const useFormatWordsToStudy = ({
   japaneseLoadedContent,
   japaneseAdhocLoadedSentences,
 }) => {
+  const timeNow = new Date();
   useEffect(() => {
     const tagsAvailable = [];
     const generalTopics = [];
 
     const formattedJapaneseWordData = japaneseWordsState.map(wordData => {
       const thisWordsContext = wordData.contexts;
+      const reviewCardDue = wordData?.reviewData?.due;
 
+      const isCardDueBool = reviewCardDue
+        ? isCardDue({cardDate: new Date(reviewCardDue), nowDate: timeNow})
+        : false;
       const contextData = [];
       const thisWordsCategories = [];
 
@@ -86,6 +92,7 @@ const useFormatWordsToStudy = ({
       return {
         ...wordData,
         contextData,
+        isCardDue: isCardDueBool,
         thisWordsCategories,
       };
     });
