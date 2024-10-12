@@ -1,6 +1,7 @@
 import {useState} from 'react';
 import {Dimensions, Text, TouchableOpacity, View} from 'react-native';
 import AnimatedWordModal from './WordModal';
+import SRSToggles from './SRSToggles';
 
 const FlashcardsWordsSection = ({dueCardsState}) => {
   const [selectedDueCardState, setSelectedDueCardState] = useState();
@@ -18,29 +19,41 @@ const FlashcardsWordsSection = ({dueCardsState}) => {
       }}>
       {dueCardsState?.map((wordData, index) => {
         const listTextNumber = index + 1 + ') ';
-        const isSelectedWord = selectedDueCardState?.id === wordData.id;
-        const isCardDue = wordData?.isCardDue;
+        const wordId = wordData.id;
+        const isSelectedWord = selectedDueCardState?.id === wordId;
+        const baseForm = wordData.baseForm;
 
         return (
           <View
-            key={wordData.id}
+            key={wordId}
             style={{
               borderBlockColor: 'black',
               borderWidth: 2,
               padding: 5,
               borderRadius: 5,
               width: isSelectedWord ? width * 0.9 : 'auto',
-              backgroundColor: isCardDue && 'pink',
             }}>
-            <TouchableOpacity onPress={() => setSelectedDueCardState(wordData)}>
+            <TouchableOpacity
+              style={{
+                borderBottomWidth: 1,
+                paddingBottom: 5,
+              }}
+              onPress={() => setSelectedDueCardState(wordData)}>
               <Text
                 style={{
                   fontSize: 24,
                 }}>
                 {listTextNumber}
-                {wordData.baseForm}
+                {baseForm}
               </Text>
             </TouchableOpacity>
+            {!isSelectedWord && (
+              <SRSToggles
+                reviewData={wordData.reviewData}
+                id={wordId}
+                baseForm={baseForm}
+              />
+            )}
             {isSelectedWord && (
               <AnimatedWordModal
                 visible={wordData}
