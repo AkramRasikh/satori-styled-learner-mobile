@@ -1,7 +1,6 @@
 import {Text, View, TouchableOpacity} from 'react-native';
 
 const SelectedCategoriesWordsSection = ({
-  hasSelectedTopicWords,
   wordCategories,
   handleShowThisCategoriesWords,
 }) => {
@@ -13,24 +12,23 @@ const SelectedCategoriesWordsSection = ({
         flexWrap: 'wrap',
         gap: 5,
       }}>
-      {!hasSelectedTopicWords &&
-        wordCategories?.map((wordCategory, index) => {
-          return (
-            <View
-              key={index}
-              style={{
-                borderBlockColor: 'black',
-                borderWidth: 2,
-                padding: 5,
-                borderRadius: 5,
-              }}>
-              <TouchableOpacity
-                onPress={() => handleShowThisCategoriesWords(wordCategory)}>
-                <Text>{wordCategory}</Text>
-              </TouchableOpacity>
-            </View>
-          );
-        })}
+      {wordCategories?.map((wordCategory, index) => {
+        return (
+          <View
+            key={index}
+            style={{
+              borderBlockColor: 'black',
+              borderWidth: 2,
+              padding: 5,
+              borderRadius: 5,
+            }}>
+            <TouchableOpacity
+              onPress={() => handleShowThisCategoriesWords(wordCategory)}>
+              <Text>{wordCategory}</Text>
+            </TouchableOpacity>
+          </View>
+        );
+      })}
     </View>
   );
 };

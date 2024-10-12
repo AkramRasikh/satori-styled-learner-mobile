@@ -55,7 +55,11 @@ function WordStudyContainer({
     if (dueCardsState?.length === 0) {
       return;
     }
-    setShowDueCardsState(true);
+    if (showDueCardsState) {
+      setShowDueCardsState(false);
+    } else {
+      setShowDueCardsState(true);
+    }
   };
 
   const handleShowThisCategoriesWords = category => {
@@ -120,12 +124,16 @@ function WordStudyContainer({
             </TouchableOpacity>
           </View>
         )}
-        {showDueCardsState && <FlashcardsWordsSection />}
-        <SelectedCategoriesWordsSection
-          hasSelectedTopicWords={hasSelectedTopicWords}
-          wordCategories={wordCategories}
-          handleShowThisCategoriesWords={handleShowThisCategoriesWords}
-        />
+        {showDueCardsState && !hasSelectedTopicWords && (
+          <FlashcardsWordsSection dueCardsState={dueCardsState} />
+        )}
+
+        {!hasSelectedTopicWords && !showDueCardsState && (
+          <SelectedCategoriesWordsSection
+            wordCategories={wordCategories}
+            handleShowThisCategoriesWords={handleShowThisCategoriesWords}
+          />
+        )}
         {hasSelectedTopicWords ? (
           <View>
             <SelectedTopicWordsSection
