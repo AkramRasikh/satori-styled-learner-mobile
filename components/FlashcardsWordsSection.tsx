@@ -20,9 +20,6 @@ const FlashcardsWordsSection = ({dueCardsState}) => {
         const listTextNumber = index + 1 + ') ';
         const isSelectedWord = selectedDueCardState?.id === wordData.id;
         const isCardDue = wordData?.isCardDue;
-        if (index === 0) {
-          console.log('## ', {wordData});
-        }
 
         return (
           <View
