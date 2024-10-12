@@ -52,6 +52,7 @@ const FlashcardsWordsSection = ({dueCardsState}) => {
                 reviewData={wordData.reviewData}
                 id={wordId}
                 baseForm={baseForm}
+                limitedOptionsMode
               />
             )}
             {isSelectedWord && (

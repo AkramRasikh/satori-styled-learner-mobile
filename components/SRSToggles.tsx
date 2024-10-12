@@ -7,7 +7,7 @@ import {
 import useData from '../context/Data/useData';
 import {useState} from 'react';
 
-const SRSToggles = ({reviewData, id, baseForm}) => {
+const SRSToggles = ({reviewData, id, baseForm, limitedOptionsMode}) => {
   const [nextReviewDateState, setNextReviewDateState] = useState('');
   const timeNow = new Date();
   const hasDueDate = reviewData?.due ? new Date(reviewData?.due) : null; // check if due yet
@@ -87,12 +87,22 @@ const SRSToggles = ({reviewData, id, baseForm}) => {
           <Text>Due in {getTimeDiff(hasDueDate)}</Text>
         ) : (
           <>
-            <View>
-              <Button title={againText} onPress={() => handleNextReview('1')} />
-            </View>
-            <View>
-              <Button title={hardText} onPress={() => handleNextReview('2')} />
-            </View>
+            {!limitedOptionsMode && (
+              <>
+                <View>
+                  <Button
+                    title={againText}
+                    onPress={() => handleNextReview('1')}
+                  />
+                </View>
+                <View>
+                  <Button
+                    title={hardText}
+                    onPress={() => handleNextReview('2')}
+                  />
+                </View>
+              </>
+            )}
             <View>
               <Button title={goodText} onPress={() => handleNextReview('3')} />
             </View>
