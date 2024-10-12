@@ -15,8 +15,8 @@ import useSnippetControls from '../hooks/useSnippetControls';
 import useSnippetManageAudioStop from '../hooks/useSnippetManageAudioStop';
 import {mergeAndRemoveDuplicates} from '../utils/merge-and-remove-duplicates';
 import MiniSnippetTimeChangeHandlers from './MiniSnippetTimeChangeHandlers';
-import useHighlightWordToWordBank from '../hooks/useHighlightWordToWordBank';
 import useData from '../context/Data/useData';
+import SRSTogglesSentences from './SRSTogglesSentences';
 
 const hasBeenSnippedFromCollectiveURL = snippet => {
   const snippetURL = snippet.url;
@@ -411,10 +411,6 @@ const DifficultSentenceWidget = ({
     loadFile(id, url);
   };
 
-  const {underlineWordsInSentence} = useHighlightWordToWordBank({
-    pureWordsUnique: pureWords,
-  });
-
   const getLongPressedWordData = () => {
     if (!showThisWordsDefinitions) {
       return;
@@ -457,24 +453,6 @@ const DifficultSentenceWidget = ({
     if (longPressedTexts.length > 0) {
       setShowThisWordsDefinitions(longPressedTexts);
     }
-  };
-
-  const getSafeText = () => {
-    const textSegments = underlineWordsInSentence(targetLang);
-    return textSegments.map((segment, index) => {
-      return (
-        <Text
-          key={index}
-          id={segment.id}
-          selectable={true}
-          style={[segment.style]}
-          // context!!!
-          // onLongPress={() => console.log('## segment.text', segment.text)}
-          onLongPress={() => onLongPress(segment.text)}>
-          {segment.text}
-        </Text>
-      );
-    });
   };
 
   const {dueColorState, text} = getDueDateText(dueStatus);
@@ -530,13 +508,20 @@ const DifficultSentenceWidget = ({
         isMediaContent={isMediaContent}
       />
       {showReviewSettings ? (
-        <SatoriLineReviewSection
-          nextReview={nextReview}
-          futureDaysState={futureDaysState}
-          showReviewSettings={showReviewSettings}
-          setFutureDaysState={setFutureDaysState}
-          setNextReviewDate={setNextReviewDate}
-        />
+        <>
+          <SRSTogglesSentences
+            updateSentenceData={updateSentenceData}
+            sentence={sentence}
+            limitedOptionsMode={false}
+          />
+          <SatoriLineReviewSection
+            nextReview={nextReview}
+            futureDaysState={futureDaysState}
+            showReviewSettings={showReviewSettings}
+            setFutureDaysState={setFutureDaysState}
+            setNextReviewDate={setNextReviewDate}
+          />
+        </>
       ) : null}
       <DifficultSentenceSnippetContainer
         isLoaded={isLoaded}
