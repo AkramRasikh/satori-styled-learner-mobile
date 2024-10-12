@@ -8,8 +8,6 @@ const DifficultSentences = (): React.JSX.Element => {
 
   const dataProviderIsLoading = data.dataProviderIsLoading;
   const difficultSentencesState = data.difficultSentencesState;
-  const saveAudioInstance = data.saveAudioInstance;
-  const audioTempState = data.audioTempState;
   const updateSentenceData = data.updateSentenceData;
   const updatePromptState = data.updatePromptState;
   const addSnippet = data.addSnippet;
@@ -23,8 +21,6 @@ const DifficultSentences = (): React.JSX.Element => {
   return (
     <DifficultSentencesContainer
       difficultSentencesState={difficultSentencesState}
-      saveAudioInstance={saveAudioInstance}
-      audioTempState={audioTempState}
       updateSentenceData={updateSentenceData}
       updatePromptState={updatePromptState}
       addSnippet={addSnippet}

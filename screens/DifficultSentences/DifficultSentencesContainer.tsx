@@ -1,29 +1,17 @@
 import React, {useEffect, useState} from 'react';
-import {
-  SafeAreaView,
-  ScrollView,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {SafeAreaView, ScrollView, Text, View} from 'react-native';
 import DifficultSentenceWidget from '../../components/DifficultSentenceWidget';
 import LoadingScreen from '../../components/LoadingScreen';
-import {sortByDueDate} from '../../utils/sort-by-due-date';
 import ToastMessage from '../../components/ToastMessage';
 import {calculateDueDate} from '../../utils/get-date-due-status';
 import PillButton from '../../components/PillButton';
-// import {getGeneralTopicName} from '../../utils/get-general-topic-name';
-// import {getThisTopicsWords} from '../../helper-functions/get-this-topics-words';
 
 const DifficultSentencesContainer = ({
   difficultSentencesState,
-  saveAudioInstance,
-  audioTempState,
   updateSentenceData,
   updatePromptState,
   addSnippet,
   removeSnippet,
-  japaneseWordsState,
   pureWords,
 }): React.JSX.Element => {
   const [toggleableSentencesState, setToggleableSentencesState] = useState([]);
@@ -32,23 +20,6 @@ const DifficultSentencesContainer = ({
   const todayDateObj = new Date();
 
   const [isShowDueOnly, setIsShowDueOnly] = useState(false);
-  // const [topicsAvailableState, setTopicsAvailableState] = useState([]);
-  // const [selectedTopic, setSelectedTopic] = useState('');
-
-  // const getBySelectedTopic = () => {};
-
-  // useEffect(() => {
-  //   if (selectedTopic) {
-  //     const thisTopicsSentences = [...toggleableSentencesState].filter(
-  //       sentenceData =>
-  //         getThisTopicsWords(sentenceData.topic) === selectedTopic,
-  //     );
-
-  //     setToggleableSentencesState(thisTopicsSentences);
-  //   } else {
-  //     setToggleableSentencesState(difficultSentencesState);
-  //   }
-  // }, [selectedTopic, toggleableSentencesState]);
 
   const showDueInit = arr => {
     const filteredForDueOnly = [...arr].filter(sentence => {
@@ -172,8 +143,6 @@ const DifficultSentencesContainer = ({
                   key={sentence.id}
                   sentence={sentence}
                   todayDateObj={todayDateObj}
-                  saveAudioInstance={saveAudioInstance}
-                  audioTempState={audioTempState}
                   updateSentenceData={updateSentenceData}
                   dueStatus={dueStatus}
                   isLastEl={isLastEl}
