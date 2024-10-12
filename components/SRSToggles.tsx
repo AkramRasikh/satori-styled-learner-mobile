@@ -6,6 +6,7 @@ import {
 } from '../srs-algo';
 import useData from '../context/Data/useData';
 import {useState} from 'react';
+import {getTimeDiffSRS} from '../utils/getTimeDiffSRS';
 
 const SRSToggles = ({reviewData, id, baseForm, limitedOptionsMode}) => {
   const [nextReviewDateState, setNextReviewDateState] = useState('');
@@ -25,29 +26,6 @@ const SRSToggles = ({reviewData, id, baseForm, limitedOptionsMode}) => {
   const goodDue = nextScheduledOptions['3'].card.due;
   const easyDue = nextScheduledOptions['4'].card.due;
 
-  const getTimeDiff = dueTimeStamp => {
-    const timeDifference = dueTimeStamp - timeNow; // Difference in milliseconds
-    const days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
-    if (days) {
-      return `${days} days`;
-    }
-
-    const hours = Math.floor(
-      (timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
-    );
-
-    if (hours) {
-      return `${hours} hrs`;
-    }
-    const minutes = Math.floor(
-      (timeDifference % (1000 * 60 * 60)) / (1000 * 60),
-    );
-
-    if (minutes) {
-      return `${minutes} mins`;
-    }
-  };
-
   const handleNextReview = async difficulty => {
     const nextReviewData = nextScheduledOptions[difficulty].card;
     try {
@@ -63,18 +41,13 @@ const SRSToggles = ({reviewData, id, baseForm, limitedOptionsMode}) => {
   };
 
   const hasDueDateInFuture = new Date(hasDueDate) > timeNow;
-  const againText = getTimeDiff(againDue) as string;
-  const hardText = getTimeDiff(hardDue) as string;
-  const goodText = getTimeDiff(goodDue) as string;
-  const easyText = getTimeDiff(easyDue) as string;
+  const againText = getTimeDiffSRS({dueTimeStamp: againDue, timeNow}) as string;
+  const hardText = getTimeDiffSRS({dueTimeStamp: hardDue, timeNow}) as string;
+  const goodText = getTimeDiffSRS({dueTimeStamp: goodDue, timeNow}) as string;
+  const easyText = getTimeDiffSRS({dueTimeStamp: easyDue, timeNow}) as string;
 
   return (
     <View>
-      {/* {hasDueDate && (
-        <View>
-          <Text>Due in {getTimeDiff(hasDueDate)}</Text>
-        </View>
-      )} */}
       <View
         style={{
           display: 'flex',
@@ -82,9 +55,13 @@ const SRSToggles = ({reviewData, id, baseForm, limitedOptionsMode}) => {
           justifyContent: 'space-between',
         }}>
         {nextReviewDateState ? (
-          <Text>Due in {getTimeDiff(nextReviewDateState)}</Text>
+          <Text>
+            {getTimeDiffSRS({dueTimeStamp: nextReviewDateState, timeNow})}
+          </Text>
         ) : hasDueDateInFuture ? (
-          <Text>Due in {getTimeDiff(hasDueDate)}</Text>
+          <Text>
+            Due in {getTimeDiffSRS({dueTimeStamp: hasDueDate, timeNow})}
+          </Text>
         ) : (
           <>
             {!limitedOptionsMode && (
