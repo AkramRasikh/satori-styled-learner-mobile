@@ -5,8 +5,6 @@ import {getFirebaseAudioURL} from '../hooks/useGetCombinedAudioData';
 import useSoundHook from '../hooks/useSoundHook';
 import DifficultSentenceContent from './DifficultSentenceContent';
 import SoundSmallSize from './SoundSmallSize';
-import SatoriLineReviewSection from './SatoriLineReviewSection';
-import {setFutureReviewDate} from './ReviewSection';
 import {getDueDateText} from '../utils/get-date-due-status';
 import useMP3File from '../hooks/useMP3File';
 import ProgressBarComponent from './Progress';
@@ -17,6 +15,7 @@ import {mergeAndRemoveDuplicates} from '../utils/merge-and-remove-duplicates';
 import MiniSnippetTimeChangeHandlers from './MiniSnippetTimeChangeHandlers';
 import useData from '../context/Data/useData';
 import SRSTogglesSentences from './SRSTogglesSentences';
+import DeleteWordSection from './DeleteWordSection';
 
 const hasBeenSnippedFromCollectiveURL = snippet => {
   const snippetURL = snippet.url;
@@ -316,9 +315,9 @@ const DifficultSentenceWidget = ({
   pureWords,
   sentenceBeingHighlightedState,
   setSentenceBeingHighlightedState,
+  dueDate,
 }) => {
   const [currentTimeState, setCurrentTimeState] = useState(0);
-  const [futureDaysState, setFutureDaysState] = useState(3);
   const [showReviewSettings, setShowReviewSettings] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [miniSnippets, setMiniSnippets] = useState([]);
@@ -332,10 +331,7 @@ const DifficultSentenceWidget = ({
   const isCore = sentence?.isCore;
   const baseLang = sentence.baseLang;
   const targetLang = sentence.targetLang;
-  const nextReview = sentence?.nextReview;
   const isMediaContent = sentence.isMediaContent;
-  const isAdhoc = sentence?.isAdhoc;
-  const hasBeenReviewed = sentence?.reviewHistory?.length > 0;
   const audioId = isMediaContent ? topic : id;
   const soundRef = useRef();
 
@@ -360,38 +356,6 @@ const DifficultSentenceWidget = ({
     setMiniSnippets(prev => [...prev, itemToSave]);
   };
 
-  const updateExistingReviewHistory = () => {
-    return [...sentence?.reviewHistory, new Date()];
-  };
-
-  const setNextReviewDate = () => {
-    const reviewNotNeeded = futureDaysState === 0;
-    if (reviewNotNeeded) {
-      updateSentenceData({
-        isAdhoc,
-        topicName: topic,
-        sentenceId: id,
-        fieldToUpdate: {
-          reviewHistory: [],
-          nextReview: null,
-        },
-      });
-    } else {
-      updateSentenceData({
-        isAdhoc,
-        topicName: topic,
-        sentenceId: id,
-        fieldToUpdate: {
-          reviewHistory: hasBeenReviewed
-            ? updateExistingReviewHistory()
-            : [new Date()],
-          nextReview: setFutureReviewDate(todayDateObj, futureDaysState),
-        },
-      });
-    }
-    setShowReviewSettings(false);
-  };
-
   const url = getFirebaseAudioURL(audioId);
 
   const {loadFile, filePath} = useMP3File(audioId);
@@ -409,6 +373,24 @@ const DifficultSentenceWidget = ({
 
   const handleLoad = () => {
     loadFile(id, url);
+  };
+
+  const handleDeleteContent = async () => {
+    try {
+      await updateSentenceData({
+        isAdhoc: sentence?.isAdhoc,
+        topicName: sentence.topic,
+        sentenceId: sentence.id,
+        fieldToUpdate: {
+          reviewData: null,
+          nextReview: null,
+          reviewHistory: null,
+        },
+      });
+      setShowReviewSettings(false);
+    } catch (error) {
+      console.log('## handleDeleteContent', {error});
+    }
   };
 
   const getLongPressedWordData = () => {
@@ -486,7 +468,7 @@ const DifficultSentenceWidget = ({
         baseLang={baseLang}
         sentenceId={id}
         setShowReviewSettings={setShowReviewSettings}
-        dueText={text}
+        dueText={dueDate}
         dueColorState={dueColorState}
         pureWords={pureWords}
         onLongPress={onLongPress}
@@ -509,17 +491,11 @@ const DifficultSentenceWidget = ({
       />
       {showReviewSettings ? (
         <>
+          <DeleteWordSection deleteContent={handleDeleteContent} />
           <SRSTogglesSentences
             updateSentenceData={updateSentenceData}
             sentence={sentence}
             limitedOptionsMode={false}
-          />
-          <SatoriLineReviewSection
-            nextReview={nextReview}
-            futureDaysState={futureDaysState}
-            showReviewSettings={showReviewSettings}
-            setFutureDaysState={setFutureDaysState}
-            setNextReviewDate={setNextReviewDate}
           />
         </>
       ) : null}

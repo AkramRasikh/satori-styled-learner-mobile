@@ -163,7 +163,7 @@ const AnimatedWordModal = ({visible, onClose, deleteWord}) => {
           })}
         </View>
         <SRSToggles reviewData={reviewData} id={id} baseForm={baseForm} />
-        <DeleteWordSection deleteWord={deleteWord} />
+        <DeleteWordSection deleteContent={deleteWord} />
       </Animated.View>
     </View>
   );

@@ -5,6 +5,7 @@ import LoadingScreen from '../../components/LoadingScreen';
 import ToastMessage from '../../components/ToastMessage';
 import {calculateDueDate} from '../../utils/get-date-due-status';
 import PillButton from '../../components/PillButton';
+import {getTimeDiffSRS} from '../../utils/getTimeDiffSRS';
 
 const DifficultSentencesContainer = ({
   difficultSentencesState,
@@ -102,32 +103,6 @@ const DifficultSentencesContainer = ({
             showDueOnlyFunc={showDueOnlyFunc}
           />
         </View>
-
-        {/* <View
-          style={{
-            display: 'flex',
-            flexDirection: 'row',
-            flexWrap: 'wrap',
-            gap: 5,
-            alignSelf: 'center',
-            marginBottom: 5,
-          }}>
-          {topicsAvailableState?.map(generalTopic => {
-            return (
-              <TouchableOpacity
-                key={generalTopic}
-                style={{
-                  borderColor: 'black',
-                  borderWidth: 1,
-                  padding: 5,
-                  borderRadius: 5,
-                }}
-                onPress={() => setSelectedTopic(generalTopic)}>
-                <Text>{generalTopic}</Text>
-              </TouchableOpacity>
-            );
-          })}
-        </View> */}
         <ScrollView
           contentInsetAdjustmentBehavior="automatic"
           style={{paddingBottom: 30}}>
@@ -136,7 +111,13 @@ const DifficultSentencesContainer = ({
               const isLastEl = toggleableSentencesState.length === index + 1;
               const dueStatus = calculateDueDate({
                 todayDateObj,
-                nextReview: sentence.nextReview,
+                nextReview: sentence?.reviewData?.due || sentence.nextReview,
+              });
+              const dueDate = getTimeDiffSRS({
+                dueTimeStamp: new Date(
+                  sentence?.reviewData?.due || sentence.nextReview,
+                ),
+                timeNow: todayDateObj,
               });
               return (
                 <DifficultSentenceWidget
@@ -145,6 +126,7 @@ const DifficultSentencesContainer = ({
                   todayDateObj={todayDateObj}
                   updateSentenceData={updateSentenceData}
                   dueStatus={dueStatus}
+                  dueDate={dueDate}
                   isLastEl={isLastEl}
                   addSnippet={addSnippet}
                   removeSnippet={removeSnippet}

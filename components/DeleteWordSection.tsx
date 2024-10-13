@@ -1,7 +1,7 @@
 import {useState} from 'react';
 import {Button, Text, TouchableOpacity, View} from 'react-native';
 
-const DeleteWordSection = ({deleteWord}) => {
+const DeleteWordSection = ({deleteContent}) => {
   const [openAreYouSureState, setOpenAreYouSureState] = useState(false);
   return (
     <View>
@@ -35,7 +35,7 @@ const DeleteWordSection = ({deleteWord}) => {
               borderRadius: 5,
               backgroundColor: 'red',
             }}
-            onPress={deleteWord}>
+            onPress={deleteContent}>
             <Text>Yes</Text>
           </TouchableOpacity>
         </View>

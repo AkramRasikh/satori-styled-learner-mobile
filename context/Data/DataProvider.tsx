@@ -71,7 +71,10 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
         contentWidget.origin === 'youtube';
       const content = contentWidget.content;
       content.forEach(sentenceInContent => {
-        if (sentenceInContent?.nextReview) {
+        if (
+          sentenceInContent?.nextReview ||
+          sentenceInContent?.reviewData?.due
+        ) {
           difficultSentences.push({
             topic: thisTopic,
             isCore,
@@ -86,7 +89,7 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
       const thisTopic = contentWidget.topic;
       const isCore = contentWidget?.isCore;
       const nextReview = contentWidget?.nextReview;
-      if (nextReview) {
+      if (nextReview || contentWidget?.reviewData?.due) {
         difficultSentences.push({
           topic: thisTopic,
           isCore,
