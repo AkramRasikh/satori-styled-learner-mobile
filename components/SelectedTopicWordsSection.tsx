@@ -51,9 +51,6 @@ const SelectedTopicWordsSection = ({
           const listTextNumber = index + 1 + ') ';
           const isSelectedWord = selectedWordState?.id === wordData.id;
           const isCardDue = wordData?.isCardDue;
-          if (index === 0) {
-            console.log('## ', {wordData});
-          }
 
           return (
             <View

@@ -32,6 +32,9 @@ const useFormatWordsToStudy = ({
           const content = contentData.content;
           const generalTopicTitle = getGeneralTopicName(contentData.title);
           const tags = content?.tags;
+          const isMediaContent =
+            contentData?.origin === 'netflix' ||
+            contentData?.origin === 'youtube';
 
           const contextIdMatchesSentence = content.find(
             contentSentence => contentSentence.id === contextId,
@@ -40,7 +43,9 @@ const useFormatWordsToStudy = ({
             contextData.push({
               ...contextIdMatchesSentence,
               title: generalTopicTitle,
+              fullTitle: contentData.title,
               tags,
+              isMediaContent,
             });
             if (!generalTopics.includes(generalTopicTitle)) {
               generalTopics.push(generalTopicTitle);

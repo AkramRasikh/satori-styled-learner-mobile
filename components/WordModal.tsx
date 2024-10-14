@@ -8,7 +8,7 @@ import useHighlightWordToWordBank from '../hooks/useHighlightWordToWordBank';
 import SRSToggles from './SRSToggles';
 import DeleteWordSection from './DeleteWordSection';
 
-const WordStudyAudio = ({sentenceData}) => {
+const WordStudyAudio = ({sentenceData, isMediaContent}) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTimeState, setCurrentTimeState] = useState(0);
 
@@ -16,10 +16,12 @@ const WordStudyAudio = ({sentenceData}) => {
 
   const id = sentenceData.id;
   const topic = sentenceData.topic;
+  const title = sentenceData.fullTitle;
+  const audioId = isMediaContent ? title : id;
 
-  const url = getFirebaseAudioURL(id);
+  const url = getFirebaseAudioURL(audioId);
 
-  const {loadFile, filePath} = useMP3File(id);
+  const {loadFile, filePath} = useMP3File(audioId);
 
   const {triggerLoadURL, isLoaded} = useLoadAudioInstance({
     soundRef,
@@ -33,7 +35,7 @@ const WordStudyAudio = ({sentenceData}) => {
   }, [filePath]);
 
   const handleLoad = () => {
-    loadFile(id, url);
+    loadFile(audioId, url);
   };
 
   return isLoaded ? (
@@ -47,6 +49,7 @@ const WordStudyAudio = ({sentenceData}) => {
       currentTimeState={currentTimeState}
       setCurrentTimeState={setCurrentTimeState}
       noSnips
+      isMediaContent={isMediaContent}
     />
   ) : (
     <View>
@@ -57,7 +60,7 @@ const WordStudyAudio = ({sentenceData}) => {
   );
 };
 
-const AnimatedWordModal = ({visible, onClose, deleteWord}) => {
+const AnimatedWordModal = ({visible, onClose, topic, deleteWord}) => {
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const scaleAnim = useRef(new Animated.Value(0.8)).current;
 
@@ -149,6 +152,7 @@ const AnimatedWordModal = ({visible, onClose, deleteWord}) => {
             const exampleNumber = index + 1 + ') ';
             const baseLang = exampleSentence.baseLang;
             const targetLang = exampleSentence.targetLang;
+            const isMediaContent = exampleSentence.isMediaContent;
             return (
               <View key={index}>
                 <Text style={styles.modalContent}>
@@ -157,7 +161,10 @@ const AnimatedWordModal = ({visible, onClose, deleteWord}) => {
                 <Text style={styles.modalContent}>
                   {getSafeText(targetLang)}
                 </Text>
-                <WordStudyAudio sentenceData={exampleSentence} />
+                <WordStudyAudio
+                  sentenceData={exampleSentence}
+                  isMediaContent={isMediaContent}
+                />
               </View>
             );
           })}
