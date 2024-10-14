@@ -9,10 +9,10 @@ import {
 import useFormatWordsToStudy from '../../hooks/useFormatWordsToStudy';
 import {makeArrayUnique} from '../../hooks/useHighlightWordToWordBank';
 import ToastMessage from '../../components/ToastMessage';
-import useData from '../../context/Data/useData';
 import SelectedTopicWordsSection from '../../components/SelectedTopicWordsSection';
 import SelectedCategoriesWordsSection from '../../components/SelectedCategoriesSection';
 import FlashcardsWordsSection from '../../components/FlashcardsWordsSection';
+import useWordData from '../../context/Data/useWordData';
 
 function WordStudyContainer({
   japaneseWordsState,
@@ -22,16 +22,23 @@ function WordStudyContainer({
 }): React.JSX.Element {
   const [tagsState, setTagsState] = useState([]);
   const [generalTopicState, setGeneralTopicState] = useState([]);
-  const [wordStudyState, setWordStudyState] = useState([]);
-  const [dueCardsState, setDueCardsState] = useState([]);
-  const [selectedTopicWords, setSelectedTopicWords] = useState([]);
-  const [selectedTopic, setSelectedTopic] = useState('');
-  const [selectedWordState, setSelectedWordState] = useState(null);
   const [showDueCardsState, setShowDueCardsState] = useState(false);
 
   const wordCategories = makeArrayUnique([...tagsState, ...generalTopicState]);
 
-  const {deleteWord} = useData();
+  const {
+    deleteWord,
+    wordStudyState,
+    setWordStudyState,
+    dueCardsState,
+    setDueCardsState,
+    selectedTopicWords,
+    setSelectedTopicWords,
+    selectedTopic,
+    setSelectedTopic,
+    selectedWordState,
+    setSelectedWordState,
+  } = useWordData();
 
   const hasSelectedTopicWords = selectedTopic && selectedTopicWords?.length > 0;
 

@@ -4,9 +4,9 @@ import {
   getNextScheduledOptions,
   srsRetentionKeyTypes,
 } from '../srs-algo';
-import useData from '../context/Data/useData';
 import {useState} from 'react';
 import {getTimeDiffSRS} from '../utils/getTimeDiffSRS';
+import useWordData from '../context/Data/useWordData';
 
 const SRSToggles = ({reviewData, id, baseForm, limitedOptionsMode}) => {
   const [nextReviewDateState, setNextReviewDateState] = useState('');
@@ -14,8 +14,7 @@ const SRSToggles = ({reviewData, id, baseForm, limitedOptionsMode}) => {
   const hasDueDate = reviewData?.due ? new Date(reviewData?.due) : null; // check if due yet
 
   const cardDataRelativeToNow = hasDueDate ? reviewData : getEmptyCard();
-  const data = useData();
-  const updateWordData = data.updateWordData;
+  const {updateWordData} = useWordData();
 
   const nextScheduledOptions = getNextScheduledOptions({
     card: cardDataRelativeToNow,
