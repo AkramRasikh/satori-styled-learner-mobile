@@ -4,6 +4,7 @@ import {Dimensions, Text, TouchableOpacity, View} from 'react-native';
 import AnimatedWordModal from './WordModal';
 import SRSToggles from './SRSToggles';
 import {PillButtonScaled} from './PillButton';
+import {sortByDueDateWords} from '../utils/sort-by-due-date';
 
 const SelectedTopicWordsSection = ({
   selectedTopicWords,
@@ -13,10 +14,24 @@ const SelectedTopicWordsSection = ({
   selectedTopic,
   setSelectedTopic,
 }) => {
-  const [isShowOptionA, setIsShowOptionA] = useState(false);
+  const [flashcardState, setFlashcardState] = useState([]);
+  const [isShowOptionA, setIsShowOptionA] = useState(true);
   const {width} = Dimensions?.get('window');
 
+  const handleToggleDueState = () => {
+    if (isShowOptionA) {
+      const sortedFlashCards = [...selectedTopicWords].sort(sortByDueDateWords);
+      setFlashcardState(sortedFlashCards);
+      setIsShowOptionA(false);
+    } else {
+      console.log('## handleToggleDueState 2');
+      setFlashcardState(selectedTopicWords);
+      setIsShowOptionA(true);
+    }
+  };
+
   useEffect(() => {
+    setFlashcardState(selectedTopicWords);
     // isShowOptionA show in due order state
   }, []);
 
@@ -53,7 +68,7 @@ const SelectedTopicWordsSection = ({
         }}>
         <PillButtonScaled
           isShowOptionA={isShowOptionA}
-          toggleOption={() => setIsShowOptionA(!isShowOptionA)}
+          toggleOption={() => handleToggleDueState()}
           textA={'Default'}
           textB={'Due order'}
         />
@@ -65,7 +80,7 @@ const SelectedTopicWordsSection = ({
           flexWrap: 'wrap',
           gap: 5,
         }}>
-        {selectedTopicWords?.map((wordData, index) => {
+        {flashcardState?.map((wordData, index) => {
           const listTextNumber = index + 1 + ') ';
           const wordId = wordData.id;
           const isSelectedWord = selectedWordState?.id === wordId;

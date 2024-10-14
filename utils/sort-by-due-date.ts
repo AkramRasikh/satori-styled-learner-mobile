@@ -12,3 +12,20 @@ export const sortByDueDate = (a, b) => {
   }
   return 0;
 };
+
+export const sortByDueDateWords = (a, b) => {
+  const aDate = a?.reviewData?.due ? a.reviewData.due : null;
+  const bDate = b?.reviewData?.due ? b.reviewData.due : null;
+
+  if (!aDate) return 1; // Push `a` to the end if `aDate` is missing
+  if (!bDate) return -1; // Push `b` to the end if `bDate` is missing
+
+  if (aDate < bDate) {
+    return -1;
+  }
+  if (aDate > bDate) {
+    return 1;
+  }
+
+  return 0;
+};
