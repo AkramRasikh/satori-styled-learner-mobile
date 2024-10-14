@@ -24,7 +24,6 @@ const SelectedTopicWordsSection = ({
       setFlashcardState(sortedFlashCards);
       setIsShowOptionA(false);
     } else {
-      console.log('## handleToggleDueState 2');
       setFlashcardState(selectedTopicWords);
       setIsShowOptionA(true);
     }
