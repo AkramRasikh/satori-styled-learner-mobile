@@ -31,7 +31,7 @@ const SelectedTopicWordsSection = ({
 
   useEffect(() => {
     setFlashcardState(selectedTopicWords);
-  }, []);
+  }, [selectedTopicWords]);
 
   return (
     <View>

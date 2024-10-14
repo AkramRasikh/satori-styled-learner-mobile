@@ -1,7 +1,7 @@
 import {useState} from 'react';
 import {Button, Text, TouchableOpacity, View} from 'react-native';
 
-const DeleteWordSection = ({deleteContent}) => {
+const DeleteWordSection = ({deleteContent, handleSnooze}) => {
   const [openAreYouSureState, setOpenAreYouSureState] = useState(false);
   return (
     <View>
@@ -29,6 +29,17 @@ const DeleteWordSection = ({deleteContent}) => {
             onPress={() => setOpenAreYouSureState(false)}>
             <Text>No</Text>
           </TouchableOpacity>
+          {handleSnooze && (
+            <TouchableOpacity
+              style={{
+                padding: 10,
+                borderRadius: 5,
+                backgroundColor: 'gold',
+              }}
+              onPress={handleSnooze}>
+              <Text>Snooze</Text>
+            </TouchableOpacity>
+          )}
           <TouchableOpacity
             style={{
               padding: 10,

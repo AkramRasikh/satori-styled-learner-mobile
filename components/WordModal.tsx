@@ -7,6 +7,7 @@ import {SoundWidget} from './DifficultSentenceWidget';
 import useHighlightWordToWordBank from '../hooks/useHighlightWordToWordBank';
 import SRSToggles from './SRSToggles';
 import DeleteWordSection from './DeleteWordSection';
+import useWordData from '../context/Data/useWordData';
 
 const WordStudyAudio = ({sentenceData, isMediaContent}) => {
   const [isPlaying, setIsPlaying] = useState(false);
@@ -72,9 +73,25 @@ const AnimatedWordModal = ({visible, onClose, deleteWord}) => {
   const phonetic = visible.phonetic;
   const sentenceExamples = visible?.contextData;
   const reviewData = visible?.reviewData;
+
   const {underlineWordsInSentence} = useHighlightWordToWordBank({
     pureWordsUnique: [baseForm, surfaceForm],
   });
+
+  const {updateWordData} = useWordData();
+
+  const handleSnooze = async () => {
+    try {
+      await updateWordData({
+        wordId: id,
+        wordBaseForm: baseForm,
+        fieldToUpdate: {reviewData: null},
+        isSnooze: true,
+      });
+    } catch (error) {
+      console.log('## handleSnooze', {error});
+    }
+  };
 
   useEffect(() => {
     Animated.parallel([
@@ -170,7 +187,10 @@ const AnimatedWordModal = ({visible, onClose, deleteWord}) => {
           })}
         </View>
         <SRSToggles reviewData={reviewData} id={id} baseForm={baseForm} />
-        <DeleteWordSection deleteContent={deleteWord} />
+        <DeleteWordSection
+          deleteContent={deleteWord}
+          handleSnooze={handleSnooze}
+        />
       </Animated.View>
     </View>
   );

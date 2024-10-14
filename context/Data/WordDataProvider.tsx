@@ -14,7 +14,12 @@ export const WordDataProvider = ({children}: PropsWithChildren<{}>) => {
   const [selectedTopic, setSelectedTopic] = useState('');
   const [selectedWordState, setSelectedWordState] = useState(null);
 
-  const updateWordData = async ({wordId, wordBaseForm, fieldToUpdate}) => {
+  const updateWordData = async ({
+    wordId,
+    wordBaseForm,
+    fieldToUpdate,
+    isSnooze,
+  }) => {
     try {
       const updatedWordProperties = await updateWordAPI({
         wordId,
@@ -22,6 +27,13 @@ export const WordDataProvider = ({children}: PropsWithChildren<{}>) => {
       });
       const japaneseWordsStateUpdated = japaneseWordsState.map(item => {
         const thisWordId = item.id === wordId;
+        if (thisWordId && isSnooze) {
+          return {
+            ...item,
+            ...fieldToUpdate,
+            reviewData: null,
+          };
+        }
         if (thisWordId) {
           return {
             ...item,
@@ -42,6 +54,13 @@ export const WordDataProvider = ({children}: PropsWithChildren<{}>) => {
       if (selectedTopicWords?.length > 0) {
         const updateSelectedTopicWords = selectedTopicWords.map(item => {
           const thisWordId = item.id === wordId;
+          if (thisWordId && isSnooze) {
+            return {
+              ...item,
+              ...fieldToUpdate,
+              reviewData: null,
+            };
+          }
           if (thisWordId) {
             return {
               ...item,
