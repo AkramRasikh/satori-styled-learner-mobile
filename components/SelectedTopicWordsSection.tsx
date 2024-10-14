@@ -1,8 +1,9 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {Dimensions, Text, TouchableOpacity, View} from 'react-native';
 
 import AnimatedWordModal from './WordModal';
 import SRSToggles from './SRSToggles';
+import {PillButtonScaled} from './PillButton';
 
 const SelectedTopicWordsSection = ({
   selectedTopicWords,
@@ -12,7 +13,12 @@ const SelectedTopicWordsSection = ({
   selectedTopic,
   setSelectedTopic,
 }) => {
+  const [isShowOptionA, setIsShowOptionA] = useState(false);
   const {width} = Dimensions?.get('window');
+
+  useEffect(() => {
+    // isShowOptionA show in due order state
+  }, []);
 
   return (
     <View>
@@ -40,7 +46,18 @@ const SelectedTopicWordsSection = ({
           <Text>Other Topics</Text>
         </TouchableOpacity>
       </View>
-
+      <View
+        style={{
+          marginBottom: 10,
+          alignItems: 'center',
+        }}>
+        <PillButtonScaled
+          isShowOptionA={isShowOptionA}
+          toggleOption={() => setIsShowOptionA(!isShowOptionA)}
+          textA={'Default'}
+          textB={'Due order'}
+        />
+      </View>
       <View
         style={{
           display: 'flex',

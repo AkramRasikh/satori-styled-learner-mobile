@@ -28,6 +28,40 @@ const PillButton = ({isShowDueOnly, showDueOnlyFunc}) => {
   );
 };
 
+export const PillButtonScaled = ({
+  isShowOptionA,
+  toggleOption,
+  textA,
+  textB,
+}) => {
+  return (
+    <View style={styles.container}>
+      <TouchableOpacity
+        style={[
+          styles.button,
+          isShowOptionA ? styles.activeButton : styles.inactiveButton,
+          styles.leftButton,
+        ]}
+        onPress={toggleOption}>
+        <Text style={styles.text}>
+          {isShowOptionA && <Text>✅</Text>} {textA}
+        </Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={[
+          styles.button,
+          !isShowOptionA ? styles.activeButton : styles.inactiveButton,
+          styles.rightButton,
+        ]}
+        onPress={toggleOption}>
+        <Text style={styles.text}>
+          {textB} {!isShowOptionA && <Text>✅</Text>}
+        </Text>
+      </TouchableOpacity>
+    </View>
+  );
+};
+
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',

@@ -1,4 +1,4 @@
-import {Button, Text, View} from 'react-native';
+import {Button, Text, TouchableOpacity, View} from 'react-native';
 import {
   getEmptyCard,
   getNextScheduledOptions,
@@ -80,12 +80,52 @@ const SRSToggles = ({reviewData, id, baseForm, limitedOptionsMode}) => {
                 </View>
               </>
             )}
-            <View>
-              <Button title={goodText} onPress={() => handleNextReview('3')} />
-            </View>
-            <View>
-              <Button title={easyText} onPress={() => handleNextReview('4')} />
-            </View>
+            {limitedOptionsMode ? (
+              <View
+                style={{
+                  display: 'flex',
+                  flexDirection: 'row',
+                  gap: 10,
+                  justifyContent: 'space-between',
+                  marginTop: 5,
+                }}>
+                <TouchableOpacity
+                  style={{
+                    alignSelf: 'center',
+                    backgroundColor: '#6082B6',
+                    padding: 5,
+                    borderRadius: 10,
+                  }}
+                  onPress={() => handleNextReview('3')}>
+                  <Text>{goodText}</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={{
+                    alignSelf: 'center',
+                    backgroundColor: '#6082B6',
+                    padding: 5,
+                    borderRadius: 10,
+                  }}
+                  onPress={() => handleNextReview('4')}>
+                  <Text>{easyText}</Text>
+                </TouchableOpacity>
+              </View>
+            ) : (
+              <>
+                <View>
+                  <Button
+                    title={goodText}
+                    onPress={() => handleNextReview('3')}
+                  />
+                </View>
+                <View>
+                  <Button
+                    title={easyText}
+                    onPress={() => handleNextReview('4')}
+                  />
+                </View>
+              </>
+            )}
           </>
         )}
       </View>
