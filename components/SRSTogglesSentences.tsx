@@ -26,7 +26,7 @@ const getCardDataRelativeToNow = ({
 
   if (nextReview) {
     return initCardWithPreviousDateInfo({
-      lasReviewDate: reviewHistory[reviewHistory.length - 1],
+      lastReviewDate: reviewHistory[reviewHistory.length - 1],
       dueDate: nextReview,
       reps: reviewHistory.length,
     });

@@ -38,7 +38,7 @@ export const getEmptyCard = () => {
 };
 
 export const initCardWithPreviousDateInfo = ({
-  lasReviewDate,
+  lastReviewDate,
   dueDate,
   reps,
 }) => {
@@ -47,18 +47,6 @@ export const initCardWithPreviousDateInfo = ({
   card.ease = 2.5; // Default ease factor for a new card
   card.interval = 0; // Initial interval for a new card
   card.reps = reps || 0;
-  card.last_review = new Date(lasReviewDate); // Set the last review date to now
+  card.last_review = new Date(lastReviewDate); // Set the last review date to now
   return card;
-};
-
-export const reviewDataAlgo = ({contentType, card, grade}) => {
-  const f = initFsrs({contentType});
-
-  const nextReview = f.repeat(card, new Date()) as any;
-  if (!nextReview?.last_review) {
-    card.last_review = new Date(); // Set the last review date to now
-    card.state = 'reviewed'; // Update state to indicate it's been reviewed
-  }
-  const postReviewedCard = nextReview[grade].card;
-  return postReviewedCard;
 };

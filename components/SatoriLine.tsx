@@ -4,7 +4,7 @@ import {Text, TouchableOpacity, View} from 'react-native';
 import HighlightTextZone from './HighlightTextZone';
 import {filterElementsById} from '../utils/filter-elements-by-id';
 import SatoriLineControls from './SatoriLineControls';
-import SatoriLineReviewSection from './SatoriLineReviewSection';
+import SatoriLineSRS from './SatoriLineSRS';
 
 const SatoriLine = ({
   id,
@@ -31,18 +31,11 @@ const SatoriLine = ({
   const [showEng, setShowEng] = useState(false);
   const [showNotes, setShowNotes] = useState(false);
   const [showReviewSettings, setShowReviewSettings] = useState(false);
-  const [futureDaysState, setFutureDaysState] = useState(3);
 
   const filteredElements = filterElementsById(safeText, 'targetWord');
 
-  const today = new Date();
-
-  const reviewHistory = topicSentence?.reviewHistory;
-  const sentenceId = topicSentence?.id;
-
-  const hasBeenReviewed = reviewHistory?.length > 0;
-
-  const hasBeenMarkedAsDifficult = topicSentence?.nextReview;
+  const hasBeenMarkedAsDifficult =
+    topicSentence?.nextReview || topicSentence?.reviewData?.due;
 
   const copySentence = () => {
     Clipboard.setString(topicSentence.targetLang);
@@ -58,45 +51,6 @@ const SatoriLine = ({
 
   const openReviewPortal = () => {
     setShowReviewSettings(!showReviewSettings);
-  };
-
-  const updateExistingReviewHistory = () => {
-    return [...reviewHistory, new Date()];
-  };
-
-  const setFutureReviewDate = (today, daysToAdd) => {
-    const futureDateWithDays = new Date(
-      today.setDate(today.getDate() + daysToAdd),
-    );
-
-    return futureDateWithDays;
-  };
-
-  const setNextReviewDate = () => {
-    if (futureDaysState === 0) {
-      updateSentenceData({
-        topicName,
-        sentenceId,
-        fieldToUpdate: {
-          nextReview: null,
-          reviewHistory: [],
-        },
-      });
-    } else {
-      const fieldToUpdate = {
-        nextReview: setFutureReviewDate(today, futureDaysState),
-        reviewHistory: hasBeenReviewed
-          ? updateExistingReviewHistory()
-          : [new Date()],
-      };
-
-      updateSentenceData({
-        topicName,
-        sentenceId,
-        fieldToUpdate,
-      });
-    }
-    setShowReviewSettings(false);
   };
 
   return (
@@ -138,7 +92,11 @@ const SatoriLine = ({
             paddingTop: 5,
             width: textWidth,
           }}>
-          <Text selectable={true}>{topicSentence.baseLang}</Text>
+          <Text
+            selectable={true}
+            style={{color: hasBeenMarkedAsDifficult ? '#8B0000' : 'black'}}>
+            {topicSentence.baseLang}
+          </Text>
         </View>
       ) : null}
       {showNotes ? <Text>{topicSentence.notes}</Text> : null}
@@ -175,11 +133,11 @@ const SatoriLine = ({
         </View>
       ) : null}
       {showReviewSettings ? (
-        <SatoriLineReviewSection
-          nextReview={topicSentence?.nextReview}
-          futureDaysState={futureDaysState}
-          setFutureDaysState={setFutureDaysState}
-          setNextReviewDate={setNextReviewDate}
+        <SatoriLineSRS
+          sentence={topicSentence}
+          topicName={topicName}
+          updateSentenceData={updateSentenceData}
+          setShowReviewSettings={setShowReviewSettings}
         />
       ) : null}
     </Text>
