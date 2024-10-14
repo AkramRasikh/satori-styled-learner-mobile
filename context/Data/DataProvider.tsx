@@ -166,8 +166,6 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
       const japaneseWordsStateUpdated = japaneseWordsState.map(item => {
         const thisWordId = item.id === wordId;
         if (thisWordId) {
-          console.log('## ', {thisWordId});
-
           return {
             ...item,
             ...updatedWordProperties,
