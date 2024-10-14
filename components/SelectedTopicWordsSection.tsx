@@ -2,6 +2,7 @@ import React from 'react';
 import {Dimensions, Text, TouchableOpacity, View} from 'react-native';
 
 import AnimatedWordModal from './WordModal';
+import SRSToggles from './SRSToggles';
 
 const SelectedTopicWordsSection = ({
   selectedTopicWords,
@@ -49,8 +50,11 @@ const SelectedTopicWordsSection = ({
         }}>
         {selectedTopicWords?.map((wordData, index) => {
           const listTextNumber = index + 1 + ') ';
-          const isSelectedWord = selectedWordState?.id === wordData.id;
+          const wordId = wordData.id;
+          const isSelectedWord = selectedWordState?.id === wordId;
           const isCardDue = wordData?.isCardDue;
+          const baseForm = wordData?.baseForm;
+          const cardReviewButNotDue = !isCardDue && wordData?.reviewData?.due;
 
           return (
             <View
@@ -61,7 +65,9 @@ const SelectedTopicWordsSection = ({
                 padding: 5,
                 borderRadius: 5,
                 width: isSelectedWord ? width * 0.9 : 'auto',
-                backgroundColor: isCardDue && 'pink',
+                backgroundColor: cardReviewButNotDue
+                  ? '#ADD8E6'
+                  : isCardDue && 'pink',
               }}>
               <TouchableOpacity onPress={() => setSelectedWordState(wordData)}>
                 <Text
@@ -72,6 +78,14 @@ const SelectedTopicWordsSection = ({
                   {wordData.baseForm}
                 </Text>
               </TouchableOpacity>
+              {!isSelectedWord && (
+                <SRSToggles
+                  reviewData={wordData.reviewData}
+                  id={wordId}
+                  baseForm={baseForm}
+                  limitedOptionsMode
+                />
+              )}
               {isSelectedWord && (
                 <AnimatedWordModal
                   visible={wordData}
