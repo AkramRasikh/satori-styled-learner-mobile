@@ -2,8 +2,9 @@ import React from 'react';
 import LoadingScreen from '../../components/LoadingScreen';
 import useData from '../../context/Data/useData';
 import WordStudyContainer from './WordStudyContainer';
+import {WordDataProvider} from '../../context/Data/WordDataProvider';
 
-const WordStudyScreen = ({navigation}): React.JSX.Element => {
+const WordStudyScreen = (): React.JSX.Element => {
   const data = useData();
 
   const dataProviderIsLoading = data.dataProviderIsLoading;
@@ -11,7 +12,6 @@ const WordStudyScreen = ({navigation}): React.JSX.Element => {
   const japaneseWordsState = data.japaneseWordsState;
   const japaneseAdhocLoadedSentences = data.adhocJapaneseSentencesState;
   const japaneseLoadedContent = data.japaneseLoadedContentMaster;
-  const updateWordData = data.updateWordData;
   const updatePromptState = data.updatePromptState;
 
   if (
@@ -26,14 +26,14 @@ const WordStudyScreen = ({navigation}): React.JSX.Element => {
   }
 
   return (
-    <WordStudyContainer
-      navigation={navigation}
-      japaneseWordsState={japaneseWordsState}
-      japaneseAdhocLoadedSentences={japaneseAdhocLoadedSentences}
-      japaneseLoadedContent={japaneseLoadedContent}
-      updateWordData={updateWordData}
-      updatePromptState={updatePromptState}
-    />
+    <WordDataProvider>
+      <WordStudyContainer
+        japaneseWordsState={japaneseWordsState}
+        japaneseAdhocLoadedSentences={japaneseAdhocLoadedSentences}
+        japaneseLoadedContent={japaneseLoadedContent}
+        updatePromptState={updatePromptState}
+      />
+    </WordDataProvider>
   );
 };
 
