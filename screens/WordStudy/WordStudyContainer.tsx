@@ -72,6 +72,26 @@ function WordStudyContainer({
     setSelectedTopic(category);
   };
 
+  const handleDeleteWordFlashCard = async wordFromFlashCard => {
+    if (!wordFromFlashCard) {
+      return;
+    }
+    const selectedWordId = wordFromFlashCard.id;
+    const wordBaseForm = wordFromFlashCard.baseForm;
+    try {
+      await deleteWord({
+        wordId: selectedWordId,
+        wordBaseForm,
+      });
+      const updatedSelectedTopicWords = dueCardsState.filter(
+        item => item.id !== selectedWordId,
+      );
+      setDueCardsState(updatedSelectedTopicWords);
+    } catch (error) {
+      console.log('## Error handleDeleteWordFlashCard', {error});
+    }
+  };
+
   const handleDeleteWord = async () => {
     if (!selectedWordState) {
       return;
@@ -125,7 +145,10 @@ function WordStudyContainer({
           </View>
         )}
         {showDueCardsState && !hasSelectedTopicWords && (
-          <FlashcardsWordsSection dueCardsState={dueCardsState} />
+          <FlashcardsWordsSection
+            dueCardsState={dueCardsState}
+            handleDeleteWord={handleDeleteWordFlashCard}
+          />
         )}
 
         {!hasSelectedTopicWords && !showDueCardsState && (
