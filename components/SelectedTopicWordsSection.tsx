@@ -32,7 +32,6 @@ const SelectedTopicWordsSection = ({
 
   useEffect(() => {
     setFlashcardState(selectedTopicWords);
-    // isShowOptionA show in due order state
   }, []);
 
   return (
