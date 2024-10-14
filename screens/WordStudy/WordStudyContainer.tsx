@@ -18,7 +18,6 @@ function WordStudyContainer({
   japaneseWordsState,
   japaneseAdhocLoadedSentences,
   japaneseLoadedContent,
-  updatePromptState,
 }): React.JSX.Element {
   const [tagsState, setTagsState] = useState([]);
   const [generalTopicState, setGeneralTopicState] = useState([]);
@@ -38,6 +37,7 @@ function WordStudyContainer({
     setSelectedTopic,
     selectedWordState,
     setSelectedWordState,
+    updatePromptState,
   } = useWordData();
 
   const hasSelectedTopicWords = selectedTopic && selectedTopicWords?.length > 0;

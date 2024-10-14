@@ -33,6 +33,27 @@ export const WordDataProvider = ({children}: PropsWithChildren<{}>) => {
       setJapaneseWordsState(japaneseWordsStateUpdated);
       setUpdatePromptState(`${wordBaseForm} updated!`);
       setTimeout(() => setUpdatePromptState(''), 3000);
+      if (dueCardsState?.length > 0) {
+        const updatedSelectedTopicWords = dueCardsState.filter(
+          item => item.id !== wordId,
+        );
+        setTimeout(() => setDueCardsState(updatedSelectedTopicWords), 1000);
+      }
+      if (selectedTopicWords?.length > 0) {
+        const updateSelectedTopicWords = selectedTopicWords.map(item => {
+          const thisWordId = item.id === wordId;
+          if (thisWordId) {
+            return {
+              ...item,
+              ...updatedWordProperties,
+            };
+          }
+          return item;
+        });
+        setSelectedTopicWords(updateSelectedTopicWords);
+      }
+
+      return true;
     } catch (error) {
       console.log('## updateWordData', {error});
     }
