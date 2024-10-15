@@ -1,4 +1,5 @@
 import {BACKEND_ENDPOINT} from '@env';
+import {japanese} from '../refs';
 
 const saveWordAPI = async ({highlightedWord, highlightedWordSentenceId}) => {
   const baseUrl = BACKEND_ENDPOINT;
@@ -10,6 +11,7 @@ const saveWordAPI = async ({highlightedWord, highlightedWordSentenceId}) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
+        language: japanese,
         word: highlightedWord,
         contexts: [highlightedWordSentenceId],
       }),
@@ -20,7 +22,7 @@ const saveWordAPI = async ({highlightedWord, highlightedWordSentenceId}) => {
 
     return wordAdded;
   } catch (error) {
-    console.log('## Error chatGPT to text: ', error);
+    console.log('## Error saveWordAPI to text: ', error);
   }
 };
 

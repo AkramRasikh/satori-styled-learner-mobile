@@ -1,4 +1,11 @@
-import {adhocSentences, content, snippets, songs, words} from '../refs';
+import {
+  adhocSentences,
+  content,
+  japanese,
+  snippets,
+  songs,
+  words,
+} from '../refs';
 import {BACKEND_ENDPOINT} from '@env';
 import mockTopicsToStudy from '../mock-firestore/mock-topics-to-study.json';
 import mockGetAllRes from '../mock-firestore/mock-get-all-res.json';
@@ -15,7 +22,7 @@ const loadAllContent = async () => {
         'Content-Type': 'application/json', //<---
       },
       body: JSON.stringify({
-        language: 'japanese',
+        language: japanese,
         refs: [adhocSentences, content, snippets, songs, words],
       }),
     });

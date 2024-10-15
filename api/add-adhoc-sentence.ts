@@ -1,4 +1,5 @@
 import {BACKEND_ENDPOINT} from '@env';
+import {japanese} from '../refs';
 
 const addAdhocSentenceAPI = async ({
   baseLang,
@@ -15,6 +16,7 @@ const addAdhocSentenceAPI = async ({
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
+        language: japanese,
         adhocSentence: {
           baseLang,
           context,
@@ -25,10 +27,7 @@ const addAdhocSentenceAPI = async ({
       }),
     });
 
-    console.log('## addAdhocSentenceAPI 1', {response});
-
     const res = await response.json();
-    console.log('## addAdhocSentenceAPI 2', {res});
 
     return {
       id: res.id,

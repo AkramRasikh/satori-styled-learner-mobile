@@ -1,5 +1,5 @@
 import {BACKEND_ENDPOINT} from '@env';
-import {japaneseSnippets} from '../refs';
+import {japanese, japaneseSnippets, snippets} from '../refs';
 
 export const addSnippetAPI = async ({contentEntry}) => {
   const url = BACKEND_ENDPOINT + '/add-snippet';
@@ -11,7 +11,8 @@ export const addSnippetAPI = async ({contentEntry}) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        ref: japaneseSnippets,
+        language: japanese,
+        ref: snippets,
         contentEntry,
       }),
     });
@@ -35,7 +36,8 @@ export const deleteSnippetAPI = async ({snippetId}) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        ref: japaneseSnippets,
+        language: japanese,
+        ref: snippets,
         snippetId,
       }),
     });

@@ -1,4 +1,5 @@
 import {BACKEND_ENDPOINT} from '@env';
+import {japanese} from '../refs';
 
 export const updateSentenceDataAPI = async ({
   topicName,
@@ -14,6 +15,7 @@ export const updateSentenceDataAPI = async ({
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
+        language: japanese,
         topicName,
         sentenceId,
         fieldToUpdate,
@@ -27,6 +29,6 @@ export const updateSentenceDataAPI = async ({
 
     return responseToJSON;
   } catch (error) {
-    console.log('## getTopicsToStudy error: ', error);
+    console.log('## updateSentenceDataAPI error: ', error);
   }
 };

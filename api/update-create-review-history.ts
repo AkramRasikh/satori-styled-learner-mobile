@@ -1,7 +1,7 @@
 import {BACKEND_ENDPOINT} from '@env';
+import {content, japanese} from '../refs';
 
 export const updateCreateReviewHistory = async ({
-  ref,
   contentEntry,
   fieldToUpdate,
 }) => {
@@ -14,7 +14,8 @@ export const updateCreateReviewHistory = async ({
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        ref,
+        ref: content,
+        language: japanese,
         contentEntry,
         fieldToUpdate,
       }),
@@ -27,6 +28,6 @@ export const updateCreateReviewHistory = async ({
 
     return responseToJSON;
   } catch (error) {
-    console.log('## getTopicsToStudy error: ', error);
+    console.log('## updateCreateReviewHistory error: ', error);
   }
 };

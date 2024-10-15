@@ -1,4 +1,5 @@
 import {BACKEND_ENDPOINT} from '@env';
+import {japanese} from '../refs';
 
 export const getTopicsToStudy = async () => {
   const url = BACKEND_ENDPOINT + '/topics-to-study';
@@ -10,7 +11,7 @@ export const getTopicsToStudy = async () => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        language: 'japanese',
+        language: japanese,
       }),
     });
 
@@ -39,6 +40,7 @@ export const getThisTopicsWordsToStudyAPI = async ({topic, isMusic}) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
+        language: japanese,
         topic,
       }),
     });
