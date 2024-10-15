@@ -5,17 +5,18 @@ export const getTopicsToStudy = async () => {
 
   try {
     const response = await fetch(url, {
-      method: 'GET',
+      method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
+      body: JSON.stringify({
+        language: 'japanese',
+      }),
     });
 
     if (!response.ok) {
       throw new Error('Network response was not ok');
     }
-    console.log('## getTopicsToStudy log needed for some reason');
-    // console.log('## getTopicsToStudy log needed for some reason');
 
     const responseToJSON = await response.json();
 

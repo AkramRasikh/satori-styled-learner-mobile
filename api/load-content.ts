@@ -1,11 +1,4 @@
-import {
-  japaneseAdhocSentences,
-  japaneseContent,
-  japaneseSentences,
-  japaneseSnippets,
-  japaneseSongs,
-  japaneseWords,
-} from '../refs';
+import {adhocSentences, content, snippets, songs, words} from '../refs';
 import {BACKEND_ENDPOINT} from '@env';
 import mockTopicsToStudy from '../mock-firestore/mock-topics-to-study.json';
 import mockGetAllRes from '../mock-firestore/mock-get-all-res.json';
@@ -22,14 +15,8 @@ const loadAllContent = async () => {
         'Content-Type': 'application/json', //<---
       },
       body: JSON.stringify({
-        refs: [
-          japaneseWords,
-          japaneseSentences,
-          japaneseSnippets,
-          japaneseSongs,
-          japaneseContent,
-          japaneseAdhocSentences,
-        ],
+        language: 'japanese',
+        refs: [adhocSentences, content, snippets, songs, words],
       }),
     });
 
@@ -64,26 +51,19 @@ export const getAllData = async () => {
       });
     };
 
-    const japaneseLoadedContent = getNestedObjectData(
-      japaneseContent,
-    ).japaneseContent.filter(item => item !== null);
+    const japaneseLoadedContent = getNestedObjectData(content).content.filter(
+      item => item !== null,
+    );
 
-    const japaneseLoadedWords =
-      getNestedObjectData(japaneseWords).japaneseWords;
-    const japaneseLoadedSentences =
-      getNestedObjectData(japaneseSentences).japaneseSentences;
-    const japaneseLoadedSnippets =
-      getNestedObjectData(japaneseSnippets).japaneseSnippets;
-    const japaneseLoadedSongs =
-      getNestedObjectData(japaneseSongs).japaneseSongs;
-    const japaneseAdhocLoadedSentences = getNestedObjectData(
-      japaneseAdhocSentences,
-    ).japaneseAdhocSentences;
+    const japaneseLoadedWords = getNestedObjectData(words).words;
+    const japaneseLoadedSnippets = getNestedObjectData(snippets).snippets;
+    const japaneseLoadedSongs = getNestedObjectData(songs).songs;
+    const japaneseAdhocLoadedSentences =
+      getNestedObjectData(adhocSentences).adhocSentences;
 
     return {
       japaneseLoadedContent,
       japaneseLoadedWords,
-      japaneseLoadedSentences,
       japaneseLoadedSnippets,
       japaneseLoadedSongs,
       japaneseAdhocLoadedSentences,
@@ -94,7 +74,6 @@ export const getAllData = async () => {
     return {
       satoriData: [],
       contextHelperData: [],
-      japaneseLoadedSentences: [],
       japaneseLoadedSnippets: [],
       japaneseLoadedSongs: [],
       japaneseAdhocLoadedSentences: [],
