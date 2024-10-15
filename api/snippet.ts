@@ -1,5 +1,5 @@
 import {BACKEND_ENDPOINT} from '@env';
-import {japanese, japaneseSnippets, snippets} from '../refs';
+import {japanese, snippets} from '../refs';
 
 export const addSnippetAPI = async ({contentEntry}) => {
   const url = BACKEND_ENDPOINT + '/add-snippet';
