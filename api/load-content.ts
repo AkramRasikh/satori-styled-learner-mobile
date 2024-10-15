@@ -11,32 +11,6 @@ import mockTopicsToStudy from '../mock-firestore/mock-topics-to-study.json';
 import mockGetAllRes from '../mock-firestore/mock-get-all-res.json';
 import {getTopicsToStudy} from './words-to-study';
 
-export const loadInContent = async ({ref}) => {
-  const url = BACKEND_ENDPOINT + '/firebase-data';
-
-  try {
-    const response = await fetch(url, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        ref,
-      }),
-    });
-
-    if (!response.ok) {
-      throw new Error('Network response was not ok');
-    }
-
-    const responseToJSON = await response.json();
-
-    return responseToJSON;
-  } catch (error) {
-    console.log('## loadInContent error: ', error);
-  }
-};
-
 const loadAllContent = async () => {
   const url = BACKEND_ENDPOINT + '/firebase-data-mobile';
 
