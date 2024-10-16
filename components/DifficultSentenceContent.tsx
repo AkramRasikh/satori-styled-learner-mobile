@@ -100,6 +100,11 @@ const DifficultSentenceContent = ({
     openGoogleTranslateApp(targetLang);
   };
 
+  const handleSaveWordToFB = ({highlightedWord, highlightedWordSentenceId}) => {
+    saveWordFirebase({highlightedWord, highlightedWordSentenceId});
+    setSentenceBeingHighlightedState('');
+  };
+
   const getSafeText = targetText => {
     const textSegments = underlineWordsInSentence(targetText);
     const textSegmentsLength = textSegments.length;
@@ -166,10 +171,14 @@ const DifficultSentenceContent = ({
             text={targetLang}
             highlightedIndices={highlightedIndices}
             setHighlightedIndices={setHighlightedIndices}
-            saveWordFirebase={saveWordFirebase}
+            saveWordFirebase={handleSaveWordToFB}
             setHighlightMode={() => {}}
             textWidth={containerWidth}
           />
+          <TouchableOpacity
+            onPress={() => setSentenceBeingHighlightedState('')}>
+            <Text>❌</Text>
+          </TouchableOpacity>
         </View>
       ) : (
         <Text>{getSafeText(targetLang)}</Text>
