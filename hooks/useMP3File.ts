@@ -60,22 +60,6 @@ const useMP3File = initFileName => {
     if (initFileName) {
       initLoad(initFileName); // Load file when app comes to foreground
     }
-    // loadFile(); // Load file on initial launch
-    // const handleAppStateChange = nextAppState => {
-    //   if (nextAppState === 'active') {
-    //     console.log('## useEffect 1');
-    // trigger load???
-    //   }
-    // };
-
-    // const subscription = AppState.addEventListener(
-    //   'change',
-    //   handleAppStateChange,
-    // );
-
-    // return () => {
-    //   subscription.remove();
-    // };
   }, []);
 
   return {loadFile, filePath};

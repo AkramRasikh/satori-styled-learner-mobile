@@ -369,10 +369,10 @@ const DifficultSentenceWidget = ({
     if (filePath) {
       triggerLoadURL();
     }
-  }, [filePath]);
+  }, [filePath, triggerLoadURL]);
 
   const handleLoad = () => {
-    loadFile(id, url);
+    loadFile(audioId, url);
   };
 
   const handleDeleteContent = async () => {
@@ -437,7 +437,7 @@ const DifficultSentenceWidget = ({
     }
   };
 
-  const {dueColorState, text} = getDueDateText(dueStatus);
+  const {dueColorState} = getDueDateText(dueStatus);
 
   return (
     <View
