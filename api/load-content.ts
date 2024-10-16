@@ -12,7 +12,7 @@ import mockGetAllRes from '../mock-firestore/mock-get-all-res.json';
 import {getTopicsToStudy} from './words-to-study';
 
 const loadAllContent = async () => {
-  const url = BACKEND_ENDPOINT + '/firebase-data-mobile';
+  const url = BACKEND_ENDPOINT + '/on-load-data';
 
   try {
     const response = await fetch(url, {
