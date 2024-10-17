@@ -12,7 +12,6 @@ export const addSnippetAPI = async ({contentEntry}) => {
       },
       body: JSON.stringify({
         language: japanese,
-        ref: snippets,
         contentEntry,
       }),
     });
