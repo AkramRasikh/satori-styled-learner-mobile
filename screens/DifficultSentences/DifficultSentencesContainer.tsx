@@ -26,7 +26,7 @@ const DifficultSentencesContainer = ({
     const filteredForDueOnly = [...arr].filter(sentence => {
       const dueStatus = calculateDueDate({
         todayDateObj,
-        nextReview: sentence.nextReview,
+        nextReview: sentence?.reviewData?.due || sentence.nextReview,
       });
       if (dueStatus < 1) {
         return true;
@@ -109,16 +109,17 @@ const DifficultSentencesContainer = ({
           <View style={{marginTop: 10}}>
             {toggleableSentencesState.map((sentence, index) => {
               const isLastEl = toggleableSentencesState.length === index + 1;
+              const nextDueTime =
+                sentence?.reviewData?.due || sentence.nextReview;
               const dueStatus = calculateDueDate({
                 todayDateObj,
-                nextReview: sentence?.reviewData?.due || sentence.nextReview,
+                nextReview: nextDueTime,
               });
               const dueDate = getTimeDiffSRS({
-                dueTimeStamp: new Date(
-                  sentence?.reviewData?.due || sentence.nextReview,
-                ),
+                dueTimeStamp: new Date(nextDueTime),
                 timeNow: todayDateObj,
               });
+
               return (
                 <DifficultSentenceWidget
                   key={sentence.id}
