@@ -37,7 +37,7 @@ export const deleteSnippetAPI = async ({snippetId}) => {
       body: JSON.stringify({
         language: japanese,
         ref: snippets,
-        snippetId,
+        id: snippetId,
       }),
     });
 
@@ -47,6 +47,6 @@ export const deleteSnippetAPI = async ({snippetId}) => {
 
     return snippetId;
   } catch (error) {
-    console.log('## addSnippet error: ', error);
+    console.log('## deleteSnippetAPI error: ', error);
   }
 };
