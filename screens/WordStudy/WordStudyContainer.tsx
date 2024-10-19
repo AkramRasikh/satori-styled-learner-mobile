@@ -21,6 +21,7 @@ function WordStudyContainer({
 }): React.JSX.Element {
   const [tagsState, setTagsState] = useState([]);
   const [generalTopicState, setGeneralTopicState] = useState([]);
+  const [tempNewStudyCardsState, setTempNewStudyCardsState] = useState([]);
   const [showDueCardsState, setShowDueCardsState] = useState(false);
 
   const wordCategories = makeArrayUnique([...tagsState, ...generalTopicState]);
@@ -67,6 +68,28 @@ function WordStudyContainer({
     } else {
       setShowDueCardsState(true);
     }
+  };
+  const getRandomInt = max => {
+    return Math.floor(Math.random() * max);
+  };
+
+  const handleShowNewRandomCards = () => {
+    // general word check
+    const randomNewWordPool = wordStudyState.filter(item => !item?.reviewData);
+    const numberOfNewCards = randomNewWordPool.length;
+    const newCardArr = [];
+    const newCardLimit =
+      randomNewWordPool.length >= 4 ? 4 : randomNewWordPool.length;
+
+    for (let i = 0; newCardLimit > newCardArr.length; i++) {
+      const randomGeneratedNumber = getRandomInt(numberOfNewCards);
+      if (!newCardArr.includes(randomGeneratedNumber)) {
+        newCardArr.push(randomGeneratedNumber);
+      }
+    }
+
+    const newStudyArr = newCardArr.map(arrIndex => randomNewWordPool[arrIndex]);
+    setTempNewStudyCardsState(newStudyArr);
   };
 
   const handleShowThisCategoriesWords = category => {
@@ -139,18 +162,39 @@ function WordStudyContainer({
               alignItems: 'center',
               marginBottom: 10,
             }}>
-            <TouchableOpacity
-              style={{
-                backgroundColor: '#CCCCCC',
-                borderColor: 'black',
-                borderRadius: 10,
-                padding: 10,
-              }}
-              onPress={handleShowDueCards}>
-              <Text>Due Cards: {dueCardsState.length}</Text>
-            </TouchableOpacity>
+            {dueCardsState.length > 0 ? (
+              <TouchableOpacity
+                style={{
+                  backgroundColor: '#CCCCCC',
+                  borderColor: 'black',
+                  borderRadius: 10,
+                  padding: 10,
+                }}
+                onPress={handleShowDueCards}>
+                <Text>Due Cards: {dueCardsState.length}</Text>
+              </TouchableOpacity>
+            ) : (
+              <TouchableOpacity
+                style={{
+                  backgroundColor: '#CCCCCC',
+                  borderColor: 'black',
+                  borderRadius: 10,
+                  padding: 10,
+                }}
+                onPress={handleShowNewRandomCards}>
+                <Text>new cards</Text>
+              </TouchableOpacity>
+            )}
           </View>
         )}
+
+        {tempNewStudyCardsState?.length > 0 && (
+          <FlashcardsWordsSection
+            dueCardsState={tempNewStudyCardsState}
+            handleDeleteWord={handleDeleteWordFlashCard}
+          />
+        )}
+
         {showDueCardsState && !hasSelectedTopicWords && (
           <FlashcardsWordsSection
             dueCardsState={dueCardsState}
@@ -158,12 +202,14 @@ function WordStudyContainer({
           />
         )}
 
-        {!hasSelectedTopicWords && !showDueCardsState && (
-          <SelectedCategoriesWordsSection
-            wordCategories={wordCategories}
-            handleShowThisCategoriesWords={handleShowThisCategoriesWords}
-          />
-        )}
+        {!hasSelectedTopicWords &&
+          !showDueCardsState &&
+          tempNewStudyCardsState?.length === 0 && (
+            <SelectedCategoriesWordsSection
+              wordCategories={wordCategories}
+              handleShowThisCategoriesWords={handleShowThisCategoriesWords}
+            />
+          )}
         {hasSelectedTopicWords ? (
           <View>
             <SelectedTopicWordsSection

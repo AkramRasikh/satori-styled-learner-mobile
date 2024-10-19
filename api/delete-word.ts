@@ -12,7 +12,7 @@ export const deleteWordAPI = async ({wordId}) => {
       },
       body: JSON.stringify({
         language: japanese,
-        wordId,
+        id: wordId,
       }),
     });
 
