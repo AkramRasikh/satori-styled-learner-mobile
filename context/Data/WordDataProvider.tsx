@@ -46,6 +46,26 @@ export const WordDataProvider = ({children}: PropsWithChildren<{}>) => {
       setUpdatePromptState(`${wordBaseForm} updated!`);
       setTimeout(() => setUpdatePromptState(''), 3000);
       if (dueCardsState?.length > 0) {
+        const wordStudyStateUpdated = wordStudyState.map(item => {
+          const thisWordId = item.id === wordId;
+          if (thisWordId && isSnooze) {
+            return {
+              ...item,
+              ...fieldToUpdate,
+              reviewData: null,
+            };
+          }
+          if (thisWordId) {
+            return {
+              ...item,
+              ...updatedWordProperties,
+            };
+          }
+          return item;
+        });
+        setWordStudyState(wordStudyStateUpdated);
+      }
+      if (dueCardsState?.length > 0) {
         const updatedSelectedTopicWords = dueCardsState.filter(
           item => item.id !== wordId,
         );
