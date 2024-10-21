@@ -1,11 +1,11 @@
 import {BACKEND_ENDPOINT} from '@env';
-import {content, japanese} from '../refs';
+import {japanese} from '../refs';
 
 export const updateCreateReviewHistory = async ({
   contentEntry,
   fieldToUpdate,
 }) => {
-  const url = BACKEND_ENDPOINT + '/update-content-review';
+  const url = BACKEND_ENDPOINT + '/update-content';
 
   try {
     const response = await fetch(url, {
@@ -14,9 +14,8 @@ export const updateCreateReviewHistory = async ({
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        ref: content,
         language: japanese,
-        contentEntry,
+        title: contentEntry,
         fieldToUpdate,
       }),
     });
