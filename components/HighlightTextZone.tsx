@@ -102,6 +102,7 @@ const HighlightTextZone = ({
       saveWordFirebase({
         highlightedWord: highlightedText,
         highlightedWordSentenceId: id,
+        contextSentence: text,
       });
       setHighlightedIndices([]);
       setHighlightMode(false);

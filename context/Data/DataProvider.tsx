@@ -351,11 +351,13 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
   const saveWordFirebase = async ({
     highlightedWord,
     highlightedWordSentenceId,
+    contextSentence,
   }) => {
     try {
       const savedWord = await saveWordAPI({
         highlightedWord,
         highlightedWordSentenceId,
+        contextSentence,
       });
       setJapaneseWordsState(prev => [...prev, savedWord]);
     } catch (error) {

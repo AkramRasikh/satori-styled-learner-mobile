@@ -118,11 +118,13 @@ function Home({
   const saveWordFirebase = async ({
     highlightedWord,
     highlightedWordSentenceId,
+    contextSentence,
   }) => {
     try {
       const savedWord = await saveWordAPI({
         highlightedWord,
         highlightedWordSentenceId,
+        contextSentence,
       });
       setNewWordsAdded(prev => [...prev, savedWord]);
     } catch (error) {

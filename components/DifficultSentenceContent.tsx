@@ -101,7 +101,11 @@ const DifficultSentenceContent = ({
   };
 
   const handleSaveWordToFB = ({highlightedWord, highlightedWordSentenceId}) => {
-    saveWordFirebase({highlightedWord, highlightedWordSentenceId});
+    saveWordFirebase({
+      highlightedWord,
+      highlightedWordSentenceId,
+      contextSentence: targetLang,
+    });
     setSentenceBeingHighlightedState('');
   };
 

@@ -5,7 +5,7 @@ export const updateCreateReviewHistory = async ({
   contentEntry,
   fieldToUpdate,
 }) => {
-  const url = BACKEND_ENDPOINT + '/update-review';
+  const url = BACKEND_ENDPOINT + '/update-content-review';
 
   try {
     const response = await fetch(url, {
