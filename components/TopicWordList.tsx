@@ -4,7 +4,7 @@ const TopicWordList = ({thisTopicsWords}) => {
   const getThisTopicsWordsEach = word => {
     const surfaceForm = word.surfaceForm;
     const baseForm = word.baseForm;
-    const phonetic = word.phonetic;
+    const phonetic = word.phonetic || word?.transliteration;
     const definition = word.definition;
     return surfaceForm + ', ' + baseForm + ', ' + phonetic + ', ' + definition;
   };

@@ -400,7 +400,7 @@ const DifficultSentenceWidget = ({
     return showThisWordsDefinitions.map((word, index) => {
       const surfaceForm = word.surfaceForm;
       const baseForm = word.baseForm;
-      const phonetic = word.phonetic;
+      const phonetic = word.phonetic || word?.transliteration;
       const definition = word.definition;
 
       const isLastInArr = index + 1 === showThisWordsDefinitions.length;

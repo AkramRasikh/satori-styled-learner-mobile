@@ -70,7 +70,7 @@ const AnimatedWordModal = ({visible, onClose, deleteWord}) => {
   const surfaceForm = visible.surfaceForm;
   const transliteration = visible.transliteration;
   const definition = visible.definition;
-  const phonetic = visible.phonetic;
+  const phonetic = visible.phonetic || transliteration;
   const sentenceExamples = visible?.contextData;
   const reviewData = visible?.reviewData;
 
