@@ -119,12 +119,14 @@ function Home({
     highlightedWord,
     highlightedWordSentenceId,
     contextSentence,
+    isGoogle = false,
   }) => {
     try {
       const savedWord = await saveWordAPI({
         highlightedWord,
         highlightedWordSentenceId,
         contextSentence,
+        isGoogle,
       });
       setNewWordsAdded(prev => [...prev, savedWord]);
     } catch (error) {

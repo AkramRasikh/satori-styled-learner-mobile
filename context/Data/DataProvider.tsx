@@ -352,12 +352,14 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
     highlightedWord,
     highlightedWordSentenceId,
     contextSentence,
+    isGoogle,
   }) => {
     try {
       const savedWord = await saveWordAPI({
         highlightedWord,
         highlightedWordSentenceId,
         contextSentence,
+        isGoogle,
       });
       setJapaneseWordsState(prev => [...prev, savedWord]);
     } catch (error) {

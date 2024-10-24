@@ -5,6 +5,7 @@ const saveWordAPI = async ({
   highlightedWord,
   highlightedWordSentenceId,
   contextSentence,
+  isGoogle,
 }) => {
   const baseUrl = BACKEND_ENDPOINT;
 
@@ -19,6 +20,7 @@ const saveWordAPI = async ({
         word: highlightedWord,
         context: highlightedWordSentenceId,
         contextSentence,
+        isGoogle,
       }),
     });
 

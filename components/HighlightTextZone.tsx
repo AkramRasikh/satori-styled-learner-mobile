@@ -6,6 +6,7 @@ import {
   View,
   TouchableOpacity,
   PanResponder,
+  Image,
 } from 'react-native';
 import useOpenGoogleTranslate from './useOpenGoogleTranslate';
 
@@ -97,12 +98,13 @@ const HighlightTextZone = ({
     }
   };
 
-  const handleSaveWord = () => {
+  const handleSaveWord = isGoogle => {
     if (highlightedText?.length > 0) {
       saveWordFirebase({
         highlightedWord: highlightedText,
         highlightedWordSentenceId: id,
         contextSentence: text,
+        isGoogle,
       });
       setHighlightedIndices([]);
       setHighlightMode(false);
@@ -150,17 +152,31 @@ const HighlightTextZone = ({
         <Text style={styles.text}>
           {renderText(text)}{' '}
           {highlightedText?.length > 0 ? (
-            <>
+            <View
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+                gap: 10,
+              }}>
               <TouchableOpacity onPress={handleCopyText}>
                 <Text>📋</Text>
-              </TouchableOpacity>
-              <TouchableOpacity onPress={handleSaveWord}>
-                <Text>📖</Text>
               </TouchableOpacity>
               <TouchableOpacity onPress={handleOpenUpGoogle}>
                 <Text>📚</Text>
               </TouchableOpacity>
-            </>
+              <TouchableOpacity onPress={() => handleSaveWord(true)}>
+                <Image
+                  source={require('../assets/images/google.png')}
+                  style={{width: 16, height: 16}}
+                />
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => handleSaveWord(false)}>
+                <Image
+                  source={require('../assets/images/chatgpt.png')}
+                  style={{width: 16, height: 16}}
+                />
+              </TouchableOpacity>
+            </View>
           ) : null}
         </Text>
       </TouchableOpacity>
