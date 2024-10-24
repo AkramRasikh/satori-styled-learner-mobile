@@ -6,7 +6,7 @@ export const updateSentenceDataAPI = async ({
   sentenceId,
   fieldToUpdate,
 }) => {
-  const url = BACKEND_ENDPOINT + '/update-content-item';
+  const url = BACKEND_ENDPOINT + '/update-sentence-review';
 
   try {
     const response = await fetch(url, {
@@ -16,8 +16,8 @@ export const updateSentenceDataAPI = async ({
       },
       body: JSON.stringify({
         language: japanese,
-        topicName,
-        sentenceId,
+        title: topicName,
+        id: sentenceId,
         fieldToUpdate,
       }),
     });
