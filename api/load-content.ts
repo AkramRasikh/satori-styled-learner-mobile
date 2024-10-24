@@ -62,11 +62,12 @@ export const getAllData = async () => {
       item => item !== null,
     );
 
-    const japaneseLoadedWords = getNestedObjectData(words).words;
-    const japaneseLoadedSnippets = getNestedObjectData(snippets).snippets;
-    const japaneseLoadedSongs = getNestedObjectData(songs).songs;
+    const japaneseLoadedWords = getNestedObjectData(words)?.words || [];
+    const japaneseLoadedSnippets =
+      getNestedObjectData(snippets)?.snippets || [];
+    const japaneseLoadedSongs = getNestedObjectData(songs)?.songs || [];
     const japaneseAdhocLoadedSentences =
-      getNestedObjectData(adhocSentences).adhocSentences;
+      getNestedObjectData(adhocSentences)?.adhocSentences || [];
 
     return {
       japaneseLoadedContent,

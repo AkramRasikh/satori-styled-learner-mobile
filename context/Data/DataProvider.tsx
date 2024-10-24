@@ -63,7 +63,7 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
     adhocSentences,
   ) => {
     const difficultSentences = [];
-    dataFromJapaneseContent.forEach(contentWidget => {
+    dataFromJapaneseContent?.forEach(contentWidget => {
       const thisTopic = contentWidget.title;
       const isCore = contentWidget.isCore;
       const isMediaContent =
@@ -401,7 +401,7 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
         setHomeScreenData(allStudyDataRes);
         setJapaneseSnippetsState(japaneseLoadedSnippetsWithSavedTag);
         setJapaneseLoadedContentMaster(
-          allStudyDataRes.japaneseLoadedContent.sort((a, b) => {
+          allStudyDataRes.japaneseLoadedContent?.sort((a, b) => {
             return a.isCore === b.isCore ? 0 : a.isCore ? -1 : 1;
           }),
         );
@@ -409,7 +409,7 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
         const allInitDifficultSentences = getSentencesMarkedAsDifficult(
           allStudyDataRes.japaneseLoadedContent,
           japaneseAdhocLoadedSentences,
-        ).sort(sortByDueDate);
+        )?.sort(sortByDueDate);
         const difficultSentencesWithSnippets = addSnippetsToDifficultSentences(
           allInitDifficultSentences,
           japaneseLoadedSnippetsWithSavedTag,
