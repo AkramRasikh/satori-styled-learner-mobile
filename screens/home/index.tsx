@@ -11,7 +11,7 @@ const Home = ({navigation}): React.JSX.Element => {
   const homeScreenData = data.homeScreenData;
   const targetLanguageLoadedContentMaster =
     data.targetLanguageLoadedContentMaster;
-  const japaneseSnippetsState = data.japaneseSnippetsState;
+  const targetLanguageSnippetsState = data.targetLanguageSnippetsState;
   const addSnippet = data.addSnippet;
   const removeSnippet = data.removeSnippet;
 
@@ -31,7 +31,7 @@ const Home = ({navigation}): React.JSX.Element => {
       navigation={navigation}
       homeScreenData={homeScreenData}
       targetLanguageLoadedContentMaster={targetLanguageLoadedContentMaster}
-      japaneseSnippetsState={japaneseSnippetsState}
+      targetLanguageSnippetsState={targetLanguageSnippetsState}
       addSnippet={addSnippet}
       removeSnippet={removeSnippet}
     />

@@ -15,7 +15,7 @@ import FlashcardsWordsSection from '../../components/FlashcardsWordsSection';
 import useWordData from '../../context/Data/useWordData';
 
 function WordStudyContainer({
-  japaneseWordsState,
+  targetLanguageWordsState,
   targetLanguageLoadedSentences,
   targetLanguageLoadedContent,
 }): React.JSX.Element {
@@ -44,7 +44,7 @@ function WordStudyContainer({
   const hasSelectedTopicWords = selectedTopic && selectedTopicWords?.length > 0;
 
   useFormatWordsToStudy({
-    japaneseWordsState,
+    targetLanguageWordsState,
     setWordStudyState,
     setTagsState,
     setGeneralTopicState,

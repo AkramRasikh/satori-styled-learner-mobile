@@ -3,7 +3,7 @@ import {getGeneralTopicName} from '../utils/get-general-topic-name';
 import {isCardDue} from '../utils/is-card-due';
 
 const useFormatWordsToStudy = ({
-  japaneseWordsState,
+  targetLanguageWordsState,
   setWordStudyState,
   setTagsState,
   setGeneralTopicState,
@@ -17,7 +17,7 @@ const useFormatWordsToStudy = ({
     const tagsAvailable = [];
     const generalTopics = [];
 
-    const formattedJapaneseWordData = japaneseWordsState.map(wordData => {
+    const formattedJapaneseWordData = targetLanguageWordsState.map(wordData => {
       const thisWordsContext = wordData.contexts;
       const reviewCardDue = wordData?.reviewData?.due;
 

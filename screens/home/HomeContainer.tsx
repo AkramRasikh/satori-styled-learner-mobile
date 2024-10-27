@@ -26,7 +26,7 @@ function Home({
   navigation,
   homeScreenData,
   targetLanguageLoadedContentMaster,
-  japaneseSnippetsState,
+  targetLanguageSnippetsState,
   addSnippet,
   removeSnippet,
 }): React.JSX.Element {
@@ -265,7 +265,7 @@ function Home({
   const topicKeys = targetLanguageLoadedContentState.map(
     topicData => topicData.title,
   );
-  const snippetsForSelectedTopic = japaneseSnippetsState?.filter(
+  const snippetsForSelectedTopic = targetLanguageSnippetsState?.filter(
     item => item.topicName === selectedTopic || item.topicName === selectedSong,
   );
 

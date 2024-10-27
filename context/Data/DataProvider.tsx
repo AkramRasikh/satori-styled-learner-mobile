@@ -23,10 +23,13 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
     targetLanguageLoadedContentMaster,
     settargetLanguageLoadedContentMaster,
   ] = useState([]);
-  const [japaneseSnippetsState, setJapaneseSnippetsState] = useState([]);
-  const [adhocJapaneseSentencesState, setAdhocJapaneseSentencesState] =
+  const [targetLanguageSnippetsState, setTargetLanguageSnippetsState] =
     useState([]);
-  const [japaneseWordsState, setJapaneseWordsState] = useState([]);
+  const [
+    adhocTargetLanguageSentencesState,
+    setAdhocTargetLanguageSentencesState,
+  ] = useState([]);
+  const [targetLanguageWordsState, setTargetLanguageWordsState] = useState([]);
   const [dataProviderIsLoading, setDataProviderIsLoading] = useState(true);
   const [provdiderError, setProvdiderError] = useState(null);
   const [updatePromptState, setUpdatePromptState] = useState('');
@@ -37,7 +40,7 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
   const getPureWords = () => {
     let pureWords = [];
     const targetLanguageLoadedWords = [
-      ...japaneseWordsState,
+      ...targetLanguageWordsState,
       // ...newWordsAdded,
     ];
 
@@ -173,17 +176,19 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
         fieldToUpdate,
         language,
       });
-      const japaneseWordsStateUpdated = japaneseWordsState.map(item => {
-        const thisWordId = item.id === wordId;
-        if (thisWordId) {
-          return {
-            ...item,
-            ...updatedWordProperties,
-          };
-        }
-        return item;
-      });
-      setJapaneseWordsState(japaneseWordsStateUpdated);
+      const targetLanguageWordsStateUpdated = targetLanguageWordsState.map(
+        item => {
+          const thisWordId = item.id === wordId;
+          if (thisWordId) {
+            return {
+              ...item,
+              ...updatedWordProperties,
+            };
+          }
+          return item;
+        },
+      );
+      setTargetLanguageWordsState(targetLanguageWordsStateUpdated);
       setUpdatePromptState(`${wordBaseForm} updated!`);
       setTimeout(() => setUpdatePromptState(''), 3000);
     } catch (error) {
@@ -194,10 +199,10 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
   const deleteWord = async ({wordId, wordBaseForm}) => {
     try {
       await deleteWordAPI({wordId, language});
-      const japaneseWordsStateUpdated = japaneseWordsState.filter(
+      const targetLanguageWordsStateUpdated = targetLanguageWordsState.filter(
         item => item.id !== wordId,
       );
-      setJapaneseWordsState(japaneseWordsStateUpdated);
+      setTargetLanguageWordsState(targetLanguageWordsStateUpdated);
       setUpdatePromptState(`${wordBaseForm} deleted!`);
       setTimeout(() => setUpdatePromptState(''), 3000);
     } catch (error) {
@@ -264,7 +269,7 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
       });
       setIsAdhocDataLoading(true);
       // need to update difficult sentences
-      setAdhocJapaneseSentencesState(prev => [...prev, adhocObject]);
+      setAdhocTargetLanguageSentencesState(prev => [...prev, adhocObject]);
       return adhocObject;
     } catch (error) {
       setProvdiderError('Error adding adhoc sentence');
@@ -280,7 +285,7 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
         contentEntry: snippetData,
         language,
       });
-      setJapaneseSnippetsState(prev => [
+      setTargetLanguageSnippetsState(prev => [
         ...prev,
         {...snippetDataFromAPI, saved: true},
       ]);
@@ -318,10 +323,10 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
   const removeSnippet = async ({snippetId, sentenceId}) => {
     try {
       const deletedSnippetId = await deleteSnippetAPI({snippetId, language});
-      const updatedSnippets = japaneseSnippetsState.filter(
+      const updatedSnippets = targetLanguageSnippetsState.filter(
         item => item.id !== deletedSnippetId,
       );
-      setJapaneseSnippetsState(updatedSnippets);
+      setTargetLanguageSnippetsState(updatedSnippets);
 
       const isInDiffSentenceArr = difficultSentencesState.some(
         diffSentence => diffSentence.id === sentenceId,
@@ -377,7 +382,7 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
         isGoogle,
         language,
       });
-      setJapaneseWordsState(prev => [...prev, savedWord]);
+      setTargetLanguageWordsState(prev => [...prev, savedWord]);
     } catch (error) {
       console.log('## saveWordFirebase Provider err', error);
     }
@@ -385,7 +390,7 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
 
   const getThisSentencesWordList = sentence => {
     let matchedWordsData = [];
-    japaneseWordsState.forEach(word => {
+    targetLanguageWordsState.forEach(word => {
       const baseForm = word.baseForm;
       const surfaceForm = word.surfaceForm;
       if (sentence.includes(baseForm)) {
@@ -417,7 +422,9 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
             saved: true,
           }));
         setHomeScreenData(allStudyDataRes);
-        setJapaneseSnippetsState(targetLanguageLoadedSnippetsWithSavedTag);
+        setTargetLanguageSnippetsState(
+          targetLanguageLoadedSnippetsWithSavedTag,
+        );
         settargetLanguageLoadedContentMaster(
           allStudyDataRes.targetLanguageLoadedContent?.sort((a, b) => {
             return a.isCore === b.isCore ? 0 : a.isCore ? -1 : 1;
@@ -433,8 +440,8 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
           targetLanguageLoadedSnippetsWithSavedTag,
         );
         setDifficultSentencesState(difficultSentencesWithSnippets);
-        setJapaneseWordsState(allStudyDataRes.targetLanguageLoadedWords);
-        setAdhocJapaneseSentencesState(targetLanguageLoadedSentences);
+        setTargetLanguageWordsState(allStudyDataRes.targetLanguageLoadedWords);
+        setAdhocTargetLanguageSentencesState(targetLanguageLoadedSentences);
       } catch (error) {
         console.log('## DataProvider error: ', error);
         setProvdiderError(error);
@@ -461,14 +468,14 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
         targetLanguageLoadedContentMaster,
         addAdhocSentenceFunc,
         isAdhocDataLoading,
-        japaneseSnippetsState,
+        targetLanguageSnippetsState,
         addSnippet,
         removeSnippet,
-        japaneseWordsState,
+        targetLanguageWordsState,
         pureWords: pureWordsArr,
         saveWordFirebase,
         getThisSentencesWordList,
-        adhocJapaneseSentencesState,
+        adhocTargetLanguageSentencesState,
         updateWordData,
         deleteWord,
       }}>

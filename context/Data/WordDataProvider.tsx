@@ -7,7 +7,7 @@ import useLanguageSelector from './useLanguageSelector';
 export const WordDataContext = createContext(null);
 
 export const WordDataProvider = ({children}: PropsWithChildren<{}>) => {
-  const [japaneseWordsState, setJapaneseWordsState] = useState([]);
+  const [targetLanguageWordsState, setTargetLanguageWordsState] = useState([]);
   const [wordStudyState, setWordStudyState] = useState([]);
   const [dueCardsState, setDueCardsState] = useState([]);
   const [updatePromptState, setUpdatePromptState] = useState('');
@@ -28,24 +28,26 @@ export const WordDataProvider = ({children}: PropsWithChildren<{}>) => {
         fieldToUpdate,
         language,
       });
-      const japaneseWordsStateUpdated = japaneseWordsState.map(item => {
-        const thisWordId = item.id === wordId;
-        if (thisWordId && isSnooze) {
-          return {
-            ...item,
-            ...fieldToUpdate,
-            reviewData: null,
-          };
-        }
-        if (thisWordId) {
-          return {
-            ...item,
-            ...updatedWordProperties,
-          };
-        }
-        return item;
-      });
-      setJapaneseWordsState(japaneseWordsStateUpdated);
+      const targetLanguageWordsStateUpdated = targetLanguageWordsState.map(
+        item => {
+          const thisWordId = item.id === wordId;
+          if (thisWordId && isSnooze) {
+            return {
+              ...item,
+              ...fieldToUpdate,
+              reviewData: null,
+            };
+          }
+          if (thisWordId) {
+            return {
+              ...item,
+              ...updatedWordProperties,
+            };
+          }
+          return item;
+        },
+      );
+      setTargetLanguageWordsState(targetLanguageWordsStateUpdated);
       setUpdatePromptState(`${wordBaseForm} updated!`);
       setTimeout(() => setUpdatePromptState(''), 3000);
       if (dueCardsState?.length > 0) {
@@ -104,10 +106,10 @@ export const WordDataProvider = ({children}: PropsWithChildren<{}>) => {
   const deleteWord = async ({wordId, wordBaseForm}) => {
     try {
       await deleteWordAPI({wordId, language});
-      const japaneseWordsStateUpdated = japaneseWordsState.filter(
+      const targetLanguageWordsStateUpdated = targetLanguageWordsState.filter(
         item => item.id !== wordId,
       );
-      setJapaneseWordsState(japaneseWordsStateUpdated);
+      setTargetLanguageWordsState(targetLanguageWordsStateUpdated);
       setUpdatePromptState(`${wordBaseForm} deleted!`);
       setTimeout(() => setUpdatePromptState(''), 3000);
     } catch (error) {
