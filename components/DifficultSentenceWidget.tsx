@@ -16,6 +16,7 @@ import MiniSnippetTimeChangeHandlers from './MiniSnippetTimeChangeHandlers';
 import useData from '../context/Data/useData';
 import SRSTogglesSentences from './SRSTogglesSentences';
 import DeleteWordSection from './DeleteWordSection';
+import useLanguageSelector from '../context/Data/useLanguageSelector';
 
 const hasBeenSnippedFromCollectiveURL = snippet => {
   const snippetURL = snippet.url;
@@ -325,6 +326,7 @@ const DifficultSentenceWidget = ({
     useState(null);
 
   const {getThisSentencesWordList} = useData();
+  const {languageSelectedState} = useLanguageSelector();
 
   const id = sentence.id;
   const topic = sentence.topic;
@@ -356,7 +358,7 @@ const DifficultSentenceWidget = ({
     setMiniSnippets(prev => [...prev, itemToSave]);
   };
 
-  const url = getFirebaseAudioURL(audioId);
+  const url = getFirebaseAudioURL(audioId, languageSelectedState);
 
   const {loadFile, filePath} = useMP3File(audioId);
 

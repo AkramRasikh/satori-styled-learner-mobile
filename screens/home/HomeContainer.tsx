@@ -86,8 +86,12 @@ function Home({
     ];
 
     targetLanguageLoadedWords?.forEach(wordData => {
-      pureWords.push(wordData.baseForm);
-      pureWords.push(wordData.surfaceForm);
+      if (wordData?.baseForm) {
+        pureWords.push(wordData.baseForm);
+      }
+      if (wordData?.surfaceForm) {
+        pureWords.push(wordData.surfaceForm);
+      }
     });
 
     const pureWordsUnique =
@@ -125,6 +129,14 @@ function Home({
     contextSentence,
     isGoogle = false,
   }) => {
+    console.log('## saveWordFirebase', {
+      highlightedWord,
+      highlightedWordSentenceId,
+      contextSentence,
+      isGoogle,
+      language: languageSelectedState,
+    });
+
     try {
       const savedWord = await saveWordAPI({
         highlightedWord,

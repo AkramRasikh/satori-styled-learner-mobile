@@ -46,7 +46,7 @@ const useContentControls = ({
   };
 
   const onLongPress = text => {
-    const longPressedTexts = targetLanguageLoadedWords.filter(word =>
+    const longPressedTexts = targetLanguageLoadedWords?.filter(word =>
       text.includes(word.surfaceForm),
     );
     if (longPressedTexts.length > 0) {

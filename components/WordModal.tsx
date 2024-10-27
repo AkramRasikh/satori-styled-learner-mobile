@@ -8,10 +8,12 @@ import useHighlightWordToWordBank from '../hooks/useHighlightWordToWordBank';
 import SRSToggles from './SRSToggles';
 import DeleteWordSection from './DeleteWordSection';
 import useWordData from '../context/Data/useWordData';
+import useLanguageSelector from '../context/Data/useLanguageSelector';
 
 const WordStudyAudio = ({sentenceData, isMediaContent}) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTimeState, setCurrentTimeState] = useState(0);
+  const {languageSelectedState} = useLanguageSelector();
 
   const soundRef = useRef();
 
@@ -20,7 +22,7 @@ const WordStudyAudio = ({sentenceData, isMediaContent}) => {
   const title = sentenceData.fullTitle;
   const audioId = isMediaContent ? title : id;
 
-  const url = getFirebaseAudioURL(audioId);
+  const url = getFirebaseAudioURL(audioId, languageSelectedState);
 
   const {loadFile, filePath} = useMP3File(audioId);
 

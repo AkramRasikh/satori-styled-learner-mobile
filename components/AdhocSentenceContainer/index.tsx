@@ -20,6 +20,7 @@ import useLoadAudioInstance from '../../hooks/useLoadAudioInstance';
 import useMP3File from '../../hooks/useMP3File';
 import {getFirebaseAudioURL} from '../../hooks/useGetCombinedAudioData';
 import {SoundWidget} from '../DifficultSentenceWidget';
+import useLanguageSelector from '../../context/Data/useLanguageSelector';
 
 const AdhocSentenceResponse = ({
   topic,
@@ -29,6 +30,7 @@ const AdhocSentenceResponse = ({
   setShowAdhocSentence,
 }) => {
   const [futureDaysState, setFutureDaysState] = useState(3);
+  const {languageSelectedState} = useLanguageSelector();
 
   const id = adhocObjectData.id;
   const hasAudio = adhocObjectData?.hasAudio;
@@ -38,7 +40,7 @@ const AdhocSentenceResponse = ({
   const nextReview = adhocObjectData.nextReview;
 
   const soundRef = useRef();
-  const url = getFirebaseAudioURL(id);
+  const url = getFirebaseAudioURL(id, languageSelectedState);
 
   const {loadFile, filePath} = useMP3File(id);
 

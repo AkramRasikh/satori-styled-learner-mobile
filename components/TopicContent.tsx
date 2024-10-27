@@ -33,6 +33,7 @@ import IsCoreSection from './IsCoreSection';
 import useMP3File from '../hooks/useMP3File';
 import useLoadAudioInstance from '../hooks/useLoadAudioInstance';
 import AdhocSentenceContainer from './AdhocSentenceContainer';
+import useLanguageSelector from '../context/Data/useLanguageSelector';
 
 const TopicContent = ({
   topicName,
@@ -72,6 +73,8 @@ const TopicContent = ({
   const [showAdhocSentence, setShowAdhocSentence] = useState(false);
   const [audioLoadingProgress, setAudioLoadingProgress] = useState(0);
 
+  const {languageSelectedState} = useLanguageSelector();
+
   const thisTopicLoadedContent = targetLanguageLoadedContent.find(
     contentData => contentData.title === topicName,
   );
@@ -102,7 +105,7 @@ const TopicContent = ({
   const audioControlsRef = useRef(null);
 
   const {height, width} = Dimensions?.get('window');
-  const url = getFirebaseAudioURL(topicName);
+  const url = getFirebaseAudioURL(topicName, languageSelectedState);
 
   const soundRefLoaded = soundRef?.current?.isLoaded();
   const soundDuration = soundRef?.current?._duration || 0;

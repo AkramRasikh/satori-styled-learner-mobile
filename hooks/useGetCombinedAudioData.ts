@@ -5,10 +5,12 @@ import {
   FIREBASE_AUDIO_SONGS_URL,
 } from '@env';
 import Sound from 'react-native-sound';
+import useLanguageSelector from '../context/Data/useLanguageSelector';
 Sound.setCategory('Playback');
 
-export const getFirebaseAudioURL = (mp3FileName: string) => {
-  const baseURL = FIREBASE_AUDIO_URL;
+export const getFirebaseAudioURL = (mp3FileName: string, language: string) => {
+  const languageParam = `${language}-audio%2F`;
+  const baseURL = FIREBASE_AUDIO_URL + languageParam;
   const firebaseToken = FIREBASE_STORAGE_ID;
   const url = `${baseURL}${mp3FileName}.mp3?alt=media&token=${firebaseToken}`;
 
@@ -33,6 +35,7 @@ const useGetCombinedAudioData = ({
 }) => {
   const [durations, setDurations] = useState([]);
   const [dataHasBeenFetched, setDataHasBeenFetch] = useState(false);
+  const {languageSelectedState} = useLanguageSelector();
 
   useEffect(() => {
     const fetchDurations = async () => {
@@ -54,7 +57,7 @@ const useGetCombinedAudioData = ({
         setDurations(sortedAudios);
       } else {
         const durationsPromises = audioFiles.map(item => {
-          const url = getFirebaseAudioURL(item.id);
+          const url = getFirebaseAudioURL(item.id, languageSelectedState);
           return new Promise(resolve => {
             const sound = new Sound(url, '', error => {
               if (error) {
