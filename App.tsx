@@ -9,6 +9,7 @@ import DifficultSentences from './screens/DifficultSentences';
 import Home from './screens/home';
 import {DataProvider} from './context/Data/DataProvider';
 import WordStudy from './screens/WordStudy';
+import LanguageSelectorScreen from './screens/LanguageSelector';
 
 enableScreens();
 
@@ -54,6 +55,9 @@ function App(): React.JSX.Element {
           >
             <Stack.Screen name="Home">
               {props => <Home {...props} />}
+            </Stack.Screen>
+            <Stack.Screen name="LanguageSelector">
+              {props => <LanguageSelectorScreen {...props} />}
             </Stack.Screen>
             <Stack.Screen name="WordStudy">
               {props => <WordStudy {...props} />}

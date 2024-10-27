@@ -23,7 +23,7 @@ const addAdhocSentenceAPI = async ({
         },
         topic,
         tags,
-        nextReview,
+        nextReview, // needs to be changed
       }),
     });
 
