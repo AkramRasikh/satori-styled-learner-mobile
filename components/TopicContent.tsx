@@ -36,11 +36,11 @@ import AdhocSentenceContainer from './AdhocSentenceContainer';
 
 const TopicContent = ({
   topicName,
-  japaneseLoadedContent,
+  targetLanguageLoadedContent,
   pureWordsUnique,
   structuredUnifiedData,
   setStructuredUnifiedData,
-  japaneseLoadedWords,
+  targetLanguageLoadedWords,
   addSnippet,
   removeSnippet,
   snippetsForSelectedTopic,
@@ -71,7 +71,7 @@ const TopicContent = ({
   const [showAdhocSentence, setShowAdhocSentence] = useState(false);
   const [audioLoadingProgress, setAudioLoadingProgress] = useState(0);
 
-  const thisTopicLoadedContent = japaneseLoadedContent.find(
+  const thisTopicLoadedContent = targetLanguageLoadedContent.find(
     contentData => contentData.title === topicName,
   );
 
@@ -147,11 +147,11 @@ const TopicContent = ({
   });
 
   useEffect(() => {
-    if (japaneseLoadedWords?.length !== initJapaneseWordsList) {
+    if (targetLanguageLoadedWords?.length !== initJapaneseWordsList) {
       setUpdateWordList(true);
-      setInitJapaneseWordsList(japaneseLoadedWords.length);
+      setInitJapaneseWordsList(targetLanguageLoadedWords.length);
     }
-  }, [japaneseLoadedWords, initJapaneseWordsList]);
+  }, [targetLanguageLoadedWords, initJapaneseWordsList]);
 
   const getSafeText = targetText => {
     const textSegments = underlineWordsInSentence(targetText);
@@ -202,7 +202,7 @@ const TopicContent = ({
     getLongPressedWordData,
     getTimeStamp,
   } = useContentControls({
-    japaneseLoadedWords,
+    targetLanguageLoadedWords,
     setLongPressedWord,
     soundRef,
     setIsPlaying,
@@ -225,7 +225,7 @@ const TopicContent = ({
     getThisTopicsWords,
     pureWordsUnique,
     topicData,
-    japaneseLoadedWords,
+    targetLanguageLoadedWords,
     setInitJapaneseWordsList,
   });
 

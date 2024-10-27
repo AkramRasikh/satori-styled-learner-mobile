@@ -1,7 +1,10 @@
 import {BACKEND_ENDPOINT} from '@env';
-import {japanese} from '../refs';
 
-const updateAdhocSentenceAPI = async ({sentenceId, fieldToUpdate}) => {
+const updateAdhocSentenceAPI = async ({
+  sentenceId,
+  fieldToUpdate,
+  language,
+}) => {
   const baseUrl = BACKEND_ENDPOINT;
   const url = baseUrl + '/update-adhoc-sentence';
   try {
@@ -11,7 +14,7 @@ const updateAdhocSentenceAPI = async ({sentenceId, fieldToUpdate}) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        language: japanese,
+        language,
         sentenceId,
         fieldToUpdate,
       }),

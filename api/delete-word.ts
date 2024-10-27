@@ -1,7 +1,6 @@
 import {BACKEND_ENDPOINT} from '@env';
-import {japanese} from '../refs';
 
-export const deleteWordAPI = async ({wordId}) => {
+export const deleteWordAPI = async ({wordId, language}) => {
   const url = BACKEND_ENDPOINT + '/delete-word';
 
   try {
@@ -11,7 +10,7 @@ export const deleteWordAPI = async ({wordId}) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        language: japanese,
+        language,
         id: wordId,
       }),
     });

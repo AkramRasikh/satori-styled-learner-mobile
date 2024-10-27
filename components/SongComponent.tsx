@@ -8,7 +8,7 @@ const SongComponent = ({
   pureWordsUnique,
   structuredUnifiedData,
   setStructuredUnifiedData,
-  japaneseLoadedWords,
+  targetLanguageLoadedWords,
   snippetsForSelectedTopic,
   addSnippet,
   removeSnippet,
@@ -41,7 +41,7 @@ const SongComponent = ({
         pureWordsUnique={pureWordsUnique}
         structuredUnifiedData={structuredUnifiedData}
         setStructuredUnifiedData={setStructuredUnifiedData}
-        japaneseLoadedWords={japaneseLoadedWords}
+        targetLanguageLoadedWords={targetLanguageLoadedWords}
         addSnippet={addSnippet}
         removeSnippet={removeSnippet}
         snippetsForSelectedTopic={snippetsForSelectedTopic}

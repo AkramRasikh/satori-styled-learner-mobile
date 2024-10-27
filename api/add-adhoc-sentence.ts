@@ -1,5 +1,4 @@
 import {BACKEND_ENDPOINT} from '@env';
-import {japanese} from '../refs';
 
 const addAdhocSentenceAPI = async ({
   baseLang,
@@ -7,6 +6,7 @@ const addAdhocSentenceAPI = async ({
   topic,
   tags,
   nextReview,
+  language,
 }) => {
   const baseUrl = BACKEND_ENDPOINT;
   try {
@@ -16,7 +16,7 @@ const addAdhocSentenceAPI = async ({
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        language: japanese,
+        language,
         adhocSentence: {
           baseLang,
           context,

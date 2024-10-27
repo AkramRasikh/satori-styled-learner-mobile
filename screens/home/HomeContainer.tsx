@@ -20,11 +20,12 @@ import {
   isUpForReview,
 } from '../../utils/is-up-for-review';
 import {getGeneralTopicName} from '../../utils/get-general-topic-name';
+import useLanguageSelector from '../../context/Data/useLanguageSelector';
 
 function Home({
   navigation,
   homeScreenData,
-  japaneseLoadedContentMaster,
+  targetLanguageLoadedContentMaster,
   japaneseSnippetsState,
   addSnippet,
   removeSnippet,
@@ -38,10 +39,12 @@ function Home({
   const [newWordsAdded, setNewWordsAdded] = useState([]);
   const [showOtherTopics, setShowOtherTopics] = useState(true);
   const [topicsToStudyState, setTopicsToStudyState] = useState(null);
-  const [japaneseLoadedSongsState, setJapaneseLoadedSongsState] = useState([]);
-  const [japaneseLoadedContentState, setJapaneseLoadedContentState] = useState(
-    [],
-  );
+  const [targetLanguageLoadedSongsState, settargetLanguageLoadedSongsState] =
+    useState([]);
+  const [
+    targetLanguageLoadedContentState,
+    settargetLanguageLoadedContentState,
+  ] = useState([]);
   const [japaneseWordsToStudyState, setJapaneseWordsToStudyState] = useState(
     {},
   );
@@ -49,39 +52,41 @@ function Home({
   const [updatePromptState, setUpdatePromptState] = useState('');
   const [triggerSentenceIdUpdate, setTriggerSentenceIdUpdate] = useState('');
 
+  const {languageSelectedState} = useLanguageSelector();
+
   useSetupPlayer({isSetupPlayerLoaded, setIsSetupPlayerLoaded});
 
   useEffect(() => {
-    if (japaneseLoadedContentMaster) {
-      setJapaneseLoadedContentState(japaneseLoadedContentMaster);
+    if (targetLanguageLoadedContentMaster) {
+      settargetLanguageLoadedContentState(targetLanguageLoadedContentMaster);
     }
-  }, [japaneseLoadedContentMaster]);
+  }, [targetLanguageLoadedContentMaster]);
 
   useEffect(() => {
     const results = homeScreenData;
     const topicsToStudy = results.topicsToStudy;
     setTopicsToStudyState(topicsToStudy);
-    const japaneseLoadedSongs = results?.japaneseLoadedSongs.filter(
+    const targetLanguageLoadedSongs = results?.targetLanguageLoadedSongs.filter(
       item => item !== null,
     );
-    const japaneseLoadedContent = japaneseLoadedContentMaster;
-    setJapaneseLoadedContentState(
-      japaneseLoadedContent.sort((a, b) => {
+    const targetLanguageLoadedContent = targetLanguageLoadedContentMaster;
+    settargetLanguageLoadedContentState(
+      targetLanguageLoadedContent.sort((a, b) => {
         return a.isCore === b.isCore ? 0 : a.isCore ? -1 : 1;
       }),
     );
-    setJapaneseLoadedSongsState(japaneseLoadedSongs);
+    settargetLanguageLoadedSongsState(targetLanguageLoadedSongs);
     setData(results);
   }, []);
 
   const getPureWords = () => {
     let pureWords = [];
-    const japaneseLoadedWords = [
-      ...data?.japaneseLoadedWords,
+    const targetLanguageLoadedWords = [
+      ...data?.targetLanguageLoadedWords,
       ...newWordsAdded,
     ];
 
-    japaneseLoadedWords?.forEach(wordData => {
+    targetLanguageLoadedWords?.forEach(wordData => {
       pureWords.push(wordData.baseForm);
       pureWords.push(wordData.surfaceForm);
     });
@@ -127,6 +132,7 @@ function Home({
         highlightedWordSentenceId,
         contextSentence,
         isGoogle,
+        language: languageSelectedState,
       });
       setNewWordsAdded(prev => [...prev, savedWord]);
     } catch (error) {
@@ -136,7 +142,11 @@ function Home({
 
   const getThisTopicsWordsFunc = async (topic, isMusic) => {
     try {
-      const res = await getThisTopicsWordsToStudyAPI({topic, isMusic});
+      const res = await getThisTopicsWordsToStudyAPI({
+        topic,
+        isMusic,
+        language: languageSelectedState,
+      });
       setJapaneseWordsToStudyState({
         ...japaneseWordsToStudyState,
         [topic]: res,
@@ -157,16 +167,17 @@ function Home({
       const resObj = await updateCreateReviewHistory({
         contentEntry: topicName,
         fieldToUpdate,
+        language: languageSelectedState,
       });
       if (resObj) {
-        const thisTopicData = japaneseLoadedContentState.find(
+        const thisTopicData = targetLanguageLoadedContentState.find(
           topic => topic.title === topicName,
         );
-        const filterTopics = japaneseLoadedContentState.filter(
+        const filterTopics = targetLanguageLoadedContentState.filter(
           topic => topic.title !== topicName,
         );
         const newTopicState = {...thisTopicData, ...resObj};
-        setJapaneseLoadedContentState([...filterTopics, newTopicState]);
+        settargetLanguageLoadedContentState([...filterTopics, newTopicState]);
         setUpdatePromptState(`${topicName} updated!`);
         setTimeout(() => setUpdatePromptState(''), 3000);
       }
@@ -181,14 +192,16 @@ function Home({
         topicName,
         sentenceId,
         fieldToUpdate,
+        language: languageSelectedState,
       });
 
       if (resObj) {
-        const thisTopicDataIndex = japaneseLoadedContentState.findIndex(
+        const thisTopicDataIndex = targetLanguageLoadedContentState.findIndex(
           topic => topic.title === topicName,
         );
 
-        const thisTopicData = japaneseLoadedContentState[thisTopicDataIndex];
+        const thisTopicData =
+          targetLanguageLoadedContentState[thisTopicDataIndex];
 
         const thisTopicUpdateContent = thisTopicData.content.map(
           sentenceData => {
@@ -207,13 +220,13 @@ function Home({
           content: thisTopicUpdateContent,
         };
 
-        const filteredTopics = japaneseLoadedContentState.map(topic => {
+        const filteredTopics = targetLanguageLoadedContentState.map(topic => {
           if (topic.title !== topicName) {
             return topic;
           }
           return newTopicState;
         });
-        setJapaneseLoadedContentState(filteredTopics);
+        settargetLanguageLoadedContentState(filteredTopics);
         setUpdatePromptState(`${topicName} updated!`);
         setTimeout(() => setUpdatePromptState(''), 3000);
         setTriggerSentenceIdUpdate(sentenceId);
@@ -225,7 +238,7 @@ function Home({
 
   if (
     !data ||
-    japaneseLoadedContentState?.length === 0 ||
+    targetLanguageLoadedContentState?.length === 0 ||
     !topicsToStudyState
   ) {
     return (
@@ -244,16 +257,19 @@ function Home({
 
   const today = new Date();
 
-  const japaneseLoadedWords = [...data?.japaneseLoadedWords, ...newWordsAdded];
+  const targetLanguageLoadedWords = [
+    ...data?.targetLanguageLoadedWords,
+    ...newWordsAdded,
+  ];
 
-  const topicKeys = japaneseLoadedContentState.map(
+  const topicKeys = targetLanguageLoadedContentState.map(
     topicData => topicData.title,
   );
   const snippetsForSelectedTopic = japaneseSnippetsState?.filter(
     item => item.topicName === selectedTopic || item.topicName === selectedSong,
   );
 
-  const songData = japaneseLoadedSongsState?.find(
+  const songData = targetLanguageLoadedSongsState?.find(
     item => item.title === selectedSong,
   );
 
@@ -299,12 +315,12 @@ function Home({
 
   // quickFix
   const hasAudioCheck = topicKey =>
-    japaneseLoadedContentState.some(
+    targetLanguageLoadedContentState.some(
       key => key.title === topicKey && key.hasAudio,
     );
 
   const isDueReviewSingular = ({topicOption, isReview}) => {
-    const thisData = japaneseLoadedContentState.find(
+    const thisData = targetLanguageLoadedContentState.find(
       topicDisplayed => topicDisplayed.title === topicOption,
     );
 
@@ -317,7 +333,7 @@ function Home({
   const isNeedsFutureReview = ({topicOption, singular}) => {
     const isHobbies = topicOption === 'hobbies-01';
     if (singular) {
-      const thisData = japaneseLoadedContentState.find(
+      const thisData = targetLanguageLoadedContentState.find(
         topicDisplayed => topicDisplayed.title === topicOption,
       );
 
@@ -330,16 +346,15 @@ function Home({
       return res;
     }
 
-    const nextReviewDateDueForGeneralTopicDue = japaneseLoadedContentState.some(
-      jpContent => {
+    const nextReviewDateDueForGeneralTopicDue =
+      targetLanguageLoadedContentState.some(jpContent => {
         const generalTopicName = getGeneralTopicName(jpContent.title);
 
         if (generalTopicName === topicOption) {
           const nextReview = jpContent?.nextReview;
           return checkIsFutureReviewNeeded({nextReview, todayDate: today});
         }
-      },
-    );
+      });
 
     return nextReviewDateDueForGeneralTopicDue;
   };
@@ -349,23 +364,22 @@ function Home({
       return isDueReviewSingular({topicOption, isReview});
     }
     // change to forLoop
-    const nextReviewDateDueForGeneralTopicDue = japaneseLoadedContentState.some(
-      jpContent => {
+    const nextReviewDateDueForGeneralTopicDue =
+      targetLanguageLoadedContentState.some(jpContent => {
         const generalTopicName = getGeneralTopicName(jpContent.title);
 
         if (generalTopicName === topicOption) {
           const nextReview = jpContent?.nextReview;
           return isUpForReview({nextReview, todayDate: today});
         }
-      },
-    );
+      });
 
     return nextReviewDateDueForGeneralTopicDue;
   };
 
   const isCoreContent = (topicOption, singular) => {
     if (singular) {
-      const thisData = japaneseLoadedContentState.find(
+      const thisData = targetLanguageLoadedContentState.find(
         topicDisplayed => topicDisplayed.title === topicOption,
       );
 
@@ -373,7 +387,7 @@ function Home({
       return thisDataIsCoreStatus;
     }
 
-    return japaneseLoadedContentState.some(jpContent => {
+    return targetLanguageLoadedContentState.some(jpContent => {
       if (jpContent.title.split('-').slice(0, -1).join('-') === topicOption) {
         const isCoreStatus = jpContent?.isCore;
         return isCoreStatus;
@@ -453,7 +467,7 @@ function Home({
         <SongSection
           topicOrSongSelected={topicOrSongSelected}
           generalTopicState={generalTopicState}
-          japaneseLoadedSongsState={japaneseLoadedSongsState}
+          targetLanguageLoadedSongsState={targetLanguageLoadedSongsState}
           showOtherTopics={showOtherTopics}
           topicsToStudyState={topicsToStudyState}
           selectedTopic={selectedTopic}
@@ -464,11 +478,11 @@ function Home({
           {selectedTopic ? (
             <TopicComponent
               topicName={selectedTopic}
-              japaneseLoadedContent={japaneseLoadedContentState}
+              targetLanguageLoadedContent={targetLanguageLoadedContentState}
               pureWordsUnique={getPureWords()}
               structuredUnifiedData={structuredUnifiedData}
               setStructuredUnifiedData={setStructuredUnifiedData}
-              japaneseLoadedWords={japaneseLoadedWords}
+              targetLanguageLoadedWords={targetLanguageLoadedWords}
               addSnippet={addSnippet}
               snippetsForSelectedTopic={snippetsForSelectedTopic}
               removeSnippet={removeSnippet}
@@ -488,7 +502,7 @@ function Home({
               pureWordsUnique={getPureWords()}
               structuredUnifiedData={structuredUnifiedData}
               setStructuredUnifiedData={setStructuredUnifiedData}
-              japaneseLoadedWords={japaneseLoadedWords}
+              targetLanguageLoadedWords={targetLanguageLoadedWords}
               snippetsForSelectedTopic={snippetsForSelectedTopic}
               addSnippet={addSnippet}
               removeSnippet={removeSnippet}

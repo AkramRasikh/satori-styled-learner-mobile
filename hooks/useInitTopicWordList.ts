@@ -5,7 +5,7 @@ const useInitTopicWordList = ({
   getThisTopicsWords,
   pureWordsUnique,
   topicData,
-  japaneseLoadedWords,
+  targetLanguageLoadedWords,
   setInitJapaneseWordsList,
 }) => {
   useEffect(() => {
@@ -13,10 +13,10 @@ const useInitTopicWordList = ({
       getThisTopicsWords({
         pureWordsUnique,
         topicData,
-        japaneseLoadedWords,
+        targetLanguageLoadedWords,
       }),
     );
-    setInitJapaneseWordsList(japaneseLoadedWords?.length);
+    setInitJapaneseWordsList(targetLanguageLoadedWords?.length);
   }, []);
 };
 

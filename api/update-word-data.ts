@@ -1,7 +1,6 @@
 import {BACKEND_ENDPOINT} from '@env';
-import {japanese} from '../refs';
 
-export const updateWordAPI = async ({wordId, fieldToUpdate}) => {
+export const updateWordAPI = async ({wordId, fieldToUpdate, language}) => {
   const url = BACKEND_ENDPOINT + '/update-word';
 
   try {
@@ -11,7 +10,7 @@ export const updateWordAPI = async ({wordId, fieldToUpdate}) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        language: japanese,
+        language,
         wordId,
         fieldToUpdate,
       }),

@@ -3,7 +3,7 @@ import {Text, TouchableOpacity, View} from 'react-native';
 const SongSection = ({
   topicOrSongSelected,
   generalTopicState,
-  japaneseLoadedSongsState,
+  targetLanguageLoadedSongsState,
   showOtherTopics,
   topicsToStudyState,
   selectedTopic,
@@ -18,7 +18,7 @@ const SongSection = ({
       ) : null}
       {(!topicOrSongSelected || showOtherTopics) && !generalTopicState ? (
         <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
-          {japaneseLoadedSongsState?.map(songData => {
+          {targetLanguageLoadedSongsState?.map(songData => {
             const numberOfWordsToStudy = topicsToStudyState[songData.title];
 
             return (

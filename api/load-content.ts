@@ -1,17 +1,10 @@
-import {
-  adhocSentences,
-  content,
-  japanese,
-  snippets,
-  songs,
-  words,
-} from '../refs';
+import {adhocSentences, content, snippets, songs, words} from '../refs';
 import {BACKEND_ENDPOINT} from '@env';
 import mockTopicsToStudy from '../mock-firestore/mock-topics-to-study.json';
 import mockGetAllRes from '../mock-firestore/mock-get-all-res.json';
 import {getTopicsToStudy} from './words-to-study';
 
-const loadAllContent = async () => {
+const loadAllContent = async ({language}) => {
   const url = BACKEND_ENDPOINT + '/on-load-data';
 
   try {
@@ -22,7 +15,7 @@ const loadAllContent = async () => {
         'Content-Type': 'application/json', //<---
       },
       body: JSON.stringify({
-        language: japanese,
+        language,
         refs: [adhocSentences, content, snippets, songs, words],
       }),
     });
@@ -39,15 +32,17 @@ const loadAllContent = async () => {
   }
 };
 
-export const getAllData = async () => {
+export const getAllData = async ({language}) => {
   const withMock = process.env.USE_MOCK_DB;
 
   try {
-    const loadedData = withMock ? mockGetAllRes : await loadAllContent();
+    const loadedData = withMock
+      ? mockGetAllRes
+      : await loadAllContent({language});
 
     const topicsToStudy = withMock
       ? mockTopicsToStudy
-      : await getTopicsToStudy();
+      : await getTopicsToStudy({language});
 
     const getNestedObjectData = thisRef => {
       return loadedData.find(el => {
@@ -58,23 +53,23 @@ export const getAllData = async () => {
       });
     };
 
-    const japaneseLoadedContent = getNestedObjectData(content).content.filter(
-      item => item !== null,
-    );
+    const targetLanguageLoadedContent = getNestedObjectData(
+      content,
+    ).content.filter(item => item !== null);
 
-    const japaneseLoadedWords = getNestedObjectData(words)?.words || [];
-    const japaneseLoadedSnippets =
+    const targetLanguageLoadedWords = getNestedObjectData(words)?.words || [];
+    const targetLanguageLoadedSnippets =
       getNestedObjectData(snippets)?.snippets || [];
-    const japaneseLoadedSongs = getNestedObjectData(songs)?.songs || [];
-    const japaneseAdhocLoadedSentences =
+    const targetLanguageLoadedSongs = getNestedObjectData(songs)?.songs || [];
+    const targetLanguageLoadedSentences =
       getNestedObjectData(adhocSentences)?.adhocSentences || [];
 
     return {
-      japaneseLoadedContent,
-      japaneseLoadedWords,
-      japaneseLoadedSnippets,
-      japaneseLoadedSongs,
-      japaneseAdhocLoadedSentences,
+      targetLanguageLoadedContent,
+      targetLanguageLoadedWords,
+      targetLanguageLoadedSnippets,
+      targetLanguageLoadedSongs,
+      targetLanguageLoadedSentences,
       topicsToStudy,
     };
   } catch (error) {
@@ -82,9 +77,9 @@ export const getAllData = async () => {
     return {
       satoriData: [],
       contextHelperData: [],
-      japaneseLoadedSnippets: [],
-      japaneseLoadedSongs: [],
-      japaneseAdhocLoadedSentences: [],
+      targetLanguageLoadedSnippets: [],
+      targetLanguageLoadedSongs: [],
+      targetLanguageLoadedSentences: [],
       topicsToStudy: [],
     };
   }

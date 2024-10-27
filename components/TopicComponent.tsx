@@ -5,11 +5,11 @@ import {useEffect} from 'react';
 
 const TopicComponent = ({
   topicName,
-  japaneseLoadedContent,
+  targetLanguageLoadedContent,
   pureWordsUnique,
   structuredUnifiedData,
   setStructuredUnifiedData,
-  japaneseLoadedWords,
+  targetLanguageLoadedWords,
   snippetsForSelectedTopic,
   addSnippet,
   removeSnippet,
@@ -43,11 +43,11 @@ const TopicComponent = ({
       />
       <TopicContent
         topicName={topicName}
-        japaneseLoadedContent={japaneseLoadedContent}
+        targetLanguageLoadedContent={targetLanguageLoadedContent}
         pureWordsUnique={pureWordsUnique}
         structuredUnifiedData={structuredUnifiedData}
         setStructuredUnifiedData={setStructuredUnifiedData}
-        japaneseLoadedWords={japaneseLoadedWords}
+        targetLanguageLoadedWords={targetLanguageLoadedWords}
         addSnippet={addSnippet}
         snippetsForSelectedTopic={snippetsForSelectedTopic}
         removeSnippet={removeSnippet}

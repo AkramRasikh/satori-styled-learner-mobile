@@ -1,5 +1,5 @@
 export const mockData = {
-  japaneseLoadedContent: {
+  targetLanguageLoadedContent: {
     'annoyed-cousin-01': [
       {
         baseLang:
@@ -402,7 +402,7 @@ export const mockData = {
       },
     ],
   },
-  japaneseLoadedWords: [
+  targetLanguageLoadedWords: [
     {
       baseForm: '公然',
       contexts: ['b238d0f3-0cd7-435b-8d05-477d86ac382c'],
@@ -1016,7 +1016,7 @@ export const mockData = {
       transliteration: 'Marine',
     },
   ],
-  japaneseLoadedContentFullMP3s: [
+  targetLanguageLoadedContentFullMP3s: [
     {name: 'work-01'},
     {name: 'food-01'},
     {name: 'thoughts-on-protests-01'},

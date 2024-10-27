@@ -7,8 +7,8 @@ const useFormatWordsToStudy = ({
   setWordStudyState,
   setTagsState,
   setGeneralTopicState,
-  japaneseLoadedContent,
-  japaneseAdhocLoadedSentences,
+  targetLanguageLoadedContent,
+  targetLanguageLoadedSentences,
   setDueCardsState,
 }) => {
   const timeNow = new Date();
@@ -28,7 +28,7 @@ const useFormatWordsToStudy = ({
       const thisWordsCategories = [];
 
       thisWordsContext.forEach(contextId => {
-        japaneseLoadedContent.forEach(contentData => {
+        targetLanguageLoadedContent.forEach(contentData => {
           const content = contentData.content;
           const generalTopicTitle = getGeneralTopicName(contentData.title);
           const tags = content?.tags;
@@ -61,7 +61,7 @@ const useFormatWordsToStudy = ({
           }
         });
         // conditionally
-        japaneseAdhocLoadedSentences.forEach(adhocSentenceData => {
+        targetLanguageLoadedSentences.forEach(adhocSentenceData => {
           const generalTopicTitle = adhocSentenceData.topic;
           const tags = adhocSentenceData?.tags;
 

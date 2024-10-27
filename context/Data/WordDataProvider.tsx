@@ -2,6 +2,7 @@ import React from 'react';
 import {createContext, PropsWithChildren, useState} from 'react';
 import {updateWordAPI} from '../../api/update-word-data';
 import {deleteWordAPI} from '../../api/delete-word';
+import useLanguageSelector from './useLanguageSelector';
 
 export const WordDataContext = createContext(null);
 
@@ -13,6 +14,7 @@ export const WordDataProvider = ({children}: PropsWithChildren<{}>) => {
   const [selectedTopicWords, setSelectedTopicWords] = useState([]);
   const [selectedTopic, setSelectedTopic] = useState('');
   const [selectedWordState, setSelectedWordState] = useState(null);
+  const {languageSelectedState: language} = useLanguageSelector();
 
   const updateWordData = async ({
     wordId,
@@ -24,6 +26,7 @@ export const WordDataProvider = ({children}: PropsWithChildren<{}>) => {
       const updatedWordProperties = await updateWordAPI({
         wordId,
         fieldToUpdate,
+        language,
       });
       const japaneseWordsStateUpdated = japaneseWordsState.map(item => {
         const thisWordId = item.id === wordId;
@@ -100,7 +103,7 @@ export const WordDataProvider = ({children}: PropsWithChildren<{}>) => {
 
   const deleteWord = async ({wordId, wordBaseForm}) => {
     try {
-      await deleteWordAPI({wordId});
+      await deleteWordAPI({wordId, language});
       const japaneseWordsStateUpdated = japaneseWordsState.filter(
         item => item.id !== wordId,
       );

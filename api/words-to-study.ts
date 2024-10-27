@@ -1,7 +1,6 @@
 import {BACKEND_ENDPOINT} from '@env';
-import {japanese} from '../refs';
 
-export const getTopicsToStudy = async () => {
+export const getTopicsToStudy = async ({language}) => {
   const url = BACKEND_ENDPOINT + '/topics-to-study';
 
   try {
@@ -11,7 +10,7 @@ export const getTopicsToStudy = async () => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        language: japanese,
+        language,
       }),
     });
 
@@ -27,7 +26,11 @@ export const getTopicsToStudy = async () => {
   }
 };
 
-export const getThisTopicsWordsToStudyAPI = async ({topic, isMusic}) => {
+export const getThisTopicsWordsToStudyAPI = async ({
+  topic,
+  isMusic,
+  language,
+}) => {
   const param = isMusic
     ? '/get-japanese-words-song'
     : '/get-japanese-words-topic';
@@ -40,7 +43,7 @@ export const getThisTopicsWordsToStudyAPI = async ({topic, isMusic}) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        language: japanese,
+        language,
         topic,
       }),
     });

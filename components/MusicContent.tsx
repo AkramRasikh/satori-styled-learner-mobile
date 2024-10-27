@@ -21,7 +21,7 @@ import WordStudySection from './WordStudySection';
 const MusicContent = ({
   topicName,
   pureWordsUnique,
-  japaneseLoadedWords,
+  targetLanguageLoadedWords,
   addSnippet,
   removeSnippet,
   snippetsForSelectedTopic,
@@ -69,11 +69,11 @@ const MusicContent = ({
   useMasterAudioLoad({soundRef, url});
 
   useEffect(() => {
-    if (japaneseLoadedWords?.length !== initJapaneseWordsList) {
+    if (targetLanguageLoadedWords?.length !== initJapaneseWordsList) {
       setUpdateWordList(true);
-      setInitJapaneseWordsList(japaneseLoadedWords.length);
+      setInitJapaneseWordsList(targetLanguageLoadedWords.length);
     }
-  }, [japaneseLoadedWords, initJapaneseWordsList]);
+  }, [targetLanguageLoadedWords, initJapaneseWordsList]);
 
   useEffect(() => {
     if (!isAlreadyLoaded && formattedData?.length > 0) {
@@ -110,10 +110,10 @@ const MusicContent = ({
       getThisTopicsWords({
         pureWordsUnique,
         topicData,
-        japaneseLoadedWords,
+        targetLanguageLoadedWords,
       }),
     );
-    setInitJapaneseWordsList(japaneseLoadedWords?.length);
+    setInitJapaneseWordsList(targetLanguageLoadedWords?.length);
   }, []);
 
   const {underlineWordsInSentence} = useHighlightWordToWordBank({
@@ -143,7 +143,7 @@ const MusicContent = ({
     getLongPressedWordData,
     getTimeStamp,
   } = useContentControls({
-    japaneseLoadedWords,
+    targetLanguageLoadedWords,
     setLongPressedWord,
     soundRef,
     setIsPlaying,

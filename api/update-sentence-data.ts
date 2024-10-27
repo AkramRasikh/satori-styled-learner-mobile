@@ -1,10 +1,10 @@
 import {BACKEND_ENDPOINT} from '@env';
-import {japanese} from '../refs';
 
 export const updateSentenceDataAPI = async ({
   topicName,
   sentenceId,
   fieldToUpdate,
+  language,
 }) => {
   const url = BACKEND_ENDPOINT + '/update-sentence-review';
 
@@ -15,7 +15,7 @@ export const updateSentenceDataAPI = async ({
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        language: japanese,
+        language,
         title: topicName,
         id: sentenceId,
         fieldToUpdate,

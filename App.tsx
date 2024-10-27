@@ -10,6 +10,7 @@ import Home from './screens/home';
 import {DataProvider} from './context/Data/DataProvider';
 import WordStudy from './screens/WordStudy';
 import LanguageSelectorScreen from './screens/LanguageSelector';
+import {LanguageSelectorProvider} from './context/Data/LanguageSelectorProvider';
 
 enableScreens();
 
@@ -46,29 +47,31 @@ function App(): React.JSX.Element {
   };
 
   return (
-    <DataProvider>
-      <SafeAreaProvider>
-        <NavigationContainer>
-          <Stack.Navigator
-            initialRouteName="Home" // This sets the default screen
-            screenOptions={{headerShown: false}} // Optional: Hide headers
-          >
-            <Stack.Screen name="Home">
-              {props => <Home {...props} />}
-            </Stack.Screen>
-            <Stack.Screen name="LanguageSelector">
-              {props => <LanguageSelectorScreen {...props} />}
-            </Stack.Screen>
-            <Stack.Screen name="WordStudy">
-              {props => <WordStudy {...props} />}
-            </Stack.Screen>
-            <Stack.Screen name="DifficultSentences">
-              {() => <DifficultSentences />}
-            </Stack.Screen>
-          </Stack.Navigator>
-        </NavigationContainer>
-      </SafeAreaProvider>
-    </DataProvider>
+    <LanguageSelectorProvider>
+      <DataProvider>
+        <SafeAreaProvider>
+          <NavigationContainer>
+            <Stack.Navigator
+              initialRouteName="LanguageSelector" // This sets the default screen
+              screenOptions={{headerShown: false}} // Optional: Hide headers
+            >
+              <Stack.Screen name="LanguageSelector">
+                {props => <LanguageSelectorScreen {...props} />}
+              </Stack.Screen>
+              <Stack.Screen name="Home">
+                {props => <Home {...props} />}
+              </Stack.Screen>
+              <Stack.Screen name="WordStudy">
+                {props => <WordStudy {...props} />}
+              </Stack.Screen>
+              <Stack.Screen name="DifficultSentences">
+                {() => <DifficultSentences />}
+              </Stack.Screen>
+            </Stack.Navigator>
+          </NavigationContainer>
+        </SafeAreaProvider>
+      </DataProvider>
+    </LanguageSelectorProvider>
   );
 }
 

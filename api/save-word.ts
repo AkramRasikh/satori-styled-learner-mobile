@@ -1,11 +1,11 @@
 import {BACKEND_ENDPOINT} from '@env';
-import {japanese} from '../refs';
 
 const saveWordAPI = async ({
   highlightedWord,
   highlightedWordSentenceId,
   contextSentence,
   isGoogle,
+  language,
 }) => {
   const baseUrl = BACKEND_ENDPOINT;
 
@@ -16,7 +16,7 @@ const saveWordAPI = async ({
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        language: japanese,
+        language,
         word: highlightedWord,
         context: highlightedWordSentenceId,
         contextSentence,

@@ -9,7 +9,8 @@ const Home = ({navigation}): React.JSX.Element => {
   const dataProviderIsLoading = data.dataProviderIsLoading;
   const provdiderError = data.provdiderError;
   const homeScreenData = data.homeScreenData;
-  const japaneseLoadedContentMaster = data.japaneseLoadedContentMaster;
+  const targetLanguageLoadedContentMaster =
+    data.targetLanguageLoadedContentMaster;
   const japaneseSnippetsState = data.japaneseSnippetsState;
   const addSnippet = data.addSnippet;
   const removeSnippet = data.removeSnippet;
@@ -17,7 +18,7 @@ const Home = ({navigation}): React.JSX.Element => {
   if (
     !homeScreenData ||
     dataProviderIsLoading ||
-    !japaneseLoadedContentMaster
+    !targetLanguageLoadedContentMaster
   ) {
     return <LoadingScreen>Loading data...</LoadingScreen>;
   }
@@ -29,7 +30,7 @@ const Home = ({navigation}): React.JSX.Element => {
     <HomeContainer
       navigation={navigation}
       homeScreenData={homeScreenData}
-      japaneseLoadedContentMaster={japaneseLoadedContentMaster}
+      targetLanguageLoadedContentMaster={targetLanguageLoadedContentMaster}
       japaneseSnippetsState={japaneseSnippetsState}
       addSnippet={addSnippet}
       removeSnippet={removeSnippet}

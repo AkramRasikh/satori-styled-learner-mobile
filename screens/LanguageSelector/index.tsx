@@ -1,14 +1,13 @@
 import React from 'react';
 import {Image, Text, TouchableOpacity, View} from 'react-native';
+import useLanguageSelector from '../../context/Data/useLanguageSelector';
+import {LanguageEnum} from '../../context/Data/LanguageSelectorProvider';
 
-const languageKey = {
-  japanese: 'japanese',
-  chinese: 'chinese',
-};
-
-const LanguageSelector = (): React.JSX.Element => {
-  const handleLanguageSelection = selectedLanguage => {
-    console.log('## handleLanguageSelection', {selectedLanguage});
+const LanguageSelector = ({navigation}): React.JSX.Element => {
+  const {setLanguageSelectedState} = useLanguageSelector();
+  const handleLanguageSelection = (selectedLanguage: LanguageEnum) => {
+    setLanguageSelectedState(selectedLanguage);
+    navigation.navigate('Home');
   };
   return (
     <View>
@@ -39,7 +38,7 @@ const LanguageSelector = (): React.JSX.Element => {
         }}>
         <View>
           <TouchableOpacity
-            onPress={() => handleLanguageSelection(languageKey.chinese)}>
+            onPress={() => handleLanguageSelection(LanguageEnum.Chinese)}>
             <Image
               style={{height: 100, resizeMode: 'contain'}}
               source={require(`../../assets/images/chinese-flag.png`)}
@@ -48,7 +47,7 @@ const LanguageSelector = (): React.JSX.Element => {
         </View>
         <View>
           <TouchableOpacity
-            onPress={() => handleLanguageSelection(languageKey.japanese)}>
+            onPress={() => handleLanguageSelection(LanguageEnum.Japanese)}>
             <Image
               style={{height: 100, resizeMode: 'contain'}}
               source={require(`../../assets/images/japanese-flag.png`)}

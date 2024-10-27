@@ -10,13 +10,13 @@ const WordStudyScreen = (): React.JSX.Element => {
   const dataProviderIsLoading = data.dataProviderIsLoading;
   const provdiderError = data.provdiderError;
   const japaneseWordsState = data.japaneseWordsState;
-  const japaneseAdhocLoadedSentences = data.adhocJapaneseSentencesState;
-  const japaneseLoadedContent = data.japaneseLoadedContentMaster;
+  const targetLanguageLoadedSentences = data.adhocJapaneseSentencesState;
+  const targetLanguageLoadedContent = data.targetLanguageLoadedContentMaster;
   const updatePromptState = data.updatePromptState;
 
   if (
     japaneseWordsState.length === 0 ||
-    japaneseLoadedContent.length === 0 ||
+    targetLanguageLoadedContent.length === 0 ||
     dataProviderIsLoading
   ) {
     return <LoadingScreen>Loading data...</LoadingScreen>;
@@ -29,8 +29,8 @@ const WordStudyScreen = (): React.JSX.Element => {
     <WordDataProvider>
       <WordStudyContainer
         japaneseWordsState={japaneseWordsState}
-        japaneseAdhocLoadedSentences={japaneseAdhocLoadedSentences}
-        japaneseLoadedContent={japaneseLoadedContent}
+        targetLanguageLoadedSentences={targetLanguageLoadedSentences}
+        targetLanguageLoadedContent={targetLanguageLoadedContent}
         updatePromptState={updatePromptState}
       />
     </WordDataProvider>

@@ -16,8 +16,8 @@ import useWordData from '../../context/Data/useWordData';
 
 function WordStudyContainer({
   japaneseWordsState,
-  japaneseAdhocLoadedSentences,
-  japaneseLoadedContent,
+  targetLanguageLoadedSentences,
+  targetLanguageLoadedContent,
 }): React.JSX.Element {
   const [tagsState, setTagsState] = useState([]);
   const [generalTopicState, setGeneralTopicState] = useState([]);
@@ -48,8 +48,8 @@ function WordStudyContainer({
     setWordStudyState,
     setTagsState,
     setGeneralTopicState,
-    japaneseLoadedContent,
-    japaneseAdhocLoadedSentences,
+    targetLanguageLoadedContent,
+    targetLanguageLoadedSentences,
     setDueCardsState,
   });
 

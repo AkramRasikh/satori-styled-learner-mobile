@@ -1,7 +1,7 @@
 import {generateRandomId} from '../utils/generate-random-id';
 
 const useContentControls = ({
-  japaneseLoadedWords,
+  targetLanguageLoadedWords,
   setLongPressedWord,
   soundRef,
   setIsPlaying,
@@ -46,7 +46,7 @@ const useContentControls = ({
   };
 
   const onLongPress = text => {
-    const longPressedTexts = japaneseLoadedWords.filter(word =>
+    const longPressedTexts = targetLanguageLoadedWords.filter(word =>
       text.includes(word.surfaceForm),
     );
     if (longPressedTexts.length > 0) {

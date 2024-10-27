@@ -11,6 +11,7 @@ import {makeArrayUnique} from '../../hooks/useHighlightWordToWordBank';
 import saveWordAPI from '../../api/save-word';
 import {updateWordAPI} from '../../api/update-word-data';
 import {deleteWordAPI} from '../../api/delete-word';
+import useLanguageSelector from './useLanguageSelector';
 
 export const DataContext = createContext(null);
 
@@ -18,8 +19,10 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
   const [difficultSentencesState, setDifficultSentencesState] = useState([]);
   const [audioTempState, setAudioTempState] = useState({});
   const [homeScreenData, setHomeScreenData] = useState(null);
-  const [japaneseLoadedContentMaster, setJapaneseLoadedContentMaster] =
-    useState([]);
+  const [
+    targetLanguageLoadedContentMaster,
+    settargetLanguageLoadedContentMaster,
+  ] = useState([]);
   const [japaneseSnippetsState, setJapaneseSnippetsState] = useState([]);
   const [adhocJapaneseSentencesState, setAdhocJapaneseSentencesState] =
     useState([]);
@@ -29,14 +32,16 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
   const [updatePromptState, setUpdatePromptState] = useState('');
   const [isAdhocDataLoading, setIsAdhocDataLoading] = useState(false);
 
+  const {languageSelectedState: language} = useLanguageSelector();
+
   const getPureWords = () => {
     let pureWords = [];
-    const japaneseLoadedWords = [
+    const targetLanguageLoadedWords = [
       ...japaneseWordsState,
       // ...newWordsAdded,
     ];
 
-    japaneseLoadedWords?.forEach(wordData => {
+    targetLanguageLoadedWords?.forEach(wordData => {
       pureWords.push(wordData.baseForm);
       pureWords.push(wordData.surfaceForm);
     });
@@ -111,11 +116,11 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
     topicName,
     resObj,
   }) => {
-    const thisTopicDataIndex = japaneseLoadedContentMaster.findIndex(
+    const thisTopicDataIndex = targetLanguageLoadedContentMaster.findIndex(
       topic => topic.title === topicName,
     );
 
-    const thisTopicData = japaneseLoadedContentMaster[thisTopicDataIndex];
+    const thisTopicData = targetLanguageLoadedContentMaster[thisTopicDataIndex];
 
     const thisTopicUpdateContent = thisTopicData.content.map(sentenceData => {
       if (sentenceData.id === sentenceId) {
@@ -132,14 +137,14 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
       content: thisTopicUpdateContent,
     };
 
-    const filteredTopics = japaneseLoadedContentMaster.map(topic => {
+    const filteredTopics = targetLanguageLoadedContentMaster.map(topic => {
       if (topic.title !== topicName) {
         return topic;
       }
       return newTopicState;
     });
 
-    setJapaneseLoadedContentMaster(filteredTopics);
+    settargetLanguageLoadedContentMaster(filteredTopics);
   };
 
   const handleUpdateAdhocSentenceDifficult = async ({
@@ -147,7 +152,11 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
     fieldToUpdate,
   }) => {
     try {
-      const res = await updateAdhocSentenceAPI({sentenceId, fieldToUpdate});
+      const res = await updateAdhocSentenceAPI({
+        sentenceId,
+        fieldToUpdate,
+        language,
+      });
       return {
         isAdhoc: true,
         ...res,
@@ -162,6 +171,7 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
       const updatedWordProperties = await updateWordAPI({
         wordId,
         fieldToUpdate,
+        language,
       });
       const japaneseWordsStateUpdated = japaneseWordsState.map(item => {
         const thisWordId = item.id === wordId;
@@ -183,7 +193,7 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
 
   const deleteWord = async ({wordId, wordBaseForm}) => {
     try {
-      await deleteWordAPI({wordId});
+      await deleteWordAPI({wordId, language});
       const japaneseWordsStateUpdated = japaneseWordsState.filter(
         item => item.id !== wordId,
       );
@@ -207,11 +217,15 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
       !isAdhoc && fieldToUpdate?.nextReview === null;
     try {
       const resObj = isAdhoc
-        ? await handleUpdateAdhocSentenceDifficult({sentenceId, fieldToUpdate})
+        ? await handleUpdateAdhocSentenceDifficult({
+            sentenceId,
+            fieldToUpdate,
+          })
         : await updateSentenceDataAPI({
             topicName,
             sentenceId,
             fieldToUpdate,
+            language,
           });
 
       const updatedSentences = isRemoveFromDifficultSentences
@@ -264,6 +278,7 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
     try {
       const snippetDataFromAPI = await addSnippetAPI({
         contentEntry: snippetData,
+        language,
       });
       setJapaneseSnippetsState(prev => [
         ...prev,
@@ -302,7 +317,7 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
 
   const removeSnippet = async ({snippetId, sentenceId}) => {
     try {
-      const deletedSnippetId = await deleteSnippetAPI({snippetId});
+      const deletedSnippetId = await deleteSnippetAPI({snippetId, language});
       const updatedSnippets = japaneseSnippetsState.filter(
         item => item.id !== deletedSnippetId,
       );
@@ -336,12 +351,12 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
 
   const addSnippetsToDifficultSentences = (
     allInitDifficultSentences,
-    japaneseLoadedSnippetsWithSavedTag,
+    targetLanguageLoadedSnippetsWithSavedTag,
   ) => {
     return allInitDifficultSentences.map(sentenceData => {
       return {
         ...sentenceData,
-        snippets: japaneseLoadedSnippetsWithSavedTag.filter(
+        snippets: targetLanguageLoadedSnippetsWithSavedTag.filter(
           snippetData => snippetData.sentenceId === sentenceData.id,
         ),
       };
@@ -360,6 +375,7 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
         highlightedWordSentenceId,
         contextSentence,
         isGoogle,
+        language,
       });
       setJapaneseWordsState(prev => [...prev, savedWord]);
     } catch (error) {
@@ -390,35 +406,35 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const allStudyDataRes = await getAllData();
-        const japaneseAdhocLoadedSentences =
-          allStudyDataRes.japaneseAdhocLoadedSentences;
-        const japaneseLoadedSnippets = allStudyDataRes.japaneseLoadedSnippets;
-        const japaneseLoadedSnippetsWithSavedTag = japaneseLoadedSnippets?.map(
-          item => ({
+        const allStudyDataRes = await getAllData({language});
+        const targetLanguageLoadedSentences =
+          allStudyDataRes.targetLanguageLoadedSentences;
+        const targetLanguageLoadedSnippets =
+          allStudyDataRes.targetLanguageLoadedSnippets;
+        const targetLanguageLoadedSnippetsWithSavedTag =
+          targetLanguageLoadedSnippets?.map(item => ({
             ...item,
             saved: true,
-          }),
-        );
+          }));
         setHomeScreenData(allStudyDataRes);
-        setJapaneseSnippetsState(japaneseLoadedSnippetsWithSavedTag);
-        setJapaneseLoadedContentMaster(
-          allStudyDataRes.japaneseLoadedContent?.sort((a, b) => {
+        setJapaneseSnippetsState(targetLanguageLoadedSnippetsWithSavedTag);
+        settargetLanguageLoadedContentMaster(
+          allStudyDataRes.targetLanguageLoadedContent?.sort((a, b) => {
             return a.isCore === b.isCore ? 0 : a.isCore ? -1 : 1;
           }),
         );
 
         const allInitDifficultSentences = getSentencesMarkedAsDifficult(
-          allStudyDataRes.japaneseLoadedContent,
-          japaneseAdhocLoadedSentences,
+          allStudyDataRes.targetLanguageLoadedContent,
+          targetLanguageLoadedSentences,
         )?.sort(sortByDueDate);
         const difficultSentencesWithSnippets = addSnippetsToDifficultSentences(
           allInitDifficultSentences,
-          japaneseLoadedSnippetsWithSavedTag,
+          targetLanguageLoadedSnippetsWithSavedTag,
         );
         setDifficultSentencesState(difficultSentencesWithSnippets);
-        setJapaneseWordsState(allStudyDataRes.japaneseLoadedWords);
-        setAdhocJapaneseSentencesState(japaneseAdhocLoadedSentences);
+        setJapaneseWordsState(allStudyDataRes.targetLanguageLoadedWords);
+        setAdhocJapaneseSentencesState(targetLanguageLoadedSentences);
       } catch (error) {
         console.log('## DataProvider error: ', error);
         setProvdiderError(error);
@@ -426,9 +442,10 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
         setDataProviderIsLoading(false);
       }
     };
-
-    fetchData();
-  }, []);
+    if (language) {
+      fetchData();
+    }
+  }, [language]);
 
   return (
     <DataContext.Provider
@@ -441,7 +458,7 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
         audioTempState,
         updateSentenceData,
         updatePromptState,
-        japaneseLoadedContentMaster,
+        targetLanguageLoadedContentMaster,
         addAdhocSentenceFunc,
         isAdhocDataLoading,
         japaneseSnippetsState,

@@ -1,9 +1,9 @@
 import {BACKEND_ENDPOINT} from '@env';
-import {japanese} from '../refs';
 
 export const updateCreateReviewHistory = async ({
   contentEntry,
   fieldToUpdate,
+  language,
 }) => {
   const url = BACKEND_ENDPOINT + '/update-content';
 
@@ -14,7 +14,7 @@ export const updateCreateReviewHistory = async ({
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        language: japanese,
+        language,
         title: contentEntry,
         fieldToUpdate,
       }),

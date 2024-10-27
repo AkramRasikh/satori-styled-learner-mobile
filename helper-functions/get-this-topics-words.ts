@@ -3,7 +3,7 @@ import {makeArrayUnique} from '../hooks/useHighlightWordToWordBank';
 export const getThisTopicsWords = ({
   pureWordsUnique,
   topicData,
-  japaneseLoadedWords,
+  targetLanguageLoadedWords,
 }) => {
   const masterBank = makeArrayUnique([...(pureWordsUnique || [])]);
   if (masterBank?.length === 0) return [];
@@ -15,7 +15,7 @@ export const getThisTopicsWords = ({
   targetLangItems.forEach(sentence => {
     sentence.split(pattern).forEach(segment => {
       if (segment.match(pattern)) {
-        const thisWordData = japaneseLoadedWords.find(
+        const thisWordData = targetLanguageLoadedWords.find(
           word => word.baseForm === segment || word.surfaceForm === segment,
         );
         segments.push(thisWordData);
