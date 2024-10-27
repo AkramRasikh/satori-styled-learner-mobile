@@ -45,7 +45,8 @@ const MusicContent = ({
   const [highlightMode, setHighlightMode] = useState(false);
   const [highlightedIndices, setHighlightedIndices] = useState([]);
   const [formattedData, setFormattedData] = useState([]);
-  const [initJapaneseWordsList, setInitJapaneseWordsList] = useState(null);
+  const [initTargetLanguageWordsList, setInitTargetLanguageWordsList] =
+    useState(null);
   const [updateWordList, setUpdateWordList] = useState(false);
   const [showWordStudyList, setShowWordStudyList] = useState(true);
 
@@ -69,11 +70,11 @@ const MusicContent = ({
   useMasterAudioLoad({soundRef, url});
 
   useEffect(() => {
-    if (targetLanguageLoadedWords?.length !== initJapaneseWordsList) {
+    if (targetLanguageLoadedWords?.length !== initTargetLanguageWordsList) {
       setUpdateWordList(true);
-      setInitJapaneseWordsList(targetLanguageLoadedWords.length);
+      setInitTargetLanguageWordsList(targetLanguageLoadedWords.length);
     }
-  }, [targetLanguageLoadedWords, initJapaneseWordsList]);
+  }, [targetLanguageLoadedWords, initTargetLanguageWordsList]);
 
   useEffect(() => {
     if (!isAlreadyLoaded && formattedData?.length > 0) {
@@ -113,7 +114,7 @@ const MusicContent = ({
         targetLanguageLoadedWords,
       }),
     );
-    setInitJapaneseWordsList(targetLanguageLoadedWords?.length);
+    setInitTargetLanguageWordsList(targetLanguageLoadedWords?.length);
   }, []);
 
   const {underlineWordsInSentence} = useHighlightWordToWordBank({

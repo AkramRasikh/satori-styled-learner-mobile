@@ -45,9 +45,8 @@ function Home({
     targetLanguageLoadedContentState,
     settargetLanguageLoadedContentState,
   ] = useState([]);
-  const [japaneseWordsToStudyState, setJapaneseWordsToStudyState] = useState(
-    {},
-  );
+  const [targetLanguageWordsToStudyState, setTargetLanguageWordsToStudyState] =
+    useState({});
   const [generalTopicState, setGeneralTopicState] = useState('');
   const [updatePromptState, setUpdatePromptState] = useState('');
   const [triggerSentenceIdUpdate, setTriggerSentenceIdUpdate] = useState('');
@@ -147,8 +146,8 @@ function Home({
         isMusic,
         language: languageSelectedState,
       });
-      setJapaneseWordsToStudyState({
-        ...japaneseWordsToStudyState,
+      setTargetLanguageWordsToStudyState({
+        ...targetLanguageWordsToStudyState,
         [topic]: res,
       });
     } catch (error) {
@@ -489,7 +488,7 @@ function Home({
               saveWordFirebase={saveWordFirebase}
               handleOtherTopics={handleOtherTopics}
               hasWordsToStudy={topicsToStudyState[selectedTopic]}
-              japaneseWordsToStudyState={japaneseWordsToStudyState}
+              targetLanguageWordsToStudyState={targetLanguageWordsToStudyState}
               getThisTopicsWordsFunc={getThisTopicsWordsFunc}
               updateTopicMetaData={updateTopicMetaData}
               updateSentenceData={updateSentenceData}
@@ -509,7 +508,7 @@ function Home({
               saveWordFirebase={saveWordFirebase}
               topicData={formattedContent}
               handleOtherTopics={handleOtherTopics}
-              japaneseWordsToStudyState={japaneseWordsToStudyState}
+              targetLanguageWordsToStudyState={targetLanguageWordsToStudyState}
               hasWordsToStudy={topicsToStudyState[selectedSong]}
               getThisTopicsWordsFunc={getThisTopicsWordsFunc}
             />

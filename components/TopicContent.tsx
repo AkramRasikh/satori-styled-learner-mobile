@@ -65,7 +65,8 @@ const TopicContent = ({
   const [highlightMode, setHighlightMode] = useState(false);
   const [highlightedIndices, setHighlightedIndices] = useState([]);
   const [formattedData, setFormattedData] = useState([]);
-  const [initJapaneseWordsList, setInitJapaneseWordsList] = useState(null);
+  const [initTargetLanguageWordsList, setInitTargetLanguageWordsList] =
+    useState(null);
   const [updateWordList, setUpdateWordList] = useState(false);
   const [showWordStudyList, setShowWordStudyList] = useState(false);
   const [showAdhocSentence, setShowAdhocSentence] = useState(false);
@@ -147,11 +148,11 @@ const TopicContent = ({
   });
 
   useEffect(() => {
-    if (targetLanguageLoadedWords?.length !== initJapaneseWordsList) {
+    if (targetLanguageLoadedWords?.length !== initTargetLanguageWordsList) {
       setUpdateWordList(true);
-      setInitJapaneseWordsList(targetLanguageLoadedWords.length);
+      setInitTargetLanguageWordsList(targetLanguageLoadedWords.length);
     }
-  }, [targetLanguageLoadedWords, initJapaneseWordsList]);
+  }, [targetLanguageLoadedWords, initTargetLanguageWordsList]);
 
   const getSafeText = targetText => {
     const textSegments = underlineWordsInSentence(targetText);
@@ -226,7 +227,7 @@ const TopicContent = ({
     pureWordsUnique,
     topicData,
     targetLanguageLoadedWords,
-    setInitJapaneseWordsList,
+    setInitTargetLanguageWordsList,
   });
 
   useFormatUnderlyingWords({

@@ -6,7 +6,7 @@ const useInitTopicWordList = ({
   pureWordsUnique,
   topicData,
   targetLanguageLoadedWords,
-  setInitJapaneseWordsList,
+  setInitTargetLanguageWordsList,
 }) => {
   useEffect(() => {
     setThisTopicsWords(
@@ -16,7 +16,7 @@ const useInitTopicWordList = ({
         targetLanguageLoadedWords,
       }),
     );
-    setInitJapaneseWordsList(targetLanguageLoadedWords?.length);
+    setInitTargetLanguageWordsList(targetLanguageLoadedWords?.length);
   }, []);
 };
 

@@ -67,11 +67,11 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
   };
 
   const getSentencesMarkedAsDifficult = (
-    dataFromJapaneseContent,
+    dataFromTargetLanguageContent,
     adhocSentences,
   ) => {
     const difficultSentences = [];
-    dataFromJapaneseContent?.forEach(contentWidget => {
+    dataFromTargetLanguageContent?.forEach(contentWidget => {
       const thisTopic = contentWidget.title;
       const isCore = contentWidget.isCore;
       const isMediaContent =

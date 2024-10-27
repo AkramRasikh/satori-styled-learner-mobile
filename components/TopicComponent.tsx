@@ -16,7 +16,7 @@ const TopicComponent = ({
   saveWordFirebase,
   handleOtherTopics,
   hasWordsToStudy,
-  japaneseWordsToStudyState,
+  targetLanguageWordsToStudyState,
   getThisTopicsWordsFunc,
   updateTopicMetaData,
   updateSentenceData,
@@ -24,7 +24,8 @@ const TopicComponent = ({
   setTriggerSentenceIdUpdate,
 }) => {
   const prefixName = topicName.split('-')[0];
-  const hasWordsInState = japaneseWordsToStudyState?.hasOwnProperty(prefixName);
+  const hasWordsInState =
+    targetLanguageWordsToStudyState?.hasOwnProperty(prefixName);
 
   useEffect(() => {
     if (hasWordsToStudy && !hasWordsInState) {
@@ -53,7 +54,7 @@ const TopicComponent = ({
         removeSnippet={removeSnippet}
         saveWordFirebase={saveWordFirebase}
         wordsToStudy={
-          hasWordsInState ? japaneseWordsToStudyState[prefixName] : null
+          hasWordsInState ? targetLanguageWordsToStudyState[prefixName] : null
         }
         updateTopicMetaData={updateTopicMetaData}
         updateSentenceData={updateSentenceData}

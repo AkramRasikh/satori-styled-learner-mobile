@@ -31,9 +31,7 @@ export const getThisTopicsWordsToStudyAPI = async ({
   isMusic,
   language,
 }) => {
-  const param = isMusic
-    ? '/get-japanese-words-song'
-    : '/get-japanese-words-topic';
+  const param = isMusic ? '/get-words-song' : '/get-words-topic';
   const url = BACKEND_ENDPOINT + param;
 
   try {

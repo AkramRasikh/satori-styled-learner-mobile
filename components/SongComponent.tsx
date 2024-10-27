@@ -15,11 +15,12 @@ const SongComponent = ({
   saveWordFirebase,
   topicData,
   handleOtherTopics,
-  japaneseWordsToStudyState,
+  targetLanguageWordsToStudyState,
   hasWordsToStudy,
   getThisTopicsWordsFunc,
 }) => {
-  const hasWordsInState = japaneseWordsToStudyState?.hasOwnProperty(topicName);
+  const hasWordsInState =
+    targetLanguageWordsToStudyState?.hasOwnProperty(topicName);
 
   useEffect(() => {
     if (hasWordsToStudy && !hasWordsInState) {
@@ -48,7 +49,7 @@ const SongComponent = ({
         saveWordFirebase={saveWordFirebase}
         topicData={topicData}
         wordsToStudy={
-          hasWordsInState ? japaneseWordsToStudyState[topicName] : null
+          hasWordsInState ? targetLanguageWordsToStudyState[topicName] : null
         }
       />
     </View>
