@@ -370,6 +370,14 @@ function Home({
     return nextReviewDateDueForGeneralTopicDue;
   };
 
+  const isYoutubeVideo = topicOption => {
+    return targetLanguageLoadedContentState.some(
+      topicDisplayed =>
+        topicDisplayed?.origin === 'youtube' &&
+        topicDisplayed.title.split('-').slice(0, -1).join('-') === topicOption,
+    );
+  };
+
   const isDueReview = (topicOption, singular, isReview) => {
     if (singular) {
       return isDueReviewSingular({topicOption, isReview});
@@ -463,6 +471,7 @@ function Home({
             isDueReview={isDueReview}
             isCoreContent={isCoreContent}
             isNeedsFutureReview={isNeedsFutureReview}
+            isYoutubeVideo={isYoutubeVideo}
           />
         )}
         {!topicOrSongSelected || showOtherTopics ? (

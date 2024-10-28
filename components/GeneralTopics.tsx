@@ -1,4 +1,4 @@
-import {Text, TouchableOpacity, View} from 'react-native';
+import {Image, Text, TouchableOpacity, View} from 'react-native';
 
 const GeneralTopics = ({
   handleShowGeneralTopic,
@@ -6,6 +6,7 @@ const GeneralTopics = ({
   isDueReview,
   isCoreContent,
   isNeedsFutureReview,
+  isYoutubeVideo,
 }) => {
   return (
     <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
@@ -16,6 +17,8 @@ const GeneralTopics = ({
           topicOption: generalTopic,
           singular: false,
         });
+        const isYoutube = isYoutubeVideo(generalTopic);
+
         return (
           <View key={generalTopic} testID={generalTopic}>
             <TouchableOpacity
@@ -36,6 +39,20 @@ const GeneralTopics = ({
               <Text>
                 <Text>{generalTopic}</Text>
                 {isCoreStatus ? <Text> 🧠</Text> : null}
+                {isYoutube ? (
+                  <View
+                    style={{
+                      paddingLeft: 5,
+                      display: 'flex',
+                      flexDirection: 'row',
+                      justifyContent: 'center',
+                    }}>
+                    <Image
+                      source={require('../assets/images/youtube.png')}
+                      style={{width: 16, height: 16}}
+                    />
+                  </View>
+                ) : null}
               </Text>
             </TouchableOpacity>
           </View>
