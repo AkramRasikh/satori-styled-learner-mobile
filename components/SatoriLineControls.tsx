@@ -16,6 +16,8 @@ const SatoriLineControls = ({
   hasBeenMarkedAsDifficult,
   topicName,
   updateSentenceData,
+  highlightMode,
+  setHighlightMode,
 }) => {
   const handleQuickNextDayReview = async () => {
     const newDate = new Date();
@@ -43,33 +45,39 @@ const SatoriLineControls = ({
         display: 'flex',
         flexDirection: 'row',
         gap: 10,
+        marginBottom: highlightMode ? 3 : 0,
       }}>
       <TouchableOpacity onPress={handlePlayThisLine}>
-        {isPlaying && focusThisSentence ? (
-          <Text style={{marginRight: 5}}>⏸️</Text>
-        ) : (
-          <Text style={{marginRight: 5}}>▶️</Text>
-        )}
+        {isPlaying && focusThisSentence ? <Text>⏸️</Text> : <Text>▶️</Text>}
       </TouchableOpacity>
       <TouchableOpacity onPress={() => setShowEng(!showEng)}>
-        <Text style={{marginRight: 5}}>🇬🇧</Text>
+        <Text>🇬🇧</Text>
       </TouchableOpacity>
       <TouchableOpacity onPress={copySentence}>
-        <Text style={{marginRight: 5}}>📋</Text>
+        <Text>📋</Text>
       </TouchableOpacity>
       <TouchableOpacity onPress={openReviewPortal}>
-        <Text style={{marginRight: 5}}>😓</Text>
+        <Text>😓</Text>
       </TouchableOpacity>
       {topicSentence.notes ? (
         <TouchableOpacity onPress={() => setShowNotes(!showNotes)}>
-          <Text style={{marginRight: 5}}>☝🏽</Text>
+          <Text>☝🏽</Text>
         </TouchableOpacity>
       ) : null}
       {!hasBeenMarkedAsDifficult ? (
         <TouchableOpacity onPress={handleQuickNextDayReview}>
-          <Text style={{marginRight: 5}}>➕</Text>
+          <Text>➕</Text>
         </TouchableOpacity>
       ) : null}
+      {highlightMode ? (
+        <TouchableOpacity onPress={() => setHighlightMode(false)}>
+          <Text>❌</Text>
+        </TouchableOpacity>
+      ) : (
+        <TouchableOpacity onPress={() => setHighlightMode(true)}>
+          <Text>🔴</Text>
+        </TouchableOpacity>
+      )}
     </View>
   );
 };

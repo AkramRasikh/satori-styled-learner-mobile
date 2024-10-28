@@ -20,23 +20,17 @@ const DisplaySettings = ({
   setWordTest,
   englishOnly,
   setEnglishOnly,
-  highlightMode,
-  setHighlightMode,
   setOpenTopicWords,
   openTopicWords,
   isFlowingSentences,
   setIsFlowingSentences,
   engMaster,
   setEngMaster,
-  showWordStudyList,
-  setShowWordStudyList,
 }) => {
   const settingsArr = [
     {func: setWordTest, bool: wordTest, text: 'Word hint'},
     {func: setEnglishOnly, bool: englishOnly, text: 'Eng only'},
     {func: setEngMaster, bool: engMaster, text: 'Eng Master'},
-    {func: setHighlightMode, bool: highlightMode, text: 'Highlight'},
-    {func: setShowWordStudyList, bool: showWordStudyList, text: 'Cards'},
     {func: setOpenTopicWords, bool: openTopicWords, text: 'Word list'},
     {
       func: setIsFlowingSentences,

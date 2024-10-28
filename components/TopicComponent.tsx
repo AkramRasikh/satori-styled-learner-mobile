@@ -53,9 +53,6 @@ const TopicComponent = ({
         snippetsForSelectedTopic={snippetsForSelectedTopic}
         removeSnippet={removeSnippet}
         saveWordFirebase={saveWordFirebase}
-        wordsToStudy={
-          hasWordsInState ? targetLanguageWordsToStudyState[prefixName] : null
-        }
         updateTopicMetaData={updateTopicMetaData}
         updateSentenceData={updateSentenceData}
         triggerSentenceIdUpdate={triggerSentenceIdUpdate}

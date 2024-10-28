@@ -75,6 +75,8 @@ const SatoriLine = ({
         hasBeenMarkedAsDifficult={hasBeenMarkedAsDifficult}
         topicName={topicName}
         updateSentenceData={updateSentenceData}
+        highlightMode={highlightMode}
+        setHighlightMode={setHighlightMode}
       />
       {englishOnly ? null : highlightMode ? (
         <HighlightTextZone

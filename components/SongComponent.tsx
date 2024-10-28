@@ -48,9 +48,6 @@ const SongComponent = ({
         snippetsForSelectedTopic={snippetsForSelectedTopic}
         saveWordFirebase={saveWordFirebase}
         topicData={topicData}
-        wordsToStudy={
-          hasWordsInState ? targetLanguageWordsToStudyState[topicName] : null
-        }
       />
     </View>
   );

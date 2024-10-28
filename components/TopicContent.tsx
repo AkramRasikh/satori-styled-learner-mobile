@@ -46,7 +46,6 @@ const TopicContent = ({
   removeSnippet,
   snippetsForSelectedTopic,
   saveWordFirebase,
-  wordsToStudy,
   updateTopicMetaData,
   updateSentenceData,
   triggerSentenceIdUpdate,
@@ -69,7 +68,6 @@ const TopicContent = ({
   const [initTargetLanguageWordsList, setInitTargetLanguageWordsList] =
     useState(null);
   const [updateWordList, setUpdateWordList] = useState(false);
-  const [showWordStudyList, setShowWordStudyList] = useState(false);
   const [showAdhocSentence, setShowAdhocSentence] = useState(false);
   const [audioLoadingProgress, setAudioLoadingProgress] = useState(0);
 
@@ -313,24 +311,17 @@ const TopicContent = ({
 
   return (
     <View>
-      {showWordStudyList && wordsToStudy ? (
-        <WordStudySection wordsToStudy={wordsToStudy} />
-      ) : null}
       <DisplaySettings
         wordTest={wordTest}
         setWordTest={setWordTest}
         englishOnly={englishOnly}
         setEnglishOnly={setEnglishOnly}
-        highlightMode={highlightMode}
-        setHighlightMode={setHighlightMode}
         setOpenTopicWords={setOpenTopicWords}
         openTopicWords={openTopicWords}
         isFlowingSentences={isFlowingSentences}
         setIsFlowingSentences={setIsFlowingSentences}
         engMaster={engMaster}
         setEngMaster={setEngMaster}
-        showWordStudyList={showWordStudyList}
-        setShowWordStudyList={setShowWordStudyList}
       />
       {openTopicWords && thisTopicsWords?.length > 0 ? (
         <TopicWordList thisTopicsWords={thisTopicsWords} />
