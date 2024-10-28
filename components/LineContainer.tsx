@@ -37,6 +37,7 @@ const LineContainer = ({
             if (topicSentence.targetLang === '') return null;
             const id = topicSentence.id;
             const focusThisSentence = id === masterPlay;
+            const firstEl = index === 0;
 
             const thisSnippets = snippetsLocalAndDb?.filter(
               item => id === item.sentenceId && item?.saved,
@@ -47,6 +48,7 @@ const LineContainer = ({
                 style={{
                   width: width * 0.9,
                   marginBottom: 10,
+                  paddingTop: firstEl ? 10 : 0,
                 }}
                 key={id}>
                 <Text

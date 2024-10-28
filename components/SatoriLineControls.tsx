@@ -1,4 +1,5 @@
-import {Text, TouchableOpacity} from 'react-native';
+import {Text, TouchableOpacity, View} from 'react-native';
+import {getEmptyCard} from '../srs-algo';
 
 const SatoriLineControls = ({
   handlePlayThisLine,
@@ -11,9 +12,38 @@ const SatoriLineControls = ({
   showEng,
   setShowNotes,
   showNotes,
+  textWidth,
+  hasBeenMarkedAsDifficult,
+  topicName,
+  updateSentenceData,
 }) => {
+  const handleQuickNextDayReview = async () => {
+    const newDate = new Date();
+    newDate.setDate(newDate.getDate() + 1);
+    const nextReviewData = {
+      ...getEmptyCard(),
+      due: newDate,
+    };
+    try {
+      await updateSentenceData({
+        topicName,
+        sentenceId: topicSentence.id,
+        fieldToUpdate: {
+          reviewData: nextReviewData,
+        },
+      });
+    } catch (error) {
+      console.log('## handleQuickNextDayReview error', error);
+    }
+  };
   return (
-    <>
+    <View
+      style={{
+        width: textWidth,
+        display: 'flex',
+        flexDirection: 'row',
+        gap: 10,
+      }}>
       <TouchableOpacity onPress={handlePlayThisLine}>
         {isPlaying && focusThisSentence ? (
           <Text style={{marginRight: 5}}>⏸️</Text>
@@ -35,7 +65,12 @@ const SatoriLineControls = ({
           <Text style={{marginRight: 5}}>☝🏽</Text>
         </TouchableOpacity>
       ) : null}
-    </>
+      {!hasBeenMarkedAsDifficult ? (
+        <TouchableOpacity onPress={handleQuickNextDayReview}>
+          <Text style={{marginRight: 5}}>➕</Text>
+        </TouchableOpacity>
+      ) : null}
+    </View>
   );
 };
 
