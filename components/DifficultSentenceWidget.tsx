@@ -317,6 +317,7 @@ const DifficultSentenceWidget = ({
   sentenceBeingHighlightedState,
   setSentenceBeingHighlightedState,
   dueDate,
+  indexOrder,
 }) => {
   const [currentTimeState, setCurrentTimeState] = useState(0);
   const [showReviewSettings, setShowReviewSettings] = useState(false);
@@ -334,6 +335,8 @@ const DifficultSentenceWidget = ({
   const baseLang = sentence.baseLang;
   const targetLang = sentence.targetLang;
   const isMediaContent = sentence.isMediaContent;
+  const isWithin3Indexs = indexOrder < 3;
+
   const audioId = isMediaContent ? topic : id;
   const soundRef = useRef();
 
@@ -366,6 +369,12 @@ const DifficultSentenceWidget = ({
     soundRef,
     url: filePath,
   });
+
+  useEffect(() => {
+    if (isWithin3Indexs) {
+      loadFile(audioId, url);
+    }
+  }, [indexOrder, loadFile, audioId, url, isWithin3Indexs]);
 
   useEffect(() => {
     if (filePath) {

@@ -123,6 +123,7 @@ const DifficultSentencesContainer = ({
               return (
                 <DifficultSentenceWidget
                   key={sentence.id}
+                  indexOrder={index}
                   sentence={sentence}
                   todayDateObj={todayDateObj}
                   updateSentenceData={updateSentenceData}
