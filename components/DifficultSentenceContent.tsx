@@ -123,7 +123,8 @@ const DifficultSentenceContent = ({
             style={[
               segment.style,
               {
-                lineHeight: 20,
+                fontSize: 20,
+                lineHeight: 24,
               },
             ]}
             onLongPress={() => onLongPress(segment.text)}>

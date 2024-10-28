@@ -87,7 +87,7 @@ const HighlightTextZone = ({
   // Estimate the character index based on the x-coordinate
   const calculateIndexX = x => {
     // Adjust this value based on actual character width in your font
-    const charWidth = 16;
+    const charWidth = 20;
     return Math.floor(x / charWidth);
   };
 
@@ -186,13 +186,13 @@ const HighlightTextZone = ({
 
 const styles = StyleSheet.create({
   text: {
-    fontSize: 16,
+    fontSize: 20,
     lineHeight: 24,
     flexDirection: 'row',
     flexWrap: 'wrap',
   },
   highlight: {
-    fontSize: 16,
+    fontSize: 20,
     lineHeight: 24,
     backgroundColor: '#add8e6',
   },
