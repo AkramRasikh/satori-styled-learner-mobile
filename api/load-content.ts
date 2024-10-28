@@ -16,7 +16,7 @@ const loadAllContent = async ({language}) => {
       },
       body: JSON.stringify({
         language,
-        refs: [adhocSentences, content, snippets, songs, words],
+        refs: [adhocSentences, content, snippets, words],
       }),
     });
 
