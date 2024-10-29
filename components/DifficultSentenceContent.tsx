@@ -78,6 +78,7 @@ const DifficultSentenceContent = ({
   const {underlineWordsInSentence} = useHighlightWordToWordBank({
     pureWordsUnique: pureWords,
   });
+  const isDueNow = new Date(sentence.reviewData.due) < new Date();
 
   const highlightMode = sentenceId === sentenceBeingHighlightedState;
 
@@ -150,12 +151,14 @@ const DifficultSentenceContent = ({
           display: 'flex',
           flexDirection: 'row',
           gap: 5,
-          justifyContent: 'space-between',
+          justifyContent: isDueNow ? 'space-between' : 'flex-end',
         }}>
-        <SRSTogglesMini
-          sentence={sentence}
-          updateSentenceData={updateSentenceData}
-        />
+        {isDueNow ? (
+          <SRSTogglesMini
+            sentence={sentence}
+            updateSentenceData={updateSentenceData}
+          />
+        ) : null}
         <View
           style={{
             display: 'flex',
