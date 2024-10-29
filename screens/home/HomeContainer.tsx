@@ -4,7 +4,6 @@ import {SafeAreaView, ScrollView, Text, View} from 'react-native';
 import TopicComponent from '../../components/TopicComponent';
 import {makeArrayUnique} from '../../hooks/useHighlightWordToWordBank';
 import saveWordAPI from '../../api/save-word';
-import {getThisTopicsWordsToStudyAPI} from '../../api/words-to-study';
 import useSetupPlayer from '../../hooks/useSetupPlayer';
 import {updateCreateReviewHistory} from '../../api/update-create-review-history';
 import MoreTopics from '../../components/MoreTopics';
@@ -41,8 +40,6 @@ function Home({
     targetLanguageLoadedContentState,
     settargetLanguageLoadedContentState,
   ] = useState([]);
-  const [targetLanguageWordsToStudyState, setTargetLanguageWordsToStudyState] =
-    useState({});
   const [generalTopicState, setGeneralTopicState] = useState('');
   const [updatePromptState, setUpdatePromptState] = useState('');
   const [triggerSentenceIdUpdate, setTriggerSentenceIdUpdate] = useState('');
@@ -121,21 +118,6 @@ function Home({
       setNewWordsAdded(prev => [...prev, savedWord]);
     } catch (error) {
       console.log('## saveWordFirebase err', error);
-    }
-  };
-
-  const getThisTopicsWordsFunc = async topic => {
-    try {
-      const res = await getThisTopicsWordsToStudyAPI({
-        topic,
-        language: languageSelectedState,
-      });
-      setTargetLanguageWordsToStudyState({
-        ...targetLanguageWordsToStudyState,
-        [topic]: res,
-      });
-    } catch (error) {
-      console.log('## getThisTopicsWordsFunc Err:', error);
     }
   };
 
@@ -451,9 +433,6 @@ function Home({
               removeSnippet={removeSnippet}
               saveWordFirebase={saveWordFirebase}
               handleOtherTopics={handleOtherTopics}
-              hasWordsToStudy={topicsToStudyState[selectedTopic]}
-              targetLanguageWordsToStudyState={targetLanguageWordsToStudyState}
-              getThisTopicsWordsFunc={getThisTopicsWordsFunc}
               updateTopicMetaData={updateTopicMetaData}
               updateSentenceData={updateSentenceData}
               triggerSentenceIdUpdate={triggerSentenceIdUpdate}
