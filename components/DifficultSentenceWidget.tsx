@@ -325,7 +325,7 @@ const DifficultSentenceWidget = ({
   const [showThisWordsDefinitions, setShowThisWordsDefinitions] =
     useState(null);
 
-  const {getThisSentencesWordList} = useData();
+  const {getThisSentencesWordList, updatingSentenceState} = useData();
   const {languageSelectedState} = useLanguageSelector();
 
   const id = sentence.id;
@@ -403,6 +403,8 @@ const DifficultSentenceWidget = ({
     }
   };
 
+  const thisSentenceIsLoading = updatingSentenceState === sentence.id;
+
   const getLongPressedWordData = () => {
     if (!showThisWordsDefinitions) {
       return;
@@ -458,7 +460,27 @@ const DifficultSentenceWidget = ({
         gap: 10,
         marginBottom: 10,
         paddingBottom: isLastEl ? 100 : 0,
+        opacity: thisSentenceIsLoading ? 0.5 : 1,
       }}>
+      {thisSentenceIsLoading && (
+        <View
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            position: 'absolute',
+            right: '50%',
+            top: '50%',
+            opacity: 1,
+            zIndex: 100,
+          }}>
+          <Text
+            style={{
+              fontSize: 30,
+            }}>
+            ⏳
+          </Text>
+        </View>
+      )}
       <View>
         {showThisWordsDefinitions?.length > 0 ? (
           <View

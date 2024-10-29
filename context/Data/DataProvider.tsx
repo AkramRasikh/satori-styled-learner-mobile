@@ -19,6 +19,7 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
   const [difficultSentencesState, setDifficultSentencesState] = useState([]);
   const [audioTempState, setAudioTempState] = useState({});
   const [homeScreenData, setHomeScreenData] = useState(null);
+  const [updatingSentenceState, setUpdatingSentenceState] = useState('');
   const [
     targetLanguageLoadedContentMaster,
     settargetLanguageLoadedContentMaster,
@@ -221,6 +222,7 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
     const isRemoveFromDifficultSentences =
       !isAdhoc && fieldToUpdate?.nextReview === null;
     try {
+      setUpdatingSentenceState(sentenceId);
       const resObj = isAdhoc
         ? await handleUpdateAdhocSentenceDifficult({
             sentenceId,
@@ -255,6 +257,8 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
       setTimeout(() => setUpdatePromptState(''), 3000);
     } catch (error) {
       console.log('## updateSentenceData', {error});
+    } finally {
+      setUpdatingSentenceState('');
     }
   };
 
@@ -478,6 +482,7 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
         adhocTargetLanguageSentencesState,
         updateWordData,
         deleteWord,
+        updatingSentenceState,
       }}>
       {children}
     </DataContext.Provider>
