@@ -3,7 +3,11 @@ import {getNextScheduledOptions, srsRetentionKeyTypes} from '../srs-algo';
 import {getTimeDiffSRS} from '../utils/getTimeDiffSRS';
 import {getCardDataRelativeToNow, getDueDate} from './SRSTogglesSentences';
 
-const SRSTogglesMini = ({sentence, updateSentenceData}) => {
+const SRSTogglesMini = ({
+  sentence,
+  updateSentenceData,
+  setToggleableSentencesState,
+}) => {
   const timeNow = new Date();
 
   const reviewData = sentence?.reviewData;
@@ -46,6 +50,9 @@ const SRSTogglesMini = ({sentence, updateSentenceData}) => {
     const nextReviewData = nextScheduledOptions[difficulty].card;
 
     try {
+      setToggleableSentencesState(prev =>
+        prev.filter(sentenceData => sentenceData.id !== sentence.id),
+      );
       await updateSentenceData({
         isAdhoc,
         topicName: sentence.topic,
@@ -54,7 +61,6 @@ const SRSTogglesMini = ({sentence, updateSentenceData}) => {
           reviewData: nextReviewData,
           ...getShouldRemoveLegacyFields(),
         },
-        quickRemoval: true,
       });
     } catch (error) {
       console.log('## handleNextReview', {error});

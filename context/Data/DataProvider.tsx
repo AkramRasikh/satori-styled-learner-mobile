@@ -218,7 +218,6 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
     sentenceId,
     fieldToUpdate,
     isAdhoc,
-    quickRemoval,
   }) => {
     const isRemoveFromDifficultSentences =
       !isAdhoc && fieldToUpdate?.nextReview === null;
@@ -261,14 +260,8 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
 
     try {
       setUpdatingSentenceState(sentenceId);
-      if (quickRemoval) {
-        stateUpdateLogic(fieldToUpdate);
-        await updateBackEnd();
-        setUpdatingSentenceState('');
-      } else {
-        const resObj = await updateBackEnd();
-        stateUpdateLogic(resObj);
-      }
+      const resObj = await updateBackEnd();
+      stateUpdateLogic(resObj);
       setTimeout(() => setUpdatePromptState(''), 2000);
     } catch (error) {
       console.log('## updateSentenceData', {error});

@@ -51,7 +51,7 @@ const DifficultSentencesContainer = ({
     if (difficultSentencesState?.length > 0) {
       showDueInit(difficultSentencesState);
     }
-  }, [difficultSentencesState]);
+  }, []);
 
   if (toggleableSentencesState.length === 0) {
     return <LoadingScreen>Getting ready!</LoadingScreen>;
@@ -120,6 +120,7 @@ const DifficultSentencesContainer = ({
                   setSentenceBeingHighlightedState={
                     setSentenceBeingHighlightedState
                   }
+                  setToggleableSentencesState={setToggleableSentencesState}
                 />
               );
             })}

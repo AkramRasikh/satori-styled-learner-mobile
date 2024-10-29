@@ -24,6 +24,7 @@ const DifficultSentenceContent = ({
   sentenceId,
   updateSentenceData,
   sentence,
+  setToggleableSentencesState,
 }) => {
   const [highlightedIndices, setHighlightedIndices] = useState([]);
   const [containerWidth, setContainerWidth] = useState(0);
@@ -113,6 +114,7 @@ const DifficultSentenceContent = ({
           <SRSTogglesMini
             sentence={sentence}
             updateSentenceData={updateSentenceData}
+            setToggleableSentencesState={setToggleableSentencesState}
           />
         ) : null}
         <View
