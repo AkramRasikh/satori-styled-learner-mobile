@@ -218,11 +218,11 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
     sentenceId,
     fieldToUpdate,
     isAdhoc,
+    quickRemoval,
   }) => {
     const isRemoveFromDifficultSentences =
       !isAdhoc && fieldToUpdate?.nextReview === null;
-    try {
-      setUpdatingSentenceState(sentenceId);
+    const updateBackEnd = async () => {
       const resObj = isAdhoc
         ? await handleUpdateAdhocSentenceDifficult({
             sentenceId,
@@ -235,6 +235,9 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
             language,
           });
 
+      return resObj;
+    };
+    const stateUpdateLogic = resObj => {
       const updatedSentences = isRemoveFromDifficultSentences
         ? filterDifficultSentenceOut(sentenceId)
         : difficultSentencesState.map(item => {
@@ -254,7 +257,19 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
 
       setDifficultSentencesState(updatedSentences);
       setUpdatePromptState(`${topicName} updated!`);
-      setTimeout(() => setUpdatePromptState(''), 3000);
+    };
+
+    try {
+      setUpdatingSentenceState(sentenceId);
+      if (quickRemoval) {
+        stateUpdateLogic(fieldToUpdate);
+        await updateBackEnd();
+        setUpdatingSentenceState('');
+      } else {
+        const resObj = await updateBackEnd();
+        stateUpdateLogic(resObj);
+      }
+      setTimeout(() => setUpdatePromptState(''), 2000);
     } catch (error) {
       console.log('## updateSentenceData', {error});
     } finally {

@@ -54,6 +54,7 @@ const SRSTogglesMini = ({sentence, updateSentenceData}) => {
           reviewData: nextReviewData,
           ...getShouldRemoveLegacyFields(),
         },
+        quickRemoval: true,
       });
     } catch (error) {
       console.log('## handleNextReview', {error});
