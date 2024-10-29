@@ -38,12 +38,8 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
 
   const getPureWords = () => {
     let pureWords = [];
-    const targetLanguageLoadedWords = [
-      ...targetLanguageWordsState,
-      // ...newWordsAdded,
-    ];
 
-    targetLanguageLoadedWords?.forEach(wordData => {
+    targetLanguageWordsState?.forEach(wordData => {
       pureWords.push(wordData.baseForm);
       pureWords.push(wordData.surfaceForm);
     });
