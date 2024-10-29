@@ -1,12 +1,12 @@
-import {Text, TouchableOpacity, View} from 'react-native';
+import {Text, View} from 'react-native';
 import useHighlightWordToWordBank from '../hooks/useHighlightWordToWordBank';
 import Clipboard from '@react-native-clipboard/clipboard';
 import useOpenGoogleTranslate from './useOpenGoogleTranslate';
 import HighlightTextZone from './HighlightTextZone';
 import {useState} from 'react';
 import useData from '../context/Data/useData';
-import SRSTogglesMini from './SRSTogglesMini';
 import DifficultSentenceContentHeader from './DifficultSentenceContentHeader';
+import DifficultSentenceTopHeaderActions from './DifficultSentenceTopHeaderActions';
 
 const DifficultSentenceContent = ({
   topic,
@@ -103,45 +103,17 @@ const DifficultSentenceContent = ({
         showReviewSettings={showReviewSettings}
         setShowReviewSettings={setShowReviewSettings}
       />
-      <View
-        style={{
-          display: 'flex',
-          flexDirection: 'row',
-          gap: 5,
-          justifyContent: isDueNow ? 'space-between' : 'flex-end',
-        }}>
-        {isDueNow ? (
-          <SRSTogglesMini
-            sentence={sentence}
-            updateSentenceData={updateSentenceData}
-            setToggleableSentencesState={setToggleableSentencesState}
-          />
-        ) : null}
-        <View
-          style={{
-            display: 'flex',
-            flexDirection: 'row',
-            gap: 10,
-            marginVertical: 'auto',
-          }}>
-          {sentenceId !== sentenceBeingHighlightedState ? (
-            <TouchableOpacity onPress={handleSettingHighlightmode}>
-              <Text>🖌️</Text>
-            </TouchableOpacity>
-          ) : (
-            <TouchableOpacity
-              onPress={() => setSentenceBeingHighlightedState('')}>
-              <Text>❌</Text>
-            </TouchableOpacity>
-          )}
-          <TouchableOpacity onPress={handleCopyText}>
-            <Text>📋</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={handleOpenGoogleTranslate}>
-            <Text>📚</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
+      <DifficultSentenceTopHeaderActions
+        isDueNow={isDueNow}
+        updateSentenceData={updateSentenceData}
+        setToggleableSentencesState={setToggleableSentencesState}
+        sentence={sentence}
+        sentenceBeingHighlightedState={sentenceBeingHighlightedState}
+        handleSettingHighlightmode={handleSettingHighlightmode}
+        setSentenceBeingHighlightedState={setSentenceBeingHighlightedState}
+        handleCopyText={handleCopyText}
+        handleOpenGoogleTranslate={handleOpenGoogleTranslate}
+      />
       {highlightMode ? (
         <View
           onLayout={handleLayout} // Attach the onLayout event handler
@@ -153,7 +125,6 @@ const DifficultSentenceContent = ({
             highlightedIndices={highlightedIndices}
             setHighlightedIndices={setHighlightedIndices}
             saveWordFirebase={handleSaveWordToFB}
-            setHighlightMode={() => {}}
             textWidth={containerWidth}
           />
         </View>

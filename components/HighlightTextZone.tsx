@@ -107,7 +107,7 @@ const HighlightTextZone = ({
         isGoogle,
       });
       setHighlightedIndices([]);
-      setHighlightMode(false);
+      setHighlightMode?.(false);
     }
   };
 
