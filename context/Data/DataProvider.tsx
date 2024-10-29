@@ -9,8 +9,6 @@ import {addSnippetAPI, deleteSnippetAPI} from '../../api/snippet';
 import {sortByDueDate} from '../../utils/sort-by-due-date';
 import {makeArrayUnique} from '../../hooks/useHighlightWordToWordBank';
 import saveWordAPI from '../../api/save-word';
-import {updateWordAPI} from '../../api/update-word-data';
-import {deleteWordAPI} from '../../api/delete-word';
 import useLanguageSelector from './useLanguageSelector';
 
 export const DataContext = createContext(null);
@@ -167,49 +165,6 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
       };
     } catch (error) {
       console.log('## handleUpdateAdhocSentenceDifficult ', error);
-    }
-  };
-
-  const updateWordData = async ({wordId, wordBaseForm, fieldToUpdate}) => {
-    try {
-      const updatedWordProperties = await updateWordAPI({
-        wordId,
-        fieldToUpdate,
-        language,
-      });
-      const targetLanguageWordsStateUpdated = targetLanguageWordsState.map(
-        item => {
-          const thisWordId = item.id === wordId;
-          if (thisWordId) {
-            return {
-              ...item,
-              ...updatedWordProperties,
-            };
-          }
-          return item;
-        },
-      );
-      setTargetLanguageWordsState(targetLanguageWordsStateUpdated);
-      setUpdatePromptState(`${wordBaseForm} updated!`);
-      setTimeout(() => setUpdatePromptState(''), 3000);
-    } catch (error) {
-      console.log('## updateWordData', {error});
-    }
-  };
-
-  const deleteWord = async ({wordId, wordBaseForm}) => {
-    try {
-      await deleteWordAPI({wordId, language});
-      const targetLanguageWordsStateUpdated = targetLanguageWordsState.filter(
-        item => item.id !== wordId,
-      );
-      setTargetLanguageWordsState(targetLanguageWordsStateUpdated);
-      setUpdatePromptState(`${wordBaseForm} deleted!`);
-      setTimeout(() => setUpdatePromptState(''), 3000);
-    } catch (error) {
-      setUpdatePromptState(`Error deleting ${wordBaseForm} 😟!`);
-      setTimeout(() => setUpdatePromptState(''), 3000);
-      console.log('## deleteWord', {error});
     }
   };
 
@@ -488,8 +443,6 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
         saveWordFirebase,
         getThisSentencesWordList,
         adhocTargetLanguageSentencesState,
-        updateWordData,
-        deleteWord,
         updatingSentenceState,
       }}>
       {children}
