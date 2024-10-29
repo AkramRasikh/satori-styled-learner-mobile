@@ -15,7 +15,6 @@ import FlashcardsWordsSection from '../../components/FlashcardsWordsSection';
 import useWordData from '../../context/Data/useWordData';
 
 function WordStudyContainer({
-  targetLanguageWordsState,
   targetLanguageLoadedSentences,
   targetLanguageLoadedContent,
 }): React.JSX.Element {
@@ -39,6 +38,7 @@ function WordStudyContainer({
     selectedWordState,
     setSelectedWordState,
     updatePromptState,
+    targetLanguageWordsState,
   } = useWordData();
 
   const hasSelectedTopicWords = selectedTopic && selectedTopicWords?.length > 0;

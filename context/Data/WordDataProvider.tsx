@@ -3,11 +3,11 @@ import {createContext, PropsWithChildren, useState} from 'react';
 import {updateWordAPI} from '../../api/update-word-data';
 import {deleteWordAPI} from '../../api/delete-word';
 import useLanguageSelector from './useLanguageSelector';
+import useData from './useData';
 
 export const WordDataContext = createContext(null);
 
 export const WordDataProvider = ({children}: PropsWithChildren<{}>) => {
-  const [targetLanguageWordsState, setTargetLanguageWordsState] = useState([]);
   const [wordStudyState, setWordStudyState] = useState([]);
   const [dueCardsState, setDueCardsState] = useState([]);
   const [updatePromptState, setUpdatePromptState] = useState('');
@@ -15,6 +15,8 @@ export const WordDataProvider = ({children}: PropsWithChildren<{}>) => {
   const [selectedTopic, setSelectedTopic] = useState('');
   const [selectedWordState, setSelectedWordState] = useState(null);
   const {languageSelectedState: language} = useLanguageSelector();
+
+  const {targetLanguageWordsState, setTargetLanguageWordsState} = useData();
 
   const updateWordData = async ({
     wordId,
@@ -74,7 +76,7 @@ export const WordDataProvider = ({children}: PropsWithChildren<{}>) => {
         const updatedSelectedTopicWords = dueCardsState.filter(
           item => item.id !== wordId,
         );
-        setTimeout(() => setDueCardsState(updatedSelectedTopicWords), 1000);
+        setDueCardsState(updatedSelectedTopicWords);
       }
       if (selectedTopicWords?.length > 0) {
         const updateSelectedTopicWords = selectedTopicWords.map(item => {
@@ -135,6 +137,7 @@ export const WordDataProvider = ({children}: PropsWithChildren<{}>) => {
         setSelectedTopic,
         selectedWordState,
         setSelectedWordState,
+        targetLanguageWordsState,
       }}>
       {children}
     </WordDataContext.Provider>

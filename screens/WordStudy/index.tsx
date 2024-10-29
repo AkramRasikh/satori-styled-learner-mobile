@@ -12,7 +12,6 @@ const WordStudyScreen = (): React.JSX.Element => {
   const targetLanguageWordsState = data.targetLanguageWordsState;
   const targetLanguageLoadedSentences = data.adhocTargetLanguageSentencesState;
   const targetLanguageLoadedContent = data.targetLanguageLoadedContentMaster;
-  const updatePromptState = data.updatePromptState;
 
   if (
     targetLanguageWordsState.length === 0 ||
@@ -28,10 +27,8 @@ const WordStudyScreen = (): React.JSX.Element => {
   return (
     <WordDataProvider>
       <WordStudyContainer
-        targetLanguageWordsState={targetLanguageWordsState}
         targetLanguageLoadedSentences={targetLanguageLoadedSentences}
         targetLanguageLoadedContent={targetLanguageLoadedContent}
-        updatePromptState={updatePromptState}
       />
     </WordDataProvider>
   );

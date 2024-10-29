@@ -444,6 +444,7 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
         getThisSentencesWordList,
         adhocTargetLanguageSentencesState,
         updatingSentenceState,
+        setTargetLanguageWordsState,
       }}>
       {children}
     </DataContext.Provider>
