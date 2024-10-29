@@ -1,8 +1,6 @@
 import {adhocSentences, content, snippets, words} from '../refs';
 import {BACKEND_ENDPOINT} from '@env';
-import mockTopicsToStudy from '../mock-firestore/mock-topics-to-study.json';
 import mockGetAllRes from '../mock-firestore/mock-get-all-res.json';
-import {getTopicsToStudy} from './words-to-study';
 
 const loadAllContent = async ({language}) => {
   const url = BACKEND_ENDPOINT + '/on-load-data';
@@ -40,10 +38,6 @@ export const getAllData = async ({language}) => {
       ? mockGetAllRes
       : await loadAllContent({language});
 
-    const topicsToStudy = withMock
-      ? mockTopicsToStudy
-      : await getTopicsToStudy({language});
-
     const getNestedObjectData = thisRef => {
       return loadedData.find(el => {
         const dataKeys = Object.keys(el);
@@ -68,7 +62,6 @@ export const getAllData = async ({language}) => {
       targetLanguageLoadedWords,
       targetLanguageLoadedSnippets,
       targetLanguageLoadedSentences,
-      topicsToStudy,
     };
   } catch (error) {
     console.error('Error fetching data:', error);
@@ -77,7 +70,6 @@ export const getAllData = async ({language}) => {
       contextHelperData: [],
       targetLanguageLoadedSnippets: [],
       targetLanguageLoadedSentences: [],
-      topicsToStudy: [],
     };
   }
 };

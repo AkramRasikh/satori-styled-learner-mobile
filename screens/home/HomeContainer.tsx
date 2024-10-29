@@ -35,7 +35,6 @@ function Home({
   const [selectedTopic, setSelectedTopic] = useState('');
   const [newWordsAdded, setNewWordsAdded] = useState([]);
   const [showOtherTopics, setShowOtherTopics] = useState(true);
-  const [topicsToStudyState, setTopicsToStudyState] = useState(null);
 
   const [
     targetLanguageLoadedContentState,
@@ -57,8 +56,6 @@ function Home({
 
   useEffect(() => {
     const results = homeScreenData;
-    const topicsToStudy = results.topicsToStudy;
-    setTopicsToStudyState(topicsToStudy);
     const targetLanguageLoadedContent = targetLanguageLoadedContentMaster.map(
       item => {
         return {
@@ -212,11 +209,7 @@ function Home({
     }
   };
 
-  if (
-    !data ||
-    targetLanguageLoadedContentState?.length === 0 ||
-    !topicsToStudyState
-  ) {
+  if (!data || targetLanguageLoadedContentState?.length === 0) {
     return <LoadingScreen>Loading data...</LoadingScreen>;
   }
 
