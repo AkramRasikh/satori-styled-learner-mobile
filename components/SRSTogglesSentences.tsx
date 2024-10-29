@@ -8,13 +8,13 @@ import {
 import {useState} from 'react';
 import {getTimeDiffSRS} from '../utils/getTimeDiffSRS';
 
-const getDueDate = reviewData => {
+export const getDueDate = reviewData => {
   if (reviewData?.due) {
     return new Date(reviewData?.due);
   }
   return null;
 };
-const getCardDataRelativeToNow = ({
+export const getCardDataRelativeToNow = ({
   hasDueDate,
   reviewData,
   nextReview,

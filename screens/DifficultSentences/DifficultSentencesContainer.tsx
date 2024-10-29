@@ -125,7 +125,6 @@ const DifficultSentencesContainer = ({
                   key={sentence.id}
                   indexOrder={index}
                   sentence={sentence}
-                  todayDateObj={todayDateObj}
                   updateSentenceData={updateSentenceData}
                   dueStatus={dueStatus}
                   dueDate={dueDate}

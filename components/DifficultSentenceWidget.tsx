@@ -307,7 +307,6 @@ const AudioComponent = ({
 
 const DifficultSentenceWidget = ({
   sentence,
-  todayDateObj,
   updateSentenceData,
   isLastEl,
   dueStatus,
@@ -485,6 +484,8 @@ const DifficultSentenceWidget = ({
         onLongPress={onLongPress}
         sentenceBeingHighlightedState={sentenceBeingHighlightedState}
         setSentenceBeingHighlightedState={setSentenceBeingHighlightedState}
+        updateSentenceData={updateSentenceData}
+        sentence={sentence}
       />
       <AudioComponent
         isLoaded={isLoaded}

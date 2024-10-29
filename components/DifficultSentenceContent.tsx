@@ -5,6 +5,7 @@ import useOpenGoogleTranslate from './useOpenGoogleTranslate';
 import HighlightTextZone from './HighlightTextZone';
 import {useState} from 'react';
 import useData from '../context/Data/useData';
+import SRSTogglesMini from './SRSTogglesMini';
 
 const DueColorMarker = ({dueColorState}) => (
   <View
@@ -66,6 +67,8 @@ const DifficultSentenceContent = ({
   sentenceBeingHighlightedState,
   setSentenceBeingHighlightedState,
   sentenceId,
+  updateSentenceData,
+  sentence,
 }) => {
   const [highlightedIndices, setHighlightedIndices] = useState([]);
   const [containerWidth, setContainerWidth] = useState(0);
@@ -146,26 +149,37 @@ const DifficultSentenceContent = ({
         style={{
           display: 'flex',
           flexDirection: 'row',
-          gap: 10,
-          alignSelf: 'flex-end',
-          paddingLeft: 5,
+          gap: 5,
+          justifyContent: 'space-between',
         }}>
-        {sentenceId !== sentenceBeingHighlightedState ? (
-          <TouchableOpacity onPress={handleSettingHighlightmode}>
-            <Text>🖌️</Text>
+        <SRSTogglesMini
+          sentence={sentence}
+          updateSentenceData={updateSentenceData}
+        />
+        <View
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            gap: 10,
+            marginVertical: 'auto',
+          }}>
+          {sentenceId !== sentenceBeingHighlightedState ? (
+            <TouchableOpacity onPress={handleSettingHighlightmode}>
+              <Text>🖌️</Text>
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity
+              onPress={() => setSentenceBeingHighlightedState('')}>
+              <Text>❌</Text>
+            </TouchableOpacity>
+          )}
+          <TouchableOpacity onPress={handleCopyText}>
+            <Text>📋</Text>
           </TouchableOpacity>
-        ) : (
-          <TouchableOpacity
-            onPress={() => setSentenceBeingHighlightedState('')}>
-            <Text>❌</Text>
+          <TouchableOpacity onPress={handleOpenGoogleTranslate}>
+            <Text>📚</Text>
           </TouchableOpacity>
-        )}
-        <TouchableOpacity onPress={handleCopyText}>
-          <Text>📋</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={handleOpenGoogleTranslate}>
-          <Text>📚</Text>
-        </TouchableOpacity>
+        </View>
       </View>
       {highlightMode ? (
         <View
