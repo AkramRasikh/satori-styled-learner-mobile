@@ -38,7 +38,7 @@ const ThisSnippetContainer = ({
   };
 
   const isSavedAndOutsideOfBoundary =
-    isSaved && adjustableStartTime > soundDuration;
+    isSaved && adjustableStartTime && adjustableStartTime > soundDuration;
 
   useEffect(() => {
     setAdjustableStartTime(getStartTime());
