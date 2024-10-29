@@ -155,6 +155,8 @@ function Home({
       }
     } catch (error) {
       console.log('## error updateTopicMetaData', {error});
+      setUpdatePromptState(`Error updating ${topicName}!`);
+      setTimeout(() => setUpdatePromptState(''), 1000);
     }
   };
 
