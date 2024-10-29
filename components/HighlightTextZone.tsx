@@ -190,6 +190,7 @@ const styles = StyleSheet.create({
     lineHeight: 24,
     flexDirection: 'row',
     flexWrap: 'wrap',
+    color: '#00008B',
   },
   highlight: {
     fontSize: 20,
