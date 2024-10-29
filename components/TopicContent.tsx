@@ -22,7 +22,6 @@ import useContentControls from '../hooks/useContentControls';
 import {getThisTopicsWords} from '../helper-functions/get-this-topics-words';
 import useAudioTextSync from '../hooks/useAudioTextSync';
 import LineContainer from './LineContainer';
-import WordStudySection from './WordStudySection';
 import LongPressedWord from './LongPressedWord';
 import useInitTopicWordList from '../hooks/useInitTopicWordList';
 import useFormatUnderlyingWords from '../hooks/useFormatUnderlyingWords';
