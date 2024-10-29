@@ -5,7 +5,7 @@ const useWordData = () => {
   const context = useContext(WordDataContext);
 
   if (!context)
-    throw new Error('useWordData must be used within a DataProvider');
+    throw new Error('useWordData must be used within a WordDataProvider');
 
   return context;
 };
