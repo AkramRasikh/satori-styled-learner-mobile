@@ -78,7 +78,8 @@ const DifficultSentenceContent = ({
   const {underlineWordsInSentence} = useHighlightWordToWordBank({
     pureWordsUnique: pureWords,
   });
-  const isDueNow = new Date(sentence.reviewData.due) < new Date();
+  const isDueNow =
+    sentence?.nextReview || new Date(sentence.reviewData.due) < new Date();
 
   const highlightMode = sentenceId === sentenceBeingHighlightedState;
 
