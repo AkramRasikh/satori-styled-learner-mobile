@@ -126,6 +126,8 @@ function Home({
       setNewWordsAdded(prev => [...prev, savedWord]);
     } catch (error) {
       console.log('## saveWordFirebase err', error);
+      setUpdatePromptState(`Error saving ${highlightedWord}!`);
+      setTimeout(() => setUpdatePromptState(''), 1000);
     }
   };
 
