@@ -153,7 +153,6 @@ function Home({
         setTimeout(() => setUpdatePromptState(''), 3000);
       }
     } catch (error) {
-      console.log('## error updateTopicMetaData', {error});
       setUpdatePromptState(`Error updating ${topicName}!`);
       setTimeout(() => setUpdatePromptState(''), 1000);
     }
@@ -206,6 +205,8 @@ function Home({
       }
     } catch (error) {
       console.log('## updateSentenceData', {error});
+      setUpdatePromptState(`Error updating sentence for ${topicName}!`);
+      setTimeout(() => setUpdatePromptState(''), 1000);
     }
   };
 
