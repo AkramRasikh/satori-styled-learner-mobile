@@ -111,9 +111,7 @@ const DifficultSentenceContent = ({
 
   const getSafeText = targetText => {
     const textSegments = underlineWordsInSentence(targetText);
-    const textSegmentsLength = textSegments.length;
     return textSegments.map((segment, index) => {
-      const isLastEl = textSegmentsLength - 1 === index;
       return (
         <>
           <Text
@@ -130,28 +128,6 @@ const DifficultSentenceContent = ({
             onLongPress={() => onLongPress(segment.text)}>
             {segment.text}
           </Text>
-          {isLastEl && (
-            <View
-              style={{
-                display: 'flex',
-                flexDirection: 'row',
-                gap: 5,
-                alignSelf: 'center',
-                paddingLeft: 5,
-              }}>
-              <TouchableOpacity onPress={handleSettingHighlightmode}>
-                <Text>
-                  {sentenceId === sentenceBeingHighlightedState ? '🔵' : '🔴'}
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity onPress={handleCopyText}>
-                <Text>📋</Text>
-              </TouchableOpacity>
-              <TouchableOpacity onPress={handleOpenGoogleTranslate}>
-                <Text>📚</Text>
-              </TouchableOpacity>
-            </View>
-          )}
         </>
       );
     });
@@ -166,6 +142,31 @@ const DifficultSentenceContent = ({
         showReviewSettings={showReviewSettings}
         setShowReviewSettings={setShowReviewSettings}
       />
+      <View
+        style={{
+          display: 'flex',
+          flexDirection: 'row',
+          gap: 5,
+          alignSelf: 'flex-end',
+          paddingLeft: 5,
+        }}>
+        {sentenceId !== sentenceBeingHighlightedState ? (
+          <TouchableOpacity onPress={handleSettingHighlightmode}>
+            <Text>🔴</Text>
+          </TouchableOpacity>
+        ) : (
+          <TouchableOpacity
+            onPress={() => setSentenceBeingHighlightedState('')}>
+            <Text>❌</Text>
+          </TouchableOpacity>
+        )}
+        <TouchableOpacity onPress={handleCopyText}>
+          <Text>📋</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={handleOpenGoogleTranslate}>
+          <Text>📚</Text>
+        </TouchableOpacity>
+      </View>
       {highlightMode ? (
         <View
           onLayout={handleLayout} // Attach the onLayout event handler
@@ -180,10 +181,6 @@ const DifficultSentenceContent = ({
             setHighlightMode={() => {}}
             textWidth={containerWidth}
           />
-          <TouchableOpacity
-            onPress={() => setSentenceBeingHighlightedState('')}>
-            <Text>❌</Text>
-          </TouchableOpacity>
         </View>
       ) : (
         <Text>{getSafeText(targetLang)}</Text>
