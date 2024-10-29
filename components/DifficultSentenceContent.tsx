@@ -146,13 +146,13 @@ const DifficultSentenceContent = ({
         style={{
           display: 'flex',
           flexDirection: 'row',
-          gap: 5,
+          gap: 10,
           alignSelf: 'flex-end',
           paddingLeft: 5,
         }}>
         {sentenceId !== sentenceBeingHighlightedState ? (
           <TouchableOpacity onPress={handleSettingHighlightmode}>
-            <Text>🔴</Text>
+            <Text>🖌️</Text>
           </TouchableOpacity>
         ) : (
           <TouchableOpacity

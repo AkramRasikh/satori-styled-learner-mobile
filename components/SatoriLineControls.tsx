@@ -75,7 +75,7 @@ const SatoriLineControls = ({
         </TouchableOpacity>
       ) : (
         <TouchableOpacity onPress={() => setHighlightMode(true)}>
-          <Text>🔴</Text>
+          <Text>🖌️</Text>
         </TouchableOpacity>
       )}
     </View>
