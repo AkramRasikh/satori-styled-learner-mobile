@@ -1,5 +1,4 @@
 import {View, Text} from 'react-native';
-import ConditionalWrapper from '../utils/conditional-wrapper';
 import SatoriLine from './SatoriLine';
 import {MiniSnippet} from './MiniSnippet';
 
