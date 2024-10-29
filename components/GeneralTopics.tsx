@@ -36,24 +36,21 @@ const GeneralTopics = ({
                   ? '#ADD8E6'
                   : 'transparent',
               }}>
-              <Text>
+              <View
+                style={{
+                  display: 'flex',
+                  flexDirection: 'row',
+                  gap: 5,
+                }}>
                 <Text>{generalTopic}</Text>
                 {isCoreStatus ? <Text> 🧠</Text> : null}
                 {isYoutube ? (
-                  <View
-                    style={{
-                      paddingLeft: 5,
-                      display: 'flex',
-                      flexDirection: 'row',
-                      justifyContent: 'center',
-                    }}>
-                    <Image
-                      source={require('../assets/images/youtube.png')}
-                      style={{width: 16, height: 16}}
-                    />
-                  </View>
+                  <Image
+                    source={require('../assets/images/youtube.png')}
+                    style={{width: 16, height: 16}}
+                  />
                 ) : null}
-              </Text>
+              </View>
             </TouchableOpacity>
           </View>
         );
