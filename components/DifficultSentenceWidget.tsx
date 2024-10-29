@@ -1,233 +1,18 @@
-import {Text, TouchableOpacity, View} from 'react-native';
+import {Text, View} from 'react-native';
 import useLoadAudioInstance from '../hooks/useLoadAudioInstance';
 import {useEffect, useMemo, useRef, useState} from 'react';
 import {getFirebaseAudioURL} from '../hooks/useGetCombinedAudioData';
-import useSoundHook from '../hooks/useSoundHook';
 import DifficultSentenceContent from './DifficultSentenceContent';
-import SoundSmallSize from './SoundSmallSize';
 import {getDueDateText} from '../utils/get-date-due-status';
 import useMP3File from '../hooks/useMP3File';
-import ProgressBarComponent from './Progress';
 import {generateRandomId} from '../utils/generate-random-id';
-import useSnippetControls from '../hooks/useSnippetControls';
-import useSnippetManageAudioStop from '../hooks/useSnippetManageAudioStop';
 import {mergeAndRemoveDuplicates} from '../utils/merge-and-remove-duplicates';
-import MiniSnippetTimeChangeHandlers from './MiniSnippetTimeChangeHandlers';
 import useData from '../context/Data/useData';
 import SRSTogglesSentences from './SRSTogglesSentences';
 import DeleteWordSection from './DeleteWordSection';
 import useLanguageSelector from '../context/Data/useLanguageSelector';
-import SoundWidget from './SoundWidget';
-
-const hasBeenSnippedFromCollectiveURL = snippet => {
-  const snippetURL = snippet.url;
-  return snippetURL.includes(snippet.topicName);
-};
-
-const DifficultSentenceSnippetContainer = ({
-  isLoaded,
-  soundRef,
-  snippetsLocalAndDb,
-  setCurrentTimeState,
-  currentTimeState,
-  isPlaying,
-  setIsPlaying,
-  addSnippet,
-  removeSnippet,
-  setMiniSnippets,
-  url,
-}) => {
-  return isLoaded && snippetsLocalAndDb?.length > 0
-    ? snippetsLocalAndDb?.map((snippetData, index) => {
-        return (
-          <ThisSnippetContainer
-            key={snippetData.id}
-            index={index}
-            soundRef={soundRef}
-            snippet={snippetData}
-            setCurrentTimeState={setCurrentTimeState}
-            currentTimeState={currentTimeState}
-            masterAudio={isPlaying}
-            setMasterAudio={setIsPlaying}
-            addSnippet={addSnippet}
-            removeSnippet={removeSnippet}
-            setMiniSnippets={setMiniSnippets}
-            url={url}
-          />
-        );
-      })
-    : null;
-};
-
-const ThisSnippetContainer = ({
-  soundRef,
-  setCurrentTimeState,
-  currentTimeState,
-  snippet,
-  url,
-  masterAudio,
-  setMasterAudio,
-  index,
-  addSnippet,
-  removeSnippet,
-  setMiniSnippets,
-}) => {
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [adjustableStartTime, setAdjustableStartTime] = useState(undefined);
-  const [adjustableDuration, setAdjustableDuration] = useState(4);
-
-  const soundDuration = soundRef.current._duration;
-  const isSaved = snippet?.saved;
-
-  const isFromUnifiedURL = hasBeenSnippedFromCollectiveURL(snippet);
-
-  const getStartTime = () => {
-    if (isFromUnifiedURL && snippet.startAt) {
-      return snippet.pointInAudio - snippet.startAt;
-    }
-    return snippet.pointInAudio;
-  };
-
-  const isSavedAndOutsideOfBoundary =
-    isSaved && adjustableStartTime > soundDuration;
-
-  useEffect(() => {
-    setAdjustableStartTime(getStartTime());
-  }, []);
-
-  useEffect(() => {
-    if (masterAudio && isPlaying) {
-      setMasterAudio(false);
-    }
-  }, [masterAudio, setMasterAudio, isPlaying]);
-
-  const handleSaveSnippet = async () => {
-    const formattedSnippet = {
-      ...snippet,
-      pointOfAudioOnClick: undefined,
-      endAt: undefined,
-      pointInAudio: adjustableStartTime,
-      duration: adjustableDuration,
-    };
-    try {
-      const thisSnippetDataFromAPI = await addSnippet(formattedSnippet);
-      setMiniSnippets(prev =>
-        prev.filter(
-          snippetData => snippetData.id !== thisSnippetDataFromAPI.id,
-        ),
-      );
-    } catch (error) {
-      console.log('## handleSaveSnippet', error);
-    }
-  };
-
-  const handleRemoveFromTempSnippets = () => {
-    setMiniSnippets(prev =>
-      prev.filter(snippetData => snippetData.id !== snippet.id),
-    );
-  };
-
-  const handleRemoveSnippet = async () => {
-    try {
-      await removeSnippet({
-        snippetId: snippet.id,
-        sentenceId: snippet.sentenceId,
-      });
-    } catch (error) {
-      console.log('## handleRemoveSnippet', error);
-    }
-  };
-
-  const {handleSetEarlierTime, handleSetDuration} = useSnippetControls({
-    adjustableStartTime,
-    adjustableDuration,
-    setAdjustableStartTime,
-    setAdjustableDuration,
-    snippetEndAtLimit: soundDuration,
-    snippetStartAtLimit: 0,
-    deleteSnippet: () => {},
-    addSnippet: () => {},
-    removeSnippet: () => {},
-    snippet,
-  });
-
-  const {playSound, pauseSound} = useSoundHook({
-    url,
-    soundRef,
-    isPlaying,
-    setIsPlaying,
-    topicName: snippet.topicName,
-    isSnippet: true,
-    startTime: isSaved ? getStartTime() : adjustableStartTime,
-    setCurrentTime: setCurrentTimeState,
-  });
-
-  useSnippetManageAudioStop({
-    soundRef,
-    isPlaying,
-    setIsPlaying,
-    startTime: isSaved ? getStartTime() : adjustableStartTime,
-    duration: isSaved ? snippet.duration : adjustableDuration,
-    currentTime: currentTimeState,
-  });
-
-  return (
-    <MiniSnippetTimeChangeHandlers
-      handleSetEarlierTime={handleSetEarlierTime}
-      handleSaveSnippet={handleSaveSnippet}
-      handleRemoveSnippet={handleRemoveSnippet}
-      handleRemoveFromTempSnippets={handleRemoveFromTempSnippets}
-      adjustableDuration={isSaved ? snippet.duration : adjustableDuration}
-      handleSetDuration={handleSetDuration}
-      adjustableStartTime={adjustableStartTime}
-      playSound={playSound}
-      pauseSound={pauseSound}
-      isPlaying={isPlaying}
-      indexList={index}
-      isSaved={isSaved}
-      isSavedAndOutsideOfBoundary={isSavedAndOutsideOfBoundary}
-    />
-  );
-};
-
-const AudioComponent = ({
-  isLoaded,
-  soundRef,
-  url,
-  topic,
-  handleSnippet,
-  sentence,
-  isPlaying,
-  setIsPlaying,
-  currentTimeState,
-  setCurrentTimeState,
-  handleLoad,
-  isMediaContent,
-}) => {
-  if (isLoaded) {
-    return (
-      <SoundWidget
-        soundRef={soundRef}
-        url={url}
-        topicName={topic}
-        handleSnippet={handleSnippet}
-        sentence={sentence}
-        isPlaying={isPlaying}
-        setIsPlaying={setIsPlaying}
-        currentTimeState={currentTimeState}
-        setCurrentTimeState={setCurrentTimeState}
-        isMediaContent={isMediaContent}
-      />
-    );
-  }
-  return (
-    <View>
-      <TouchableOpacity onPress={handleLoad}>
-        <Text>Load URL</Text>
-      </TouchableOpacity>
-    </View>
-  );
-};
+import DifficultSentenceAudioContainer from './DifficultSentenceAudioContainer';
+import DifficultSentenceSnippetContainer from './DifficultSentenceSnippetContainer';
 
 const DifficultSentenceWidget = ({
   sentence,
@@ -433,7 +218,7 @@ const DifficultSentenceWidget = ({
         updateSentenceData={updateSentenceData}
         sentence={sentence}
       />
-      <AudioComponent
+      <DifficultSentenceAudioContainer
         isLoaded={isLoaded}
         soundRef={soundRef}
         url={url}
