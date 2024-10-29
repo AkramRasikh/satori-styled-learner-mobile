@@ -26,12 +26,8 @@ export const getTopicsToStudy = async ({language}) => {
   }
 };
 
-export const getThisTopicsWordsToStudyAPI = async ({
-  topic,
-  isMusic,
-  language,
-}) => {
-  const param = isMusic ? '/get-words-song' : '/get-words-topic';
+export const getThisTopicsWordsToStudyAPI = async ({topic, language}) => {
+  const param = '/get-words-topic';
   const url = BACKEND_ENDPOINT + param;
 
   try {

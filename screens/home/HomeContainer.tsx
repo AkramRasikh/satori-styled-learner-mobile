@@ -124,11 +124,10 @@ function Home({
     }
   };
 
-  const getThisTopicsWordsFunc = async (topic, isMusic) => {
+  const getThisTopicsWordsFunc = async topic => {
     try {
       const res = await getThisTopicsWordsToStudyAPI({
         topic,
-        isMusic,
         language: languageSelectedState,
       });
       setTargetLanguageWordsToStudyState({

@@ -1,9 +1,5 @@
 import {useEffect, useState} from 'react';
-import {
-  FIREBASE_AUDIO_URL,
-  FIREBASE_STORAGE_ID,
-  FIREBASE_AUDIO_SONGS_URL,
-} from '@env';
+import {FIREBASE_AUDIO_URL, FIREBASE_STORAGE_ID} from '@env';
 import Sound from 'react-native-sound';
 import useLanguageSelector from '../context/Data/useLanguageSelector';
 Sound.setCategory('Playback');
@@ -11,14 +7,6 @@ Sound.setCategory('Playback');
 export const getFirebaseAudioURL = (mp3FileName: string, language: string) => {
   const languageParam = `${language}-audio%2F`;
   const baseURL = FIREBASE_AUDIO_URL + languageParam;
-  const firebaseToken = FIREBASE_STORAGE_ID;
-  const url = `${baseURL}${mp3FileName}.mp3?alt=media&token=${firebaseToken}`;
-
-  return url;
-};
-
-export const getFirebaseSongURL = (mp3FileName: string) => {
-  const baseURL = FIREBASE_AUDIO_SONGS_URL;
   const firebaseToken = FIREBASE_STORAGE_ID;
   const url = `${baseURL}${mp3FileName}.mp3?alt=media&token=${firebaseToken}`;
 
