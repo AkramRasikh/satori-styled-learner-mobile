@@ -11,7 +11,12 @@ const DifficultSentenceTopHeaderActions = ({
   setSentenceBeingHighlightedState,
   handleCopyText,
   handleOpenGoogleTranslate,
+  setHighlightedIndices,
 }) => {
+  const handleCloseHighlighting = () => {
+    setHighlightedIndices([]);
+    setSentenceBeingHighlightedState('');
+  };
   return (
     <View
       style={{
@@ -39,8 +44,7 @@ const DifficultSentenceTopHeaderActions = ({
             <Text>🖌️</Text>
           </TouchableOpacity>
         ) : (
-          <TouchableOpacity
-            onPress={() => setSentenceBeingHighlightedState('')}>
+          <TouchableOpacity onPress={handleCloseHighlighting}>
             <Text>❌</Text>
           </TouchableOpacity>
         )}

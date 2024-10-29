@@ -113,6 +113,7 @@ const DifficultSentenceContent = ({
         setSentenceBeingHighlightedState={setSentenceBeingHighlightedState}
         handleCopyText={handleCopyText}
         handleOpenGoogleTranslate={handleOpenGoogleTranslate}
+        setHighlightedIndices={setHighlightedIndices}
       />
       {highlightMode ? (
         <View
