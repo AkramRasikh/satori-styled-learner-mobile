@@ -277,7 +277,6 @@ function Home({
   };
 
   const isNeedsFutureReview = ({topicOption, singular}) => {
-    const isHobbies = topicOption === 'hobbies-01';
     if (singular) {
       const thisData = targetLanguageLoadedContentState.find(
         topicDisplayed => topicDisplayed.title === topicOption,
@@ -286,9 +285,6 @@ function Home({
       const nextReview = thisData?.nextReview;
 
       const res = checkIsFutureReviewNeeded({nextReview, todayDate: today});
-      if (isHobbies) {
-        console.log('## ', {res});
-      }
       return res;
     }
 
