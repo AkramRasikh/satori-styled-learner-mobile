@@ -1,4 +1,4 @@
-import {adhocSentences, content, snippets, songs, words} from '../refs';
+import {adhocSentences, content, snippets, words} from '../refs';
 import {BACKEND_ENDPOINT} from '@env';
 import mockTopicsToStudy from '../mock-firestore/mock-topics-to-study.json';
 import mockGetAllRes from '../mock-firestore/mock-get-all-res.json';
@@ -60,7 +60,6 @@ export const getAllData = async ({language}) => {
     const targetLanguageLoadedWords = getNestedObjectData(words)?.words || [];
     const targetLanguageLoadedSnippets =
       getNestedObjectData(snippets)?.snippets || [];
-    const targetLanguageLoadedSongs = getNestedObjectData(songs)?.songs || [];
     const targetLanguageLoadedSentences =
       getNestedObjectData(adhocSentences)?.adhocSentences || [];
 
@@ -68,7 +67,6 @@ export const getAllData = async ({language}) => {
       targetLanguageLoadedContent,
       targetLanguageLoadedWords,
       targetLanguageLoadedSnippets,
-      targetLanguageLoadedSongs,
       targetLanguageLoadedSentences,
       topicsToStudy,
     };
@@ -78,7 +76,6 @@ export const getAllData = async ({language}) => {
       satoriData: [],
       contextHelperData: [],
       targetLanguageLoadedSnippets: [],
-      targetLanguageLoadedSongs: [],
       targetLanguageLoadedSentences: [],
       topicsToStudy: [],
     };
