@@ -24,12 +24,10 @@ const DifficultSentencesContainer = ({
 
   const showDueInit = arr => {
     const filteredForDueOnly = [...arr].filter(sentence => {
-      const dueStatus = calculateDueDate({
-        todayDateObj,
-        nextReview: sentence?.reviewData?.due || sentence.nextReview,
-      });
-      if (dueStatus < 1) {
-        return true;
+      if (sentence?.nextReview) {
+        return sentence.nextReview < todayDateObj;
+      } else {
+        return new Date(sentence?.reviewData?.due) < todayDateObj;
       }
     });
     if (filteredForDueOnly?.length > 0) {
@@ -54,20 +52,6 @@ const DifficultSentencesContainer = ({
       showDueInit(difficultSentencesState);
     }
   }, [difficultSentencesState]);
-  // useEffect(() => {
-  //   if (toggleableSentencesState?.length > 0) {
-  //     const topicsArr = [];
-  //     toggleableSentencesState.forEach(sentenceData => {
-  //       const sentenceTopic = getGeneralTopicName(sentenceData.topic);
-  //       if (!topicsArr.includes(sentenceTopic)) {
-  //         topicsArr.push(sentenceTopic);
-  //       }
-  //     });
-  //     setTopicsAvailableState(topicsArr);
-  //   } else {
-  //     setTopicsAvailableState([]);
-  //   }
-  // }, [toggleableSentencesState]);
 
   if (toggleableSentencesState.length === 0) {
     return <LoadingScreen>Getting ready!</LoadingScreen>;
