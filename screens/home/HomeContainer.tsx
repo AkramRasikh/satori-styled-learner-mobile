@@ -4,14 +4,12 @@ import {SafeAreaView, ScrollView, Text, View} from 'react-native';
 import TopicComponent from '../../components/TopicComponent';
 import {makeArrayUnique} from '../../hooks/useHighlightWordToWordBank';
 import saveWordAPI from '../../api/save-word';
-import SongComponent from '../../components/SongComponent';
 import {getThisTopicsWordsToStudyAPI} from '../../api/words-to-study';
 import useSetupPlayer from '../../hooks/useSetupPlayer';
 import {updateCreateReviewHistory} from '../../api/update-create-review-history';
 import MoreTopics from '../../components/MoreTopics';
 import GeneralTopics from '../../components/GeneralTopics';
 import TopicsToDisplay from '../../components/TopicsToDisplay';
-import SongSection from '../../components/SongSection';
 import ToastMessage from '../../components/ToastMessage';
 import {updateSentenceDataAPI} from '../../api/update-sentence-data';
 import {TouchableOpacity} from 'react-native-gesture-handler';
@@ -35,12 +33,10 @@ function Home({
 
   const [structuredUnifiedData, setStructuredUnifiedData] = useState([]);
   const [selectedTopic, setSelectedTopic] = useState('');
-  const [selectedSong, setSelectedSong] = useState('');
   const [newWordsAdded, setNewWordsAdded] = useState([]);
   const [showOtherTopics, setShowOtherTopics] = useState(true);
   const [topicsToStudyState, setTopicsToStudyState] = useState(null);
-  const [targetLanguageLoadedSongsState, settargetLanguageLoadedSongsState] =
-    useState([]);
+
   const [
     targetLanguageLoadedContentState,
     settargetLanguageLoadedContentState,
@@ -65,16 +61,12 @@ function Home({
     const results = homeScreenData;
     const topicsToStudy = results.topicsToStudy;
     setTopicsToStudyState(topicsToStudy);
-    const targetLanguageLoadedSongs = results?.targetLanguageLoadedSongs.filter(
-      item => item !== null,
-    );
     const targetLanguageLoadedContent = targetLanguageLoadedContentMaster;
     settargetLanguageLoadedContentState(
       targetLanguageLoadedContent.sort((a, b) => {
         return a.isCore === b.isCore ? 0 : a.isCore ? -1 : 1;
       }),
     );
-    settargetLanguageLoadedSongsState(targetLanguageLoadedSongs);
     setData(results);
   }, []);
 
@@ -100,7 +92,6 @@ function Home({
   };
 
   const handleShowTopic = topic => {
-    setSelectedSong('');
     if (topic === selectedTopic) {
       setSelectedTopic('');
     } else {
@@ -113,30 +104,12 @@ function Home({
     setGeneralTopicState(generalTopic);
   };
 
-  const handleShowMusic = song => {
-    setSelectedTopic('');
-    if (song === selectedSong) {
-      setSelectedSong('');
-    } else {
-      setSelectedSong(song);
-    }
-    setShowOtherTopics(false);
-  };
-
   const saveWordFirebase = async ({
     highlightedWord,
     highlightedWordSentenceId,
     contextSentence,
     isGoogle = false,
   }) => {
-    console.log('## saveWordFirebase', {
-      highlightedWord,
-      highlightedWordSentenceId,
-      contextSentence,
-      isGoogle,
-      language: languageSelectedState,
-    });
-
     try {
       const savedWord = await saveWordAPI({
         highlightedWord,
@@ -170,7 +143,6 @@ function Home({
   const handleOtherTopics = () => {
     setShowOtherTopics(!showOtherTopics);
     setSelectedTopic('');
-    setSelectedSong('');
   };
 
   const updateTopicMetaData = async ({topicName, fieldToUpdate}) => {
@@ -277,26 +249,8 @@ function Home({
     topicData => topicData.title,
   );
   const snippetsForSelectedTopic = targetLanguageSnippetsState?.filter(
-    item => item.topicName === selectedTopic || item.topicName === selectedSong,
+    item => item.topicName === selectedTopic,
   );
-
-  const songData = targetLanguageLoadedSongsState?.find(
-    item => item.title === selectedSong,
-  );
-
-  const formattedContent = selectedSong
-    ? songData.lyrics.map((item, index) => {
-        const isLastInArr = index + 1 === songData.lyrics.length;
-
-        return {
-          ...item,
-          startAt: item.time,
-          endAt: isLastInArr ? null : songData.lyrics[index + 1].time,
-        };
-      })
-    : [];
-
-  const topicOrSongSelected = selectedTopic || selectedSong;
 
   const generalTopicObj = {};
   topicKeys.forEach(item => {
@@ -414,7 +368,7 @@ function Home({
     });
   };
 
-  const showNaviBtn = !(generalTopicState || selectedSong || selectedTopic);
+  const showNaviBtn = !(generalTopicState || selectedTopic);
 
   return (
     <SafeAreaView style={{backgroundColor: '#D3D3D3', minHeight: '100%'}}>
@@ -424,7 +378,7 @@ function Home({
       <ScrollView
         contentInsetAdjustmentBehavior="automatic"
         style={{padding: 10}}>
-        {selectedSong || selectedTopic || generalTopicState === '' ? null : (
+        {selectedTopic || generalTopicState === '' ? null : (
           <MoreTopics handleShowGeneralTopic={handleShowGeneralTopic} />
         )}
         {showNaviBtn ? (
@@ -464,7 +418,7 @@ function Home({
             </TouchableOpacity>
           </View>
         ) : null}
-        {!generalTopicState && !selectedSong && (
+        {!generalTopicState && (
           <GeneralTopics
             handleShowGeneralTopic={handleShowGeneralTopic}
             generalTopicObjKeys={generalTopicObjKeys}
@@ -474,7 +428,7 @@ function Home({
             isYoutubeVideo={isYoutubeVideo}
           />
         )}
-        {!topicOrSongSelected || showOtherTopics ? (
+        {!selectedTopic ? (
           <TopicsToDisplay
             topicsToDisplay={topicsToDisplay}
             isDueReview={isDueReview}
@@ -484,16 +438,6 @@ function Home({
             isNeedsFutureReview={isNeedsFutureReview}
           />
         ) : null}
-        <SongSection
-          topicOrSongSelected={topicOrSongSelected}
-          generalTopicState={generalTopicState}
-          targetLanguageLoadedSongsState={targetLanguageLoadedSongsState}
-          showOtherTopics={showOtherTopics}
-          topicsToStudyState={topicsToStudyState}
-          selectedTopic={selectedTopic}
-          handleShowMusic={handleShowMusic}
-        />
-
         <View>
           {selectedTopic ? (
             <TopicComponent
@@ -515,23 +459,6 @@ function Home({
               updateSentenceData={updateSentenceData}
               triggerSentenceIdUpdate={triggerSentenceIdUpdate}
               setTriggerSentenceIdUpdate={setTriggerSentenceIdUpdate}
-            />
-          ) : selectedSong ? (
-            <SongComponent
-              topicName={selectedSong}
-              pureWordsUnique={getPureWords()}
-              structuredUnifiedData={structuredUnifiedData}
-              setStructuredUnifiedData={setStructuredUnifiedData}
-              targetLanguageLoadedWords={targetLanguageLoadedWords}
-              snippetsForSelectedTopic={snippetsForSelectedTopic}
-              addSnippet={addSnippet}
-              removeSnippet={removeSnippet}
-              saveWordFirebase={saveWordFirebase}
-              topicData={formattedContent}
-              handleOtherTopics={handleOtherTopics}
-              targetLanguageWordsToStudyState={targetLanguageWordsToStudyState}
-              hasWordsToStudy={topicsToStudyState[selectedSong]}
-              getThisTopicsWordsFunc={getThisTopicsWordsFunc}
             />
           ) : null}
         </View>
