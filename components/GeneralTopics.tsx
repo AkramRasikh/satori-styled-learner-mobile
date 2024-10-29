@@ -2,7 +2,7 @@ import {Image, Text, TouchableOpacity, View} from 'react-native';
 
 const GeneralTopics = ({
   handleShowGeneralTopic,
-  generalTopicObjKeys,
+  generalTopicsToDisplay,
   isDueReview,
   isCoreContent,
   isNeedsFutureReview,
@@ -10,7 +10,7 @@ const GeneralTopics = ({
 }) => {
   return (
     <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
-      {generalTopicObjKeys?.map(generalTopic => {
+      {generalTopicsToDisplay?.map((generalTopic, index) => {
         const isCoreStatus = isCoreContent(generalTopic, false);
         const hasReviewDue = isDueReview(generalTopic, false, true);
         const thisTopicIsUpcoming = isNeedsFutureReview({
@@ -20,7 +20,7 @@ const GeneralTopics = ({
         const isYoutube = isYoutubeVideo(generalTopic);
 
         return (
-          <View key={generalTopic} testID={generalTopic}>
+          <View key={index} testID={generalTopic}>
             <TouchableOpacity
               onPress={() => handleShowGeneralTopic(generalTopic)}
               style={{

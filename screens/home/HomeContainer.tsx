@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {SafeAreaView, ScrollView, Text, View} from 'react-native';
+import {SafeAreaView, ScrollView, View} from 'react-native';
 
 import TopicComponent from '../../components/TopicComponent';
 import {makeArrayUnique} from '../../hooks/useHighlightWordToWordBank';
@@ -11,13 +11,14 @@ import GeneralTopics from '../../components/GeneralTopics';
 import TopicsToDisplay from '../../components/TopicsToDisplay';
 import ToastMessage from '../../components/ToastMessage';
 import {updateSentenceDataAPI} from '../../api/update-sentence-data';
-import {TouchableOpacity} from 'react-native-gesture-handler';
 import {
   checkIsFutureReviewNeeded,
   isUpForReview,
 } from '../../utils/is-up-for-review';
 import {getGeneralTopicName} from '../../utils/get-general-topic-name';
 import useLanguageSelector from '../../context/Data/useLanguageSelector';
+import LoadingScreen from '../../components/LoadingScreen';
+import HomeContainerToSentencesOrWords from '../../components/HomeContainerToSentencesOrWords';
 
 function Home({
   navigation,
@@ -58,7 +59,14 @@ function Home({
     const results = homeScreenData;
     const topicsToStudy = results.topicsToStudy;
     setTopicsToStudyState(topicsToStudy);
-    const targetLanguageLoadedContent = targetLanguageLoadedContentMaster;
+    const targetLanguageLoadedContent = targetLanguageLoadedContentMaster.map(
+      item => {
+        return {
+          generalTopic: item.title.split('-').slice(0, -1).join('-'),
+          ...item,
+        };
+      },
+    );
     settargetLanguageLoadedContentState(
       targetLanguageLoadedContent.sort((a, b) => {
         return a.isCore === b.isCore ? 0 : a.isCore ? -1 : 1;
@@ -205,18 +213,7 @@ function Home({
     targetLanguageLoadedContentState?.length === 0 ||
     !topicsToStudyState
   ) {
-    return (
-      <View
-        style={{
-          flex: 1,
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}>
-        <Text style={{fontStyle: 'italic', fontSize: 30, fontWeight: 'bold'}}>
-          Loading data...
-        </Text>
-      </View>
-    );
+    return <LoadingScreen>Loading data...</LoadingScreen>;
   }
 
   const today = new Date();
@@ -226,40 +223,22 @@ function Home({
     ...newWordsAdded,
   ];
 
-  const topicKeys = targetLanguageLoadedContentState.map(
-    topicData => topicData.title,
-  );
   const snippetsForSelectedTopic = targetLanguageSnippetsState?.filter(
     item => item.topicName === selectedTopic,
   );
 
-  const generalTopicObj = {};
-  topicKeys.forEach(item => {
-    const numberOfWordsToStudy = topicsToStudyState[item];
-    const splitWord = item.split('-').slice(0, -1).join('-');
-    const existsInObj = generalTopicObj[splitWord];
-    if (existsInObj) {
-      const newNumber =
-        generalTopicObj[splitWord] +
-        (numberOfWordsToStudy ? numberOfWordsToStudy : 0);
-      generalTopicObj[splitWord] = newNumber;
-    } else {
-      generalTopicObj[splitWord] = numberOfWordsToStudy || 0;
+  const topicsToDisplay = [];
+  const generalTopicObjKeys = [];
+
+  targetLanguageLoadedContentState.forEach(item => {
+    if (item?.generalTopic === generalTopicState) {
+      topicsToDisplay.push(item.title);
+    }
+    if (!generalTopicObjKeys.includes(item.generalTopic)) {
+      generalTopicObjKeys.push(item.generalTopic);
     }
   });
 
-  const generalTopicObjKeys = Object.keys(generalTopicObj);
-
-  const topicsToDisplay = topicKeys.filter(topic => {
-    const generalTopicName = topic.split('-').slice(0, -1).join('-');
-    if (generalTopicName === generalTopicState) {
-      return true;
-    } else {
-      false;
-    }
-  });
-
-  // quickFix
   const hasAudioCheck = topicKey =>
     targetLanguageLoadedContentState.some(
       key => key.title === topicKey && key.hasAudio,
@@ -273,7 +252,6 @@ function Home({
     const nextReview = thisData?.nextReview;
 
     return isUpForReview({nextReview, todayDate: today});
-    // then check if is upcoming
   };
 
   const isNeedsFutureReview = ({topicOption, singular}) => {
@@ -359,46 +337,12 @@ function Home({
           <MoreTopics handleShowGeneralTopic={handleShowGeneralTopic} />
         )}
         {showNaviBtn ? (
-          <View
-            style={{
-              display: 'flex',
-              flexDirection: 'row',
-              justifyContent: 'space-around',
-            }}>
-            <TouchableOpacity
-              style={{
-                flex: 1,
-                borderWidth: 1,
-                borderColor: '#999999',
-                borderRadius: 20,
-                paddingVertical: 10,
-                paddingHorizontal: 15,
-                margin: 5,
-                backgroundColor: 'transparent',
-              }}
-              onPress={() => navigation.navigate('DifficultSentences')}>
-              <Text style={{textAlign: 'center'}}>Sentences 🤓🏋🏽‍♂️</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={{
-                flex: 1,
-                borderWidth: 1,
-                borderColor: '#999999',
-                borderRadius: 20,
-                paddingVertical: 10,
-                paddingHorizontal: 15,
-                margin: 5,
-                backgroundColor: 'transparent',
-              }}
-              onPress={() => navigation.navigate('WordStudy')}>
-              <Text style={{textAlign: 'center'}}>Words 🤓🏋🏽‍♂️</Text>
-            </TouchableOpacity>
-          </View>
+          <HomeContainerToSentencesOrWords navigation={navigation} />
         ) : null}
         {!generalTopicState && (
           <GeneralTopics
             handleShowGeneralTopic={handleShowGeneralTopic}
-            generalTopicObjKeys={generalTopicObjKeys}
+            generalTopicsToDisplay={generalTopicObjKeys}
             isDueReview={isDueReview}
             isCoreContent={isCoreContent}
             isNeedsFutureReview={isNeedsFutureReview}
