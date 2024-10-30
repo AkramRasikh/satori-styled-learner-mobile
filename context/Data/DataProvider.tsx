@@ -160,6 +160,8 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
         ...res,
       };
     } catch (error) {
+      setUpdatePromptState('Error saving updating adhoc sentence');
+      setTimeout(() => setUpdatePromptState(''), 2000);
       console.log('## handleUpdateAdhocSentenceDifficult ', error);
     }
   };
@@ -216,6 +218,8 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
       setTimeout(() => setUpdatePromptState(''), 2000);
     } catch (error) {
       console.log('## updateSentenceData', {error});
+      setUpdatePromptState(`Error updating sentence for ${topicName}`);
+      setTimeout(() => setUpdatePromptState(''), 2000);
     } finally {
       setUpdatingSentenceState('');
     }
@@ -280,6 +284,8 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
       return snippetDataFromAPI;
     } catch (error) {
       console.log('## error adding snippet (DataProvider.tsx)');
+      setUpdatePromptState('Error adding snippet');
+      setTimeout(() => setUpdatePromptState(''), 2000);
     }
   };
 
@@ -314,6 +320,8 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
       }
     } catch (error) {
       console.log('## error removeSnippet (DataProvider.tsx)');
+      setUpdatePromptState('Error removing snippet');
+      setTimeout(() => setUpdatePromptState(''), 2000);
     }
   };
 
@@ -348,6 +356,8 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
       setTargetLanguageWordsState(prev => [...prev, savedWord]);
     } catch (error) {
       console.log('## saveWordFirebase Provider err', error);
+      setUpdatePromptState(`Error saving ${highlightedWord}`);
+      setTimeout(() => setUpdatePromptState(''), 2000);
     }
   };
 

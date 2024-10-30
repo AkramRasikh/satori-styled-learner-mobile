@@ -2,7 +2,6 @@ import React, {useEffect, useState} from 'react';
 import {SafeAreaView, ScrollView, View} from 'react-native';
 
 import TopicComponent from '../../components/TopicComponent';
-import {makeArrayUnique} from '../../hooks/useHighlightWordToWordBank';
 import saveWordAPI from '../../api/save-word';
 import useSetupPlayer from '../../hooks/useSetupPlayer';
 import {updateCreateReviewHistory} from '../../api/update-create-review-history';
@@ -26,6 +25,7 @@ function Home({
   addSnippet,
   removeSnippet,
   setTargetLanguageWordsState,
+  pureWords,
 }): React.JSX.Element {
   const [isSetupPlayerLoaded, setIsSetupPlayerLoaded] = useState(false);
   const [structuredUnifiedData, setStructuredUnifiedData] = useState([]);
@@ -93,23 +93,6 @@ function Home({
       setTopicsToDisplayState(topicsToDisplay);
     }
   }, [generalTopicState]);
-
-  const getPureWords = () => {
-    let pureWords = [];
-
-    targetLanguageLoadedWords.forEach(wordData => {
-      if (wordData?.baseForm) {
-        pureWords.push(wordData.baseForm);
-      }
-      if (wordData?.surfaceForm) {
-        pureWords.push(wordData.surfaceForm);
-      }
-    });
-
-    const pureWordsUnique =
-      pureWords?.length > 0 ? makeArrayUnique(pureWords) : [];
-    return pureWordsUnique;
-  };
 
   const handleShowTopic = topic => {
     if (topic === selectedTopic) {
@@ -244,7 +227,6 @@ function Home({
     return <LoadingScreen>Loading data...</LoadingScreen>;
   }
 
-  const pureWords = getPureWords();
   const showNaviBtn = !(generalTopicState || selectedTopic);
 
   return (
