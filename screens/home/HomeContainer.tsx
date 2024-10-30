@@ -11,33 +11,28 @@ import GeneralTopics from '../../components/GeneralTopics';
 import TopicsToDisplay from '../../components/TopicsToDisplay';
 import ToastMessage from '../../components/ToastMessage';
 import {updateSentenceDataAPI} from '../../api/update-sentence-data';
-import {
-  checkIsFutureReviewNeeded,
-  isUpForReview,
-} from '../../utils/is-up-for-review';
-import {getGeneralTopicName} from '../../utils/get-general-topic-name';
 import useLanguageSelector from '../../context/Data/useLanguageSelector';
 import LoadingScreen from '../../components/LoadingScreen';
 import HomeContainerToSentencesOrWords from '../../components/HomeContainerToSentencesOrWords';
+import useTopicDescriptors from '../../hooks/useTopicDescriptors';
 
 function Home({
   navigation,
-  homeScreenData,
+  targetLanguageLoadedWords,
   targetLanguageLoadedContentMaster,
   targetLanguageSnippetsState,
   addSnippet,
   removeSnippet,
+  setTargetLanguageWordsState,
 }): React.JSX.Element {
   const [isSetupPlayerLoaded, setIsSetupPlayerLoaded] = useState(false);
-
   const [structuredUnifiedData, setStructuredUnifiedData] = useState([]);
   const [selectedTopic, setSelectedTopic] = useState('');
-  const [newWordsAdded, setNewWordsAdded] = useState([]);
   const [showOtherTopics, setShowOtherTopics] = useState(true);
 
   const [
     targetLanguageLoadedContentState,
-    settargetLanguageLoadedContentState,
+    setTargetLanguageLoadedContentState,
   ] = useState([]);
   const [generalTopicState, setGeneralTopicState] = useState('');
   const [updatePromptState, setUpdatePromptState] = useState('');
@@ -46,10 +41,19 @@ function Home({
   const {languageSelectedState} = useLanguageSelector();
 
   useSetupPlayer({isSetupPlayerLoaded, setIsSetupPlayerLoaded});
+  const today = new Date();
+
+  const {
+    isYoutubeVideo,
+    isDueReview,
+    isCoreContent,
+    hasAudioCheck,
+    isNeedsFutureReview,
+  } = useTopicDescriptors(targetLanguageLoadedContentState, today);
 
   useEffect(() => {
     if (targetLanguageLoadedContentMaster) {
-      settargetLanguageLoadedContentState(targetLanguageLoadedContentMaster);
+      setTargetLanguageLoadedContentState(targetLanguageLoadedContentMaster);
     }
   }, [targetLanguageLoadedContentMaster]);
 
@@ -62,7 +66,7 @@ function Home({
         };
       },
     );
-    settargetLanguageLoadedContentState(
+    setTargetLanguageLoadedContentState(
       targetLanguageLoadedContent.sort((a, b) => {
         return a.isCore === b.isCore ? 0 : a.isCore ? -1 : 1;
       }),
@@ -71,12 +75,8 @@ function Home({
 
   const getPureWords = () => {
     let pureWords = [];
-    const targetLanguageLoadedWords = [
-      ...homeScreenData?.targetLanguageLoadedWords,
-      ...newWordsAdded,
-    ];
 
-    targetLanguageLoadedWords?.forEach(wordData => {
+    targetLanguageLoadedWords.forEach(wordData => {
       if (wordData?.baseForm) {
         pureWords.push(wordData.baseForm);
       }
@@ -117,7 +117,7 @@ function Home({
         isGoogle,
         language: languageSelectedState,
       });
-      setNewWordsAdded(prev => [...prev, savedWord]);
+      setTargetLanguageWordsState(prev => [...prev, savedWord]);
     } catch (error) {
       console.log('## saveWordFirebase err', error);
       setUpdatePromptState(`Error saving ${highlightedWord}!`);
@@ -145,7 +145,7 @@ function Home({
           topic => topic.title !== topicName,
         );
         const newTopicState = {...thisTopicData, ...resObj};
-        settargetLanguageLoadedContentState([...filterTopics, newTopicState]);
+        setTargetLanguageLoadedContentState([...filterTopics, newTopicState]);
         setUpdatePromptState(`${topicName} updated!`);
         setTimeout(() => setUpdatePromptState(''), 3000);
       }
@@ -195,7 +195,7 @@ function Home({
           }
           return newTopicState;
         });
-        settargetLanguageLoadedContentState(filteredTopics);
+        setTargetLanguageLoadedContentState(filteredTopics);
         setUpdatePromptState(`${topicName} updated!`);
         setTimeout(() => setUpdatePromptState(''), 3000);
         setTriggerSentenceIdUpdate(sentenceId);
@@ -207,16 +207,9 @@ function Home({
     }
   };
 
-  if (!homeScreenData || targetLanguageLoadedContentState?.length === 0) {
+  if (targetLanguageLoadedContentState?.length === 0) {
     return <LoadingScreen>Loading data...</LoadingScreen>;
   }
-
-  const today = new Date();
-
-  const targetLanguageLoadedWords = [
-    ...homeScreenData?.targetLanguageLoadedWords,
-    ...newWordsAdded,
-  ];
 
   const snippetsForSelectedTopic = targetLanguageSnippetsState?.filter(
     item => item.topicName === selectedTopic,
@@ -233,90 +226,6 @@ function Home({
       generalTopicObjKeys.push(item.generalTopic);
     }
   });
-
-  const hasAudioCheck = topicKey =>
-    targetLanguageLoadedContentState.some(
-      key => key.title === topicKey && key.hasAudio,
-    );
-
-  const isDueReviewSingular = ({topicOption, isReview}) => {
-    const thisData = targetLanguageLoadedContentState.find(
-      topicDisplayed => topicDisplayed.title === topicOption,
-    );
-
-    const nextReview = thisData?.nextReview;
-
-    return isUpForReview({nextReview, todayDate: today});
-  };
-
-  const isNeedsFutureReview = ({topicOption, singular}) => {
-    if (singular) {
-      const thisData = targetLanguageLoadedContentState.find(
-        topicDisplayed => topicDisplayed.title === topicOption,
-      );
-
-      const nextReview = thisData?.nextReview;
-
-      const res = checkIsFutureReviewNeeded({nextReview, todayDate: today});
-      return res;
-    }
-
-    const nextReviewDateDueForGeneralTopicDue =
-      targetLanguageLoadedContentState.some(jpContent => {
-        const generalTopicName = getGeneralTopicName(jpContent.title);
-
-        if (generalTopicName === topicOption) {
-          const nextReview = jpContent?.nextReview;
-          return checkIsFutureReviewNeeded({nextReview, todayDate: today});
-        }
-      });
-
-    return nextReviewDateDueForGeneralTopicDue;
-  };
-
-  const isYoutubeVideo = topicOption => {
-    return targetLanguageLoadedContentState.some(
-      topicDisplayed =>
-        topicDisplayed?.origin === 'youtube' &&
-        topicDisplayed.title.split('-').slice(0, -1).join('-') === topicOption,
-    );
-  };
-
-  const isDueReview = (topicOption, singular, isReview) => {
-    if (singular) {
-      return isDueReviewSingular({topicOption, isReview});
-    }
-    // change to forLoop
-    const nextReviewDateDueForGeneralTopicDue =
-      targetLanguageLoadedContentState.some(jpContent => {
-        const generalTopicName = getGeneralTopicName(jpContent.title);
-
-        if (generalTopicName === topicOption) {
-          const nextReview = jpContent?.nextReview;
-          return isUpForReview({nextReview, todayDate: today});
-        }
-      });
-
-    return nextReviewDateDueForGeneralTopicDue;
-  };
-
-  const isCoreContent = (topicOption, singular) => {
-    if (singular) {
-      const thisData = targetLanguageLoadedContentState.find(
-        topicDisplayed => topicDisplayed.title === topicOption,
-      );
-
-      const thisDataIsCoreStatus = thisData?.isCore;
-      return thisDataIsCoreStatus;
-    }
-
-    return targetLanguageLoadedContentState.some(jpContent => {
-      if (jpContent.title.split('-').slice(0, -1).join('-') === topicOption) {
-        const isCoreStatus = jpContent?.isCore;
-        return isCoreStatus;
-      }
-    });
-  };
 
   const showNaviBtn = !(generalTopicState || selectedTopic);
 
