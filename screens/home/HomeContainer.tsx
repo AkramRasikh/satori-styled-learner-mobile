@@ -16,6 +16,8 @@ import LoadingScreen from '../../components/LoadingScreen';
 import HomeContainerToSentencesOrWords from '../../components/HomeContainerToSentencesOrWords';
 import useTopicDescriptors from '../../hooks/useTopicDescriptors';
 
+const today = new Date();
+
 function Home({
   navigation,
   targetLanguageLoadedWords,
@@ -46,7 +48,6 @@ function Home({
   const {languageSelectedState} = useLanguageSelector();
 
   useSetupPlayer({isSetupPlayerLoaded, setIsSetupPlayerLoaded});
-  const today = new Date();
 
   const {
     isYoutubeVideo,
