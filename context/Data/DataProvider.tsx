@@ -232,7 +232,7 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
         context,
         topic,
         tags,
-        nextReview: setFutureReviewDate(new Date(), 3),
+        nextReview: setFutureReviewDate(new Date(), 3), //
       });
       setIsAdhocDataLoading(true);
       // need to update difficult sentences

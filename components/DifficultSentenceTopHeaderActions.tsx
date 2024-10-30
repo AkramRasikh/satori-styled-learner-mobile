@@ -12,6 +12,7 @@ const DifficultSentenceTopHeaderActions = ({
   handleCopyText,
   handleOpenGoogleTranslate,
   setHighlightedIndices,
+  setShowReviewSettings,
 }) => {
   const handleCloseHighlighting = () => {
     setHighlightedIndices([]);
@@ -30,6 +31,7 @@ const DifficultSentenceTopHeaderActions = ({
           sentence={sentence}
           updateSentenceData={updateSentenceData}
           setToggleableSentencesState={setToggleableSentencesState}
+          setShowReviewSettings={setShowReviewSettings}
         />
       ) : null}
       <View

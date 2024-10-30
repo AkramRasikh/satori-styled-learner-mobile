@@ -7,6 +7,7 @@ const SRSTogglesMini = ({
   sentence,
   updateSentenceData,
   setToggleableSentencesState,
+  setShowReviewSettings,
 }) => {
   const timeNow = new Date();
 
@@ -119,6 +120,16 @@ const SRSTogglesMini = ({
         }}
         onPress={() => handleNextReview('4')}>
         <Text>{easyText}</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={{
+          alignSelf: 'center',
+          backgroundColor: 'darkred',
+          padding: 5,
+          borderRadius: 10,
+        }}
+        onPress={() => setShowReviewSettings(true)}>
+        <Text>🗑️</Text>
       </TouchableOpacity>
     </View>
   );

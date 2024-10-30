@@ -114,6 +114,7 @@ const DifficultSentenceContent = ({
         handleCopyText={handleCopyText}
         handleOpenGoogleTranslate={handleOpenGoogleTranslate}
         setHighlightedIndices={setHighlightedIndices}
+        setShowReviewSettings={setShowReviewSettings}
       />
       {highlightMode ? (
         <View

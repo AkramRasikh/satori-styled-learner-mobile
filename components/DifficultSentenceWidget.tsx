@@ -44,7 +44,7 @@ const DifficultSentenceWidget = ({
   const baseLang = sentence.baseLang;
   const targetLang = sentence.targetLang;
   const isMediaContent = sentence.isMediaContent;
-  const isWithin3Indexs = indexOrder < 3;
+  // const isWithin3Indexs = indexOrder < 3;
 
   const audioId = isMediaContent ? topic : id;
   const soundRef = useRef();
@@ -79,11 +79,11 @@ const DifficultSentenceWidget = ({
     url: filePath,
   });
 
-  useEffect(() => {
-    if (isWithin3Indexs) {
-      loadFile(audioId, url);
-    }
-  }, [indexOrder, loadFile, audioId, url, isWithin3Indexs]);
+  // useEffect(() => {
+  //   if (isWithin3Indexs) {
+  //     loadFile(audioId, url);
+  //   }
+  // }, [indexOrder, loadFile, audioId, url, isWithin3Indexs]);
 
   useEffect(() => {
     if (filePath) {
@@ -97,6 +97,9 @@ const DifficultSentenceWidget = ({
 
   const handleDeleteContent = async () => {
     try {
+      setToggleableSentencesState(prev =>
+        prev.filter(sentenceData => sentenceData.id !== sentence.id),
+      );
       await updateSentenceData({
         isAdhoc: sentence?.isAdhoc,
         topicName: sentence.topic,
@@ -237,11 +240,6 @@ const DifficultSentenceWidget = ({
       {showReviewSettings ? (
         <>
           <DeleteWordSection deleteContent={handleDeleteContent} />
-          <SRSTogglesSentences
-            updateSentenceData={updateSentenceData}
-            sentence={sentence}
-            limitedOptionsMode={false}
-          />
         </>
       ) : null}
       <DifficultSentenceSnippetContainer
