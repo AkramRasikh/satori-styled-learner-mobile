@@ -71,20 +71,27 @@ function Home({
       }),
     );
 
-    const topicsToDisplay = [];
     const generalTopicObjKeys = [];
-
     targetLanguageLoadedContent.forEach(item => {
-      if (item?.generalTopic === generalTopicState) {
-        topicsToDisplay.push(item.title);
-      }
       if (!generalTopicObjKeys.includes(item.generalTopic)) {
         generalTopicObjKeys.push(item.generalTopic);
       }
     });
-    setTopicsToDisplayState(topicsToDisplay);
     setGeneralTopicObjKeysState(generalTopicObjKeys);
   }, []);
+
+  useEffect(() => {
+    if (generalTopicState) {
+      const topicsToDisplay = [];
+
+      targetLanguageLoadedContentState.forEach(item => {
+        if (item?.generalTopic === generalTopicState) {
+          topicsToDisplay.push(item.title);
+        }
+      });
+      setTopicsToDisplayState(topicsToDisplay);
+    }
+  }, [generalTopicState]);
 
   const getPureWords = () => {
     let pureWords = [];
@@ -106,6 +113,10 @@ function Home({
   const handleShowTopic = topic => {
     if (topic === selectedTopic) {
       setSelectedTopic('');
+      setSelectedContentState({
+        content: [],
+        snippets: [],
+      });
     } else {
       setSelectedTopic(topic);
       setSelectedContentState({
