@@ -52,12 +52,6 @@ function Home({
   } = useTopicDescriptors(targetLanguageLoadedContentState, today);
 
   useEffect(() => {
-    if (targetLanguageLoadedContentMaster) {
-      setTargetLanguageLoadedContentState(targetLanguageLoadedContentMaster);
-    }
-  }, [targetLanguageLoadedContentMaster]);
-
-  useEffect(() => {
     const targetLanguageLoadedContent = targetLanguageLoadedContentMaster.map(
       item => {
         return {
@@ -227,6 +221,7 @@ function Home({
     }
   });
 
+  const pureWords = getPureWords();
   const showNaviBtn = !(generalTopicState || selectedTopic);
 
   return (
@@ -268,7 +263,7 @@ function Home({
             <TopicComponent
               topicName={selectedTopic}
               targetLanguageLoadedContent={targetLanguageLoadedContentState}
-              pureWordsUnique={getPureWords()}
+              pureWordsUnique={pureWords}
               structuredUnifiedData={structuredUnifiedData}
               setStructuredUnifiedData={setStructuredUnifiedData}
               targetLanguageLoadedWords={targetLanguageLoadedWords}
