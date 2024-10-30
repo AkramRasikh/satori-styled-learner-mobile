@@ -28,7 +28,6 @@ function Home({
   addSnippet,
   removeSnippet,
 }): React.JSX.Element {
-  const [data, setData] = useState<any>(null);
   const [isSetupPlayerLoaded, setIsSetupPlayerLoaded] = useState(false);
 
   const [structuredUnifiedData, setStructuredUnifiedData] = useState([]);
@@ -55,7 +54,6 @@ function Home({
   }, [targetLanguageLoadedContentMaster]);
 
   useEffect(() => {
-    const results = homeScreenData;
     const targetLanguageLoadedContent = targetLanguageLoadedContentMaster.map(
       item => {
         return {
@@ -69,13 +67,12 @@ function Home({
         return a.isCore === b.isCore ? 0 : a.isCore ? -1 : 1;
       }),
     );
-    setData(results);
   }, []);
 
   const getPureWords = () => {
     let pureWords = [];
     const targetLanguageLoadedWords = [
-      ...data?.targetLanguageLoadedWords,
+      ...homeScreenData?.targetLanguageLoadedWords,
       ...newWordsAdded,
     ];
 
@@ -210,14 +207,14 @@ function Home({
     }
   };
 
-  if (!data || targetLanguageLoadedContentState?.length === 0) {
+  if (!homeScreenData || targetLanguageLoadedContentState?.length === 0) {
     return <LoadingScreen>Loading data...</LoadingScreen>;
   }
 
   const today = new Date();
 
   const targetLanguageLoadedWords = [
-    ...data?.targetLanguageLoadedWords,
+    ...homeScreenData?.targetLanguageLoadedWords,
     ...newWordsAdded,
   ];
 
