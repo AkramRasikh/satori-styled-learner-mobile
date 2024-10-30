@@ -29,14 +29,19 @@ function Home({
   const [structuredUnifiedData, setStructuredUnifiedData] = useState([]);
   const [selectedTopic, setSelectedTopic] = useState('');
   const [showOtherTopics, setShowOtherTopics] = useState(true);
-
   const [
     targetLanguageLoadedContentState,
     setTargetLanguageLoadedContentState,
   ] = useState([]);
+  const [topicsToDisplayState, setTopicsToDisplayState] = useState([]);
+  const [generalTopicObjKeysState, setGeneralTopicObjKeysState] = useState([]);
   const [generalTopicState, setGeneralTopicState] = useState('');
   const [updatePromptState, setUpdatePromptState] = useState('');
   const [triggerSentenceIdUpdate, setTriggerSentenceIdUpdate] = useState('');
+  const [selectedContentState, setSelectedContentState] = useState({
+    content: [],
+    snippets: [],
+  });
 
   const {languageSelectedState} = useLanguageSelector();
 
@@ -65,6 +70,20 @@ function Home({
         return a.isCore === b.isCore ? 0 : a.isCore ? -1 : 1;
       }),
     );
+
+    const topicsToDisplay = [];
+    const generalTopicObjKeys = [];
+
+    targetLanguageLoadedContent.forEach(item => {
+      if (item?.generalTopic === generalTopicState) {
+        topicsToDisplay.push(item.title);
+      }
+      if (!generalTopicObjKeys.includes(item.generalTopic)) {
+        generalTopicObjKeys.push(item.generalTopic);
+      }
+    });
+    setTopicsToDisplayState(topicsToDisplay);
+    setGeneralTopicObjKeysState(generalTopicObjKeys);
   }, []);
 
   const getPureWords = () => {
@@ -89,6 +108,14 @@ function Home({
       setSelectedTopic('');
     } else {
       setSelectedTopic(topic);
+      setSelectedContentState({
+        content: targetLanguageLoadedContentState.find(
+          contentItem => contentItem.title === topic,
+        ),
+        snippets: targetLanguageSnippetsState?.filter(
+          item => item.topicName === topic,
+        ),
+      });
     }
     setShowOtherTopics(false);
   };
@@ -205,22 +232,6 @@ function Home({
     return <LoadingScreen>Loading data...</LoadingScreen>;
   }
 
-  const snippetsForSelectedTopic = targetLanguageSnippetsState?.filter(
-    item => item.topicName === selectedTopic,
-  );
-
-  const topicsToDisplay = [];
-  const generalTopicObjKeys = [];
-
-  targetLanguageLoadedContentState.forEach(item => {
-    if (item?.generalTopic === generalTopicState) {
-      topicsToDisplay.push(item.title);
-    }
-    if (!generalTopicObjKeys.includes(item.generalTopic)) {
-      generalTopicObjKeys.push(item.generalTopic);
-    }
-  });
-
   const pureWords = getPureWords();
   const showNaviBtn = !(generalTopicState || selectedTopic);
 
@@ -241,7 +252,7 @@ function Home({
         {!generalTopicState && (
           <GeneralTopics
             handleShowGeneralTopic={handleShowGeneralTopic}
-            generalTopicsToDisplay={generalTopicObjKeys}
+            generalTopicsToDisplay={generalTopicObjKeysState}
             isDueReview={isDueReview}
             isCoreContent={isCoreContent}
             isNeedsFutureReview={isNeedsFutureReview}
@@ -250,7 +261,7 @@ function Home({
         )}
         {!selectedTopic ? (
           <TopicsToDisplay
-            topicsToDisplay={topicsToDisplay}
+            topicsToDisplay={topicsToDisplayState}
             isDueReview={isDueReview}
             isCoreContent={isCoreContent}
             handleShowTopic={handleShowTopic}
@@ -262,13 +273,13 @@ function Home({
           {selectedTopic ? (
             <TopicComponent
               topicName={selectedTopic}
-              targetLanguageLoadedContent={targetLanguageLoadedContentState}
+              loadedContent={selectedContentState.content}
               pureWordsUnique={pureWords}
               structuredUnifiedData={structuredUnifiedData}
               setStructuredUnifiedData={setStructuredUnifiedData}
               targetLanguageLoadedWords={targetLanguageLoadedWords}
               addSnippet={addSnippet}
-              snippetsForSelectedTopic={snippetsForSelectedTopic}
+              loadedSnippets={selectedContentState.snippets}
               removeSnippet={removeSnippet}
               saveWordFirebase={saveWordFirebase}
               handleOtherTopics={handleOtherTopics}

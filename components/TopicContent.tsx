@@ -36,19 +36,19 @@ import useLanguageSelector from '../context/Data/useLanguageSelector';
 
 const TopicContent = ({
   topicName,
-  targetLanguageLoadedContent,
   pureWordsUnique,
   structuredUnifiedData,
   setStructuredUnifiedData,
   targetLanguageLoadedWords,
   addSnippet,
   removeSnippet,
-  snippetsForSelectedTopic,
   saveWordFirebase,
   updateTopicMetaData,
   updateSentenceData,
   triggerSentenceIdUpdate,
   setTriggerSentenceIdUpdate,
+  loadedContent,
+  loadedSnippets,
 }) => {
   const [masterPlay, setMasterPlay] = useState('');
   const [currentTimeState, setCurrentTimeState] = useState(0);
@@ -72,31 +72,26 @@ const TopicContent = ({
 
   const {languageSelectedState} = useLanguageSelector();
 
-  const thisTopicLoadedContent = targetLanguageLoadedContent.find(
-    contentData => contentData.title === topicName,
-  );
-
-  const topicData = thisTopicLoadedContent.content.filter(
+  const topicData = loadedContent.content.filter(
     contentItem => contentItem !== null,
   );
 
-  const reviewHistory = thisTopicLoadedContent.reviewHistory;
-  const nextReview = thisTopicLoadedContent.nextReview;
+  const reviewHistory = loadedContent.reviewHistory;
+  const nextReview = loadedContent.nextReview;
 
-  const isCore = thisTopicLoadedContent?.isCore;
+  const isCore = loadedContent?.isCore;
   const isMediaContent =
-    thisTopicLoadedContent?.origin === 'netflix' ||
-    thisTopicLoadedContent?.origin === 'youtube';
+    loadedContent?.origin === 'netflix' || loadedContent?.origin === 'youtube';
 
-  const hasUnifiedMP3File = thisTopicLoadedContent.hasAudio;
+  const hasUnifiedMP3File = loadedContent.hasAudio;
 
   const hasAlreadyBeenUnified = structuredUnifiedData[topicName]?.content;
   const snippetsLocalAndDb = useMemo(() => {
     return mergeAndRemoveDuplicates(
-      snippetsForSelectedTopic?.sort((a, b) => a.pointInAudio - b.pointInAudio),
+      loadedSnippets?.sort((a, b) => a.pointInAudio - b.pointInAudio),
       miniSnippets,
     );
-  }, [snippetsForSelectedTopic, miniSnippets]);
+  }, [loadedSnippets, miniSnippets]);
 
   const soundRef = useRef(null);
   const audioControlsRef = useRef(null);
