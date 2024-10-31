@@ -11,9 +11,11 @@ import {updateSentenceDataAPI} from '../../api/update-sentence-data';
 import useLanguageSelector from '../../context/Data/useLanguageSelector';
 import LoadingScreen from '../../components/LoadingScreen';
 import HomeContainerToSentencesOrWords from '../../components/HomeContainerToSentencesOrWords';
-import useTopicDescriptors from '../../hooks/useTopicDescriptors';
 import Topics from '../../components/Topics';
-import {checkIsFutureReviewNeeded} from '../../utils/is-up-for-review';
+import {
+  checkIsFutureReviewNeeded,
+  isUpForReview,
+} from '../../utils/is-up-for-review';
 
 const today = new Date();
 
@@ -50,11 +52,6 @@ function Home({
 
   useSetupPlayer({isSetupPlayerLoaded, setIsSetupPlayerLoaded});
 
-  const {isDueReview} = useTopicDescriptors(
-    targetLanguageLoadedContentMaster,
-    today,
-  );
-
   useEffect(() => {
     const targetLanguageLoadedContent = targetLanguageLoadedContentMaster.map(
       item => {
@@ -70,6 +67,19 @@ function Home({
       }),
     );
 
+    const getGeneralTopicDueStatus = generalTopicTitle =>
+      targetLanguageLoadedContent.some(jpContent => {
+        const generalTopicName = jpContent.generalTopic;
+
+        if (generalTopicName === generalTopicTitle) {
+          const nextReview = jpContent?.nextReview;
+          if (nextReview) {
+            return isUpForReview({nextReview, todayDate: today});
+          }
+          return false;
+        }
+      });
+
     const generalTopicObjKeys = [];
     const generalTopicWithMetaData = [];
     const allTopicsMetaData = [];
@@ -77,7 +87,6 @@ function Home({
       const topicMetaData = {
         isCore: item.isCore,
         isYoutube: item?.origin === 'youtube',
-        isDue: isDueReview(item.generalTopic, false),
         hasFutureReview: checkIsFutureReviewNeeded({
           nextReview: item?.nextReview,
           todayDate: today,
@@ -90,12 +99,16 @@ function Home({
           ...topicMetaData,
           title: item.generalTopic,
           isGeneral: true,
+          isDue: getGeneralTopicDueStatus(item.generalTopic),
         });
       }
       allTopicsMetaData.push({
         ...topicMetaData,
         title: item.title,
         generalTopic: item.generalTopic,
+        isDue: item?.nextReview
+          ? isUpForReview({nextReview: item?.nextReview, todayDate: today})
+          : false,
         isGeneral: false,
       });
     });
