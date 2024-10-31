@@ -1,47 +1,36 @@
-import {Text, TouchableOpacity, View} from 'react-native';
+import {View} from 'react-native';
+import {TopicTitleButton} from './GeneralTopics';
 
 const TopicsToDisplay = ({
-  topicsToDisplay,
-  isDueReview,
-  isCoreContent,
+  allTopicsMetaDataState,
   handleShowTopic,
-  hasAudioCheck,
-  isNeedsFutureReview,
+  selectedGeneralTopicState,
 }) => {
   return (
     <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
-      {topicsToDisplay?.map(topic => {
-        const hasUnifiedMP3File = hasAudioCheck(topic);
-        const thisTopicIsDue = isDueReview(topic, true, true);
-        const isCoreStatus = isCoreContent(topic, true);
-        const thisTopicIsUpcoming = isNeedsFutureReview({
-          topicOption: topic,
-          singular: true,
-        });
+      {allTopicsMetaDataState?.map(topic => {
+        const hasAudio = topic.hasAudio;
+        const isDue = topic.isDue;
+        const isCore = topic.isCore;
+        const hasFutureReview = topic.hasFutureReview;
+        const generalTopicTitle = topic.generalTopic;
+        const title = topic.title;
+        const isYoutube = topic.isYoutube;
+
+        if (selectedGeneralTopicState !== generalTopicTitle) return null;
 
         return (
-          <View key={topic} testID={topic}>
-            <TouchableOpacity
-              onPress={() => handleShowTopic(topic)}
-              style={{
-                borderWidth: 1,
-                borderColor: '#999999',
-                borderRadius: 20,
-                paddingVertical: 10,
-                paddingHorizontal: 15,
-                margin: 5,
-                backgroundColor: thisTopicIsDue
-                  ? '#C34A2C'
-                  : thisTopicIsUpcoming
-                  ? '#ADD8E6'
-                  : 'transparent',
-              }}>
-              <Text>
-                {topic} {!hasUnifiedMP3File ? '🔕' : ''}{' '}
-                {isCoreStatus ? <Text> 🧠</Text> : null}
-              </Text>
-            </TouchableOpacity>
-          </View>
+          <TopicTitleButton
+            key={title}
+            onPress={() => handleShowTopic(topic)}
+            testID={title}
+            isDue={isDue}
+            futureReview={hasFutureReview}
+            title={title}
+            isCore={isCore}
+            isYoutube={isYoutube}
+            hasAudio={hasAudio}
+          />
         );
       })}
     </View>

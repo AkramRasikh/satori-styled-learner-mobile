@@ -6,14 +6,14 @@ import saveWordAPI from '../../api/save-word';
 import useSetupPlayer from '../../hooks/useSetupPlayer';
 import {updateCreateReviewHistory} from '../../api/update-create-review-history';
 import MoreTopics from '../../components/MoreTopics';
-import GeneralTopics from '../../components/GeneralTopics';
-import TopicsToDisplay from '../../components/TopicsToDisplay';
 import ToastMessage from '../../components/ToastMessage';
 import {updateSentenceDataAPI} from '../../api/update-sentence-data';
 import useLanguageSelector from '../../context/Data/useLanguageSelector';
 import LoadingScreen from '../../components/LoadingScreen';
 import HomeContainerToSentencesOrWords from '../../components/HomeContainerToSentencesOrWords';
 import useTopicDescriptors from '../../hooks/useTopicDescriptors';
+import Topics from '../../components/Topics';
+import {checkIsFutureReviewNeeded} from '../../utils/is-up-for-review';
 
 const today = new Date();
 
@@ -35,9 +35,10 @@ function Home({
     targetLanguageLoadedContentState,
     setTargetLanguageLoadedContentState,
   ] = useState([]);
-  const [topicsToDisplayState, setTopicsToDisplayState] = useState([]);
+  const [allTopicsMetaDataState, setAllTopicsMetaDataState] = useState([]);
   const [generalTopicObjKeysState, setGeneralTopicObjKeysState] = useState([]);
-  const [generalTopicState, setGeneralTopicState] = useState('');
+  const [selectedGeneralTopicState, setSelectedGeneralTopicState] =
+    useState('');
   const [updatePromptState, setUpdatePromptState] = useState('');
   const [triggerSentenceIdUpdate, setTriggerSentenceIdUpdate] = useState('');
   const [selectedContentState, setSelectedContentState] = useState({
@@ -49,13 +50,10 @@ function Home({
 
   useSetupPlayer({isSetupPlayerLoaded, setIsSetupPlayerLoaded});
 
-  const {
-    isYoutubeVideo,
-    isDueReview,
-    isCoreContent,
-    hasAudioCheck,
-    isNeedsFutureReview,
-  } = useTopicDescriptors(targetLanguageLoadedContentState, today);
+  const {isDueReview} = useTopicDescriptors(
+    targetLanguageLoadedContentMaster,
+    today,
+  );
 
   useEffect(() => {
     const targetLanguageLoadedContent = targetLanguageLoadedContentMaster.map(
@@ -73,26 +71,37 @@ function Home({
     );
 
     const generalTopicObjKeys = [];
+    const generalTopicWithMetaData = [];
+    const allTopicsMetaData = [];
     targetLanguageLoadedContent.forEach(item => {
+      const topicMetaData = {
+        isCore: item.isCore,
+        isYoutube: item?.origin === 'youtube',
+        isDue: isDueReview(item.generalTopic, false),
+        hasFutureReview: checkIsFutureReviewNeeded({
+          nextReview: item?.nextReview,
+          todayDate: today,
+        }),
+        hasAudio: item.hasAudio,
+      };
       if (!generalTopicObjKeys.includes(item.generalTopic)) {
         generalTopicObjKeys.push(item.generalTopic);
+        generalTopicWithMetaData.push({
+          ...topicMetaData,
+          title: item.generalTopic,
+          isGeneral: true,
+        });
       }
-    });
-    setGeneralTopicObjKeysState(generalTopicObjKeys);
-  }, []);
-
-  useEffect(() => {
-    if (generalTopicState) {
-      const topicsToDisplay = [];
-
-      targetLanguageLoadedContentState.forEach(item => {
-        if (item?.generalTopic === generalTopicState) {
-          topicsToDisplay.push(item.title);
-        }
+      allTopicsMetaData.push({
+        ...topicMetaData,
+        title: item.title,
+        generalTopic: item.generalTopic,
+        isGeneral: false,
       });
-      setTopicsToDisplayState(topicsToDisplay);
-    }
-  }, [generalTopicState]);
+    });
+    setGeneralTopicObjKeysState(generalTopicWithMetaData);
+    setAllTopicsMetaDataState(allTopicsMetaData);
+  }, []);
 
   const handleShowTopic = topic => {
     if (topic === selectedTopic) {
@@ -116,7 +125,7 @@ function Home({
   };
 
   const handleShowGeneralTopic = generalTopic => {
-    setGeneralTopicState(generalTopic);
+    setSelectedGeneralTopicState(generalTopic);
   };
 
   const saveWordFirebase = async ({
@@ -227,7 +236,7 @@ function Home({
     return <LoadingScreen>Loading data...</LoadingScreen>;
   }
 
-  const showNaviBtn = !(generalTopicState || selectedTopic);
+  const showNaviBtn = !(selectedGeneralTopicState || selectedTopic);
 
   return (
     <SafeAreaView style={{backgroundColor: '#D3D3D3', minHeight: '100%'}}>
@@ -237,32 +246,19 @@ function Home({
       <ScrollView
         contentInsetAdjustmentBehavior="automatic"
         style={{padding: 10}}>
-        {selectedTopic || generalTopicState === '' ? null : (
+        {selectedTopic || selectedGeneralTopicState === '' ? null : (
           <MoreTopics handleShowGeneralTopic={handleShowGeneralTopic} />
         )}
         {showNaviBtn ? (
           <HomeContainerToSentencesOrWords navigation={navigation} />
         ) : null}
-        {!generalTopicState && (
-          <GeneralTopics
-            handleShowGeneralTopic={handleShowGeneralTopic}
-            generalTopicsToDisplay={generalTopicObjKeysState}
-            isDueReview={isDueReview}
-            isCoreContent={isCoreContent}
-            isNeedsFutureReview={isNeedsFutureReview}
-            isYoutubeVideo={isYoutubeVideo}
-          />
-        )}
-        {!selectedTopic ? (
-          <TopicsToDisplay
-            topicsToDisplay={topicsToDisplayState}
-            isDueReview={isDueReview}
-            isCoreContent={isCoreContent}
-            handleShowTopic={handleShowTopic}
-            hasAudioCheck={hasAudioCheck}
-            isNeedsFutureReview={isNeedsFutureReview}
-          />
-        ) : null}
+        <Topics
+          selectedGeneralTopicState={selectedGeneralTopicState}
+          handleShowGeneralTopic={handleShowGeneralTopic}
+          generalTopicObjKeysState={generalTopicObjKeysState}
+          handleShowTopic={handleShowTopic}
+          allTopicsMetaDataState={allTopicsMetaDataState}
+        />
         <View>
           {selectedTopic ? (
             <TopicComponent
