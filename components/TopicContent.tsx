@@ -17,9 +17,7 @@ import {mergeAndRemoveDuplicates} from '../utils/merge-and-remove-duplicates';
 import SnippetTimeline from './SnippetTimeline';
 import SnippetContainer from './SnippetContainer';
 import DisplaySettings from './DisplaySettings';
-import TopicWordList from './TopicWordList';
 import useContentControls from '../hooks/useContentControls';
-import {getThisTopicsWords} from '../helper-functions/get-this-topics-words';
 import useAudioTextSync from '../hooks/useAudioTextSync';
 import LineContainer from './LineContainer';
 import LongPressedWord from './LongPressedWord';
@@ -56,8 +54,6 @@ const TopicContent = ({
   const [isFlowingSentences, setIsFlowingSentences] = useState(true);
   const [longPressedWord, setLongPressedWord] = useState([]);
   const [miniSnippets, setMiniSnippets] = useState([]);
-  const [thisTopicsWords, setThisTopicsWords] = useState([]);
-  const [openTopicWords, setOpenTopicWords] = useState(false);
   const [wordTest, setWordTest] = useState(false);
   const [englishOnly, setEnglishOnly] = useState(false);
   const [engMaster, setEngMaster] = useState(true);
@@ -217,10 +213,6 @@ const TopicContent = ({
   });
 
   useInitTopicWordList({
-    setThisTopicsWords,
-    getThisTopicsWords,
-    pureWordsUnique,
-    topicData,
     targetLanguageLoadedWords,
     setInitTargetLanguageWordsList,
   });
@@ -310,16 +302,11 @@ const TopicContent = ({
         setWordTest={setWordTest}
         englishOnly={englishOnly}
         setEnglishOnly={setEnglishOnly}
-        setOpenTopicWords={setOpenTopicWords}
-        openTopicWords={openTopicWords}
         isFlowingSentences={isFlowingSentences}
         setIsFlowingSentences={setIsFlowingSentences}
         engMaster={engMaster}
         setEngMaster={setEngMaster}
       />
-      {openTopicWords && thisTopicsWords?.length > 0 ? (
-        <TopicWordList thisTopicsWords={thisTopicsWords} />
-      ) : null}
       {longPressedWord?.length ? (
         <LongPressedWord getLongPressedWordData={getLongPressedWordData} />
       ) : null}

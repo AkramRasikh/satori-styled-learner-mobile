@@ -20,8 +20,6 @@ const DisplaySettings = ({
   setWordTest,
   englishOnly,
   setEnglishOnly,
-  setOpenTopicWords,
-  openTopicWords,
   isFlowingSentences,
   setIsFlowingSentences,
   engMaster,
@@ -31,7 +29,6 @@ const DisplaySettings = ({
     {func: setWordTest, bool: wordTest, text: 'Word hint'},
     {func: setEnglishOnly, bool: englishOnly, text: 'Eng only'},
     {func: setEngMaster, bool: engMaster, text: 'Eng Master'},
-    {func: setOpenTopicWords, bool: openTopicWords, text: 'Word list'},
     {
       func: setIsFlowingSentences,
       bool: isFlowingSentences,
