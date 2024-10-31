@@ -265,13 +265,15 @@ function Home({
         {showNaviBtn ? (
           <HomeContainerToSentencesOrWords navigation={navigation} />
         ) : null}
-        <Topics
-          selectedGeneralTopicState={selectedGeneralTopicState}
-          handleShowGeneralTopic={handleShowGeneralTopic}
-          generalTopicObjKeysState={generalTopicObjKeysState}
-          handleShowTopic={handleShowTopic}
-          allTopicsMetaDataState={allTopicsMetaDataState}
-        />
+        {!selectedTopic && (
+          <Topics
+            selectedGeneralTopicState={selectedGeneralTopicState}
+            handleShowGeneralTopic={handleShowGeneralTopic}
+            generalTopicObjKeysState={generalTopicObjKeysState}
+            handleShowTopic={handleShowTopic}
+            allTopicsMetaDataState={allTopicsMetaDataState}
+          />
+        )}
         <View>
           {selectedTopic ? (
             <TopicComponent

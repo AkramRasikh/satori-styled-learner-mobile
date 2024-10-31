@@ -22,7 +22,7 @@ const TopicsToDisplay = ({
         return (
           <TopicTitleButton
             key={title}
-            onPress={() => handleShowTopic(topic)}
+            onPress={() => handleShowTopic(topic.title)}
             testID={title}
             isDue={isDue}
             futureReview={hasFutureReview}
