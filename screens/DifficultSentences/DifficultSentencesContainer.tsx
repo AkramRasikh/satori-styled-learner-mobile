@@ -107,7 +107,6 @@ const DifficultSentencesContainer = ({
               return (
                 <DifficultSentenceWidget
                   key={sentence.id}
-                  indexOrder={index}
                   sentence={sentence}
                   updateSentenceData={updateSentenceData}
                   dueStatus={dueStatus}

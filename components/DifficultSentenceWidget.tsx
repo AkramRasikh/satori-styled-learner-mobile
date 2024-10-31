@@ -8,11 +8,10 @@ import useMP3File from '../hooks/useMP3File';
 import {generateRandomId} from '../utils/generate-random-id';
 import {mergeAndRemoveDuplicates} from '../utils/merge-and-remove-duplicates';
 import useData from '../context/Data/useData';
-import SRSTogglesSentences from './SRSTogglesSentences';
-import DeleteWordSection from './DeleteWordSection';
 import useLanguageSelector from '../context/Data/useLanguageSelector';
 import DifficultSentenceAudioContainer from './DifficultSentenceAudioContainer';
 import DifficultSentenceSnippetContainer from './DifficultSentenceSnippetContainer';
+import AreYouSureSection from './AreYouSureSection';
 
 const DifficultSentenceWidget = ({
   sentence,
@@ -25,7 +24,6 @@ const DifficultSentenceWidget = ({
   sentenceBeingHighlightedState,
   setSentenceBeingHighlightedState,
   dueDate,
-  indexOrder,
   setToggleableSentencesState,
 }) => {
   const [currentTimeState, setCurrentTimeState] = useState(0);
@@ -44,7 +42,6 @@ const DifficultSentenceWidget = ({
   const baseLang = sentence.baseLang;
   const targetLang = sentence.targetLang;
   const isMediaContent = sentence.isMediaContent;
-  // const isWithin3Indexs = indexOrder < 3;
 
   const audioId = isMediaContent ? topic : id;
   const soundRef = useRef();
@@ -78,12 +75,6 @@ const DifficultSentenceWidget = ({
     soundRef,
     url: filePath,
   });
-
-  // useEffect(() => {
-  //   if (isWithin3Indexs) {
-  //     loadFile(audioId, url);
-  //   }
-  // }, [indexOrder, loadFile, audioId, url, isWithin3Indexs]);
 
   useEffect(() => {
     if (filePath) {
@@ -238,9 +229,10 @@ const DifficultSentenceWidget = ({
         isMediaContent={isMediaContent}
       />
       {showReviewSettings ? (
-        <>
-          <DeleteWordSection deleteContent={handleDeleteContent} />
-        </>
+        <AreYouSureSection
+          handleClose={() => setShowReviewSettings(false)}
+          handleYesSure={handleDeleteContent}
+        />
       ) : null}
       <DifficultSentenceSnippetContainer
         isLoaded={isLoaded}

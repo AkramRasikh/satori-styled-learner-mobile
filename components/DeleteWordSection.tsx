@@ -1,5 +1,6 @@
 import {useState} from 'react';
-import {Button, Text, TouchableOpacity, View} from 'react-native';
+import {Button, View} from 'react-native';
+import AreYouSureSection from './AreYouSureSection';
 
 const DeleteWordSection = ({deleteContent, handleSnooze}) => {
   const [openAreYouSureState, setOpenAreYouSureState] = useState(false);
@@ -12,44 +13,11 @@ const DeleteWordSection = ({deleteContent, handleSnooze}) => {
         <Button title="Delete" onPress={() => setOpenAreYouSureState(true)} />
       </View>
       {openAreYouSureState && (
-        <View
-          style={{
-            paddingVertical: 10,
-            display: 'flex',
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            borderTopWidth: 1,
-          }}>
-          <TouchableOpacity
-            style={{
-              padding: 10,
-              borderRadius: 5,
-              backgroundColor: 'grey',
-            }}
-            onPress={() => setOpenAreYouSureState(false)}>
-            <Text>No</Text>
-          </TouchableOpacity>
-          {handleSnooze && (
-            <TouchableOpacity
-              style={{
-                padding: 10,
-                borderRadius: 5,
-                backgroundColor: 'gold',
-              }}
-              onPress={handleSnooze}>
-              <Text>Snooze</Text>
-            </TouchableOpacity>
-          )}
-          <TouchableOpacity
-            style={{
-              padding: 10,
-              borderRadius: 5,
-              backgroundColor: 'red',
-            }}
-            onPress={deleteContent}>
-            <Text>Yes</Text>
-          </TouchableOpacity>
-        </View>
+        <AreYouSureSection
+          handleClose={() => setOpenAreYouSureState(false)}
+          handleSnooze={handleSnooze}
+          handleYesSure={deleteContent}
+        />
       )}
     </View>
   );
