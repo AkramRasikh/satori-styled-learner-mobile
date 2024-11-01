@@ -184,9 +184,7 @@ function Home({
 
   return (
     <ScreenContainerComponent updatePromptState={updatePromptState}>
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={{padding: 10}}>
+      <ScrollView contentInsetAdjustmentBehavior="automatic">
         {selectedTopic || selectedGeneralTopicState === '' ? null : (
           <MoreTopics handleShowGeneralTopic={handleShowGeneralTopic} />
         )}
