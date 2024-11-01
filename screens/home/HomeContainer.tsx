@@ -1,16 +1,16 @@
 import React, {useState} from 'react';
-import {SafeAreaView, ScrollView, View} from 'react-native';
+import {ScrollView, View} from 'react-native';
 import TopicComponent from '../../components/TopicComponent';
 import saveWordAPI from '../../api/save-word';
 import {updateCreateReviewHistory} from '../../api/update-create-review-history';
 import MoreTopics from '../../components/MoreTopics';
-import ToastMessage from '../../components/ToastMessage';
 import {updateSentenceDataAPI} from '../../api/update-sentence-data';
 import useLanguageSelector from '../../context/Data/useLanguageSelector';
 import LoadingScreen from '../../components/LoadingScreen';
 import HomeContainerToSentencesOrWords from '../../components/HomeContainerToSentencesOrWords';
 import Topics from '../../components/Topics';
 import useOnLoadContentScreen from '../../hooks/useOnLoadContentScreen';
+import ScreenContainerComponent from '../../components/ScreenContainerComponent';
 
 function Home({
   navigation,
@@ -183,10 +183,7 @@ function Home({
   const showNaviBtn = !(selectedGeneralTopicState || selectedTopic);
 
   return (
-    <SafeAreaView style={{backgroundColor: '#D3D3D3', minHeight: '100%'}}>
-      {updatePromptState ? (
-        <ToastMessage toastText={updatePromptState} />
-      ) : null}
+    <ScreenContainerComponent updatePromptState={updatePromptState}>
       <ScrollView
         contentInsetAdjustmentBehavior="automatic"
         style={{padding: 10}}>
@@ -226,7 +223,7 @@ function Home({
           ) : null}
         </View>
       </ScrollView>
-    </SafeAreaView>
+    </ScreenContainerComponent>
   );
 }
 

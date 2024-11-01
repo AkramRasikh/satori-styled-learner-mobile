@@ -1,13 +1,13 @@
 import React, {useEffect, useState} from 'react';
-import {SafeAreaView, ScrollView, View} from 'react-native';
+import {ScrollView, View} from 'react-native';
 import useFormatWordsToStudy from '../../hooks/useFormatWordsToStudy';
 import {makeArrayUnique} from '../../hooks/useHighlightWordToWordBank';
-import ToastMessage from '../../components/ToastMessage';
 import SelectedTopicWordsSection from '../../components/SelectedTopicWordsSection';
 import SelectedCategoriesWordsSection from '../../components/SelectedCategoriesSection';
 import {FlashCardsSectionContainer} from '../../components/FlashcardsWordsSection';
 import useWordData from '../../context/Data/useWordData';
 import WordStudyCardsCTA from '../../components/WordStudyCardsCTA';
+import ScreenContainerComponent from '../../components/ScreenContainerComponent';
 
 function WordStudyContainer({
   targetLanguageLoadedSentences,
@@ -149,14 +149,7 @@ function WordStudyContainer({
     tempNewStudyCardsState?.length === 0;
 
   return (
-    <SafeAreaView
-      style={{
-        backgroundColor: '#D3D3D3',
-        minHeight: '100%',
-      }}>
-      {updatePromptState ? (
-        <ToastMessage toastText={updatePromptState} />
-      ) : null}
+    <ScreenContainerComponent updatePromptState={updatePromptState}>
       <ScrollView
         contentInsetAdjustmentBehavior="automatic"
         style={{padding: 10}}>
@@ -194,7 +187,7 @@ function WordStudyContainer({
           </View>
         ) : null}
       </ScrollView>
-    </SafeAreaView>
+    </ScreenContainerComponent>
   );
 }
 

@@ -1,11 +1,11 @@
 import React, {useEffect, useState} from 'react';
-import {SafeAreaView, ScrollView, Text, View} from 'react-native';
+import {ScrollView, Text, View} from 'react-native';
 import DifficultSentenceWidget from '../../components/DifficultSentenceWidget';
 import LoadingScreen from '../../components/LoadingScreen';
-import ToastMessage from '../../components/ToastMessage';
 import {calculateDueDate} from '../../utils/get-date-due-status';
 import PillButton from '../../components/PillButton';
 import {getTimeDiffSRS} from '../../utils/getTimeDiffSRS';
+import ScreenContainerComponent from '../../components/ScreenContainerComponent';
 
 const DifficultSentencesContainer = ({
   difficultSentencesState,
@@ -58,15 +58,9 @@ const DifficultSentencesContainer = ({
   }
 
   return (
-    <SafeAreaView
-      style={{
-        backgroundColor: '#D3D3D3',
-        minHeight: '100%',
-        marginBottom: 30,
-      }}>
-      {updatePromptState ? (
-        <ToastMessage toastText={updatePromptState} />
-      ) : null}
+    <ScreenContainerComponent
+      updatePromptState={updatePromptState}
+      marginBottom={30}>
       <View style={{padding: 10, paddingBottom: 30}}>
         <View>
           <Text>
@@ -126,7 +120,7 @@ const DifficultSentencesContainer = ({
           </View>
         </ScrollView>
       </View>
-    </SafeAreaView>
+    </ScreenContainerComponent>
   );
 };
 
