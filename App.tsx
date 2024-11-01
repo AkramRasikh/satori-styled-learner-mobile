@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {AppState} from 'react-native';
 import RNFS from 'react-native-fs';
 import {NavigationContainer} from '@react-navigation/native';
@@ -11,12 +11,17 @@ import {DataProvider} from './context/Data/DataProvider';
 import WordStudy from './screens/WordStudy';
 import LanguageSelectorScreen from './screens/LanguageSelector';
 import {LanguageSelectorProvider} from './context/Data/LanguageSelectorProvider';
+import useSetupPlayer from './hooks/useSetupPlayer';
 
 enableScreens();
 
 const Stack = createStackNavigator();
 
 function App(): React.JSX.Element {
+  const [isSetupPlayerLoaded, setIsSetupPlayerLoaded] = useState(false);
+
+  useSetupPlayer({isSetupPlayerLoaded, setIsSetupPlayerLoaded});
+
   useEffect(() => {
     const subscription = AppState.addEventListener(
       'change',

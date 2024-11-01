@@ -1,9 +1,7 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {SafeAreaView, ScrollView, View} from 'react-native';
-
 import TopicComponent from '../../components/TopicComponent';
 import saveWordAPI from '../../api/save-word';
-import useSetupPlayer from '../../hooks/useSetupPlayer';
 import {updateCreateReviewHistory} from '../../api/update-create-review-history';
 import MoreTopics from '../../components/MoreTopics';
 import ToastMessage from '../../components/ToastMessage';
@@ -12,12 +10,7 @@ import useLanguageSelector from '../../context/Data/useLanguageSelector';
 import LoadingScreen from '../../components/LoadingScreen';
 import HomeContainerToSentencesOrWords from '../../components/HomeContainerToSentencesOrWords';
 import Topics from '../../components/Topics';
-import {
-  checkIsFutureReviewNeeded,
-  isUpForReview,
-} from '../../utils/is-up-for-review';
-
-const today = new Date();
+import useOnLoadContentScreen from '../../hooks/useOnLoadContentScreen';
 
 function Home({
   navigation,
@@ -29,7 +22,6 @@ function Home({
   setTargetLanguageWordsState,
   pureWords,
 }): React.JSX.Element {
-  const [isSetupPlayerLoaded, setIsSetupPlayerLoaded] = useState(false);
   const [structuredUnifiedData, setStructuredUnifiedData] = useState([]);
   const [selectedTopic, setSelectedTopic] = useState('');
   const [showOtherTopics, setShowOtherTopics] = useState(true);
@@ -50,72 +42,12 @@ function Home({
 
   const {languageSelectedState} = useLanguageSelector();
 
-  useSetupPlayer({isSetupPlayerLoaded, setIsSetupPlayerLoaded});
-
-  useEffect(() => {
-    const targetLanguageLoadedContent = targetLanguageLoadedContentMaster.map(
-      item => {
-        return {
-          generalTopic: item.title.split('-').slice(0, -1).join('-'),
-          isMedia: item?.origin === 'youtube' || item?.origin === 'netflix',
-          ...item,
-        };
-      },
-    );
-    setTargetLanguageLoadedContentState(
-      targetLanguageLoadedContent.sort((a, b) => {
-        return a.isCore === b.isCore ? 0 : a.isCore ? -1 : 1;
-      }),
-    );
-
-    const getGeneralTopicDueStatus = generalTopicTitle =>
-      targetLanguageLoadedContent.some(jpContent => {
-        const generalTopicName = jpContent.generalTopic;
-
-        if (generalTopicName === generalTopicTitle) {
-          const nextReview = jpContent?.nextReview;
-          if (nextReview) {
-            return isUpForReview({nextReview, todayDate: today});
-          }
-          return false;
-        }
-      });
-
-    const generalTopicObjKeys = [];
-    const generalTopicWithMetaData = [];
-    const allTopicsMetaData = [];
-    targetLanguageLoadedContent.forEach(item => {
-      const topicMetaData = {
-        isCore: item.isCore,
-        isYoutube: item?.origin === 'youtube',
-        hasFutureReview: checkIsFutureReviewNeeded({
-          nextReview: item?.nextReview,
-          todayDate: today,
-        }),
-        hasAudio: item.hasAudio,
-      };
-      if (!generalTopicObjKeys.includes(item.generalTopic)) {
-        generalTopicObjKeys.push(item.generalTopic);
-        generalTopicWithMetaData.push({
-          ...topicMetaData,
-          title: item.generalTopic,
-          isGeneral: true,
-          isDue: getGeneralTopicDueStatus(item.generalTopic),
-        });
-      }
-      allTopicsMetaData.push({
-        ...topicMetaData,
-        title: item.title,
-        generalTopic: item.generalTopic,
-        isDue: item?.nextReview
-          ? isUpForReview({nextReview: item?.nextReview, todayDate: today})
-          : false,
-        isGeneral: false,
-      });
-    });
-    setGeneralTopicObjKeysState(generalTopicWithMetaData);
-    setAllTopicsMetaDataState(allTopicsMetaData);
-  }, []);
+  useOnLoadContentScreen({
+    targetLanguageLoadedContentMaster,
+    setTargetLanguageLoadedContentState,
+    setGeneralTopicObjKeysState,
+    setAllTopicsMetaDataState,
+  });
 
   const handleShowTopic = topic => {
     if (topic === selectedTopic) {
