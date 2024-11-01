@@ -1,5 +1,6 @@
 import {Text, TouchableOpacity, View} from 'react-native';
 import {getEmptyCard} from '../srs-algo';
+import useOpenGoogleTranslate from './useOpenGoogleTranslate';
 
 const SatoriLineControls = ({
   handlePlayThisLine,
@@ -19,6 +20,8 @@ const SatoriLineControls = ({
   highlightMode,
   setHighlightMode,
 }) => {
+  const {openGoogleTranslateApp} = useOpenGoogleTranslate();
+
   const handleQuickNextDayReview = async () => {
     const newDate = new Date();
     newDate.setDate(newDate.getDate() + 1);
@@ -37,6 +40,10 @@ const SatoriLineControls = ({
     } catch (error) {
       console.log('## handleQuickNextDayReview error', error);
     }
+  };
+
+  const handleOpenGoogle = () => {
+    openGoogleTranslateApp(topicSentence.targetLang);
   };
   return (
     <View
@@ -58,6 +65,9 @@ const SatoriLineControls = ({
       </TouchableOpacity>
       <TouchableOpacity onPress={openReviewPortal}>
         <Text>😓</Text>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={handleOpenGoogle}>
+        <Text>📚</Text>
       </TouchableOpacity>
       {topicSentence.notes ? (
         <TouchableOpacity onPress={() => setShowNotes(!showNotes)}>
