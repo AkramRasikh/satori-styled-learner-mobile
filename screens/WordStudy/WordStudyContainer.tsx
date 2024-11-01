@@ -13,6 +13,7 @@ import SelectedTopicWordsSection from '../../components/SelectedTopicWordsSectio
 import SelectedCategoriesWordsSection from '../../components/SelectedCategoriesSection';
 import {FlashCardsSectionContainer} from '../../components/FlashcardsWordsSection';
 import useWordData from '../../context/Data/useWordData';
+import WordStudyCardsCTA from '../../components/WordStudyCardsCTA';
 
 function WordStudyContainer({
   targetLanguageLoadedSentences,
@@ -166,36 +167,11 @@ function WordStudyContainer({
         contentInsetAdjustmentBehavior="automatic"
         style={{padding: 10}}>
         {!hasSelectedTopicWords && (
-          <View
-            style={{
-              justifyContent: 'center',
-              alignItems: 'center',
-              marginBottom: 10,
-            }}>
-            {dueCardsState.length > 0 ? (
-              <TouchableOpacity
-                style={{
-                  backgroundColor: '#CCCCCC',
-                  borderColor: 'black',
-                  borderRadius: 10,
-                  padding: 10,
-                }}
-                onPress={handleShowDueCards}>
-                <Text>Due Cards: {dueCardsState.length}</Text>
-              </TouchableOpacity>
-            ) : (
-              <TouchableOpacity
-                style={{
-                  backgroundColor: '#CCCCCC',
-                  borderColor: 'black',
-                  borderRadius: 10,
-                  padding: 10,
-                }}
-                onPress={handleShowNewRandomCards}>
-                <Text>new cards</Text>
-              </TouchableOpacity>
-            )}
-          </View>
+          <WordStudyCardsCTA
+            dueCardsState={dueCardsState}
+            handleShowDueCards={handleShowDueCards}
+            handleShowNewRandomCards={handleShowNewRandomCards}
+          />
         )}
 
         {showFlashCardSection && (
