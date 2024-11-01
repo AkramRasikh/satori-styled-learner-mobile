@@ -1,11 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {
-  SafeAreaView,
-  ScrollView,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {SafeAreaView, ScrollView, View} from 'react-native';
 import useFormatWordsToStudy from '../../hooks/useFormatWordsToStudy';
 import {makeArrayUnique} from '../../hooks/useHighlightWordToWordBank';
 import ToastMessage from '../../components/ToastMessage';
