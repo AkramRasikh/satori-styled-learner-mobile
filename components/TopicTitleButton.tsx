@@ -1,6 +1,7 @@
+import React from 'react';
 import {Image, Text, TouchableOpacity, View} from 'react-native';
 
-export const TopicTitleButton = ({
+const TopicTitleButton = ({
   onPress,
   testID,
   isDue,
@@ -21,10 +22,10 @@ export const TopicTitleButton = ({
         paddingVertical: 10,
         paddingHorizontal: 15,
         margin: 5,
-        backgroundColor: isDue
-          ? '#C34A2C'
-          : futureReview
+        backgroundColor: futureReview
           ? '#ADD8E6'
+          : isDue
+          ? '#C34A2C'
           : 'transparent',
       }}>
       <View
@@ -49,32 +50,4 @@ export const TopicTitleButton = ({
   </View>
 );
 
-const GeneralTopics = ({handleShowGeneralTopic, generalTopicsToDisplay}) => {
-  return (
-    <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
-      {generalTopicsToDisplay?.map(generalTopic => {
-        const title = generalTopic.title;
-        const isCore = generalTopic.isCore;
-        const isDue = generalTopic.isDue;
-        const futureReview = generalTopic.hasFutureReview;
-        const isYoutube = generalTopic.isYoutube;
-
-        return (
-          <TopicTitleButton
-            key={title}
-            onPress={() => handleShowGeneralTopic(title)}
-            testID={title}
-            isDue={isDue}
-            futureReview={futureReview}
-            title={title}
-            isCore={isCore}
-            isYoutube={isYoutube}
-            isGeneral
-          />
-        );
-      })}
-    </View>
-  );
-};
-
-export default GeneralTopics;
+export default TopicTitleButton;

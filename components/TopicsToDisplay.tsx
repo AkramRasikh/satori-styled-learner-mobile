@@ -1,9 +1,9 @@
 import {View} from 'react-native';
-import {TopicTitleButton} from './GeneralTopics';
+import {TopicTitleButton} from './TopicTitleButton';
 
 const TopicsToDisplay = ({
   allTopicsMetaDataState,
-  handleShowTopic,
+  handleOnPress,
   selectedGeneralTopicState,
 }) => {
   return (
@@ -22,7 +22,7 @@ const TopicsToDisplay = ({
         return (
           <TopicTitleButton
             key={title}
-            onPress={() => handleShowTopic(topic.title)}
+            onPress={() => handleOnPress(topic.title)}
             testID={title}
             isDue={isDue}
             futureReview={hasFutureReview}

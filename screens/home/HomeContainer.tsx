@@ -30,7 +30,6 @@ function Home({
     setTargetLanguageLoadedContentState,
   ] = useState([]);
   const [allTopicsMetaDataState, setAllTopicsMetaDataState] = useState([]);
-  const [generalTopicObjKeysState, setGeneralTopicObjKeysState] = useState([]);
   const [selectedGeneralTopicState, setSelectedGeneralTopicState] =
     useState('');
   const [updatePromptState, setUpdatePromptState] = useState('');
@@ -45,7 +44,6 @@ function Home({
   useOnLoadContentScreen({
     targetLanguageLoadedContentMaster,
     setTargetLanguageLoadedContentState,
-    setGeneralTopicObjKeysState,
     setAllTopicsMetaDataState,
   });
 
@@ -202,7 +200,6 @@ function Home({
           <Topics
             selectedGeneralTopicState={selectedGeneralTopicState}
             handleShowGeneralTopic={handleShowGeneralTopic}
-            generalTopicObjKeysState={generalTopicObjKeysState}
             handleShowTopic={handleShowTopic}
             allTopicsMetaDataState={allTopicsMetaDataState}
           />

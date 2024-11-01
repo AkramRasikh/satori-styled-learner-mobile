@@ -11,11 +11,9 @@ const today = new Date();
 const useOnLoadContentScreen = ({
   targetLanguageLoadedContentMaster,
   setTargetLanguageLoadedContentState,
-  setGeneralTopicObjKeysState,
   setAllTopicsMetaDataState,
 }) => {
   const generalTopicObjKeys: string[] = [];
-  const generalTopicWithMetaData = [];
   const allTopicsMetaData = [];
   const targetContent = [];
 
@@ -39,7 +37,7 @@ const useOnLoadContentScreen = ({
   ) => {
     if (!generalTopicObjKeys.includes(generalTopic)) {
       generalTopicObjKeys.push(generalTopic);
-      generalTopicWithMetaData.push({
+      allTopicsMetaData.push({
         ...topicMetaData,
         title: generalTopic,
         isGeneral: true,
@@ -88,7 +86,6 @@ const useOnLoadContentScreen = ({
       }),
     );
 
-    setGeneralTopicObjKeysState(generalTopicWithMetaData);
     setAllTopicsMetaDataState(allTopicsMetaData);
   }, []);
 };
