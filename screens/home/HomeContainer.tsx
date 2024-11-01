@@ -57,6 +57,7 @@ function Home({
       item => {
         return {
           generalTopic: item.title.split('-').slice(0, -1).join('-'),
+          isMedia: item?.origin === 'youtube' || item?.origin === 'netflix',
           ...item,
         };
       },

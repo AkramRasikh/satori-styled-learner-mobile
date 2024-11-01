@@ -68,16 +68,10 @@ const TopicContent = ({
 
   const {languageSelectedState} = useLanguageSelector();
 
-  const topicData = loadedContent.content.filter(
-    contentItem => contentItem !== null,
-  );
-
-  const reviewHistory = loadedContent.reviewHistory;
-  const nextReview = loadedContent.nextReview;
+  const {content: topicData, reviewHistory, nextReview} = loadedContent;
 
   const isCore = loadedContent?.isCore;
-  const isMediaContent =
-    loadedContent?.origin === 'netflix' || loadedContent?.origin === 'youtube';
+  const isMediaContent = loadedContent?.isMedia;
 
   const hasUnifiedMP3File = loadedContent.hasAudio;
 
