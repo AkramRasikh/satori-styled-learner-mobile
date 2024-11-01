@@ -1,7 +1,23 @@
-import {useState} from 'react';
+import React, {useState} from 'react';
 import {Dimensions, Text, TouchableOpacity, View} from 'react-native';
 import AnimatedWordModal from './WordModal';
 import SRSToggles from './SRSToggles';
+
+export const FlashCardsSectionContainer = ({
+  handleDeleteWordFlashCard,
+  dueCardsState,
+  tempNewStudyCardsState,
+}) => {
+  const isTemp = tempNewStudyCardsState?.length > 0;
+  const flashCards = isTemp ? tempNewStudyCardsState : dueCardsState;
+  return (
+    <FlashcardsWordsSection
+      dueCardsState={flashCards}
+      handleDeleteWord={handleDeleteWordFlashCard}
+      isTempWord={isTemp}
+    />
+  );
+};
 
 const FlashcardsWordsSection = ({
   dueCardsState,

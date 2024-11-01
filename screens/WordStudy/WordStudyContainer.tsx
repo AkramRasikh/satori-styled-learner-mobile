@@ -11,7 +11,7 @@ import {makeArrayUnique} from '../../hooks/useHighlightWordToWordBank';
 import ToastMessage from '../../components/ToastMessage';
 import SelectedTopicWordsSection from '../../components/SelectedTopicWordsSection';
 import SelectedCategoriesWordsSection from '../../components/SelectedCategoriesSection';
-import FlashcardsWordsSection from '../../components/FlashcardsWordsSection';
+import {FlashCardsSectionContainer} from '../../components/FlashcardsWordsSection';
 import useWordData from '../../context/Data/useWordData';
 
 function WordStudyContainer({
@@ -41,8 +41,6 @@ function WordStudyContainer({
     tempNewStudyCardsState,
     setTempNewStudyCardsState,
   } = useWordData();
-
-  const hasSelectedTopicWords = selectedTopic && selectedTopicWords?.length > 0;
 
   useFormatWordsToStudy({
     targetLanguageWordsState,
@@ -144,6 +142,17 @@ function WordStudyContainer({
     }
   };
 
+  const hasSelectedTopicWords = selectedTopic && selectedTopicWords?.length > 0;
+
+  const showFlashCardSection =
+    tempNewStudyCardsState?.length > 0 ||
+    (showDueCardsState && !hasSelectedTopicWords);
+
+  const showWordCategories =
+    !hasSelectedTopicWords &&
+    !showDueCardsState &&
+    tempNewStudyCardsState?.length === 0;
+
   return (
     <SafeAreaView
       style={{
@@ -189,29 +198,19 @@ function WordStudyContainer({
           </View>
         )}
 
-        {tempNewStudyCardsState?.length > 0 && (
-          <FlashcardsWordsSection
-            dueCardsState={tempNewStudyCardsState}
-            handleDeleteWord={handleDeleteWordFlashCard}
-            isTempWord
-          />
-        )}
-
-        {showDueCardsState && !hasSelectedTopicWords && (
-          <FlashcardsWordsSection
+        {showFlashCardSection && (
+          <FlashCardsSectionContainer
+            handleDeleteWordFlashCard={handleDeleteWordFlashCard}
             dueCardsState={dueCardsState}
-            handleDeleteWord={handleDeleteWordFlashCard}
+            tempNewStudyCardsState={tempNewStudyCardsState}
           />
         )}
-
-        {!hasSelectedTopicWords &&
-          !showDueCardsState &&
-          tempNewStudyCardsState?.length === 0 && (
-            <SelectedCategoriesWordsSection
-              wordCategories={wordCategories}
-              handleShowThisCategoriesWords={handleShowThisCategoriesWords}
-            />
-          )}
+        {showWordCategories && (
+          <SelectedCategoriesWordsSection
+            wordCategories={wordCategories}
+            handleShowThisCategoriesWords={handleShowThisCategoriesWords}
+          />
+        )}
         {hasSelectedTopicWords ? (
           <View>
             <SelectedTopicWordsSection
