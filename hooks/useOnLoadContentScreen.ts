@@ -14,25 +14,50 @@ const useOnLoadContentScreen = ({
   setGeneralTopicObjKeysState,
   setAllTopicsMetaDataState,
 }) => {
-  const generalTopicObjKeys = [];
+  const generalTopicObjKeys: string[] = [];
   const generalTopicWithMetaData = [];
   const allTopicsMetaData = [];
   const targetContent = [];
 
-  useEffect(() => {
-    const getGeneralTopicDueStatus = generalTopicTitle =>
-      targetContent.some(jpContent => {
-        const generalTopicName = jpContent.generalTopic;
+  const getGeneralTopicDueStatus = generalTopicTitle =>
+    targetContent.some(jpContent => {
+      const generalTopicName = jpContent.generalTopic;
 
-        if (generalTopicName === generalTopicTitle) {
-          const nextReview = jpContent?.nextReview;
-          if (nextReview) {
-            return isUpForReview({nextReview, todayDate: today});
-          }
-          return false;
+      if (generalTopicName === generalTopicTitle) {
+        const nextReview = jpContent?.nextReview;
+        if (nextReview) {
+          return isUpForReview({nextReview, todayDate: today});
         }
-      });
+        return false;
+      }
+    });
 
+  const getTopicMetaDataAndGeneralTopicKeys = (
+    topicMetaData,
+    item,
+    generalTopic,
+  ) => {
+    if (!generalTopicObjKeys.includes(generalTopic)) {
+      generalTopicObjKeys.push(generalTopic);
+      generalTopicWithMetaData.push({
+        ...topicMetaData,
+        title: generalTopic,
+        isGeneral: true,
+        isDue: getGeneralTopicDueStatus(generalTopic),
+      });
+    }
+    allTopicsMetaData.push({
+      ...topicMetaData,
+      title: item.title,
+      generalTopic: generalTopic,
+      isDue: item?.nextReview
+        ? isUpForReview({nextReview: item?.nextReview, todayDate: today})
+        : false,
+      isGeneral: false,
+    });
+  };
+
+  useEffect(() => {
     targetLanguageLoadedContentMaster.forEach(item => {
       const generalTopic = getGeneralTopicName(item.title);
       const isMedia = isMediaContent(item?.origin);
@@ -42,34 +67,19 @@ const useOnLoadContentScreen = ({
         ...item,
       });
 
-      const topicMetaData = {
-        isCore: item.isCore,
-        isYoutube: isYoutube(item?.origin),
-        hasFutureReview: checkIsFutureReviewNeeded({
-          nextReview: item?.nextReview,
-          todayDate: today,
-        }),
-        hasAudio: item.hasAudio,
-      };
-
-      if (!generalTopicObjKeys.includes(generalTopic)) {
-        generalTopicObjKeys.push(generalTopic);
-        generalTopicWithMetaData.push({
-          ...topicMetaData,
-          title: generalTopic,
-          isGeneral: true,
-          isDue: getGeneralTopicDueStatus(generalTopic),
-        });
-      }
-      allTopicsMetaData.push({
-        ...topicMetaData,
-        title: item.title,
-        generalTopic: generalTopic,
-        isDue: item?.nextReview
-          ? isUpForReview({nextReview: item?.nextReview, todayDate: today})
-          : false,
-        isGeneral: false,
-      });
+      getTopicMetaDataAndGeneralTopicKeys(
+        {
+          isCore: item.isCore,
+          isYoutube: isYoutube(item?.origin),
+          hasFutureReview: checkIsFutureReviewNeeded({
+            nextReview: item?.nextReview,
+            todayDate: today,
+          }),
+          hasAudio: item.hasAudio,
+        },
+        item,
+        generalTopic,
+      );
     });
 
     setTargetLanguageLoadedContentState(
