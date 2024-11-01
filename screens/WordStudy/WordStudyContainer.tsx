@@ -13,7 +13,6 @@ import SelectedTopicWordsSection from '../../components/SelectedTopicWordsSectio
 import SelectedCategoriesWordsSection from '../../components/SelectedCategoriesSection';
 import FlashcardsWordsSection from '../../components/FlashcardsWordsSection';
 import useWordData from '../../context/Data/useWordData';
-import {FlashCardWordType} from './types';
 
 function WordStudyContainer({
   targetLanguageLoadedSentences,
@@ -21,9 +20,6 @@ function WordStudyContainer({
 }): React.JSX.Element {
   const [tagsState, setTagsState] = useState<string[]>([]);
   const [generalTopicState, setGeneralTopicState] = useState<string[]>([]);
-  const [tempNewStudyCardsState, setTempNewStudyCardsState] = useState<
-    FlashCardWordType[]
-  >([]);
   const [showDueCardsState, setShowDueCardsState] = useState<boolean>(false);
 
   const wordCategories = makeArrayUnique([...tagsState, ...generalTopicState]);
@@ -42,6 +38,8 @@ function WordStudyContainer({
     setSelectedWordState,
     updatePromptState,
     targetLanguageWordsState,
+    tempNewStudyCardsState,
+    setTempNewStudyCardsState,
   } = useWordData();
 
   const hasSelectedTopicWords = selectedTopic && selectedTopicWords?.length > 0;
@@ -195,6 +193,7 @@ function WordStudyContainer({
           <FlashcardsWordsSection
             dueCardsState={tempNewStudyCardsState}
             handleDeleteWord={handleDeleteWordFlashCard}
+            isTempWord
           />
         )}
 

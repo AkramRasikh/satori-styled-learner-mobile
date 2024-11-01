@@ -3,7 +3,11 @@ import {Dimensions, Text, TouchableOpacity, View} from 'react-native';
 import AnimatedWordModal from './WordModal';
 import SRSToggles from './SRSToggles';
 
-const FlashcardsWordsSection = ({dueCardsState, handleDeleteWord}) => {
+const FlashcardsWordsSection = ({
+  dueCardsState,
+  handleDeleteWord,
+  isTempWord,
+}) => {
   const [selectedDueCardState, setSelectedDueCardState] = useState();
   const {width} = Dimensions?.get('window');
 
@@ -51,6 +55,7 @@ const FlashcardsWordsSection = ({dueCardsState, handleDeleteWord}) => {
                 id={wordId}
                 baseForm={baseForm}
                 limitedOptionsMode
+                isTempWord={isTempWord}
               />
             )}
             {isSelectedWord && (
@@ -58,6 +63,7 @@ const FlashcardsWordsSection = ({dueCardsState, handleDeleteWord}) => {
                 visible={wordData}
                 onClose={() => setSelectedDueCardState(null)}
                 deleteWord={() => handleDeleteWord(wordData)}
+                isTempWord={isTempWord}
               />
             )}
           </View>

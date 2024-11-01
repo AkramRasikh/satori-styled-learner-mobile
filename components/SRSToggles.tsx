@@ -8,7 +8,13 @@ import {useState} from 'react';
 import {getTimeDiffSRS} from '../utils/getTimeDiffSRS';
 import useWordData from '../context/Data/useWordData';
 
-const SRSToggles = ({reviewData, id, baseForm, limitedOptionsMode}) => {
+const SRSToggles = ({
+  reviewData,
+  id,
+  baseForm,
+  limitedOptionsMode,
+  isTempWord,
+}) => {
   const [nextReviewDateState, setNextReviewDateState] = useState('');
   const timeNow = new Date();
   const hasDueDate = reviewData?.due ? new Date(reviewData?.due) : null; // check if due yet
@@ -32,6 +38,7 @@ const SRSToggles = ({reviewData, id, baseForm, limitedOptionsMode}) => {
         wordId: id,
         wordBaseForm: baseForm,
         fieldToUpdate: {reviewData: nextReviewData},
+        isTempWord,
       });
       setNextReviewDateState(nextReviewData.due);
     } catch (error) {

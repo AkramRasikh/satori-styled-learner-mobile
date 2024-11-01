@@ -63,7 +63,7 @@ const WordStudyAudio = ({sentenceData, isMediaContent}) => {
   );
 };
 
-const AnimatedWordModal = ({visible, onClose, deleteWord}) => {
+const AnimatedWordModal = ({visible, onClose, deleteWord, isTempWord}) => {
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const scaleAnim = useRef(new Animated.Value(0.8)).current;
 
@@ -89,6 +89,7 @@ const AnimatedWordModal = ({visible, onClose, deleteWord}) => {
         wordBaseForm: baseForm,
         fieldToUpdate: {reviewData: null},
         isSnooze: true,
+        isTempWord,
       });
     } catch (error) {
       console.log('## handleSnooze', {error});
@@ -188,7 +189,12 @@ const AnimatedWordModal = ({visible, onClose, deleteWord}) => {
             );
           })}
         </View>
-        <SRSToggles reviewData={reviewData} id={id} baseForm={baseForm} />
+        <SRSToggles
+          reviewData={reviewData}
+          id={id}
+          baseForm={baseForm}
+          isTempWord={isTempWord}
+        />
         <DeleteWordSection
           deleteContent={deleteWord}
           handleSnooze={handleSnooze}
