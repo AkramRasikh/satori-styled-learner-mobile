@@ -33,7 +33,7 @@ function Home({
   const [selectedGeneralTopicState, setSelectedGeneralTopicState] =
     useState('');
   const [updatePromptState, setUpdatePromptState] = useState('');
-  const [triggerSentenceIdUpdate, setTriggerSentenceIdUpdate] = useState('');
+  const [triggerSentenceIdUpdate, setTriggerSentenceIdUpdate] = useState(null);
   const [selectedContentState, setSelectedContentState] = useState({
     content: [],
     snippets: [],
@@ -167,7 +167,11 @@ function Home({
         setTargetLanguageLoadedContentState(filteredTopics);
         setUpdatePromptState(`${topicName} updated!`);
         setTimeout(() => setUpdatePromptState(''), 3000);
-        setTriggerSentenceIdUpdate(sentenceId);
+        setTriggerSentenceIdUpdate({id: sentenceId, fieldToUpdate: resObj});
+        setSelectedContentState({
+          snippets: selectedContentState.snippets,
+          content: newTopicState,
+        });
       }
     } catch (error) {
       console.log('## updateSentenceData', {error});

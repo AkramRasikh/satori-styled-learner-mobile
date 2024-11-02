@@ -68,7 +68,7 @@ const TopicContent = ({
 
   const {languageSelectedState} = useLanguageSelector();
 
-  const {content: topicData, reviewHistory, nextReview} = loadedContent;
+  const {reviewHistory, content, nextReview} = loadedContent;
 
   const isCore = loadedContent?.isCore;
   const isMediaContent = loadedContent?.isMedia;
@@ -159,7 +159,7 @@ const TopicContent = ({
     pauseSound();
   };
 
-  const orderedContent = topicData.map((item, index) => {
+  const orderedContent = content?.map((item, index) => {
     return {
       ...item,
       position: index,
@@ -176,7 +176,7 @@ const TopicContent = ({
   });
 
   const durationsLengths = durations.length;
-  const topicDataLengths = topicData?.length;
+  const topicDataLengths = content?.length;
 
   const lastItem = durations[durations?.length - 1];
 
@@ -225,7 +225,7 @@ const TopicContent = ({
     durationsLengths,
     topicName,
     durations,
-    topicData,
+    topicData: content,
     hasAlreadyBeenUnified,
     setStructuredUnifiedData,
     topicDataLengths,
@@ -246,28 +246,26 @@ const TopicContent = ({
 
   useEffect(() => {
     if (triggerSentenceIdUpdate) {
-      // find sentenceId in content
-      const shouldTriggerFormatDataUpdate = topicData.find(
-        sentenceData => sentenceData.id === triggerSentenceIdUpdate,
-      );
-      if (shouldTriggerFormatDataUpdate) {
-        const updatedFormattedData = formattedData.map(item => {
-          if (triggerSentenceIdUpdate !== item.id) {
-            return item;
-          }
-          return {
-            ...item,
-            ...shouldTriggerFormatDataUpdate,
-          };
-        });
-        setFormattedData(updatedFormattedData);
-        setTriggerSentenceIdUpdate('');
-      }
+      const idForTriggeredSentence = triggerSentenceIdUpdate.id;
+      const fieldToUpdateForTriggeredSentence =
+        triggerSentenceIdUpdate.fieldToUpdate;
+
+      const updatedFormattedData = formattedData.map(item => {
+        if (idForTriggeredSentence !== item.id) {
+          return item;
+        }
+        return {
+          ...item,
+          ...fieldToUpdateForTriggeredSentence,
+        };
+      });
+      setFormattedData(updatedFormattedData);
+      setTriggerSentenceIdUpdate(null);
     }
   }, [
     triggerSentenceIdUpdate,
     formattedData,
-    topicData,
+    content,
     setTriggerSentenceIdUpdate,
   ]);
 
