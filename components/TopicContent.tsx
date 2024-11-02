@@ -361,7 +361,6 @@ const TopicContent = ({
         topicName={topicName}
         isCore={isCore}
       />
-      {/* showAdhocSentence, setShowAdhocSentence */}
       <View
         style={{
           display: 'flex',
