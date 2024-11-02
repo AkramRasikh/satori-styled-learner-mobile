@@ -261,8 +261,15 @@ const TopicContent = ({
       });
       setFormattedData(updatedFormattedData);
       setTriggerSentenceIdUpdate(null);
+      setStructuredUnifiedData(prevState => ({
+        ...prevState,
+        [topicName]: {content: updatedFormattedData},
+      }));
     }
   }, [
+    topicName,
+    setStructuredUnifiedData,
+    durations,
     triggerSentenceIdUpdate,
     formattedData,
     content,
