@@ -395,6 +395,7 @@ const TopicContent = ({
           deleteSnippet={deleteSnippet}
           addSnippet={addSnippet}
           removeSnippet={removeSnippet}
+          soundRef={soundRef}
           url={url}
         />
       )}

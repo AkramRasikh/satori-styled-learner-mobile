@@ -49,7 +49,10 @@ const useGetCombinedAudioData = ({
           return new Promise(resolve => {
             const sound = new Sound(url, '', error => {
               if (error) {
-                console.log('Failed to load the sound', error);
+                console.log(
+                  'Failed to load the sound (useGetCombinedAudioData)',
+                  error,
+                );
                 resolve({id: item.id, duration: 0});
                 return;
               }

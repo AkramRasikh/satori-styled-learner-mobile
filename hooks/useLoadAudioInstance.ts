@@ -19,7 +19,10 @@ const useLoadAudioInstance = ({soundRef, url}) => {
     }
     const soundInstance = new Sound(url, '', error => {
       if (error) {
-        console.error('## Failed to load the sound', error);
+        console.error(
+          '## Failed to load the sound (useLoadAudioInstance)',
+          error,
+        );
         return;
       }
       console.log(

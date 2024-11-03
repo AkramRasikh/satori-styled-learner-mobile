@@ -25,7 +25,10 @@ const useMasterAudioLoad = ({
 
     const soundInstance = new Sound(url, '', error => {
       if (error) {
-        console.error('## Failed to load the sound', error);
+        console.error(
+          '## Failed to load the sound (useMasterAudioLoad)',
+          error,
+        );
         return;
       }
       console.log(

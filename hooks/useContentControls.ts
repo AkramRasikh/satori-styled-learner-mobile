@@ -25,7 +25,10 @@ const useContentControls = ({
   const getTimeStamp = () => {
     const id = topicName + '-' + generateRandomId();
     const thisItem = topicData.find(item => item.id === masterPlay);
-    const targetLang = thisItem.targetLang;
+    const targetLang = thisItem?.targetLang;
+    if (!targetLang) {
+      return null;
+    }
     const itemToSave = {
       id,
       sentenceId: masterPlay,

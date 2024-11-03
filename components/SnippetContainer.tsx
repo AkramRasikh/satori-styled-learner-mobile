@@ -1,4 +1,4 @@
-import {useRef} from 'react';
+import React, {useRef} from 'react';
 import useMasterAudioLoad from '../hooks/useMasterAudioLoad';
 import Snippet from './Snippet';
 
@@ -10,9 +10,13 @@ const SnippetContainer = ({
   addSnippet,
   removeSnippet,
   url,
+  soundRef,
 }) => {
   const masterSoundRef = useRef(null);
-  const instance = useMasterAudioLoad({soundRef: masterSoundRef, url});
+  const instance = useMasterAudioLoad({
+    soundRef: soundRef || masterSoundRef,
+    url,
+  });
 
   return snippetsLocalAndDb?.map((snippet, index) => {
     return (
