@@ -1,9 +1,9 @@
+import React, {useState} from 'react';
 import {Text, View} from 'react-native';
 import useHighlightWordToWordBank from '../hooks/useHighlightWordToWordBank';
 import Clipboard from '@react-native-clipboard/clipboard';
 import useOpenGoogleTranslate from './useOpenGoogleTranslate';
 import HighlightTextZone from './HighlightTextZone';
-import {useState} from 'react';
 import useData from '../context/Data/useData';
 import DifficultSentenceContentHeader from './DifficultSentenceContentHeader';
 import DifficultSentenceTopHeaderActions from './DifficultSentenceTopHeaderActions';
@@ -74,9 +74,8 @@ const DifficultSentenceContent = ({
     const textSegments = underlineWordsInSentence(targetText);
     return textSegments.map((segment, index) => {
       return (
-        <>
+        <React.Fragment key={index}>
           <Text
-            key={index}
             id={segment.id}
             selectable={true}
             style={[
@@ -89,7 +88,7 @@ const DifficultSentenceContent = ({
             onLongPress={() => onLongPress(segment.text)}>
             {segment.text}
           </Text>
-        </>
+        </React.Fragment>
       );
     });
   };
