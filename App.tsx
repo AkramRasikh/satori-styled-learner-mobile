@@ -12,6 +12,7 @@ import WordStudy from './screens/WordStudy';
 import LanguageSelectorScreen from './screens/LanguageSelector';
 import {LanguageSelectorProvider} from './context/Data/LanguageSelectorProvider';
 import useSetupPlayer from './hooks/useSetupPlayer';
+import VideoTestScreen from './screens/VideoTestScreen';
 
 enableScreens();
 
@@ -60,6 +61,9 @@ function App(): React.JSX.Element {
               initialRouteName="LanguageSelector" // This sets the default screen
               screenOptions={{headerShown: false}} // Optional: Hide headers
             >
+              <Stack.Screen name="VideoTestScreen">
+                {props => <VideoTestScreen {...props} />}
+              </Stack.Screen>
               <Stack.Screen name="LanguageSelector">
                 {props => <LanguageSelectorScreen {...props} />}
               </Stack.Screen>

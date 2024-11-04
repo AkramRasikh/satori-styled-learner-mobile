@@ -11,6 +11,7 @@
 		13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		22036E862CCEE779006C4262 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
+		221C7F1B2CD97063003738BD /* libreact-native-video.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 221C7F1A2CD97063003738BD /* libreact-native-video.a */; };
 		4187957C2BD9C158E91F579C /* libPods-SatoriNativeApp-SatoriNativeAppTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EEAFA1F369F31C3E8D8F36C4 /* libPods-SatoriNativeApp-SatoriNativeAppTests.a */; };
 		795F744C57CE42C5A2E27B1E /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = E4CE2C9C2A4072AC7793C7CD /* PrivacyInfo.xcprivacy */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
@@ -38,6 +39,7 @@
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = SatoriNativeApp/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = SatoriNativeApp/main.m; sourceTree = "<group>"; };
 		13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = PrivacyInfo.xcprivacy; path = SatoriNativeApp/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		221C7F1A2CD97063003738BD /* libreact-native-video.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = "libreact-native-video.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		315D1DA33FCB4A640D010FAF /* Pods-SatoriNativeApp-SatoriNativeAppTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SatoriNativeApp-SatoriNativeAppTests.release.xcconfig"; path = "Target Support Files/Pods-SatoriNativeApp-SatoriNativeAppTests/Pods-SatoriNativeApp-SatoriNativeAppTests.release.xcconfig"; sourceTree = "<group>"; };
 		349B985330A4B7A7D68E4424 /* libPods-SatoriNativeApp.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-SatoriNativeApp.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		57D338F9FDCCE56BCE3C97BF /* Pods-SatoriNativeApp-SatoriNativeAppTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SatoriNativeApp-SatoriNativeAppTests.debug.xcconfig"; path = "Target Support Files/Pods-SatoriNativeApp-SatoriNativeAppTests/Pods-SatoriNativeApp-SatoriNativeAppTests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -62,6 +64,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				221C7F1B2CD97063003738BD /* libreact-native-video.a in Frameworks */,
 				CC7E43EA78DBC535466DDA1A /* libPods-SatoriNativeApp.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -104,6 +107,7 @@
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				221C7F1A2CD97063003738BD /* libreact-native-video.a */,
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
 				349B985330A4B7A7D68E4424 /* libPods-SatoriNativeApp.a */,
 				EEAFA1F369F31C3E8D8F36C4 /* libPods-SatoriNativeApp-SatoriNativeAppTests.a */,
