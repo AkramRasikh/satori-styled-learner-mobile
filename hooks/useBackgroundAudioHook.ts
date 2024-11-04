@@ -6,7 +6,7 @@ import TrackPlayer from 'react-native-track-player';
 Sound.setCategory('Playback');
 
 const useBackgroundAudioHook = ({
-  soundInstance,
+  // soundInstance,
   topicName,
   url,
   soundRef,
@@ -23,7 +23,7 @@ const useBackgroundAudioHook = ({
           await TrackPlayer.seekTo(currentTime);
         });
         soundRef.current.pause();
-        await TrackPlayer.play();
+        // await TrackPlayer.play();
       } else {
         console.log('## No track is currently loaded');
       }
@@ -72,12 +72,12 @@ const useBackgroundAudioHook = ({
     const isPlaying = soundRef.current?.isPlaying();
     if (nextAppState === 'background' && isPlaying) {
       setTrackPlayerCurrentTime();
-      soundInstance.play(success => {
-        console.log('## playback success ✅');
-        if (!success) {
-          console.log('## playback failed due to audio decoding errors ❌');
-        }
-      });
+      // soundInstance.play(success => {
+      //   console.log('## playback success ✅');
+      //   if (!success) {
+      //     console.log('## playback failed due to audio decoding errors ❌');
+      //   }
+      // });
     } else if (nextAppState === 'active' && !isPlaying) {
       const progress = await TrackPlayer.getProgress();
       const position = progress.position;
