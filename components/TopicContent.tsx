@@ -1,4 +1,5 @@
-import {useEffect, useMemo, useRef, useState} from 'react';
+import React, {useEffect, useMemo, useRef, useState} from 'react';
+import Sound from 'react-native-sound';
 import {
   View,
   Text,
@@ -83,7 +84,7 @@ const TopicContent = ({
     );
   }, [loadedSnippets, miniSnippets]);
 
-  const soundRef = useRef(null);
+  const soundRef = useRef<Sound>(null);
   const audioControlsRef = useRef(null);
 
   const {height, width} = Dimensions?.get('window');
