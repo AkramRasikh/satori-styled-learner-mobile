@@ -6,7 +6,7 @@ import VideoPlayer from '../../components/VideoPlayer';
 import AudioToggles from '../../components/AudioToggles';
 import {getFirebaseVideoURL} from '../../hooks/useGetCombinedAudioData';
 
-const VideoTestScreen = () => {
+const VideoTestScreen = ({navigation, params}) => {
   const numbers = Array.from({length: 100}, (_, i) => i + 1);
 
   const videoRef = useRef(null);
@@ -21,7 +21,6 @@ const VideoTestScreen = () => {
 
   const {height} = Dimensions?.get('window');
 
-  const playSound = () => {};
   const pauseSound = () => {};
   const rewindSound = () => {};
   const forwardSound = () => {};
@@ -59,7 +58,7 @@ const VideoTestScreen = () => {
                 <View
                   key={num}
                   style={{
-                    padding: '10',
+                    padding: 10,
                     backgroundColor: 'red',
                   }}>
                   <Text>{index}</Text>

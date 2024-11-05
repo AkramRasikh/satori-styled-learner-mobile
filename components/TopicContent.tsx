@@ -10,6 +10,7 @@ import SoundComponent from './Sound';
 import useSoundHook from '../hooks/useSoundHook';
 import useGetCombinedAudioData, {
   getFirebaseAudioURL,
+  getFirebaseVideoURL,
 } from '../hooks/useGetCombinedAudioData';
 import ProgressBarComponent from './Progress';
 import useHighlightWordToWordBank from '../hooks/useHighlightWordToWordBank';
@@ -31,6 +32,10 @@ import useMP3File from '../hooks/useMP3File';
 import useLoadAudioInstance from '../hooks/useLoadAudioInstance';
 import AdhocSentenceContainer from './AdhocSentenceContainer';
 import useLanguageSelector from '../context/Data/useLanguageSelector';
+import TopicVideoContainer from './TopicVideoContainer';
+import AudioToggles from './AudioToggles';
+import {VideoRef} from 'react-native-video';
+import VideoPlayer from './VideoPlayer';
 
 const TopicContent = ({
   topicName,
@@ -65,6 +70,9 @@ const TopicContent = ({
   const [updateWordList, setUpdateWordList] = useState(false);
   const [showAdhocSentence, setShowAdhocSentence] = useState(false);
   const [audioLoadingProgress, setAudioLoadingProgress] = useState(0);
+  const [isVideoPlaying, setIsVideoPlaying] = useState(false);
+  const [currentVideoTimeState, setCurrentVideoTimeState] = useState(0);
+  const [videoDurationState, setVideoDurationState] = useState(0);
 
   const {languageSelectedState} = useLanguageSelector();
 
@@ -72,6 +80,7 @@ const TopicContent = ({
 
   const isCore = loadedContent?.isCore;
   const isMediaContent = loadedContent?.isMedia;
+  const hasVideo = loadedContent?.hasVideo;
 
   const hasUnifiedMP3File = loadedContent.hasAudio;
 
@@ -85,6 +94,43 @@ const TopicContent = ({
 
   const soundRef = useRef(null);
   const audioControlsRef = useRef(null);
+
+  const videoRef = useRef<VideoRef>(null);
+
+  const jumpAudioValue = 2;
+
+  const progress =
+    currentVideoTimeState && videoDurationState
+      ? currentVideoTimeState / videoDurationState
+      : 0;
+
+  const videoInstance = videoRef?.current;
+
+  const jumpToAudioPoint = (videoPosition: number) => {
+    if (!videoInstance) {
+      return null;
+    }
+    videoInstance.seek(videoPosition);
+  };
+
+  const seekHandler = (isForward: boolean) => {
+    if (!videoInstance) {
+      return null;
+    }
+    if (isForward) {
+      videoInstance.seek(currentVideoTimeState + jumpAudioValue);
+    } else {
+      videoInstance.seek(currentVideoTimeState - jumpAudioValue);
+    }
+  };
+
+  const playVideo = () => {
+    if (isVideoPlaying) {
+      setIsVideoPlaying(false);
+    } else {
+      setIsVideoPlaying(true);
+    }
+  };
 
   const {height, width} = Dimensions?.get('window');
   const url = getFirebaseAudioURL(topicName, languageSelectedState);
@@ -127,6 +173,8 @@ const TopicContent = ({
     }
     playSound();
   };
+
+  const handleVideoMode = () => {};
 
   const {underlineWordsInSentence} = useHighlightWordToWordBank({
     pureWordsUnique,
@@ -276,6 +324,18 @@ const TopicContent = ({
     setTriggerSentenceIdUpdate,
   ]);
 
+  const handlePlayFromThisSentence = playFromHere => {
+    if (isVideoPlaying) {
+      jumpToAudioPoint(playFromHere);
+    } else {
+      playFromThisSentence(playFromHere);
+    }
+  };
+
+  const videoUrl = hasVideo
+    ? getFirebaseVideoURL('meiji-era-intro', 'japanese')
+    : '';
+
   if (!isLoaded || formattedData?.length === 0) {
     return (
       <TopicContentLoader
@@ -294,9 +354,11 @@ const TopicContent = ({
     );
   }
 
+  console.log('## ', formattedData[0]);
+
   return (
     <View>
-      <DisplaySettings
+      {/* <DisplaySettings
         wordTest={wordTest}
         setWordTest={setWordTest}
         englishOnly={englishOnly}
@@ -305,18 +367,45 @@ const TopicContent = ({
         setIsFlowingSentences={setIsFlowingSentences}
         engMaster={engMaster}
         setEngMaster={setEngMaster}
-      />
+      /> */}
       {longPressedWord?.length ? (
         <LongPressedWord getLongPressedWordData={getLongPressedWordData} />
       ) : null}
+      {hasUnifiedMP3File && (
+        <VideoPlayer
+          url={videoUrl}
+          videoRef={videoRef}
+          isPlaying={isVideoPlaying}
+          onProgressHandler={setCurrentVideoTimeState}
+          setVideoDuration={setVideoDurationState}
+        />
+        // <View ref={audioControlsRef}>
+        //   <SoundComponent
+        //     soundRef={soundRef}
+        //     isPlaying={isPlaying}
+        //     playSound={handlePlaySound}
+        //     pauseSound={pauseSound}
+        //     rewindSound={rewindSound}
+        //     forwardSound={forwardSound}
+        //     getTimeStamp={getTimeStamp}
+        //   />
+        //   {soundDuration && currentTimeState ? (
+        //     <ProgressBarComponent
+        //       endTime={soundDuration.toFixed(2)}
+        //       progress={currentTimeState / soundDuration}
+        //       time={currentTimeState.toFixed(2)}
+        //     />
+        //   ) : null}
+        // </View>
+      )}
       <ScrollView
         contentInsetAdjustmentBehavior="automatic"
         style={{
-          maxHeight: height * 0.6,
+          maxHeight: height * 0.5,
         }}>
         <LineContainer
           formattedData={formattedData}
-          playFromThisSentence={playFromThisSentence}
+          playFromThisSentence={handlePlayFromThisSentence}
           wordTest={wordTest}
           englishOnly={englishOnly}
           highlightedIndices={highlightedIndices}
@@ -337,26 +426,34 @@ const TopicContent = ({
           updateSentenceData={updateSentenceData}
         />
       </ScrollView>
-      {hasUnifiedMP3File && (
-        <View ref={audioControlsRef}>
-          <SoundComponent
-            soundRef={soundRef}
-            isPlaying={isPlaying}
-            playSound={handlePlaySound}
-            pauseSound={pauseSound}
-            rewindSound={rewindSound}
-            forwardSound={forwardSound}
-            getTimeStamp={getTimeStamp}
-          />
-          {soundDuration && currentTimeState ? (
-            <ProgressBarComponent
-              endTime={soundDuration.toFixed(2)}
-              progress={currentTimeState / soundDuration}
-              time={currentTimeState.toFixed(2)}
-            />
-          ) : null}
-        </View>
-      )}
+      <AudioToggles
+        isPlaying={isVideoPlaying}
+        playSound={playVideo}
+        seekHandler={seekHandler}
+        jumpAudioValue={jumpAudioValue}
+        progress={progress}
+      />
+      {/* {hasUnifiedMP3File && (
+        // <TopicVideoContainer videoUrl={videoUrl} />
+        // <View ref={audioControlsRef}>
+        //   <SoundComponent
+        //     soundRef={soundRef}
+        //     isPlaying={isPlaying}
+        //     playSound={handlePlaySound}
+        //     pauseSound={pauseSound}
+        //     rewindSound={rewindSound}
+        //     forwardSound={forwardSound}
+        //     getTimeStamp={getTimeStamp}
+        //   />
+        //   {soundDuration && currentTimeState ? (
+        //     <ProgressBarComponent
+        //       endTime={soundDuration.toFixed(2)}
+        //       progress={currentTimeState / soundDuration}
+        //       time={currentTimeState.toFixed(2)}
+        //     />
+        //   ) : null}
+        // </View>
+      )} */}
       <ReviewSection
         topicName={topicName}
         reviewHistory={reviewHistory}

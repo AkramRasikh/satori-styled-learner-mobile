@@ -45,7 +45,7 @@ const SatoriLine = ({
     if (isPlaying && focusThisSentence) {
       pauseSound();
     } else {
-      playFromThisSentence(topicSentence.id);
+      playFromThisSentence(topicSentence.startAt);
     }
   };
 

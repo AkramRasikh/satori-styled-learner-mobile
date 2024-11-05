@@ -3,22 +3,19 @@ import {View} from 'react-native';
 import {Button, ProgressBar, MD3Colors} from 'react-native-paper';
 
 const AudioToggles = ({
-  soundRef,
   isPlaying,
   playSound,
-  pauseSound,
-  rewindSound,
-  forwardSound,
-  getTimeStamp,
+  seekHandler,
   jumpAudioValue,
-  seekToTimestamp,
+  progress,
+  // seekToTimestamp,
+  // getTimeStamp,
 }) => {
   return (
     <View
       style={{
         display: 'flex',
         flexDirection: 'row',
-        padding: 10,
         gap: 10,
       }}>
       <View
@@ -26,7 +23,7 @@ const AudioToggles = ({
           flex: 2,
           marginVertical: 'auto',
         }}>
-        <ProgressBar progress={0.5} color={MD3Colors.error50} />
+        <ProgressBar progress={progress} color={MD3Colors.error50} />
       </View>
       <View
         style={{
@@ -36,15 +33,15 @@ const AudioToggles = ({
         }}>
         <Button
           mode="contained"
-          onPress={() => seekToTimestamp(20)}
+          onPress={() => seekHandler(false)}
           buttonColor="grey">
-          +{jumpAudioValue}
+          -{jumpAudioValue}
         </Button>
         <Button
           mode="contained"
-          onPress={() => seekToTimestamp(20)}
+          onPress={() => seekHandler(true)}
           buttonColor="grey">
-          -{jumpAudioValue}
+          +{jumpAudioValue}
         </Button>
         <Button
           mode="contained"

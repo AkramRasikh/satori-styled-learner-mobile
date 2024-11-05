@@ -66,17 +66,14 @@ const useContentControls = ({
 
     return formattedText;
   };
-  const playFromThisSentence = id => {
-    if (soundRef.current) {
-      const thisItem = topicData.find(item => item.id === id);
-      if (thisItem) {
-        soundRef.current.getCurrentTime(() => {
-          soundRef.current.setCurrentTime(thisItem.startAt);
-        });
-        setCurrentTimeState(thisItem.startAt);
-        soundRef.current.play();
-        setIsPlaying(true);
-      }
+  const playFromThisSentence = playFromHere => {
+    if (soundRef.current && isFinite(playFromHere)) {
+      soundRef.current.getCurrentTime(() => {
+        soundRef.current.setCurrentTime(playFromHere);
+      });
+      setCurrentTimeState(playFromHere);
+      soundRef.current.play();
+      setIsPlaying(true);
     }
   };
 

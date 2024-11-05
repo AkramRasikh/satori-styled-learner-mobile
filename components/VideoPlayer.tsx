@@ -1,24 +1,17 @@
-import React, {useRef, useState} from 'react';
+import React, {useState} from 'react';
 import {Dimensions} from 'react-native';
 import Video from 'react-native-video';
 import {ActivityIndicator} from 'react-native-paper';
 
-const VideoPlayer = ({url}) => {
-  const videoRef = useRef(null);
+const VideoPlayer = ({
+  url,
+  videoRef,
+  isPlaying,
+  onProgressHandler,
+  setVideoDuration,
+}) => {
   const [isLoading, setIsLoading] = useState(false);
-
-  // const seekToTimestamp = seconds => {
-  //   videoRef.current.seek(seconds);
-  // };
-
   const {height} = Dimensions?.get('window');
-
-  const playSound = () => {};
-  const pauseSound = () => {};
-  const rewindSound = () => {};
-  const forwardSound = () => {};
-  const getTimeStamp = () => {};
-  const jumpAudioValue = 2;
 
   if (!url) {
     return null;
@@ -30,22 +23,25 @@ const VideoPlayer = ({url}) => {
       <Video
         source={{uri: url}}
         ref={videoRef}
-        style={{width: '100%', height: isLoading ? 0 : height * 0.35}}
+        style={{
+          width: '100%',
+          paddingBottom: 10,
+          height: isLoading ? 0 : height * 0.25,
+        }}
         resizeMode="contain"
-        controls
-        muted
+        // controls
+        paused={!isPlaying}
         onLoadStart={() => {
-          console.log('## onLoadStart');
           setIsLoading(true);
         }}
-        onLoad={() => {
-          console.log('## onLoad');
+        onLoad={data => {
           setIsLoading(false);
+          setVideoDuration(data.duration);
         }}
         onReadyForDisplay={() => {
-          console.log('## onReadyForDisplay');
           setIsLoading(false);
         }}
+        onProgress={data => onProgressHandler(data.currentTime)}
       />
     </>
   );
