@@ -15,12 +15,14 @@ const OneSnippetContainer = ({
   indexList,
   currentTimeState,
   handleRemoveFromTempSnippets,
+  handleAddSnippet,
 }) => {
   const [snipperIsPlayingState, setSnipperIsPlayingState] = useState(false);
   const [adjustableStartTime, setAdjustableStartTime] = useState();
   const [adjustableDuration, setAdjustableDuration] = useState(4);
 
   const id = snippet.id;
+  const sentenceId = snippet.sentenceId;
   const pointInAudio = snippet.pointInAudio;
   const snippetStartAtLimit = snippet?.startAt;
   const snippetEndAtLimit = snippet?.endAt;
@@ -35,10 +37,25 @@ const OneSnippetContainer = ({
 
   const handleRemoveFromState = () => {
     if (isSaved) {
-      deleteSnippet(id);
+      deleteSnippet({snippetId: id, sentenceId});
     } else {
       handleRemoveFromTempSnippets(id);
     }
+  };
+
+  const handleAddSnippetFunc = () => {
+    const formattedSnippet = {
+      id: snippet.id,
+      sentenceId: snippet.sentenceId,
+      pointInAudio: adjustableStartTime,
+      duration: adjustableDuration,
+      startAt: snippet.startAt,
+      isIsolated: snippet.isIsolated,
+      targetLang: snippet.targetLang,
+      topicName: snippet.topicName,
+      url: snippet.url,
+    };
+    handleAddSnippet(formattedSnippet);
   };
 
   const handleThisPlay = () => {
@@ -70,19 +87,18 @@ const OneSnippetContainer = ({
     }
   }, [adjustableStartTime, pointInAudioOnClick, setAdjustableStartTime]);
 
-  const {handleAddingSnippet, handleSetEarlierTime, handleSetDuration} =
-    useSnippetControls({
-      adjustableStartTime,
-      adjustableDuration,
-      setAdjustableStartTime,
-      setAdjustableDuration,
-      snippetEndAtLimit,
-      snippetStartAtLimit,
-      deleteSnippet,
-      addSnippet,
-      removeSnippet,
-      snippet,
-    });
+  const {handleSetEarlierTime, handleSetDuration} = useSnippetControls({
+    adjustableStartTime,
+    adjustableDuration,
+    setAdjustableStartTime,
+    setAdjustableDuration,
+    snippetEndAtLimit,
+    snippetStartAtLimit,
+    deleteSnippet,
+    addSnippet,
+    removeSnippet,
+    snippet,
+  });
 
   return (
     <View
@@ -91,7 +107,7 @@ const OneSnippetContainer = ({
       }}>
       <MiniSnippetTimeChangeHandlers
         handleSetEarlierTime={handleSetEarlierTime}
-        handleSaveSnippet={handleAddingSnippet}
+        handleSaveSnippet={handleAddSnippetFunc}
         handleRemoveSnippet={handleRemoveFromState}
         handleRemoveFromTempSnippets={handleRemoveFromState} // directly from state
         adjustableDuration={currentDuration}
@@ -131,6 +147,7 @@ const LineContainer = ({
   deleteSnippet,
   setMiniSnippets,
   playSound,
+  handleAddSnippet,
 }) => {
   const handleRemoveFromTempSnippets = snippetId => {
     setMiniSnippets(prev =>
@@ -209,6 +226,7 @@ const LineContainer = ({
                       handleRemoveFromTempSnippets={
                         handleRemoveFromTempSnippets
                       }
+                      handleAddSnippet={handleAddSnippet}
                     />
                   );
                 })}

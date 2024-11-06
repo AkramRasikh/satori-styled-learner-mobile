@@ -196,7 +196,17 @@ const TopicContent = ({
   const durationsLengths = durations.length;
   const topicDataLengths = content?.length;
 
-  const lastItem = durations[durations?.length - 1];
+  const handleAddSnippet = async snippetData => {
+    try {
+      const snippetResponse = await addSnippet(snippetData);
+      setSelectedSnippetsState(prev => [
+        ...prev,
+        {...snippetResponse, saved: true},
+      ]);
+    } catch (error) {
+      console.error('## failed to add snippet state');
+    }
+  };
 
   const {
     onLongPress,
@@ -223,6 +233,7 @@ const TopicContent = ({
     isText: true,
     setCurrentTimeState,
     setSelectedSnippetsState,
+    removeSnippet,
   });
 
   useInitTopicWordList({
@@ -383,6 +394,7 @@ const TopicContent = ({
           deleteSnippet={deleteSnippet}
           playSound={playFromHere}
           setMiniSnippets={setMiniSnippets}
+          handleAddSnippet={handleAddSnippet}
         />
       </ScrollView>
       {hasUnifiedMP3File && (
