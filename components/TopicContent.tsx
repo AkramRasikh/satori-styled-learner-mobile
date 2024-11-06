@@ -64,9 +64,9 @@ const TopicContent = ({
   const [highlightMode, setHighlightMode] = useState(false);
   const [highlightedIndices, setHighlightedIndices] = useState([]);
   const [formattedData, setFormattedData] = useState([]);
-  const [secondsToSentencesMapState, setSecondsToSentencesMapState] = useState(
-    [],
-  );
+  const [secondsToSentencesMapState, setSecondsToSentencesMapState] = useState<
+    string[]
+  >([]);
   const [initTargetLanguageWordsList, setInitTargetLanguageWordsList] =
     useState(null);
   const [updateWordList, setUpdateWordList] = useState(false);
@@ -267,7 +267,7 @@ const TopicContent = ({
       const mappedIds = mapSentenceIdsToSeconds({
         contentArr: durations,
         duration: soundDuration,
-      });
+      }) as string[];
       setSecondsToSentencesMapState(mappedIds);
     }
   }, [

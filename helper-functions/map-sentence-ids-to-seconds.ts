@@ -2,7 +2,7 @@ const mapSentenceIdsToSeconds = ({contentArr, duration}) => {
   if (!contentArr || !duration) {
     return null;
   }
-  const arrOfSecondsMappedIds = [];
+  const arrOfSecondsMappedIds: string[] = [];
   contentArr.forEach((item, index) => {
     const isFirst = index === 0;
     const isLast = index + 1 === contentArr.length;
