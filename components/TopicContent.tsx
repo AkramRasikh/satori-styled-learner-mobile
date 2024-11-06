@@ -37,10 +37,10 @@ import TopicVideoContainer from './TopicVideoContainer';
 import AudioToggles from './AudioToggles';
 import {VideoRef} from 'react-native-video';
 import VideoPlayer from './VideoPlayer';
-import mapSentenceIdsToSeconds from '../helper-functions/map-sentence-ids-to-seconds';
 import useTrackCurrentTimeState from '../hooks/useTrackCurrentTimeState';
 import useOneByOneSentenceFlow from '../hooks/useOneByOneSentenceFlow';
 import useVideoTextSync from '../hooks/useVideoTextSync';
+import useSetSecondsToSentenceIds from '../hooks/useSetSecondsToSentenceIds';
 
 const TopicContent = ({
   topicName,
@@ -313,26 +313,12 @@ const TopicContent = ({
     secondsToSentencesMapState,
   });
 
-  useEffect(() => {
-    if (
-      soundDuration &&
-      durationsLengths === topicDataLengths &&
-      secondsToSentencesMapState?.length === 0
-    ) {
-      const mappedIds = mapSentenceIdsToSeconds({
-        contentArr: durations,
-        duration: soundDuration,
-      }) as string[];
-      setSecondsToSentencesMapState(mappedIds);
-    }
-  }, [
-    soundDuration,
-    durationsLengths,
-    secondsToSentencesMapState,
-    topicDataLengths,
-    content,
+  useSetSecondsToSentenceIds({
     durations,
-  ]);
+    soundDuration,
+    secondsToSentencesMapState,
+    setSecondsToSentencesMapState,
+  });
 
   useEffect(() => {
     if (triggerSentenceIdUpdate) {
