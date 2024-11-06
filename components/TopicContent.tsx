@@ -32,6 +32,9 @@ import useMP3File from '../hooks/useMP3File';
 import useLoadAudioInstance from '../hooks/useLoadAudioInstance';
 import AdhocSentenceContainer from './AdhocSentenceContainer';
 import useLanguageSelector from '../context/Data/useLanguageSelector';
+import mapSentenceIdsToSeconds from '../helper-functions/map-sentence-ids-to-seconds';
+import useTrackCurrentTimeState from '../hooks/useTrackCurrentTimeState';
+import useOneByOneSentenceFlow from '../hooks/useOneByOneSentenceFlow';
 
 const TopicContent = ({
   topicName,
@@ -61,6 +64,9 @@ const TopicContent = ({
   const [highlightMode, setHighlightMode] = useState(false);
   const [highlightedIndices, setHighlightedIndices] = useState([]);
   const [formattedData, setFormattedData] = useState([]);
+  const [secondsToSentencesMapState, setSecondsToSentencesMapState] = useState(
+    [],
+  );
   const [initTargetLanguageWordsList, setInitTargetLanguageWordsList] =
     useState(null);
   const [updateWordList, setUpdateWordList] = useState(false);
@@ -232,18 +238,46 @@ const TopicContent = ({
     topicDataLengths,
   });
 
-  useAudioTextSync({
+  useTrackCurrentTimeState({
+    soundRef,
+    setCurrentTimeState,
+  });
+
+  useOneByOneSentenceFlow({
     currentTimeState,
     isFlowingSentences,
     soundRef,
     setIsPlaying,
-    topicData: durations,
-    isPlaying,
-    soundDuration,
+    durations,
     masterPlay,
-    setCurrentTimeState,
-    setMasterPlay,
   });
+
+  useAudioTextSync({
+    currentTimeState,
+    setMasterPlay,
+    secondsToSentencesMapState,
+  });
+
+  useEffect(() => {
+    if (
+      soundDuration &&
+      durationsLengths === topicDataLengths &&
+      secondsToSentencesMapState?.length === 0
+    ) {
+      const mappedIds = mapSentenceIdsToSeconds({
+        contentArr: durations,
+        duration: soundDuration,
+      });
+      setSecondsToSentencesMapState(mappedIds);
+    }
+  }, [
+    soundDuration,
+    durationsLengths,
+    secondsToSentencesMapState,
+    topicDataLengths,
+    content,
+    durations,
+  ]);
 
   useEffect(() => {
     if (triggerSentenceIdUpdate) {
