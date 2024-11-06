@@ -53,6 +53,7 @@ const useGetCombinedAudioData = ({
         });
         setDurations(sortedAudios);
       } else {
+        // combine to one map
         const durationsPromises = audioFiles.map(item => {
           const url = getFirebaseAudioURL(item.id, languageSelectedState);
           return new Promise(resolve => {
@@ -89,11 +90,12 @@ const useGetCombinedAudioData = ({
           endAt = endAt + thisDuration;
           return {
             ...audioItem,
-            thisDuration,
             startAt,
             endAt,
           };
         });
+        console.log('## ', {sortedAudios});
+
         setDurations(sortedAudios);
       }
     };
