@@ -1,4 +1,5 @@
-import {useEffect, useMemo, useRef, useState} from 'react';
+import React, {useEffect, useMemo, useRef, useState} from 'react';
+import Sound from 'react-native-sound';
 import {
   View,
   Text,
@@ -36,6 +37,10 @@ import TopicVideoContainer from './TopicVideoContainer';
 import AudioToggles from './AudioToggles';
 import {VideoRef} from 'react-native-video';
 import VideoPlayer from './VideoPlayer';
+import mapSentenceIdsToSeconds from '../helper-functions/map-sentence-ids-to-seconds';
+import useTrackCurrentTimeState from '../hooks/useTrackCurrentTimeState';
+import useOneByOneSentenceFlow from '../hooks/useOneByOneSentenceFlow';
+import useVideoTextSync from '../hooks/useVideoTextSync';
 
 const TopicContent = ({
   topicName,
@@ -65,6 +70,9 @@ const TopicContent = ({
   const [highlightMode, setHighlightMode] = useState(false);
   const [highlightedIndices, setHighlightedIndices] = useState([]);
   const [formattedData, setFormattedData] = useState([]);
+  const [secondsToSentencesMapState, setSecondsToSentencesMapState] = useState<
+    string[]
+  >([]);
   const [initTargetLanguageWordsList, setInitTargetLanguageWordsList] =
     useState(null);
   const [updateWordList, setUpdateWordList] = useState(false);
@@ -92,7 +100,7 @@ const TopicContent = ({
     );
   }, [loadedSnippets, miniSnippets]);
 
-  const soundRef = useRef(null);
+  const soundRef = useRef<Sound>(null);
   const audioControlsRef = useRef(null);
 
   const videoRef = useRef<VideoRef>(null);
@@ -254,6 +262,12 @@ const TopicContent = ({
     setCurrentTimeState,
   });
 
+  useVideoTextSync({
+    currentVideoTimeState,
+    setMasterPlay,
+    secondsToSentencesMapState,
+  });
+
   useInitTopicWordList({
     targetLanguageLoadedWords,
     setInitTargetLanguageWordsList,
@@ -279,18 +293,46 @@ const TopicContent = ({
     topicDataLengths,
   });
 
-  useAudioTextSync({
+  useTrackCurrentTimeState({
+    soundRef,
+    setCurrentTimeState,
+  });
+
+  useOneByOneSentenceFlow({
     currentTimeState,
     isFlowingSentences,
     soundRef,
     setIsPlaying,
-    topicData: durations,
-    isPlaying,
-    soundDuration,
+    durations,
     masterPlay,
-    setCurrentTimeState,
-    setMasterPlay,
   });
+
+  useAudioTextSync({
+    currentTimeState,
+    setMasterPlay,
+    secondsToSentencesMapState,
+  });
+
+  useEffect(() => {
+    if (
+      soundDuration &&
+      durationsLengths === topicDataLengths &&
+      secondsToSentencesMapState?.length === 0
+    ) {
+      const mappedIds = mapSentenceIdsToSeconds({
+        contentArr: durations,
+        duration: soundDuration,
+      }) as string[];
+      setSecondsToSentencesMapState(mappedIds);
+    }
+  }, [
+    soundDuration,
+    durationsLengths,
+    secondsToSentencesMapState,
+    topicDataLengths,
+    content,
+    durations,
+  ]);
 
   useEffect(() => {
     if (triggerSentenceIdUpdate) {
