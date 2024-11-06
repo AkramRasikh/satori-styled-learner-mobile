@@ -53,8 +53,9 @@ const useGetCombinedAudioData = ({
         });
         setDurations(sortedAudios);
       } else {
-        // combine to one map
-        const durationsPromises = audioFiles.map(item => {
+        let endAt = 0;
+
+        const durationsPromises = audioFiles.map((item, index) => {
           const url = getFirebaseAudioURL(item.id, languageSelectedState);
           return new Promise(resolve => {
             const sound = new Sound(url, '', error => {
@@ -68,35 +69,23 @@ const useGetCombinedAudioData = ({
               }
               setAudioLoadingProgress?.(prev => (prev += 1));
               const duration = sound.getDuration();
-
+              console.log('## ', {index});
+              const startAt = endAt;
+              endAt = endAt + duration;
               resolve({
+                ...item,
                 id: item.id,
+                position: index,
                 duration,
+                startAt,
+                endAt,
               });
               sound.release(); // Release the sound resource
             });
           });
         });
-
         const durationsResults = await Promise.all(durationsPromises);
-
-        let endAt = 0;
-
-        const sortedAudios = audioFiles.map(audioItem => {
-          const thisDuration = durationsResults.find(
-            item => item.id === audioItem.id,
-          ).duration;
-          const startAt = endAt;
-          endAt = endAt + thisDuration;
-          return {
-            ...audioItem,
-            startAt,
-            endAt,
-          };
-        });
-        console.log('## ', {sortedAudios});
-
-        setDurations(sortedAudios);
+        setDurations(durationsResults);
       }
     };
 
