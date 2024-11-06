@@ -69,7 +69,6 @@ const useGetCombinedAudioData = ({
               }
               setAudioLoadingProgress?.(prev => (prev += 1));
               const duration = sound.getDuration();
-              console.log('## ', {index});
               const startAt = endAt;
               endAt = endAt + duration;
               resolve({
