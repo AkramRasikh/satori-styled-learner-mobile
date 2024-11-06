@@ -51,6 +51,7 @@ const TopicContent = ({
   setTriggerSentenceIdUpdate,
   loadedContent,
   loadedSnippets,
+  setSelectedSnippetsState,
 }) => {
   const [masterPlay, setMasterPlay] = useState('');
   const [currentTimeState, setCurrentTimeState] = useState(0);
@@ -181,6 +182,17 @@ const TopicContent = ({
     soundDuration,
   });
 
+  const playFromHere = seconds => {
+    if (soundRef.current) {
+      soundRef.current.getCurrentTime(() => {
+        soundRef.current.setCurrentTime(seconds);
+      });
+      setCurrentTimeState(seconds);
+      soundRef.current.play();
+      setIsPlaying(true);
+    }
+  };
+
   const durationsLengths = durations.length;
   const topicDataLengths = content?.length;
 
@@ -210,6 +222,7 @@ const TopicContent = ({
     pauseSound,
     isText: true,
     setCurrentTimeState,
+    setSelectedSnippetsState,
   });
 
   useInitTopicWordList({
@@ -357,15 +370,19 @@ const TopicContent = ({
           isPlaying={isPlaying}
           pauseSound={pauseSound}
           width={width}
-          soundRef={soundRef}
           snippetsLocalAndDb={snippetsLocalAndDb}
           masterPlay={masterPlay}
           highlightMode={highlightMode}
-          setIsPlaying={setIsPlaying}
           setHighlightMode={setHighlightMode}
           onLongPress={onLongPress}
           topicName={topicName}
           updateSentenceData={updateSentenceData}
+          currentTimeState={currentTimeState}
+          addSnippet={addSnippet}
+          removeSnippet={removeSnippet}
+          deleteSnippet={deleteSnippet}
+          playSound={playFromHere}
+          setMiniSnippets={setMiniSnippets}
         />
       </ScrollView>
       {hasUnifiedMP3File && (
@@ -411,25 +428,6 @@ const TopicContent = ({
           <Text>(+) Add Adhoc sentence</Text>
         </TouchableOpacity>
       </View>
-      {lastItem && snippetsLocalAndDb?.length > 0 && (
-        <SnippetTimeline
-          snippetsLocalAndDb={snippetsLocalAndDb}
-          duration={soundDuration}
-        />
-      )}
-
-      {soundRefLoaded && snippetsLocalAndDb?.length > 0 && (
-        <SnippetContainer
-          snippetsLocalAndDb={snippetsLocalAndDb}
-          setIsPlaying={setIsPlaying}
-          isPlaying={isPlaying}
-          deleteSnippet={deleteSnippet}
-          addSnippet={addSnippet}
-          removeSnippet={removeSnippet}
-          soundRef={soundRef}
-          url={url}
-        />
-      )}
     </View>
   );
 };

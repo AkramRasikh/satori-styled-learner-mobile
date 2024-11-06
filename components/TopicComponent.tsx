@@ -16,6 +16,7 @@ const TopicComponent = ({
   updateSentenceData,
   triggerSentenceIdUpdate,
   setTriggerSentenceIdUpdate,
+  setSelectedSnippetsState,
   loadedContent,
   loadedSnippets,
 }) => (
@@ -39,6 +40,7 @@ const TopicComponent = ({
       setTriggerSentenceIdUpdate={setTriggerSentenceIdUpdate}
       loadedContent={loadedContent}
       loadedSnippets={loadedSnippets}
+      setSelectedSnippetsState={setSelectedSnippetsState}
     />
   </View>
 );

@@ -1,6 +1,111 @@
-import {View, Text} from 'react-native';
+import React, {View, Text} from 'react-native';
 import SatoriLine from './SatoriLine';
-import {MiniSnippet} from './MiniSnippet';
+import {useEffect, useState} from 'react';
+import MiniSnippetTimeChangeHandlers from './MiniSnippetTimeChangeHandlers';
+import useSnippetControls from '../hooks/useSnippetControls';
+
+const OneSnippetContainer = ({
+  snippet,
+  deleteSnippet,
+  addSnippet,
+  removeSnippet,
+  playSound,
+  pauseSound,
+  isPlaying,
+  indexList,
+  currentTimeState,
+  handleRemoveFromTempSnippets,
+}) => {
+  const [snipperIsPlayingState, setSnipperIsPlayingState] = useState(false);
+  const [adjustableStartTime, setAdjustableStartTime] = useState();
+  const [adjustableDuration, setAdjustableDuration] = useState(4);
+
+  const id = snippet.id;
+  const pointInAudio = snippet.pointInAudio;
+  const snippetStartAtLimit = snippet?.startAt;
+  const snippetEndAtLimit = snippet?.endAt;
+  const pointInAudioOnClick = snippet?.pointInAudioOnClick;
+
+  const duration = snippet.duration;
+  const isSaved = snippet?.saved;
+  const startTime = isSaved ? pointInAudio : adjustableStartTime;
+
+  const currentDuration = isSaved ? duration : adjustableDuration;
+  const snippetEndAt = startTime + currentDuration;
+
+  const handleRemoveFromState = () => {
+    if (isSaved) {
+      deleteSnippet(id);
+    } else {
+      handleRemoveFromTempSnippets(id);
+    }
+  };
+
+  const handleThisPlay = () => {
+    setSnipperIsPlayingState(true);
+    playSound(startTime);
+  };
+
+  useEffect(() => {
+    if (snipperIsPlayingState) {
+      const audioIsInTimeRange =
+        startTime <= currentTimeState && currentTimeState <= snippetEndAt;
+      if (!audioIsInTimeRange) {
+        setSnipperIsPlayingState(false);
+        pauseSound();
+      }
+    }
+  }, [
+    startTime,
+    snippetEndAt,
+    currentTimeState,
+    snipperIsPlayingState,
+    setSnipperIsPlayingState,
+    pauseSound,
+  ]);
+
+  useEffect(() => {
+    if (!adjustableStartTime) {
+      setAdjustableStartTime(pointInAudioOnClick);
+    }
+  }, [adjustableStartTime, pointInAudioOnClick, setAdjustableStartTime]);
+
+  const {handleAddingSnippet, handleSetEarlierTime, handleSetDuration} =
+    useSnippetControls({
+      adjustableStartTime,
+      adjustableDuration,
+      setAdjustableStartTime,
+      setAdjustableDuration,
+      snippetEndAtLimit,
+      snippetStartAtLimit,
+      deleteSnippet,
+      addSnippet,
+      removeSnippet,
+      snippet,
+    });
+
+  return (
+    <View
+      style={{
+        backgroundColor: snipperIsPlayingState ? 'yellow' : 'transparent',
+      }}>
+      <MiniSnippetTimeChangeHandlers
+        handleSetEarlierTime={handleSetEarlierTime}
+        handleSaveSnippet={handleAddingSnippet}
+        handleRemoveSnippet={handleRemoveFromState}
+        handleRemoveFromTempSnippets={handleRemoveFromState} // directly from state
+        adjustableDuration={currentDuration}
+        handleSetDuration={handleSetDuration}
+        adjustableStartTime={startTime}
+        playSound={handleThisPlay}
+        pauseSound={pauseSound}
+        isPlaying={isPlaying}
+        indexList={indexList}
+        isSaved={isSaved}
+      />
+    </View>
+  );
+};
 
 const LineContainer = ({
   formattedData,
@@ -13,16 +118,25 @@ const LineContainer = ({
   isPlaying,
   pauseSound,
   width,
-  soundRef,
   snippetsLocalAndDb,
   masterPlay,
   highlightMode,
-  setIsPlaying,
   setHighlightMode,
   onLongPress,
   topicName,
   updateSentenceData,
+  currentTimeState,
+  addSnippet,
+  removeSnippet,
+  deleteSnippet,
+  setMiniSnippets,
+  playSound,
 }) => {
+  const handleRemoveFromTempSnippets = snippetId => {
+    setMiniSnippets(prev =>
+      prev.filter(snippetDataState => snippetDataState.id !== snippetId),
+    );
+  };
   return (
     <View>
       <View
@@ -38,7 +152,7 @@ const LineContainer = ({
             const firstEl = index === 0;
 
             const thisSnippets = snippetsLocalAndDb?.filter(
-              item => id === item.sentenceId && item?.saved,
+              item => id === item.sentenceId,
             );
 
             return (
@@ -78,25 +192,26 @@ const LineContainer = ({
                     updateSentenceData={updateSentenceData}
                   />
                 </Text>
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    flexWrap: 'wrap',
-                    justifyContent: 'space-around',
-                  }}>
-                  {thisSnippets?.map((item, indexB) => {
-                    return (
-                      <MiniSnippet
-                        key={indexB}
-                        index={indexB}
-                        snippet={item}
-                        setMasterAudio={setIsPlaying}
-                        masterAudio={isPlaying}
-                        soundRef={soundRef}
-                      />
-                    );
-                  })}
-                </View>
+
+                {thisSnippets?.map((snippetData, index) => {
+                  return (
+                    <OneSnippetContainer
+                      key={index}
+                      snippet={snippetData}
+                      deleteSnippet={deleteSnippet}
+                      addSnippet={addSnippet}
+                      removeSnippet={removeSnippet}
+                      playSound={playSound}
+                      pauseSound={pauseSound}
+                      isPlaying={isPlaying}
+                      currentTimeState={currentTimeState}
+                      indexList={index}
+                      handleRemoveFromTempSnippets={
+                        handleRemoveFromTempSnippets
+                      }
+                    />
+                  );
+                })}
               </View>
             );
           })}

@@ -17,6 +17,7 @@ const useContentControls = ({
   pauseSound,
   isText,
   setCurrentTimeState,
+  setSelectedSnippetsState,
 }) => {
   const timeDataWithinSnippet = (thisItem, currentTimeState) => {
     const pointInAudioInSnippet = currentTimeState - thisItem.startAt;
@@ -85,6 +86,9 @@ const useContentControls = ({
       snippet => snippet.id !== idToBeDeleted,
     );
     setMiniSnippets(newSnippets);
+    setSelectedSnippetsState(prev =>
+      prev.filter(snippetData => snippetData.id !== idToBeDeleted),
+    );
   };
 
   const getLongPressedWordData = () => {
