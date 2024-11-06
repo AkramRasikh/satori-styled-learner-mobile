@@ -58,7 +58,6 @@ const TopicContent = ({
   const [isFlowingSentences, setIsFlowingSentences] = useState(true);
   const [longPressedWord, setLongPressedWord] = useState([]);
   const [miniSnippets, setMiniSnippets] = useState([]);
-  const [wordTest, setWordTest] = useState(false);
   const [englishOnly, setEnglishOnly] = useState(false);
   const [engMaster, setEngMaster] = useState(true);
   const [highlightMode, setHighlightMode] = useState(false);
@@ -332,8 +331,6 @@ const TopicContent = ({
   return (
     <View>
       <DisplaySettings
-        wordTest={wordTest}
-        setWordTest={setWordTest}
         englishOnly={englishOnly}
         setEnglishOnly={setEnglishOnly}
         isFlowingSentences={isFlowingSentences}
@@ -352,7 +349,6 @@ const TopicContent = ({
         <LineContainer
           formattedData={formattedData}
           playFromThisSentence={playFromThisSentence}
-          wordTest={wordTest}
           englishOnly={englishOnly}
           highlightedIndices={highlightedIndices}
           setHighlightedIndices={setHighlightedIndices}

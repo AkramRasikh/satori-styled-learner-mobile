@@ -11,7 +11,6 @@ const SatoriLine = ({
   focusThisSentence,
   playFromThisSentence,
   topicSentence,
-  wordTest,
   englishOnly,
   highlightMode,
   highlightedIndices,
@@ -31,8 +30,11 @@ const SatoriLine = ({
   const [showEng, setShowEng] = useState(false);
   const [showNotes, setShowNotes] = useState(false);
   const [showReviewSettings, setShowReviewSettings] = useState(false);
+  const [showWordHintState, setShowWordHintState] = useState(false);
 
   const filteredElements = filterElementsById(safeText, 'targetWord');
+  const hasWordHint = filteredElements.length > 0;
+  const showWordHint = showWordHintState && hasWordHint;
 
   const hasBeenMarkedAsDifficult =
     topicSentence?.nextReview || topicSentence?.reviewData?.due;
@@ -77,6 +79,9 @@ const SatoriLine = ({
         updateSentenceData={updateSentenceData}
         highlightMode={highlightMode}
         setHighlightMode={setHighlightMode}
+        setShowWordHintState={setShowWordHintState}
+        showWordHintState={showWordHintState}
+        hasWordHint={hasWordHint}
       />
       {englishOnly ? null : highlightMode ? (
         <HighlightTextZone
@@ -106,7 +111,7 @@ const SatoriLine = ({
         </View>
       ) : null}
       {showNotes ? <Text>{topicSentence.notes}</Text> : null}
-      {wordTest && filteredElements.length > 0 ? (
+      {showWordHint && (
         <View
           style={{
             paddingTop: 5,
@@ -129,15 +134,7 @@ const SatoriLine = ({
             })}
           </Text>
         </View>
-      ) : wordTest && filteredElements.length === 0 ? (
-        <View
-          style={{
-            paddingTop: 10,
-            width: textWidth,
-          }}>
-          <Text style={{fontSize: 20}}>No words</Text>
-        </View>
-      ) : null}
+      )}
       {showReviewSettings ? (
         <SatoriLineSRS
           sentence={topicSentence}

@@ -16,8 +16,6 @@ const SettingBlock = ({func, bool, text}) => {
 };
 
 const DisplaySettings = ({
-  wordTest,
-  setWordTest,
   englishOnly,
   setEnglishOnly,
   isFlowingSentences,
@@ -26,7 +24,6 @@ const DisplaySettings = ({
   setEngMaster,
 }) => {
   const settingsArr = [
-    {func: setWordTest, bool: wordTest, text: 'Word hint'},
     {func: setEnglishOnly, bool: englishOnly, text: 'Eng only'},
     {func: setEngMaster, bool: engMaster, text: 'Eng Master'},
     {

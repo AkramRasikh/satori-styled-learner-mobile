@@ -5,7 +5,6 @@ import {MiniSnippet} from './MiniSnippet';
 const LineContainer = ({
   formattedData,
   playFromThisSentence,
-  wordTest,
   englishOnly,
   highlightedIndices,
   setHighlightedIndices,
@@ -63,7 +62,6 @@ const LineContainer = ({
                     focusThisSentence={focusThisSentence}
                     topicSentence={topicSentence}
                     playFromThisSentence={playFromThisSentence}
-                    wordTest={wordTest}
                     englishOnly={englishOnly}
                     highlightMode={highlightMode}
                     highlightedIndices={highlightedIndices}
