@@ -6,11 +6,10 @@ const useAudioTextSync = ({
   soundRef,
   setIsPlaying,
   topicData,
-  isPlaying,
-  soundDuration,
   masterPlay,
   setCurrentTimeState,
   setMasterPlay,
+  secondsToSentencesMapState,
 }) => {
   useEffect(() => {
     if (currentTimeState && !isFlowingSentences) {
@@ -49,31 +48,10 @@ const useAudioTextSync = ({
   ]);
 
   useEffect(() => {
-    if (
-      topicData?.length > 0 &&
-      currentTimeState &&
-      soundDuration &&
-      isPlaying
-    ) {
-      const currentAudioPlaying = topicData.findIndex(
-        item =>
-          currentTimeState < (item.endAt || soundDuration) &&
-          currentTimeState > item.startAt,
-      );
-
-      const newId = topicData[currentAudioPlaying]?.id;
-      if (newId !== masterPlay) {
-        setMasterPlay(newId);
-      }
+    if (currentTimeState && secondsToSentencesMapState?.length > 0) {
+      setMasterPlay(secondsToSentencesMapState[Math.floor(currentTimeState)]);
     }
-  }, [
-    topicData,
-    setMasterPlay,
-    currentTimeState,
-    masterPlay,
-    isPlaying,
-    soundDuration,
-  ]);
+  }, [secondsToSentencesMapState, setMasterPlay, currentTimeState]);
 
   useEffect(() => {
     const getCurrentTimeFunc = () => {
@@ -88,14 +66,7 @@ const useAudioTextSync = ({
     }, 100);
 
     return () => clearInterval(interval);
-  }, [
-    masterPlay,
-    topicData,
-    soundRef,
-    soundDuration,
-    setCurrentTimeState,
-    setMasterPlay,
-  ]);
+  }, [soundRef, setCurrentTimeState]);
 };
 
 export default useAudioTextSync;
