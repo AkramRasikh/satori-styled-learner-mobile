@@ -57,6 +57,7 @@ const TopicContent = ({
   const [englishOnly, setEnglishOnly] = useState(false);
   const [engMaster, setEngMaster] = useState(true);
   const [highlightMode, setHighlightMode] = useState(false);
+  const [isVideoModeState, setIsVideoModeState] = useState(false);
   const [highlightedIndices, setHighlightedIndices] = useState([]);
   const [formattedData, setFormattedData] = useState([]);
   const [secondsToSentencesMapState, setSecondsToSentencesMapState] = useState<
@@ -90,8 +91,6 @@ const TopicContent = ({
   }, [loadedSnippets, miniSnippets]);
 
   const soundRef = useRef<Sound>(null);
-  const audioControlsRef = useRef(null);
-
   const videoRef = useRef<VideoRef>(null);
 
   const jumpAudioValue = 2;
@@ -404,6 +403,89 @@ const TopicContent = ({
     );
   }
 
+  if (isVideoModeState) {
+    return (
+      <View>
+        <View>
+          <DisplaySettings
+            englishOnly={englishOnly}
+            setEnglishOnly={setEnglishOnly}
+            isFlowingSentences={isFlowingSentences}
+            setIsFlowingSentences={setIsFlowingSentences}
+            engMaster={engMaster}
+            setEngMaster={setEngMaster}
+            handleIsCore={handleIsCore}
+            isCore={isCore}
+            handleAddAdhocSentence={handleAddAdhocSentence}
+            isVideoModeState={isVideoModeState}
+            setIsVideoModeState={setIsVideoModeState}
+            hasVideo={hasVideo}
+          />
+          {longPressedWord?.length ? (
+            <LongPressedWord getLongPressedWordData={getLongPressedWordData} />
+          ) : null}
+          {hasUnifiedMP3File && (
+            <VideoPlayer
+              url={videoUrl}
+              videoRef={videoRef}
+              isPlaying={isVideoPlaying}
+              onProgressHandler={setCurrentVideoTimeState}
+              setVideoDuration={setVideoDurationState}
+            />
+          )}
+          <ScrollView
+            contentInsetAdjustmentBehavior="automatic"
+            style={{
+              maxHeight: height * 0.45,
+            }}>
+            <LineContainer
+              formattedData={formattedData}
+              playFromThisSentence={handlePlayFromThisSentence}
+              // playFromThisSentence={playFromThisSentence}
+              englishOnly={englishOnly}
+              highlightedIndices={highlightedIndices}
+              setHighlightedIndices={setHighlightedIndices}
+              saveWordFirebase={saveWordFirebase}
+              engMaster={engMaster}
+              isPlaying={isPlaying}
+              pauseSound={pauseSound}
+              width={width}
+              snippetsLocalAndDb={snippetsLocalAndDb}
+              masterPlay={masterPlay}
+              highlightMode={highlightMode}
+              setHighlightMode={setHighlightMode}
+              onLongPress={onLongPress}
+              topicName={topicName}
+              updateSentenceData={updateSentenceData}
+              currentTimeState={currentTimeState}
+              addSnippet={addSnippet}
+              removeSnippet={removeSnippet}
+              deleteSnippet={deleteSnippet}
+              playSound={playFromHere}
+              setMiniSnippets={setMiniSnippets}
+              handleAddSnippet={handleAddSnippet}
+            />
+          </ScrollView>
+        </View>
+        <View>
+          <AudioToggles
+            isPlaying={isVideoPlaying}
+            playSound={playVideo}
+            seekHandler={seekHandler}
+            jumpAudioValue={jumpAudioValue}
+            progress={progress}
+          />
+          <ReviewSection
+            topicName={topicName}
+            reviewHistory={reviewHistory}
+            nextReview={nextReview}
+            updateTopicMetaData={updateTopicMetaData}
+          />
+        </View>
+      </View>
+    );
+  }
+
   return (
     <View>
       <DisplaySettings
@@ -416,19 +498,13 @@ const TopicContent = ({
         handleIsCore={handleIsCore}
         isCore={isCore}
         handleAddAdhocSentence={handleAddAdhocSentence}
+        isVideoModeState={isVideoModeState}
+        setIsVideoModeState={setIsVideoModeState}
+        hasVideo={hasVideo}
       />
       {longPressedWord?.length ? (
         <LongPressedWord getLongPressedWordData={getLongPressedWordData} />
       ) : null}
-      {hasUnifiedMP3File && (
-        <VideoPlayer
-          url={videoUrl}
-          videoRef={videoRef}
-          isPlaying={isVideoPlaying}
-          onProgressHandler={setCurrentVideoTimeState}
-          setVideoDuration={setVideoDurationState}
-        />
-      )}
       <ScrollView
         contentInsetAdjustmentBehavior="automatic"
         style={{
