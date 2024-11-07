@@ -15,8 +15,6 @@ import useGetCombinedAudioData, {
 import ProgressBarComponent from './Progress';
 import useHighlightWordToWordBank from '../hooks/useHighlightWordToWordBank';
 import {mergeAndRemoveDuplicates} from '../utils/merge-and-remove-duplicates';
-import SnippetTimeline from './SnippetTimeline';
-import SnippetContainer from './SnippetContainer';
 import DisplaySettings from './DisplaySettings';
 import useContentControls from '../hooks/useContentControls';
 import useAudioTextSync from '../hooks/useAudioTextSync';
@@ -96,7 +94,6 @@ const TopicContent = ({
   const {height, width} = Dimensions?.get('window');
   const url = getFirebaseAudioURL(topicName, languageSelectedState);
 
-  const soundRefLoaded = soundRef?.current?.isLoaded();
   const soundDuration = soundRef?.current?._duration || 0;
 
   const {loadFile, filePath} = useMP3File(topicName);
