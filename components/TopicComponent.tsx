@@ -20,10 +20,7 @@ const TopicComponent = ({
   loadedContent,
   loadedSnippets,
 }) => (
-  <View
-    style={{
-      paddingBottom: 50,
-    }}>
+  <View>
     <TopicHeader topicName={topicName} handleOtherTopics={handleOtherTopics} />
     <TopicContent
       topicName={topicName}

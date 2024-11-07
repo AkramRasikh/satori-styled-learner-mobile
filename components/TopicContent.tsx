@@ -400,6 +400,12 @@ const TopicContent = ({
           handleAddSnippet={handleAddSnippet}
         />
       </ScrollView>
+      <ReviewSection
+        topicName={topicName}
+        reviewHistory={reviewHistory}
+        nextReview={nextReview}
+        updateTopicMetaData={updateTopicMetaData}
+      />
       {hasUnifiedMP3File && (
         <TopicContentAudioSection
           isPlaying={isPlaying}
@@ -412,12 +418,6 @@ const TopicContent = ({
           soundDuration={soundDuration}
         />
       )}
-      <ReviewSection
-        topicName={topicName}
-        reviewHistory={reviewHistory}
-        nextReview={nextReview}
-        updateTopicMetaData={updateTopicMetaData}
-      />
     </View>
   );
 };
