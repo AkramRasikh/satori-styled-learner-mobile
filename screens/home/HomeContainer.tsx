@@ -34,7 +34,7 @@ function Home({
     useState('');
   const [updatePromptState, setUpdatePromptState] = useState('');
   const [triggerSentenceIdUpdate, setTriggerSentenceIdUpdate] = useState(null);
-  const [selectedContentState, setSelectedContentState] = useState([]);
+  const [selectedContentState, setSelectedContentState] = useState({});
   const [selectedSnippetsState, setSelectedSnippetsState] = useState([]);
 
   const {languageSelectedState} = useLanguageSelector();
@@ -48,7 +48,7 @@ function Home({
   const handleShowTopic = topic => {
     if (topic === selectedTopic) {
       setSelectedTopic('');
-      setSelectedContentState([]);
+      setSelectedContentState({});
       setSelectedSnippetsState([]);
     } else {
       setSelectedTopic(topic);
@@ -111,6 +111,7 @@ function Home({
         );
         const newTopicState = {...thisTopicData, ...resObj};
         setTargetLanguageLoadedContentState([...filterTopics, newTopicState]);
+        setSelectedContentState(newTopicState);
         setUpdatePromptState(`${topicName} updated!`);
         setTimeout(() => setUpdatePromptState(''), 3000);
       }

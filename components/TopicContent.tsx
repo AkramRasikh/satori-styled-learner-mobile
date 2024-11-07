@@ -136,6 +136,17 @@ const TopicContent = ({
     pureWordsUnique,
   });
 
+  const handleIsCore = () => {
+    const fieldToUpdate = {
+      isCore: !Boolean(isCore),
+    };
+
+    updateTopicMetaData({
+      topicName,
+      fieldToUpdate,
+    });
+  };
+
   useEffect(() => {
     if (targetLanguageLoadedWords?.length !== initTargetLanguageWordsList) {
       setUpdateWordList(true);
@@ -358,6 +369,8 @@ const TopicContent = ({
         setIsFlowingSentences={setIsFlowingSentences}
         engMaster={engMaster}
         setEngMaster={setEngMaster}
+        handleIsCore={handleIsCore}
+        isCore={isCore}
       />
       {longPressedWord?.length ? (
         <LongPressedWord getLongPressedWordData={getLongPressedWordData} />
@@ -419,11 +432,6 @@ const TopicContent = ({
         reviewHistory={reviewHistory}
         nextReview={nextReview}
         updateTopicMetaData={updateTopicMetaData}
-      />
-      <IsCoreSection
-        updateTopicMetaData={updateTopicMetaData}
-        topicName={topicName}
-        isCore={isCore}
       />
       <View
         style={{

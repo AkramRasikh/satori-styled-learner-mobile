@@ -22,6 +22,8 @@ const DisplaySettings = ({
   setIsFlowingSentences,
   engMaster,
   setEngMaster,
+  handleIsCore,
+  isCore,
 }) => {
   const settingsArr = [
     {func: setEnglishOnly, bool: englishOnly, text: 'Eng only'},
@@ -31,6 +33,7 @@ const DisplaySettings = ({
       bool: isFlowingSentences,
       text: isFlowingSentences ? 'Flowing 🏄🏽' : '1 by 1 🧱',
     },
+    {func: handleIsCore, bool: isCore, text: 'Core'},
   ];
   return (
     <View
