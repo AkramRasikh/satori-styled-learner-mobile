@@ -1,10 +1,18 @@
 import {useEffect} from 'react';
 
-const mapSentenceIdsToSeconds = ({contentArr, duration}) => {
+export const mapSentenceIdsToSeconds = ({
+  contentArr,
+  duration,
+  isVideoModeState,
+  realStartTime,
+}) => {
   if (!contentArr || !duration) {
     return null;
   }
-  const arrOfSecondsMappedIds: string[] = [];
+  const arrOfSecondsMappedIds: string[] = isVideoModeState
+    ? Array.from({length: realStartTime}, () => 'placehoddlderId')
+    : [];
+
   contentArr.forEach((item, index) => {
     const isFirst = index === 0;
     const isLast = index + 1 === contentArr.length;
@@ -29,6 +37,8 @@ const useSetSecondsToSentenceIds = ({
   soundDuration,
   secondsToSentencesMapState,
   setSecondsToSentencesMapState,
+  isVideoModeState,
+  realStartTime,
 }) => {
   useEffect(() => {
     const durationsLengths = durations.length;
@@ -40,6 +50,8 @@ const useSetSecondsToSentenceIds = ({
       const mappedIds = mapSentenceIdsToSeconds({
         contentArr: durations,
         duration: soundDuration,
+        isVideoModeState,
+        realStartTime,
       }) as string[];
       setSecondsToSentencesMapState(mappedIds);
     }
@@ -49,6 +61,18 @@ const useSetSecondsToSentenceIds = ({
     durations,
     setSecondsToSentencesMapState,
   ]);
+
+  useEffect(() => {
+    if (isVideoModeState) {
+      const mappedIds = mapSentenceIdsToSeconds({
+        contentArr: durations,
+        duration: soundDuration,
+        isVideoModeState,
+        realStartTime,
+      }) as string[];
+      setSecondsToSentencesMapState(mappedIds);
+    }
+  }, [isVideoModeState]);
 };
 
 export default useSetSecondsToSentenceIds;

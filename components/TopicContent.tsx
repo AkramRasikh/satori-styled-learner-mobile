@@ -79,6 +79,7 @@ const TopicContent = ({
   const isCore = loadedContent?.isCore;
   const isMediaContent = loadedContent?.isMedia;
   const hasVideo = loadedContent?.hasVideo;
+  const realStartTime = loadedContent?.realStartTime;
 
   const hasUnifiedMP3File = loadedContent.hasAudio;
 
@@ -339,6 +340,8 @@ const TopicContent = ({
     soundDuration,
     secondsToSentencesMapState,
     setSecondsToSentencesMapState,
+    isVideoModeState,
+    realStartTime,
   });
 
   useEffect(() => {
@@ -374,8 +377,8 @@ const TopicContent = ({
   ]);
 
   const handlePlayFromThisSentence = playFromHere => {
-    if (isVideoPlaying) {
-      jumpToAudioPoint(playFromHere);
+    if (isVideoModeState) {
+      jumpToAudioPoint(realStartTime + playFromHere);
     } else {
       playFromThisSentence(playFromHere);
     }
@@ -464,6 +467,7 @@ const TopicContent = ({
               playSound={playFromHere}
               setMiniSnippets={setMiniSnippets}
               handleAddSnippet={handleAddSnippet}
+              realStartTime={realStartTime}
             />
           </ScrollView>
         </View>
@@ -508,7 +512,7 @@ const TopicContent = ({
       <ScrollView
         contentInsetAdjustmentBehavior="automatic"
         style={{
-          maxHeight: height * 0.5,
+          maxHeight: height * 0.6,
         }}>
         <LineContainer
           formattedData={formattedData}
@@ -538,13 +542,6 @@ const TopicContent = ({
           handleAddSnippet={handleAddSnippet}
         />
       </ScrollView>
-      <AudioToggles
-        isPlaying={isVideoPlaying}
-        playSound={playVideo}
-        seekHandler={seekHandler}
-        jumpAudioValue={jumpAudioValue}
-        progress={progress}
-      />
       <ReviewSection
         topicName={topicName}
         reviewHistory={reviewHistory}
