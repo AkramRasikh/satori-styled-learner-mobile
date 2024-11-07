@@ -1,18 +1,10 @@
 import React, {useEffect, useMemo, useRef, useState} from 'react';
 import Sound from 'react-native-sound';
-import {
-  View,
-  Text,
-  ScrollView,
-  Dimensions,
-  TouchableOpacity,
-} from 'react-native';
-import SoundComponent from './Sound';
+import {View, Text, ScrollView, Dimensions} from 'react-native';
 import useSoundHook from '../hooks/useSoundHook';
 import useGetCombinedAudioData, {
   getFirebaseAudioURL,
 } from '../hooks/useGetCombinedAudioData';
-import ProgressBarComponent from './Progress';
 import useHighlightWordToWordBank from '../hooks/useHighlightWordToWordBank';
 import {mergeAndRemoveDuplicates} from '../utils/merge-and-remove-duplicates';
 import DisplaySettings from './DisplaySettings';
@@ -32,6 +24,7 @@ import useLanguageSelector from '../context/Data/useLanguageSelector';
 import mapSentenceIdsToSeconds from '../helper-functions/map-sentence-ids-to-seconds';
 import useTrackCurrentTimeState from '../hooks/useTrackCurrentTimeState';
 import useOneByOneSentenceFlow from '../hooks/useOneByOneSentenceFlow';
+import TopicContentAudioSection from './TopicContentAudioSection';
 
 const TopicContent = ({
   topicName,
@@ -408,24 +401,16 @@ const TopicContent = ({
         />
       </ScrollView>
       {hasUnifiedMP3File && (
-        <View ref={audioControlsRef}>
-          <SoundComponent
-            soundRef={soundRef}
-            isPlaying={isPlaying}
-            playSound={handlePlaySound}
-            pauseSound={pauseSound}
-            rewindSound={rewindSound}
-            forwardSound={forwardSound}
-            getTimeStamp={getTimeStamp}
-          />
-          {soundDuration && currentTimeState ? (
-            <ProgressBarComponent
-              endTime={soundDuration.toFixed(2)}
-              progress={currentTimeState / soundDuration}
-              time={currentTimeState.toFixed(2)}
-            />
-          ) : null}
-        </View>
+        <TopicContentAudioSection
+          isPlaying={isPlaying}
+          playSound={handlePlaySound}
+          pauseSound={pauseSound}
+          rewindSound={rewindSound}
+          forwardSound={forwardSound}
+          getTimeStamp={getTimeStamp}
+          currentTimeState={currentTimeState}
+          soundDuration={soundDuration}
+        />
       )}
       <ReviewSection
         topicName={topicName}
