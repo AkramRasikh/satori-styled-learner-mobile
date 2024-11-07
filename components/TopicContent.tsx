@@ -25,7 +25,6 @@ import useFormatUnderlyingWords from '../hooks/useFormatUnderlyingWords';
 import TopicContentLoader from './TopicContentLoader';
 import useSetTopicAudioDataInState from '../hooks/useSetTopicAudioDataInState';
 import ReviewSection from './ReviewSection';
-import IsCoreSection from './IsCoreSection';
 import useMP3File from '../hooks/useMP3File';
 import useLoadAudioInstance from '../hooks/useLoadAudioInstance';
 import AdhocSentenceContainer from './AdhocSentenceContainer';
@@ -371,6 +370,7 @@ const TopicContent = ({
         setEngMaster={setEngMaster}
         handleIsCore={handleIsCore}
         isCore={isCore}
+        handleAddAdhocSentence={handleAddAdhocSentence}
       />
       {longPressedWord?.length ? (
         <LongPressedWord getLongPressedWordData={getLongPressedWordData} />
@@ -433,18 +433,6 @@ const TopicContent = ({
         nextReview={nextReview}
         updateTopicMetaData={updateTopicMetaData}
       />
-      <View
-        style={{
-          display: 'flex',
-          flexDirection: 'row',
-          flexWrap: 'wrap',
-          justifyContent: 'center',
-          marginVertical: 10,
-        }}>
-        <TouchableOpacity onPress={handleAddAdhocSentence}>
-          <Text>(+) Add Adhoc sentence</Text>
-        </TouchableOpacity>
-      </View>
     </View>
   );
 };

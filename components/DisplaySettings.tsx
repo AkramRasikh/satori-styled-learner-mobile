@@ -1,4 +1,4 @@
-import {Text, View} from 'react-native';
+import React, {Text, TouchableOpacity, View} from 'react-native';
 import SwitchButton from './SwitchButton';
 
 const SettingBlock = ({func, bool, text}) => {
@@ -24,6 +24,7 @@ const DisplaySettings = ({
   setEngMaster,
   handleIsCore,
   isCore,
+  handleAddAdhocSentence,
 }) => {
   const settingsArr = [
     {func: setEnglishOnly, bool: englishOnly, text: 'Eng only'},
@@ -49,6 +50,20 @@ const DisplaySettings = ({
       {settingsArr?.map((settingItem, index) => {
         return <SettingBlock key={index} {...settingItem} />;
       })}
+      <View
+        style={{
+          margin: 10,
+        }}>
+        <TouchableOpacity
+          onPress={handleAddAdhocSentence}
+          style={{
+            padding: 10,
+            backgroundColor: 'grey',
+            borderRadius: 50,
+          }}>
+          <Text>➕</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
