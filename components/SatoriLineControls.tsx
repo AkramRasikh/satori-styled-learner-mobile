@@ -19,6 +19,9 @@ const SatoriLineControls = ({
   updateSentenceData,
   highlightMode,
   setHighlightMode,
+  setShowWordHintState,
+  showWordHintState,
+  hasWordHint,
 }) => {
   const {openGoogleTranslateApp} = useOpenGoogleTranslate();
 
@@ -75,6 +78,12 @@ const SatoriLineControls = ({
         {topicSentence.notes ? (
           <TouchableOpacity onPress={() => setShowNotes(!showNotes)}>
             <Text>☝🏽</Text>
+          </TouchableOpacity>
+        ) : null}
+        {hasWordHint ? (
+          <TouchableOpacity
+            onPress={() => setShowWordHintState(!showWordHintState)}>
+            <Text>🔍</Text>
           </TouchableOpacity>
         ) : null}
         {!hasBeenMarkedAsDifficult ? (

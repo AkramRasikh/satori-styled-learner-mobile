@@ -1,23 +1,13 @@
 import React, {useEffect, useMemo, useRef, useState} from 'react';
 import Sound from 'react-native-sound';
-import {
-  View,
-  Text,
-  ScrollView,
-  Dimensions,
-  TouchableOpacity,
-} from 'react-native';
-import SoundComponent from './Sound';
+import {View, Text, ScrollView, Dimensions} from 'react-native';
 import useSoundHook from '../hooks/useSoundHook';
 import useGetCombinedAudioData, {
   getFirebaseAudioURL,
   getFirebaseVideoURL,
 } from '../hooks/useGetCombinedAudioData';
-import ProgressBarComponent from './Progress';
 import useHighlightWordToWordBank from '../hooks/useHighlightWordToWordBank';
 import {mergeAndRemoveDuplicates} from '../utils/merge-and-remove-duplicates';
-import SnippetTimeline from './SnippetTimeline';
-import SnippetContainer from './SnippetContainer';
 import DisplaySettings from './DisplaySettings';
 import useContentControls from '../hooks/useContentControls';
 import useAudioTextSync from '../hooks/useAudioTextSync';
@@ -28,12 +18,10 @@ import useFormatUnderlyingWords from '../hooks/useFormatUnderlyingWords';
 import TopicContentLoader from './TopicContentLoader';
 import useSetTopicAudioDataInState from '../hooks/useSetTopicAudioDataInState';
 import ReviewSection from './ReviewSection';
-import IsCoreSection from './IsCoreSection';
 import useMP3File from '../hooks/useMP3File';
 import useLoadAudioInstance from '../hooks/useLoadAudioInstance';
 import AdhocSentenceContainer from './AdhocSentenceContainer';
 import useLanguageSelector from '../context/Data/useLanguageSelector';
-import TopicVideoContainer from './TopicVideoContainer';
 import AudioToggles from './AudioToggles';
 import {VideoRef} from 'react-native-video';
 import VideoPlayer from './VideoPlayer';
@@ -41,6 +29,7 @@ import useTrackCurrentTimeState from '../hooks/useTrackCurrentTimeState';
 import useOneByOneSentenceFlow from '../hooks/useOneByOneSentenceFlow';
 import useVideoTextSync from '../hooks/useVideoTextSync';
 import useSetSecondsToSentenceIds from '../hooks/useSetSecondsToSentenceIds';
+import TopicContentAudioSection from './TopicContentAudioSection';
 
 const TopicContent = ({
   topicName,
@@ -57,6 +46,7 @@ const TopicContent = ({
   setTriggerSentenceIdUpdate,
   loadedContent,
   loadedSnippets,
+  setSelectedSnippetsState,
 }) => {
   const [masterPlay, setMasterPlay] = useState('');
   const [currentTimeState, setCurrentTimeState] = useState(0);
@@ -64,7 +54,6 @@ const TopicContent = ({
   const [isFlowingSentences, setIsFlowingSentences] = useState(true);
   const [longPressedWord, setLongPressedWord] = useState([]);
   const [miniSnippets, setMiniSnippets] = useState([]);
-  const [wordTest, setWordTest] = useState(false);
   const [englishOnly, setEnglishOnly] = useState(false);
   const [engMaster, setEngMaster] = useState(true);
   const [highlightMode, setHighlightMode] = useState(false);
@@ -143,7 +132,6 @@ const TopicContent = ({
   const {height, width} = Dimensions?.get('window');
   const url = getFirebaseAudioURL(topicName, languageSelectedState);
 
-  const soundRefLoaded = soundRef?.current?.isLoaded();
   const soundDuration = soundRef?.current?._duration || 0;
 
   const {loadFile, filePath} = useMP3File(topicName);
@@ -188,6 +176,17 @@ const TopicContent = ({
     pureWordsUnique,
   });
 
+  const handleIsCore = () => {
+    const fieldToUpdate = {
+      isCore: !Boolean(isCore),
+    };
+
+    updateTopicMetaData({
+      topicName,
+      fieldToUpdate,
+    });
+  };
+
   useEffect(() => {
     if (targetLanguageLoadedWords?.length !== initTargetLanguageWordsList) {
       setUpdateWordList(true);
@@ -231,10 +230,31 @@ const TopicContent = ({
     soundDuration,
   });
 
+  const playFromHere = seconds => {
+    if (soundRef.current) {
+      soundRef.current.getCurrentTime(() => {
+        soundRef.current.setCurrentTime(seconds);
+      });
+      setCurrentTimeState(seconds);
+      soundRef.current.play();
+      setIsPlaying(true);
+    }
+  };
+
   const durationsLengths = durations.length;
   const topicDataLengths = content?.length;
 
-  const lastItem = durations[durations?.length - 1];
+  const handleAddSnippet = async snippetData => {
+    try {
+      const snippetResponse = await addSnippet(snippetData);
+      setSelectedSnippetsState(prev => [
+        ...prev,
+        {...snippetResponse, saved: true},
+      ]);
+    } catch (error) {
+      console.error('## failed to add snippet state');
+    }
+  };
 
   const {
     onLongPress,
@@ -260,6 +280,8 @@ const TopicContent = ({
     pauseSound,
     isText: true,
     setCurrentTimeState,
+    setSelectedSnippetsState,
+    removeSnippet,
   });
 
   useVideoTextSync({
@@ -382,20 +404,19 @@ const TopicContent = ({
     );
   }
 
-  console.log('## ', formattedData[0]);
-
   return (
     <View>
-      {/* <DisplaySettings
-        wordTest={wordTest}
-        setWordTest={setWordTest}
+      <DisplaySettings
         englishOnly={englishOnly}
         setEnglishOnly={setEnglishOnly}
         isFlowingSentences={isFlowingSentences}
         setIsFlowingSentences={setIsFlowingSentences}
         engMaster={engMaster}
         setEngMaster={setEngMaster}
-      /> */}
+        handleIsCore={handleIsCore}
+        isCore={isCore}
+        handleAddAdhocSentence={handleAddAdhocSentence}
+      />
       {longPressedWord?.length ? (
         <LongPressedWord getLongPressedWordData={getLongPressedWordData} />
       ) : null}
@@ -407,24 +428,6 @@ const TopicContent = ({
           onProgressHandler={setCurrentVideoTimeState}
           setVideoDuration={setVideoDurationState}
         />
-        // <View ref={audioControlsRef}>
-        //   <SoundComponent
-        //     soundRef={soundRef}
-        //     isPlaying={isPlaying}
-        //     playSound={handlePlaySound}
-        //     pauseSound={pauseSound}
-        //     rewindSound={rewindSound}
-        //     forwardSound={forwardSound}
-        //     getTimeStamp={getTimeStamp}
-        //   />
-        //   {soundDuration && currentTimeState ? (
-        //     <ProgressBarComponent
-        //       endTime={soundDuration.toFixed(2)}
-        //       progress={currentTimeState / soundDuration}
-        //       time={currentTimeState.toFixed(2)}
-        //     />
-        //   ) : null}
-        // </View>
       )}
       <ScrollView
         contentInsetAdjustmentBehavior="automatic"
@@ -434,7 +437,7 @@ const TopicContent = ({
         <LineContainer
           formattedData={formattedData}
           playFromThisSentence={handlePlayFromThisSentence}
-          wordTest={wordTest}
+          // playFromThisSentence={playFromThisSentence}
           englishOnly={englishOnly}
           highlightedIndices={highlightedIndices}
           setHighlightedIndices={setHighlightedIndices}
@@ -443,15 +446,20 @@ const TopicContent = ({
           isPlaying={isPlaying}
           pauseSound={pauseSound}
           width={width}
-          soundRef={soundRef}
           snippetsLocalAndDb={snippetsLocalAndDb}
           masterPlay={masterPlay}
           highlightMode={highlightMode}
-          setIsPlaying={setIsPlaying}
           setHighlightMode={setHighlightMode}
           onLongPress={onLongPress}
           topicName={topicName}
           updateSentenceData={updateSentenceData}
+          currentTimeState={currentTimeState}
+          addSnippet={addSnippet}
+          removeSnippet={removeSnippet}
+          deleteSnippet={deleteSnippet}
+          playSound={playFromHere}
+          setMiniSnippets={setMiniSnippets}
+          handleAddSnippet={handleAddSnippet}
         />
       </ScrollView>
       <AudioToggles
@@ -461,67 +469,22 @@ const TopicContent = ({
         jumpAudioValue={jumpAudioValue}
         progress={progress}
       />
-      {/* {hasUnifiedMP3File && (
-        // <TopicVideoContainer videoUrl={videoUrl} />
-        // <View ref={audioControlsRef}>
-        //   <SoundComponent
-        //     soundRef={soundRef}
-        //     isPlaying={isPlaying}
-        //     playSound={handlePlaySound}
-        //     pauseSound={pauseSound}
-        //     rewindSound={rewindSound}
-        //     forwardSound={forwardSound}
-        //     getTimeStamp={getTimeStamp}
-        //   />
-        //   {soundDuration && currentTimeState ? (
-        //     <ProgressBarComponent
-        //       endTime={soundDuration.toFixed(2)}
-        //       progress={currentTimeState / soundDuration}
-        //       time={currentTimeState.toFixed(2)}
-        //     />
-        //   ) : null}
-        // </View>
-      )} */}
       <ReviewSection
         topicName={topicName}
         reviewHistory={reviewHistory}
         nextReview={nextReview}
         updateTopicMetaData={updateTopicMetaData}
       />
-      <IsCoreSection
-        updateTopicMetaData={updateTopicMetaData}
-        topicName={topicName}
-        isCore={isCore}
-      />
-      <View
-        style={{
-          display: 'flex',
-          flexDirection: 'row',
-          flexWrap: 'wrap',
-          justifyContent: 'center',
-          marginVertical: 10,
-        }}>
-        <TouchableOpacity onPress={handleAddAdhocSentence}>
-          <Text>(+) Add Adhoc sentence</Text>
-        </TouchableOpacity>
-      </View>
-      {lastItem && snippetsLocalAndDb?.length > 0 && (
-        <SnippetTimeline
-          snippetsLocalAndDb={snippetsLocalAndDb}
-          duration={soundDuration}
-        />
-      )}
-
-      {soundRefLoaded && snippetsLocalAndDb?.length > 0 && (
-        <SnippetContainer
-          snippetsLocalAndDb={snippetsLocalAndDb}
-          setIsPlaying={setIsPlaying}
+      {hasUnifiedMP3File && (
+        <TopicContentAudioSection
           isPlaying={isPlaying}
-          deleteSnippet={deleteSnippet}
-          addSnippet={addSnippet}
-          removeSnippet={removeSnippet}
-          soundRef={soundRef}
-          url={url}
+          playSound={handlePlaySound}
+          pauseSound={pauseSound}
+          rewindSound={rewindSound}
+          forwardSound={forwardSound}
+          getTimeStamp={getTimeStamp}
+          currentTimeState={currentTimeState}
+          soundDuration={soundDuration}
         />
       )}
     </View>

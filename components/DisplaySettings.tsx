@@ -1,4 +1,4 @@
-import {Text, View} from 'react-native';
+import React, {Text, TouchableOpacity, View} from 'react-native';
 import SwitchButton from './SwitchButton';
 
 const SettingBlock = ({func, bool, text}) => {
@@ -16,17 +16,17 @@ const SettingBlock = ({func, bool, text}) => {
 };
 
 const DisplaySettings = ({
-  wordTest,
-  setWordTest,
   englishOnly,
   setEnglishOnly,
   isFlowingSentences,
   setIsFlowingSentences,
   engMaster,
   setEngMaster,
+  handleIsCore,
+  isCore,
+  handleAddAdhocSentence,
 }) => {
   const settingsArr = [
-    {func: setWordTest, bool: wordTest, text: 'Word hint'},
     {func: setEnglishOnly, bool: englishOnly, text: 'Eng only'},
     {func: setEngMaster, bool: engMaster, text: 'Eng Master'},
     {
@@ -34,6 +34,7 @@ const DisplaySettings = ({
       bool: isFlowingSentences,
       text: isFlowingSentences ? 'Flowing 🏄🏽' : '1 by 1 🧱',
     },
+    {func: handleIsCore, bool: isCore, text: 'Core'},
   ];
   return (
     <View
@@ -49,6 +50,20 @@ const DisplaySettings = ({
       {settingsArr?.map((settingItem, index) => {
         return <SettingBlock key={index} {...settingItem} />;
       })}
+      <View
+        style={{
+          margin: 10,
+        }}>
+        <TouchableOpacity
+          onPress={handleAddAdhocSentence}
+          style={{
+            padding: 10,
+            backgroundColor: 'grey',
+            borderRadius: 50,
+          }}>
+          <Text>➕</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };

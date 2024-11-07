@@ -34,10 +34,8 @@ function Home({
     useState('');
   const [updatePromptState, setUpdatePromptState] = useState('');
   const [triggerSentenceIdUpdate, setTriggerSentenceIdUpdate] = useState(null);
-  const [selectedContentState, setSelectedContentState] = useState({
-    content: [],
-    snippets: [],
-  });
+  const [selectedContentState, setSelectedContentState] = useState({});
+  const [selectedSnippetsState, setSelectedSnippetsState] = useState([]);
 
   const {languageSelectedState} = useLanguageSelector();
 
@@ -50,20 +48,18 @@ function Home({
   const handleShowTopic = topic => {
     if (topic === selectedTopic) {
       setSelectedTopic('');
-      setSelectedContentState({
-        content: [],
-        snippets: [],
-      });
+      setSelectedContentState({});
+      setSelectedSnippetsState([]);
     } else {
       setSelectedTopic(topic);
-      setSelectedContentState({
-        content: targetLanguageLoadedContentState.find(
+      setSelectedContentState(
+        targetLanguageLoadedContentState.find(
           contentItem => contentItem.title === topic,
         ),
-        snippets: targetLanguageSnippetsState?.filter(
-          item => item.topicName === topic,
-        ),
-      });
+      );
+      setSelectedSnippetsState(
+        targetLanguageSnippetsState?.filter(item => item.topicName === topic),
+      );
     }
     setShowOtherTopics(false);
   };
@@ -115,6 +111,7 @@ function Home({
         );
         const newTopicState = {...thisTopicData, ...resObj};
         setTargetLanguageLoadedContentState([...filterTopics, newTopicState]);
+        setSelectedContentState(newTopicState);
         setUpdatePromptState(`${topicName} updated!`);
         setTimeout(() => setUpdatePromptState(''), 3000);
       }
@@ -168,10 +165,8 @@ function Home({
         setUpdatePromptState(`${topicName} updated!`);
         setTimeout(() => setUpdatePromptState(''), 3000);
         setTriggerSentenceIdUpdate({id: sentenceId, fieldToUpdate: resObj});
-        setSelectedContentState({
-          snippets: selectedContentState.snippets,
-          content: newTopicState,
-        });
+        setSelectedContentState(newTopicState);
+        setSelectedSnippetsState(selectedContentState.snippets);
       }
     } catch (error) {
       console.log('## updateSentenceData', {error});
@@ -209,13 +204,13 @@ function Home({
           {selectedTopic ? (
             <TopicComponent
               topicName={selectedTopic}
-              loadedContent={selectedContentState.content}
+              loadedContent={selectedContentState}
+              loadedSnippets={selectedSnippetsState}
               pureWordsUnique={pureWords}
               structuredUnifiedData={structuredUnifiedData}
               setStructuredUnifiedData={setStructuredUnifiedData}
               targetLanguageLoadedWords={targetLanguageLoadedWords}
               addSnippet={addSnippet}
-              loadedSnippets={selectedContentState.snippets}
               removeSnippet={removeSnippet}
               saveWordFirebase={saveWordFirebase}
               handleOtherTopics={handleOtherTopics}
@@ -223,6 +218,7 @@ function Home({
               updateSentenceData={updateSentenceData}
               triggerSentenceIdUpdate={triggerSentenceIdUpdate}
               setTriggerSentenceIdUpdate={setTriggerSentenceIdUpdate}
+              setSelectedSnippetsState={setSelectedSnippetsState}
             />
           ) : null}
         </View>
