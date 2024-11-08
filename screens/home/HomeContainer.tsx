@@ -20,9 +20,7 @@ function Home({
   addSnippet,
   removeSnippet,
   setTargetLanguageWordsState,
-  pureWords,
 }): React.JSX.Element {
-  const [structuredUnifiedData, setStructuredUnifiedData] = useState([]);
   const [selectedTopic, setSelectedTopic] = useState('');
   const [showOtherTopics, setShowOtherTopics] = useState(true);
   const [
@@ -38,35 +36,6 @@ function Home({
   const [selectedSnippetsState, setSelectedSnippetsState] = useState([]);
 
   const {languageSelectedState} = useLanguageSelector();
-
-  useOnLoadContentScreen({
-    targetLanguageLoadedContentMaster,
-    setTargetLanguageLoadedContentState,
-    setAllTopicsMetaDataState,
-  });
-
-  const handleShowTopic = topic => {
-    if (topic === selectedTopic) {
-      setSelectedTopic('');
-      setSelectedContentState({});
-      setSelectedSnippetsState([]);
-    } else {
-      setSelectedTopic(topic);
-      setSelectedContentState(
-        targetLanguageLoadedContentState.find(
-          contentItem => contentItem.title === topic,
-        ),
-      );
-      setSelectedSnippetsState(
-        targetLanguageSnippetsState?.filter(item => item.topicName === topic),
-      );
-    }
-    setShowOtherTopics(false);
-  };
-
-  const handleShowGeneralTopic = generalTopic => {
-    setSelectedGeneralTopicState(generalTopic);
-  };
 
   const saveWordFirebase = async ({
     highlightedWord,
@@ -88,11 +57,6 @@ function Home({
       setUpdatePromptState(`Error saving ${highlightedWord}!`);
       setTimeout(() => setUpdatePromptState(''), 1000);
     }
-  };
-
-  const handleOtherTopics = () => {
-    setShowOtherTopics(!showOtherTopics);
-    setSelectedTopic('');
   };
 
   const updateTopicMetaData = async ({topicName, fieldToUpdate}) => {
@@ -175,6 +139,40 @@ function Home({
     }
   };
 
+  useOnLoadContentScreen({
+    targetLanguageLoadedContentMaster,
+    setTargetLanguageLoadedContentState,
+    setAllTopicsMetaDataState,
+  });
+
+  const handleShowTopic = topic => {
+    if (topic === selectedTopic) {
+      setSelectedTopic('');
+      setSelectedContentState({});
+      setSelectedSnippetsState([]);
+    } else {
+      setSelectedTopic(topic);
+      setSelectedContentState(
+        targetLanguageLoadedContentState.find(
+          contentItem => contentItem.title === topic,
+        ),
+      );
+      setSelectedSnippetsState(
+        targetLanguageSnippetsState?.filter(item => item.topicName === topic),
+      );
+    }
+    setShowOtherTopics(false);
+  };
+
+  const handleShowGeneralTopic = generalTopic => {
+    setSelectedGeneralTopicState(generalTopic);
+  };
+
+  const handleOtherTopics = () => {
+    setShowOtherTopics(!showOtherTopics);
+    setSelectedTopic('');
+  };
+
   if (targetLanguageLoadedContentState?.length === 0) {
     return <LoadingScreen>Loading data...</LoadingScreen>;
   }
@@ -206,9 +204,6 @@ function Home({
               topicName={selectedTopic}
               loadedContent={selectedContentState}
               loadedSnippets={selectedSnippetsState}
-              pureWordsUnique={pureWords}
-              structuredUnifiedData={structuredUnifiedData}
-              setStructuredUnifiedData={setStructuredUnifiedData}
               targetLanguageLoadedWords={targetLanguageLoadedWords}
               addSnippet={addSnippet}
               removeSnippet={removeSnippet}

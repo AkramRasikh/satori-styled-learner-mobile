@@ -4,9 +4,6 @@ import TopicHeader from './TopicHeader';
 
 const TopicComponent = ({
   topicName,
-  pureWordsUnique,
-  structuredUnifiedData,
-  setStructuredUnifiedData,
   targetLanguageLoadedWords,
   addSnippet,
   removeSnippet,
@@ -24,9 +21,6 @@ const TopicComponent = ({
     <TopicHeader topicName={topicName} handleOtherTopics={handleOtherTopics} />
     <TopicContent
       topicName={topicName}
-      pureWordsUnique={pureWordsUnique}
-      structuredUnifiedData={structuredUnifiedData}
-      setStructuredUnifiedData={setStructuredUnifiedData}
       targetLanguageLoadedWords={targetLanguageLoadedWords}
       addSnippet={addSnippet}
       removeSnippet={removeSnippet}

@@ -31,12 +31,10 @@ import useSetSecondsToSentenceIds, {
   mapSentenceIdsToSeconds,
 } from '../hooks/useSetSecondsToSentenceIds';
 import TopicContentAudioSection from './TopicContentAudioSection';
+import useData from '../context/Data/useData';
 
 const TopicContent = ({
   topicName,
-  pureWordsUnique,
-  structuredUnifiedData,
-  setStructuredUnifiedData,
   targetLanguageLoadedWords,
   addSnippet,
   removeSnippet,
@@ -73,6 +71,11 @@ const TopicContent = ({
   const [videoDurationState, setVideoDurationState] = useState(0);
 
   const {languageSelectedState} = useLanguageSelector();
+  const {
+    structuredUnifiedData,
+    setStructuredUnifiedData,
+    pureWords: pureWordsUnique,
+  } = useData();
 
   const {reviewHistory, content, nextReview} = loadedContent;
 
