@@ -73,7 +73,6 @@ const SatoriLine = ({
         showEng={showEng}
         setShowNotes={setShowNotes}
         showNotes={showNotes}
-        textWidth={textWidth}
         hasBeenMarkedAsDifficult={hasBeenMarkedAsDifficult}
         topicName={topicName}
         updateSentenceData={updateSentenceData}

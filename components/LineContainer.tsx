@@ -175,7 +175,6 @@ const LineContainer = ({
             return (
               <View
                 style={{
-                  width: width * 0.9,
                   marginBottom: 10,
                   paddingTop: firstEl ? 10 : 0,
                 }}

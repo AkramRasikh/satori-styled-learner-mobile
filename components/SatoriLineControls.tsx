@@ -13,7 +13,6 @@ const SatoriLineControls = ({
   showEng,
   setShowNotes,
   showNotes,
-  textWidth,
   hasBeenMarkedAsDifficult,
   topicName,
   updateSentenceData,
@@ -51,7 +50,7 @@ const SatoriLineControls = ({
   return (
     <View
       style={{
-        width: textWidth,
+        width: '100%',
         marginBottom: highlightMode ? 3 : 0,
         display: 'flex',
         flexDirection: 'row',
