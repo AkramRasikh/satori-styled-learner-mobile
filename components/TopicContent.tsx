@@ -451,7 +451,6 @@ const TopicContent = ({
             <LineContainer
               formattedData={formattedData}
               playFromThisSentence={handlePlayFromThisSentence}
-              // playFromThisSentence={playFromThisSentence}
               englishOnly={englishOnly}
               highlightedIndices={highlightedIndices}
               setHighlightedIndices={setHighlightedIndices}
