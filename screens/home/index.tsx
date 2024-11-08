@@ -15,8 +15,6 @@ const Home = ({navigation}): React.JSX.Element => {
   const addSnippet = data.addSnippet;
   const removeSnippet = data.removeSnippet;
   const targetLanguageLoadedWords = data.targetLanguageWordsState;
-  const setTargetLanguageWordsState = data.setTargetLanguageWordsState;
-  const pureWords = data.pureWords;
 
   if (
     !homeScreenData ||
@@ -37,8 +35,6 @@ const Home = ({navigation}): React.JSX.Element => {
       targetLanguageSnippetsState={targetLanguageSnippetsState}
       addSnippet={addSnippet}
       removeSnippet={removeSnippet}
-      setTargetLanguageWordsState={setTargetLanguageWordsState}
-      pureWords={pureWords}
     />
   );
 };

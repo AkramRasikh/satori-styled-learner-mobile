@@ -1,7 +1,6 @@
 import React, {useState} from 'react';
 import {ScrollView, View} from 'react-native';
 import TopicComponent from '../../components/TopicComponent';
-import saveWordAPI from '../../api/save-word';
 import {updateCreateReviewHistory} from '../../api/update-create-review-history';
 import MoreTopics from '../../components/MoreTopics';
 import {updateSentenceDataAPI} from '../../api/update-sentence-data';
@@ -19,7 +18,6 @@ function Home({
   targetLanguageSnippetsState,
   addSnippet,
   removeSnippet,
-  setTargetLanguageWordsState,
 }): React.JSX.Element {
   const [selectedTopic, setSelectedTopic] = useState('');
   const [showOtherTopics, setShowOtherTopics] = useState(true);
@@ -36,28 +34,6 @@ function Home({
   const [selectedSnippetsState, setSelectedSnippetsState] = useState([]);
 
   const {languageSelectedState} = useLanguageSelector();
-
-  const saveWordFirebase = async ({
-    highlightedWord,
-    highlightedWordSentenceId,
-    contextSentence,
-    isGoogle = false,
-  }) => {
-    try {
-      const savedWord = await saveWordAPI({
-        highlightedWord,
-        highlightedWordSentenceId,
-        contextSentence,
-        isGoogle,
-        language: languageSelectedState,
-      });
-      setTargetLanguageWordsState(prev => [...prev, savedWord]);
-    } catch (error) {
-      console.log('## saveWordFirebase err', error);
-      setUpdatePromptState(`Error saving ${highlightedWord}!`);
-      setTimeout(() => setUpdatePromptState(''), 1000);
-    }
-  };
 
   const updateTopicMetaData = async ({topicName, fieldToUpdate}) => {
     try {
@@ -207,7 +183,6 @@ function Home({
               targetLanguageLoadedWords={targetLanguageLoadedWords}
               addSnippet={addSnippet}
               removeSnippet={removeSnippet}
-              saveWordFirebase={saveWordFirebase}
               handleOtherTopics={handleOtherTopics}
               updateTopicMetaData={updateTopicMetaData}
               updateSentenceData={updateSentenceData}

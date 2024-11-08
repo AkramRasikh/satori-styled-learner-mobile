@@ -7,7 +7,6 @@ const TopicComponent = ({
   targetLanguageLoadedWords,
   addSnippet,
   removeSnippet,
-  saveWordFirebase,
   handleOtherTopics,
   updateTopicMetaData,
   updateSentenceData,
@@ -24,7 +23,6 @@ const TopicComponent = ({
       targetLanguageLoadedWords={targetLanguageLoadedWords}
       addSnippet={addSnippet}
       removeSnippet={removeSnippet}
-      saveWordFirebase={saveWordFirebase}
       updateTopicMetaData={updateTopicMetaData}
       updateSentenceData={updateSentenceData}
       triggerSentenceIdUpdate={triggerSentenceIdUpdate}

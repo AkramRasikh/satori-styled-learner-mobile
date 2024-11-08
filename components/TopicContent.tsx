@@ -38,7 +38,6 @@ const TopicContent = ({
   targetLanguageLoadedWords,
   addSnippet,
   removeSnippet,
-  saveWordFirebase,
   updateTopicMetaData,
   updateSentenceData,
   triggerSentenceIdUpdate,
@@ -75,6 +74,7 @@ const TopicContent = ({
     structuredUnifiedData,
     setStructuredUnifiedData,
     pureWords: pureWordsUnique,
+    saveWordFirebase,
   } = useData();
 
   const {reviewHistory, content, nextReview} = loadedContent;
