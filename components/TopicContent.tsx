@@ -26,9 +26,10 @@ import AudioToggles from './AudioToggles';
 import {VideoRef} from 'react-native-video';
 import VideoPlayer from './VideoPlayer';
 import useTrackCurrentTimeState from '../hooks/useTrackCurrentTimeState';
-import useOneByOneSentenceFlow from '../hooks/useOneByOneSentenceFlow';
 import useVideoTextSync from '../hooks/useVideoTextSync';
-import useSetSecondsToSentenceIds from '../hooks/useSetSecondsToSentenceIds';
+import useSetSecondsToSentenceIds, {
+  mapSentenceIdsToSeconds,
+} from '../hooks/useSetSecondsToSentenceIds';
 import TopicContentAudioSection from './TopicContentAudioSection';
 
 const TopicContent = ({
@@ -51,7 +52,6 @@ const TopicContent = ({
   const [masterPlay, setMasterPlay] = useState('');
   const [currentTimeState, setCurrentTimeState] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [isFlowingSentences, setIsFlowingSentences] = useState(true);
   const [longPressedWord, setLongPressedWord] = useState([]);
   const [miniSnippets, setMiniSnippets] = useState([]);
   const [englishOnly, setEnglishOnly] = useState(false);
@@ -163,14 +163,29 @@ const TopicContent = ({
     topicName,
   });
 
-  const handlePlaySound = () => {
-    if (!isFlowingSentences) {
-      setIsFlowingSentences(true);
+  const handleVideoMode = (switchToVideoMode: boolean) => {
+    if (switchToVideoMode) {
+      setIsVideoModeState(true);
+      setSecondsToSentencesMapState(
+        mapSentenceIdsToSeconds({
+          contentArr: durations,
+          duration: soundDuration,
+          isVideoModeState: true,
+          realStartTime,
+        }),
+      );
+    } else {
+      setIsVideoModeState(false);
+      setSecondsToSentencesMapState(
+        mapSentenceIdsToSeconds({
+          contentArr: durations,
+          duration: soundDuration,
+          isVideoModeState: false,
+          realStartTime,
+        }),
+      );
     }
-    playSound();
   };
-
-  const handleVideoMode = () => {};
 
   const {underlineWordsInSentence} = useHighlightWordToWordBank({
     pureWordsUnique,
@@ -320,15 +335,6 @@ const TopicContent = ({
     setCurrentTimeState,
   });
 
-  useOneByOneSentenceFlow({
-    currentTimeState,
-    isFlowingSentences,
-    soundRef,
-    setIsPlaying,
-    durations,
-    masterPlay,
-  });
-
   useAudioTextSync({
     currentTimeState,
     setMasterPlay,
@@ -379,6 +385,9 @@ const TopicContent = ({
   const handlePlayFromThisSentence = playFromHere => {
     if (isVideoModeState) {
       jumpToAudioPoint(realStartTime + playFromHere);
+      if (!isVideoPlaying) {
+        playVideo();
+      }
     } else {
       playFromThisSentence(playFromHere);
     }
@@ -413,16 +422,14 @@ const TopicContent = ({
           <DisplaySettings
             englishOnly={englishOnly}
             setEnglishOnly={setEnglishOnly}
-            isFlowingSentences={isFlowingSentences}
-            setIsFlowingSentences={setIsFlowingSentences}
             engMaster={engMaster}
             setEngMaster={setEngMaster}
             handleIsCore={handleIsCore}
             isCore={isCore}
             handleAddAdhocSentence={handleAddAdhocSentence}
             isVideoModeState={isVideoModeState}
-            setIsVideoModeState={setIsVideoModeState}
             hasVideo={hasVideo}
+            handleVideoMode={handleVideoMode}
           />
           {longPressedWord?.length ? (
             <LongPressedWord getLongPressedWordData={getLongPressedWordData} />
@@ -467,7 +474,6 @@ const TopicContent = ({
               playSound={playFromHere}
               setMiniSnippets={setMiniSnippets}
               handleAddSnippet={handleAddSnippet}
-              realStartTime={realStartTime}
             />
           </ScrollView>
         </View>
@@ -495,16 +501,14 @@ const TopicContent = ({
       <DisplaySettings
         englishOnly={englishOnly}
         setEnglishOnly={setEnglishOnly}
-        isFlowingSentences={isFlowingSentences}
-        setIsFlowingSentences={setIsFlowingSentences}
         engMaster={engMaster}
         setEngMaster={setEngMaster}
         handleIsCore={handleIsCore}
         isCore={isCore}
         handleAddAdhocSentence={handleAddAdhocSentence}
         isVideoModeState={isVideoModeState}
-        setIsVideoModeState={setIsVideoModeState}
         hasVideo={hasVideo}
+        handleVideoMode={handleVideoMode}
       />
       {longPressedWord?.length ? (
         <LongPressedWord getLongPressedWordData={getLongPressedWordData} />
@@ -551,7 +555,7 @@ const TopicContent = ({
       {hasUnifiedMP3File && (
         <TopicContentAudioSection
           isPlaying={isPlaying}
-          playSound={handlePlaySound}
+          playSound={playSound}
           pauseSound={pauseSound}
           rewindSound={rewindSound}
           forwardSound={forwardSound}

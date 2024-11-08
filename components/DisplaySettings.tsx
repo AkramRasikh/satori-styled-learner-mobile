@@ -18,31 +18,24 @@ const SettingBlock = ({func, bool, text}) => {
 const DisplaySettings = ({
   englishOnly,
   setEnglishOnly,
-  isFlowingSentences,
-  setIsFlowingSentences,
   engMaster,
   setEngMaster,
   handleIsCore,
   isCore,
   handleAddAdhocSentence,
   isVideoModeState,
-  setIsVideoModeState,
   hasVideo,
+  handleVideoMode,
 }) => {
-  let defaultSettings = [
+  let defaultSettingsArr = [
     {func: setEnglishOnly, bool: englishOnly, text: 'Eng only'},
     {func: setEngMaster, bool: engMaster, text: 'Eng Master'},
-    // {
-    //   func: setIsFlowingSentences,
-    //   bool: isFlowingSentences,
-    //   text: isFlowingSentences ? 'Flowing 🏄🏽' : '1 by 1 🧱',
-    // },
     {func: handleIsCore, bool: isCore, text: 'Core'},
   ];
 
   if (hasVideo) {
-    defaultSettings.push({
-      func: setIsVideoModeState,
+    defaultSettingsArr.push({
+      func: handleVideoMode,
       bool: isVideoModeState,
       text: '🎥',
     });
@@ -59,7 +52,7 @@ const DisplaySettings = ({
         justifyContent: 'space-around',
         alignItems: 'center',
       }}>
-      {defaultSettings?.map((settingItem, index) => {
+      {defaultSettingsArr?.map((settingItem, index) => {
         return <SettingBlock key={index} {...settingItem} />;
       })}
       <View

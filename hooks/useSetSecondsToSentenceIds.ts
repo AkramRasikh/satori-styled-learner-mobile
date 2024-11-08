@@ -61,18 +61,6 @@ const useSetSecondsToSentenceIds = ({
     durations,
     setSecondsToSentencesMapState,
   ]);
-
-  useEffect(() => {
-    if (isVideoModeState) {
-      const mappedIds = mapSentenceIdsToSeconds({
-        contentArr: durations,
-        duration: soundDuration,
-        isVideoModeState,
-        realStartTime,
-      }) as string[];
-      setSecondsToSentencesMapState(mappedIds);
-    }
-  }, [isVideoModeState]);
 };
 
 export default useSetSecondsToSentenceIds;

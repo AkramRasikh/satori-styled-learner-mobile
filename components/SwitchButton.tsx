@@ -3,7 +3,7 @@ import {View, StyleSheet, TouchableOpacity} from 'react-native';
 
 const SwitchButton = ({isOn, setIsOn}) => {
   const toggleSwitch = () => {
-    setIsOn(prevState => !prevState);
+    setIsOn(!isOn);
   };
 
   return (
