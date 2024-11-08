@@ -1,4 +1,4 @@
-import {View} from 'react-native';
+import React, {View} from 'react-native';
 import TopicContent from './TopicContent';
 import TopicHeader from './TopicHeader';
 
