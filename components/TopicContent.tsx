@@ -35,9 +35,6 @@ import useData from '../context/Data/useData';
 
 const TopicContent = ({
   topicName,
-  targetLanguageLoadedWords,
-  addSnippet,
-  removeSnippet,
   updateTopicMetaData,
   updateSentenceData,
   triggerSentenceIdUpdate,
@@ -75,12 +72,16 @@ const TopicContent = ({
     setStructuredUnifiedData,
     pureWords: pureWordsUnique,
     saveWordFirebase,
+    addSnippet,
+    targetLanguageWordsState: targetLanguageLoadedWords,
+    removeSnippet,
   } = useData();
 
   const {reviewHistory, content, nextReview} = loadedContent;
 
   const isCore = loadedContent?.isCore;
-  const isMediaContent = loadedContent?.isMedia;
+  const isMediaContent =
+    loadedContent?.origin === 'netflix' || loadedContent?.origin === 'youtube';
   const hasVideo = loadedContent?.hasVideo;
   const realStartTime = loadedContent?.realStartTime;
 

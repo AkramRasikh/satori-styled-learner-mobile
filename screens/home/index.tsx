@@ -11,10 +11,6 @@ const Home = ({navigation}): React.JSX.Element => {
   const homeScreenData = data.homeScreenData;
   const targetLanguageLoadedContentMaster =
     data.targetLanguageLoadedContentMaster;
-  const targetLanguageSnippetsState = data.targetLanguageSnippetsState;
-  const addSnippet = data.addSnippet;
-  const removeSnippet = data.removeSnippet;
-  const targetLanguageLoadedWords = data.targetLanguageWordsState;
 
   if (
     !homeScreenData ||
@@ -30,11 +26,7 @@ const Home = ({navigation}): React.JSX.Element => {
   return (
     <HomeContainer
       navigation={navigation}
-      targetLanguageLoadedWords={targetLanguageLoadedWords}
       targetLanguageLoadedContentMaster={targetLanguageLoadedContentMaster}
-      targetLanguageSnippetsState={targetLanguageSnippetsState}
-      addSnippet={addSnippet}
-      removeSnippet={removeSnippet}
     />
   );
 };
