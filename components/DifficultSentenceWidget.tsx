@@ -76,6 +76,15 @@ const DifficultSentenceWidget = ({
     url: filePath,
   });
 
+  // useEffect(() => {
+  //   return () => {
+  //     if (isPlaying) {
+  //       console.log('## Audio stopped!');
+  //       soundRef.current.stop();
+  //     }
+  //   };
+  // }, []);
+
   useEffect(() => {
     if (filePath) {
       triggerLoadURL();

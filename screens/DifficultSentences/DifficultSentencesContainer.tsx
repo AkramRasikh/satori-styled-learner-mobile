@@ -7,6 +7,57 @@ import PillButton from '../../components/PillButton';
 import {getTimeDiffSRS} from '../../utils/getTimeDiffSRS';
 import ScreenContainerComponent from '../../components/ScreenContainerComponent';
 
+const todayDateObj = new Date();
+
+const Wrapper = React.memo(
+  ({
+    toggleableSentencesState,
+    addSnippet,
+    updateSentenceData,
+    removeSnippet,
+    pureWords,
+    sentenceBeingHighlightedState,
+    setSentenceBeingHighlightedState,
+    setToggleableSentencesState,
+  }) => {
+    return (
+      <View style={{marginTop: 10}}>
+        {toggleableSentencesState.map((sentence, index) => {
+          const isLastEl = toggleableSentencesState.length === index + 1;
+          const nextDueTime = sentence?.reviewData?.due || sentence.nextReview;
+          const dueStatus = calculateDueDate({
+            todayDateObj,
+            nextReview: nextDueTime,
+          });
+          const dueDate = getTimeDiffSRS({
+            dueTimeStamp: new Date(nextDueTime),
+            timeNow: todayDateObj,
+          });
+
+          return (
+            <DifficultSentenceWidget
+              key={index}
+              sentence={sentence}
+              updateSentenceData={updateSentenceData}
+              dueStatus={dueStatus}
+              dueDate={dueDate}
+              isLastEl={isLastEl}
+              addSnippet={addSnippet}
+              removeSnippet={removeSnippet}
+              pureWords={pureWords}
+              sentenceBeingHighlightedState={sentenceBeingHighlightedState}
+              setSentenceBeingHighlightedState={
+                setSentenceBeingHighlightedState
+              }
+              setToggleableSentencesState={setToggleableSentencesState}
+            />
+          );
+        })}
+      </View>
+    );
+  },
+);
+
 const DifficultSentencesContainer = ({
   difficultSentencesState,
   updateSentenceData,
@@ -18,7 +69,6 @@ const DifficultSentencesContainer = ({
   const [toggleableSentencesState, setToggleableSentencesState] = useState([]);
   const [sentenceBeingHighlightedState, setSentenceBeingHighlightedState] =
     useState('');
-  const todayDateObj = new Date();
 
   const [isShowDueOnly, setIsShowDueOnly] = useState(false);
 
@@ -84,40 +134,16 @@ const DifficultSentencesContainer = ({
         <ScrollView
           contentInsetAdjustmentBehavior="automatic"
           style={{paddingBottom: 30}}>
-          <View style={{marginTop: 10}}>
-            {toggleableSentencesState.map((sentence, index) => {
-              const isLastEl = toggleableSentencesState.length === index + 1;
-              const nextDueTime =
-                sentence?.reviewData?.due || sentence.nextReview;
-              const dueStatus = calculateDueDate({
-                todayDateObj,
-                nextReview: nextDueTime,
-              });
-              const dueDate = getTimeDiffSRS({
-                dueTimeStamp: new Date(nextDueTime),
-                timeNow: todayDateObj,
-              });
-
-              return (
-                <DifficultSentenceWidget
-                  key={index}
-                  sentence={sentence}
-                  updateSentenceData={updateSentenceData}
-                  dueStatus={dueStatus}
-                  dueDate={dueDate}
-                  isLastEl={isLastEl}
-                  addSnippet={addSnippet}
-                  removeSnippet={removeSnippet}
-                  pureWords={pureWords}
-                  sentenceBeingHighlightedState={sentenceBeingHighlightedState}
-                  setSentenceBeingHighlightedState={
-                    setSentenceBeingHighlightedState
-                  }
-                  setToggleableSentencesState={setToggleableSentencesState}
-                />
-              );
-            })}
-          </View>
+          <Wrapper
+            toggleableSentencesState={toggleableSentencesState}
+            addSnippet={addSnippet}
+            updateSentenceData={updateSentenceData}
+            removeSnippet={removeSnippet}
+            pureWords={pureWords}
+            sentenceBeingHighlightedState={sentenceBeingHighlightedState}
+            setSentenceBeingHighlightedState={setSentenceBeingHighlightedState}
+            setToggleableSentencesState={setToggleableSentencesState}
+          />
         </ScrollView>
       </View>
     </ScreenContainerComponent>
