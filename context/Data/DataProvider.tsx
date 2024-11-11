@@ -113,7 +113,6 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
     } catch (error) {
       setUpdatePromptState('Error saving updating adhoc sentence');
       setTimeout(() => setUpdatePromptState(''), 2000);
-      console.log('## handleUpdateAdhocSentenceDifficult ', error);
     }
   };
 
@@ -168,10 +167,9 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
         context,
         topic,
         tags,
-        nextReview: setFutureReviewDate(new Date(), 3), //
+        nextReview: setFutureReviewDate(new Date(), 3), // update here!
       });
       setIsAdhocDataLoading(true);
-      // need to update difficult sentences
       setAdhocTargetLanguageSentencesState(prev => [...prev, adhocObject]);
       return adhocObject;
     } catch (error) {
@@ -281,16 +279,6 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
             return a.isCore === b.isCore ? 0 : a.isCore ? -1 : 1;
           }),
         );
-
-        // const allInitDifficultSentences = getSentencesMarkedAsDifficult(
-        //   targetLanguageLoadedContent,
-        //   targetLanguageLoadedSentences,
-        // )?.sort(sortByDueDate);
-        // const difficultSentencesWithSnippets = addSnippetsToDifficultSentences(
-        //   allInitDifficultSentences,
-        //   targetLanguageLoadedSnippetsWithSavedTag,
-        // );
-        // setDifficultSentencesState(difficultSentencesWithSnippets);
         setTargetLanguageWordsState(allStudyDataRes.targetLanguageLoadedWords);
         setAdhocTargetLanguageSentencesState(targetLanguageLoadedSentences);
       } catch (error) {
