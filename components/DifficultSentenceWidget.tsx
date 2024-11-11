@@ -69,6 +69,7 @@ const DifficultSentenceWidget = ({
 
   const url = getFirebaseAudioURL(audioId, languageSelectedState);
 
+  // filePath iccorrectingly has previous
   const {loadFile, filePath} = useMP3File(audioId);
 
   const {triggerLoadURL, isLoaded} = useLoadAudioInstance({
@@ -77,10 +78,12 @@ const DifficultSentenceWidget = ({
   });
 
   useEffect(() => {
+    // if (filePath?.includes(audioId) && !isLoaded) {
     if (filePath && !isLoaded) {
       triggerLoadURL();
     }
   }, [filePath, triggerLoadURL, isLoaded]);
+  // }, [filePath, triggerLoadURL, audioId, isLoaded]);
 
   const handleLoad = () => {
     loadFile(audioId, url);
