@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {Text, View} from 'react-native';
 import useHighlightWordToWordBank from '../hooks/useHighlightWordToWordBank';
 import Clipboard from '@react-native-clipboard/clipboard';

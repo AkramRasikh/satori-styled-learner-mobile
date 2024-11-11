@@ -1,5 +1,6 @@
 import {Text, TouchableOpacity, View} from 'react-native';
 import SoundWidget from './SoundWidget';
+import {useEffect, useRef} from 'react';
 
 const DifficultSentenceAudioContainer = ({
   isLoaded,
@@ -15,6 +16,14 @@ const DifficultSentenceAudioContainer = ({
   handleLoad,
   isMediaContent,
 }) => {
+  // const renderCount = useRef(1);
+
+  // // Increment the ref value on each render
+  // useEffect(() => {
+  //   renderCount.current += 1;
+  // });
+
+  // console.log('## DifficultSentenceAudioContainer', renderCount.current);
   if (isLoaded) {
     return (
       <SoundWidget

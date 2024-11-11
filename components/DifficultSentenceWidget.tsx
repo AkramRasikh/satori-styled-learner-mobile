@@ -86,10 +86,10 @@ const DifficultSentenceWidget = ({
   // }, []);
 
   useEffect(() => {
-    if (filePath) {
+    if (filePath && !isLoaded) {
       triggerLoadURL();
     }
-  }, [filePath, triggerLoadURL]);
+  }, [filePath, triggerLoadURL, isLoaded]);
 
   const handleLoad = () => {
     loadFile(audioId, url);

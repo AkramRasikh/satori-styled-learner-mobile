@@ -22,7 +22,7 @@ const Wrapper = React.memo(
   }) => {
     return (
       <View style={{marginTop: 10}}>
-        {toggleableSentencesState.map((sentence, index) => {
+        {toggleableSentencesState.slice(0, 1).map((sentence, index) => {
           const isLastEl = toggleableSentencesState.length === index + 1;
           const nextDueTime = sentence?.reviewData?.due || sentence.nextReview;
           const dueStatus = calculateDueDate({
