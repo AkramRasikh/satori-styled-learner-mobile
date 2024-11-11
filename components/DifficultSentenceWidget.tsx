@@ -24,7 +24,6 @@ const DifficultSentenceWidget = ({
   sentenceBeingHighlightedState,
   setSentenceBeingHighlightedState,
   dueDate,
-  setToggleableSentencesState,
 }) => {
   const [currentTimeState, setCurrentTimeState] = useState(0);
   const [showReviewSettings, setShowReviewSettings] = useState(false);
@@ -89,25 +88,18 @@ const DifficultSentenceWidget = ({
     loadFile(audioId, url);
   };
 
-  const handleDeleteContent = async () => {
-    try {
-      setToggleableSentencesState(prev =>
-        prev.filter(sentenceData => sentenceData.id !== sentence.id),
-      );
-      await updateSentenceData({
-        isAdhoc: sentence?.isAdhoc,
-        topicName: sentence.topic,
-        sentenceId: sentence.id,
-        fieldToUpdate: {
-          reviewData: null,
-          nextReview: null,
-          reviewHistory: null,
-        },
-      });
-      setShowReviewSettings(false);
-    } catch (error) {
-      console.log('## handleDeleteContent', {error});
-    }
+  const handleDeleteContent = () => {
+    updateSentenceData({
+      isAdhoc: sentence?.isAdhoc,
+      topicName: sentence.topic,
+      sentenceId: sentence.id,
+      fieldToUpdate: {
+        reviewData: null,
+        nextReview: null,
+        reviewHistory: null,
+      },
+    });
+    setShowReviewSettings(false);
   };
 
   const thisSentenceIsLoading = updatingSentenceState === sentence.id;

@@ -19,7 +19,6 @@ const Wrapper = React.memo(
     pureWords,
     sentenceBeingHighlightedState,
     setSentenceBeingHighlightedState,
-    setToggleableSentencesState,
   }) => {
     return (
       <View style={{marginTop: 10}}>
@@ -50,7 +49,6 @@ const Wrapper = React.memo(
               setSentenceBeingHighlightedState={
                 setSentenceBeingHighlightedState
               }
-              setToggleableSentencesState={setToggleableSentencesState}
             />
           );
         })}
@@ -196,7 +194,6 @@ const DifficultSentencesContainer = ({
             pureWords={pureWords}
             sentenceBeingHighlightedState={sentenceBeingHighlightedState}
             setSentenceBeingHighlightedState={setSentenceBeingHighlightedState}
-            setToggleableSentencesState={setToggleableSentencesState}
           />
         </ScrollView>
       </View>
