@@ -13,6 +13,7 @@ const ToastMessage = ({toastText}) => {
         backgroundColor: 'white',
         borderRadius: 10,
         borderWidth: 2,
+        opacity: 0.5,
       }}>
       <Text>{toastText}</Text>
     </View>

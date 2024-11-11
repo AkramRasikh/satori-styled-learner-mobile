@@ -13,7 +13,6 @@ const ScreenContainerComponent = ({
         backgroundColor: '#D3D3D3',
         minHeight: '100%',
         marginBottom,
-        opacity: 0.5,
       }}>
       {updatePromptState ? (
         <ToastMessage toastText={updatePromptState} />
