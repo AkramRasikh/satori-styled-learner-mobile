@@ -104,8 +104,10 @@ const DifficultSentencesContainer = ({
     sentenceId,
     fieldToUpdate,
   }) => {
+    const isRemoveFromDifficultSentences =
+      !isAdhoc && fieldToUpdate?.nextReview === null;
     try {
-      await updateSentenceData({
+      const updateDataRes = await updateSentenceData({
         isAdhoc,
         topicName,
         sentenceId,
@@ -114,6 +116,23 @@ const DifficultSentencesContainer = ({
       setToggleableSentencesState(prev =>
         prev.filter(sentenceData => sentenceData.id !== sentenceId),
       );
+      if (isRemoveFromDifficultSentences) {
+        setDifficultSentencesState(prev =>
+          prev.filter(sentenceData => sentenceData.id !== sentenceId),
+        );
+      } else {
+        setDifficultSentencesState(prev =>
+          prev.map(sentenceData => {
+            if (sentenceData.id === sentenceId) {
+              return {
+                ...sentenceData,
+                ...updateDataRes,
+              };
+            }
+            return sentenceData;
+          }),
+        );
+      }
     } catch (error) {
       console.log('## updateSentenceDataScreenLevel error', error);
     }

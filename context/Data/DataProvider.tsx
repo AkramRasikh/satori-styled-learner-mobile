@@ -123,8 +123,6 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
     fieldToUpdate,
     isAdhoc,
   }) => {
-    // const isRemoveFromDifficultSentences =
-    //   !isAdhoc && fieldToUpdate?.nextReview === null;
     const updateBackEnd = async () => {
       const resObj = isAdhoc
         ? await handleUpdateAdhocSentenceDifficult({
@@ -149,6 +147,7 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
       }
       setUpdatePromptState(`${topicName} updated!`);
       setTimeout(() => setUpdatePromptState(''), 2000);
+      return resObj;
     } catch (error) {
       console.log('## updateSentenceData', {error});
       setUpdatePromptState(`Error updating sentence for ${topicName}`);
