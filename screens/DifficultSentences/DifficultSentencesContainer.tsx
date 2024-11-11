@@ -6,6 +6,7 @@ import {calculateDueDate} from '../../utils/get-date-due-status';
 import PillButton from '../../components/PillButton';
 import {getTimeDiffSRS} from '../../utils/getTimeDiffSRS';
 import ScreenContainerComponent from '../../components/ScreenContainerComponent';
+import useLoadDifficultSentences from '../../hooks/useLoadDifficultSentences';
 
 const todayDateObj = new Date();
 
@@ -59,18 +60,27 @@ const Wrapper = React.memo(
 );
 
 const DifficultSentencesContainer = ({
-  difficultSentencesState,
   updateSentenceData,
   updatePromptState,
   addSnippet,
   removeSnippet,
   pureWords,
+  adhocTargetLanguageSentencesState,
+  targetLanguageLoadedContentMaster,
+  targetLanguageSnippetsState,
 }): React.JSX.Element => {
+  const [difficultSentencesState, setDifficultSentencesState] = useState([]);
   const [toggleableSentencesState, setToggleableSentencesState] = useState([]);
   const [sentenceBeingHighlightedState, setSentenceBeingHighlightedState] =
     useState('');
 
   const [isShowDueOnly, setIsShowDueOnly] = useState(false);
+
+  const {getAllDataReady} = useLoadDifficultSentences({
+    adhocTargetLanguageSentencesState,
+    targetLanguageLoadedContentMaster,
+    targetLanguageSnippetsState,
+  });
 
   const showDueInit = arr => {
     const filteredForDueOnly = [...arr].filter(sentence => {
@@ -88,6 +98,27 @@ const DifficultSentencesContainer = ({
     }
   };
 
+  const updateSentenceDataScreenLevel = async ({
+    isAdhoc,
+    topicName,
+    sentenceId,
+    fieldToUpdate,
+  }) => {
+    try {
+      await updateSentenceData({
+        isAdhoc,
+        topicName,
+        sentenceId,
+        fieldToUpdate,
+      });
+      setToggleableSentencesState(prev =>
+        prev.filter(sentenceData => sentenceData.id !== sentenceId),
+      );
+    } catch (error) {
+      console.log('## updateSentenceDataScreenLevel error', error);
+    }
+  };
+
   const showDueOnlyFunc = () => {
     if (!isShowDueOnly) {
       showDueInit(toggleableSentencesState);
@@ -98,8 +129,10 @@ const DifficultSentencesContainer = ({
   };
 
   useEffect(() => {
-    if (difficultSentencesState?.length > 0) {
-      showDueInit(difficultSentencesState);
+    const difficultSentencesData = getAllDataReady();
+    if (difficultSentencesData?.length > 0) {
+      setDifficultSentencesState(difficultSentencesData);
+      showDueInit(difficultSentencesData);
     }
   }, []);
 
@@ -137,7 +170,7 @@ const DifficultSentencesContainer = ({
           <Wrapper
             toggleableSentencesState={toggleableSentencesState}
             addSnippet={addSnippet}
-            updateSentenceData={updateSentenceData}
+            updateSentenceData={updateSentenceDataScreenLevel}
             removeSnippet={removeSnippet}
             pureWords={pureWords}
             sentenceBeingHighlightedState={sentenceBeingHighlightedState}

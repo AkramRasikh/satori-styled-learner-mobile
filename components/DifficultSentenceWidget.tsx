@@ -212,7 +212,6 @@ const DifficultSentenceWidget = ({
         setSentenceBeingHighlightedState={setSentenceBeingHighlightedState}
         updateSentenceData={updateSentenceData}
         sentence={sentence}
-        setToggleableSentencesState={setToggleableSentencesState}
       />
       <DifficultSentenceAudioContainer
         isLoaded={isLoaded}

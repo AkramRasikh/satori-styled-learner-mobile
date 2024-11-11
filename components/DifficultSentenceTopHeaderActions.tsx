@@ -4,7 +4,6 @@ import SRSTogglesMini from './SRSTogglesMini';
 const DifficultSentenceTopHeaderActions = ({
   isDueNow,
   updateSentenceData,
-  setToggleableSentencesState,
   sentence,
   sentenceBeingHighlightedState,
   handleSettingHighlightmode,
@@ -30,7 +29,6 @@ const DifficultSentenceTopHeaderActions = ({
         <SRSTogglesMini
           sentence={sentence}
           updateSentenceData={updateSentenceData}
-          setToggleableSentencesState={setToggleableSentencesState}
           setShowReviewSettings={setShowReviewSettings}
         />
       ) : null}

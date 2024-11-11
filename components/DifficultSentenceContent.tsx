@@ -23,7 +23,6 @@ const DifficultSentenceContent = ({
   sentenceId,
   updateSentenceData,
   sentence,
-  setToggleableSentencesState,
 }) => {
   const [highlightedIndices, setHighlightedIndices] = useState([]);
   const [containerWidth, setContainerWidth] = useState(0);
@@ -102,7 +101,6 @@ const DifficultSentenceContent = ({
       <DifficultSentenceTopHeaderActions
         isDueNow={isDueNow}
         updateSentenceData={updateSentenceData}
-        setToggleableSentencesState={setToggleableSentencesState}
         sentence={sentence}
         sentenceBeingHighlightedState={sentenceBeingHighlightedState}
         handleSettingHighlightmode={handleSettingHighlightmode}

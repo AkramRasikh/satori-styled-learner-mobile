@@ -1,4 +1,4 @@
-import {Text, TouchableOpacity, View} from 'react-native';
+import React, {Text, TouchableOpacity, View} from 'react-native';
 import {getNextScheduledOptions, srsRetentionKeyTypes} from '../srs-algo';
 import {getTimeDiffSRS} from '../utils/getTimeDiffSRS';
 import {getCardDataRelativeToNow, getDueDate} from './SRSTogglesSentences';
@@ -6,7 +6,6 @@ import {getCardDataRelativeToNow, getDueDate} from './SRSTogglesSentences';
 const SRSTogglesMini = ({
   sentence,
   updateSentenceData,
-  setToggleableSentencesState,
   setShowReviewSettings,
 }) => {
   const timeNow = new Date();
@@ -50,22 +49,15 @@ const SRSTogglesMini = ({
   const handleNextReview = async difficulty => {
     const nextReviewData = nextScheduledOptions[difficulty].card;
 
-    try {
-      setToggleableSentencesState(prev =>
-        prev.filter(sentenceData => sentenceData.id !== sentence.id),
-      );
-      await updateSentenceData({
-        isAdhoc,
-        topicName: sentence.topic,
-        sentenceId: sentence.id,
-        fieldToUpdate: {
-          reviewData: nextReviewData,
-          ...getShouldRemoveLegacyFields(),
-        },
-      });
-    } catch (error) {
-      console.log('## handleNextReview', {error});
-    }
+    updateSentenceData({
+      isAdhoc,
+      topicName: sentence.topic,
+      sentenceId: sentence.id,
+      fieldToUpdate: {
+        reviewData: nextReviewData,
+        ...getShouldRemoveLegacyFields(),
+      },
+    });
   };
 
   const againText = getTimeDiffSRS({dueTimeStamp: againDue, timeNow}) as string;

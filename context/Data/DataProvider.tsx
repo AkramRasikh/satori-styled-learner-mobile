@@ -6,7 +6,6 @@ import addAdhocSentenceAPI from '../../api/add-adhoc-sentence';
 import {setFutureReviewDate} from '../../components/ReviewSection';
 import updateAdhocSentenceAPI from '../../api/update-adhoc-sentence';
 import {addSnippetAPI, deleteSnippetAPI} from '../../api/snippet';
-import {sortByDueDate} from '../../utils/sort-by-due-date';
 import {makeArrayUnique} from '../../hooks/useHighlightWordToWordBank';
 import saveWordAPI from '../../api/save-word';
 import useLanguageSelector from './useLanguageSelector';
@@ -14,7 +13,6 @@ import useLanguageSelector from './useLanguageSelector';
 export const DataContext = createContext(null);
 
 export const DataProvider = ({children}: PropsWithChildren<{}>) => {
-  const [difficultSentencesState, setDifficultSentencesState] = useState([]);
   const [audioTempState, setAudioTempState] = useState({});
   const [homeScreenData, setHomeScreenData] = useState(null);
   const [updatingSentenceState, setUpdatingSentenceState] = useState('');
@@ -61,54 +59,6 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
       }));
     }
   };
-
-  const getSentencesMarkedAsDifficult = (
-    dataFromTargetLanguageContent,
-    adhocSentences,
-  ) => {
-    const difficultSentences = [];
-    dataFromTargetLanguageContent?.forEach(contentWidget => {
-      const thisTopic = contentWidget.title;
-      const isCore = contentWidget.isCore;
-      const isMediaContent =
-        contentWidget.origin === 'netflix' ||
-        contentWidget.origin === 'youtube';
-      const content = contentWidget.content;
-      content.forEach(sentenceInContent => {
-        if (
-          sentenceInContent?.nextReview ||
-          sentenceInContent?.reviewData?.due
-        ) {
-          difficultSentences.push({
-            topic: thisTopic,
-            isCore,
-            isMediaContent,
-            ...sentenceInContent,
-          });
-        }
-      });
-    });
-
-    adhocSentences.forEach(contentWidget => {
-      const thisTopic = contentWidget.topic;
-      const isCore = contentWidget?.isCore;
-      const nextReview = contentWidget?.nextReview;
-      if (nextReview || contentWidget?.reviewData?.due) {
-        difficultSentences.push({
-          topic: thisTopic,
-          isCore,
-          isAdhoc: true,
-          ...contentWidget,
-        });
-      }
-    });
-    return difficultSentences;
-  };
-
-  const filterDifficultSentenceOut = sentenceIdToRemove =>
-    difficultSentencesState.filter(
-      sentence => sentence.id !== sentenceIdToRemove,
-    );
 
   const updateLoadedContentStateAfterSentenceUpdate = ({
     sentenceId,
@@ -173,8 +123,8 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
     fieldToUpdate,
     isAdhoc,
   }) => {
-    const isRemoveFromDifficultSentences =
-      !isAdhoc && fieldToUpdate?.nextReview === null;
+    // const isRemoveFromDifficultSentences =
+    //   !isAdhoc && fieldToUpdate?.nextReview === null;
     const updateBackEnd = async () => {
       const resObj = isAdhoc
         ? await handleUpdateAdhocSentenceDifficult({
@@ -190,32 +140,14 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
 
       return resObj;
     };
-    const stateUpdateLogic = resObj => {
-      const updatedSentences = isRemoveFromDifficultSentences
-        ? filterDifficultSentenceOut(sentenceId)
-        : difficultSentencesState.map(item => {
-            if (item.id === sentenceId) {
-              return {
-                ...item,
-                ...resObj,
-              };
-            }
-
-            return item;
-          });
-
-      if (!isAdhoc) {
-        updateLoadedContentStateAfterSentenceUpdate({topicName, sentenceId});
-      }
-
-      setDifficultSentencesState(updatedSentences);
-      setUpdatePromptState(`${topicName} updated!`);
-    };
 
     try {
       setUpdatingSentenceState(sentenceId);
       const resObj = await updateBackEnd();
-      stateUpdateLogic(resObj);
+      if (!isAdhoc) {
+        updateLoadedContentStateAfterSentenceUpdate({topicName, sentenceId});
+      }
+      setUpdatePromptState(`${topicName} updated!`);
       setTimeout(() => setUpdatePromptState(''), 2000);
     } catch (error) {
       console.log('## updateSentenceData', {error});
@@ -258,29 +190,29 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
         {...snippetDataFromAPI, saved: true},
       ]);
 
-      const thisSnippetsSentence = snippetDataFromAPI.sentenceId;
-      const isInDiffSentenceArr = difficultSentencesState.some(
-        diffSentence => diffSentence.id === thisSnippetsSentence,
-      );
-      if (isInDiffSentenceArr) {
-        const updatedDifficultSentencesWithSnippet =
-          difficultSentencesState.map(diffSentence => {
-            if (diffSentence.id === thisSnippetsSentence) {
-              const hasSnippets = diffSentence?.snippets?.length > 0;
-              return {
-                ...diffSentence,
-                snippets: hasSnippets
-                  ? [
-                      ...diffSentence.snippets,
-                      {...snippetDataFromAPI, saved: true},
-                    ]
-                  : [{...snippetDataFromAPI, saved: true}],
-              };
-            }
-            return diffSentence;
-          });
-        setDifficultSentencesState(updatedDifficultSentencesWithSnippet);
-      }
+      // const thisSnippetsSentence = snippetDataFromAPI.sentenceId;
+      // const isInDiffSentenceArr = difficultSentencesState.some(
+      //   diffSentence => diffSentence.id === thisSnippetsSentence,
+      // );
+      // if (isInDiffSentenceArr) {
+      //   const updatedDifficultSentencesWithSnippet =
+      //     difficultSentencesState.map(diffSentence => {
+      //       if (diffSentence.id === thisSnippetsSentence) {
+      //         const hasSnippets = diffSentence?.snippets?.length > 0;
+      //         return {
+      //           ...diffSentence,
+      //           snippets: hasSnippets
+      //             ? [
+      //                 ...diffSentence.snippets,
+      //                 {...snippetDataFromAPI, saved: true},
+      //               ]
+      //             : [{...snippetDataFromAPI, saved: true}],
+      //         };
+      //       }
+      //       return diffSentence;
+      //     });
+      // setDifficultSentencesState(updatedDifficultSentencesWithSnippet);
+      // }
 
       return snippetDataFromAPI;
     } catch (error) {
@@ -298,27 +230,27 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
       );
       setTargetLanguageSnippetsState(updatedSnippets);
 
-      const isInDiffSentenceArr = difficultSentencesState.some(
-        diffSentence => diffSentence.id === sentenceId,
-      );
-      if (isInDiffSentenceArr) {
-        const updatedDifficultSentencesWithSnippet =
-          difficultSentencesState.map(diffSentence => {
-            if (diffSentence.id === sentenceId) {
-              const hasSnippets = diffSentence?.snippets?.length > 0;
-              return {
-                ...diffSentence,
-                snippets: hasSnippets
-                  ? diffSentence.snippets.filter(
-                      nestedSnippet => nestedSnippet.id !== deletedSnippetId,
-                    )
-                  : [],
-              };
-            }
-            return diffSentence;
-          });
-        setDifficultSentencesState(updatedDifficultSentencesWithSnippet);
-      }
+      // const isInDiffSentenceArr = difficultSentencesState.some(
+      //   diffSentence => diffSentence.id === sentenceId,
+      // );
+      // if (isInDiffSentenceArr) {
+      // const updatedDifficultSentencesWithSnippet =
+      //   difficultSentencesState.map(diffSentence => {
+      //     if (diffSentence.id === sentenceId) {
+      //       const hasSnippets = diffSentence?.snippets?.length > 0;
+      //       return {
+      //         ...diffSentence,
+      //         snippets: hasSnippets
+      //           ? diffSentence.snippets.filter(
+      //               nestedSnippet => nestedSnippet.id !== deletedSnippetId,
+      //             )
+      //           : [],
+      //       };
+      //     }
+      //     return diffSentence;
+      //   });
+      // setDifficultSentencesState(updatedDifficultSentencesWithSnippet);
+      // }
     } catch (error) {
       console.log('## error removeSnippet (DataProvider.tsx)');
       setUpdatePromptState('Error removing snippet');
@@ -326,19 +258,19 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
     }
   };
 
-  const addSnippetsToDifficultSentences = (
-    allInitDifficultSentences,
-    targetLanguageLoadedSnippetsWithSavedTag,
-  ) => {
-    return allInitDifficultSentences.map(sentenceData => {
-      return {
-        ...sentenceData,
-        snippets: targetLanguageLoadedSnippetsWithSavedTag.filter(
-          snippetData => snippetData.sentenceId === sentenceData.id,
-        ),
-      };
-    });
-  };
+  // const addSnippetsToDifficultSentences = (
+  //   allInitDifficultSentences,
+  //   targetLanguageLoadedSnippetsWithSavedTag,
+  // ) => {
+  //   return allInitDifficultSentences.map(sentenceData => {
+  //     return {
+  //       ...sentenceData,
+  //       snippets: targetLanguageLoadedSnippetsWithSavedTag.filter(
+  //         snippetData => snippetData.sentenceId === sentenceData.id,
+  //       ),
+  //     };
+  //   });
+  // };
 
   const saveWordFirebase = async ({
     highlightedWord,
@@ -388,6 +320,8 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
         const allStudyDataRes = await getAllData({language});
         const targetLanguageLoadedSentences =
           allStudyDataRes.targetLanguageLoadedSentences;
+        const targetLanguageLoadedContent =
+          allStudyDataRes.targetLanguageLoadedContent;
         const targetLanguageLoadedSnippets =
           allStudyDataRes.targetLanguageLoadedSnippets;
         const targetLanguageLoadedSnippetsWithSavedTag =
@@ -400,20 +334,20 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
           targetLanguageLoadedSnippetsWithSavedTag,
         );
         settargetLanguageLoadedContentMaster(
-          allStudyDataRes.targetLanguageLoadedContent?.sort((a, b) => {
+          targetLanguageLoadedContent?.sort((a, b) => {
             return a.isCore === b.isCore ? 0 : a.isCore ? -1 : 1;
           }),
         );
 
-        const allInitDifficultSentences = getSentencesMarkedAsDifficult(
-          allStudyDataRes.targetLanguageLoadedContent,
-          targetLanguageLoadedSentences,
-        )?.sort(sortByDueDate);
-        const difficultSentencesWithSnippets = addSnippetsToDifficultSentences(
-          allInitDifficultSentences,
-          targetLanguageLoadedSnippetsWithSavedTag,
-        );
-        setDifficultSentencesState(difficultSentencesWithSnippets);
+        // const allInitDifficultSentences = getSentencesMarkedAsDifficult(
+        //   targetLanguageLoadedContent,
+        //   targetLanguageLoadedSentences,
+        // )?.sort(sortByDueDate);
+        // const difficultSentencesWithSnippets = addSnippetsToDifficultSentences(
+        //   allInitDifficultSentences,
+        //   targetLanguageLoadedSnippetsWithSavedTag,
+        // );
+        // setDifficultSentencesState(difficultSentencesWithSnippets);
         setTargetLanguageWordsState(allStudyDataRes.targetLanguageLoadedWords);
         setAdhocTargetLanguageSentencesState(targetLanguageLoadedSentences);
       } catch (error) {
@@ -431,7 +365,6 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
   return (
     <DataContext.Provider
       value={{
-        difficultSentencesState,
         dataProviderIsLoading,
         provdiderError,
         homeScreenData,
