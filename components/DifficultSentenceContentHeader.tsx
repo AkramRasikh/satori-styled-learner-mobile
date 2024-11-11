@@ -1,4 +1,4 @@
-import {Text, TouchableOpacity, View} from 'react-native';
+import {Text, View} from 'react-native';
 
 const DueColorMarker = ({dueColorState}) => (
   <View
@@ -17,8 +17,6 @@ export const DifficultSentenceContentHeader = ({
   dueColorState,
   isCore,
   dueText,
-  setShowReviewSettings,
-  showReviewSettings,
 }) => {
   return (
     <View style={{display: 'flex', flexDirection: 'row', gap: 5}}>
@@ -37,10 +35,7 @@ export const DifficultSentenceContentHeader = ({
           }}>
           {topic} {isCore ? '🧠' : ''}
         </Text>
-        <TouchableOpacity
-          onPress={() => setShowReviewSettings(!showReviewSettings)}>
-          <Text>{dueText} 😓</Text>
-        </TouchableOpacity>
+        <Text>{dueText} 😓</Text>
       </View>
     </View>
   );

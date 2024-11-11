@@ -15,7 +15,6 @@ const DifficultSentenceContent = ({
   baseLang,
   dueText,
   setShowReviewSettings,
-  showReviewSettings,
   dueColorState,
   pureWords,
   onLongPress,
@@ -99,8 +98,6 @@ const DifficultSentenceContent = ({
         dueColorState={dueColorState}
         isCore={isCore}
         dueText={dueText}
-        showReviewSettings={showReviewSettings}
-        setShowReviewSettings={setShowReviewSettings}
       />
       <DifficultSentenceTopHeaderActions
         isDueNow={isDueNow}
