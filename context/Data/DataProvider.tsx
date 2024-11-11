@@ -192,31 +192,6 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
         ...prev,
         {...snippetDataFromAPI, saved: true},
       ]);
-
-      // const thisSnippetsSentence = snippetDataFromAPI.sentenceId;
-      // const isInDiffSentenceArr = difficultSentencesState.some(
-      //   diffSentence => diffSentence.id === thisSnippetsSentence,
-      // );
-      // if (isInDiffSentenceArr) {
-      //   const updatedDifficultSentencesWithSnippet =
-      //     difficultSentencesState.map(diffSentence => {
-      //       if (diffSentence.id === thisSnippetsSentence) {
-      //         const hasSnippets = diffSentence?.snippets?.length > 0;
-      //         return {
-      //           ...diffSentence,
-      //           snippets: hasSnippets
-      //             ? [
-      //                 ...diffSentence.snippets,
-      //                 {...snippetDataFromAPI, saved: true},
-      //               ]
-      //             : [{...snippetDataFromAPI, saved: true}],
-      //         };
-      //       }
-      //       return diffSentence;
-      //     });
-      // setDifficultSentencesState(updatedDifficultSentencesWithSnippet);
-      // }
-
       return snippetDataFromAPI;
     } catch (error) {
       console.log('## error adding snippet (DataProvider.tsx)');
@@ -225,55 +200,20 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
     }
   };
 
-  const removeSnippet = async ({snippetId, sentenceId}) => {
+  const removeSnippet = async ({snippetId}) => {
     try {
       const deletedSnippetId = await deleteSnippetAPI({snippetId, language});
       const updatedSnippets = targetLanguageSnippetsState.filter(
         item => item.id !== deletedSnippetId,
       );
       setTargetLanguageSnippetsState(updatedSnippets);
-
-      // const isInDiffSentenceArr = difficultSentencesState.some(
-      //   diffSentence => diffSentence.id === sentenceId,
-      // );
-      // if (isInDiffSentenceArr) {
-      // const updatedDifficultSentencesWithSnippet =
-      //   difficultSentencesState.map(diffSentence => {
-      //     if (diffSentence.id === sentenceId) {
-      //       const hasSnippets = diffSentence?.snippets?.length > 0;
-      //       return {
-      //         ...diffSentence,
-      //         snippets: hasSnippets
-      //           ? diffSentence.snippets.filter(
-      //               nestedSnippet => nestedSnippet.id !== deletedSnippetId,
-      //             )
-      //           : [],
-      //       };
-      //     }
-      //     return diffSentence;
-      //   });
-      // setDifficultSentencesState(updatedDifficultSentencesWithSnippet);
-      // }
+      return deletedSnippetId;
     } catch (error) {
       console.log('## error removeSnippet (DataProvider.tsx)');
       setUpdatePromptState('Error removing snippet');
       setTimeout(() => setUpdatePromptState(''), 2000);
     }
   };
-
-  // const addSnippetsToDifficultSentences = (
-  //   allInitDifficultSentences,
-  //   targetLanguageLoadedSnippetsWithSavedTag,
-  // ) => {
-  //   return allInitDifficultSentences.map(sentenceData => {
-  //     return {
-  //       ...sentenceData,
-  //       snippets: targetLanguageLoadedSnippetsWithSavedTag.filter(
-  //         snippetData => snippetData.sentenceId === sentenceData.id,
-  //       ),
-  //     };
-  //   });
-  // };
 
   const saveWordFirebase = async ({
     highlightedWord,

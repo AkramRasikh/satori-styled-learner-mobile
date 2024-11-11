@@ -7,6 +7,7 @@ import PillButton from '../../components/PillButton';
 import {getTimeDiffSRS} from '../../utils/getTimeDiffSRS';
 import ScreenContainerComponent from '../../components/ScreenContainerComponent';
 import useLoadDifficultSentences from '../../hooks/useLoadDifficultSentences';
+import useData from '../../context/Data/useData';
 
 const todayDateObj = new Date();
 
@@ -57,22 +58,24 @@ const Wrapper = React.memo(
   },
 );
 
-const DifficultSentencesContainer = ({
-  updateSentenceData,
-  updatePromptState,
-  addSnippet,
-  removeSnippet,
-  pureWords,
-  adhocTargetLanguageSentencesState,
-  targetLanguageLoadedContentMaster,
-  targetLanguageSnippetsState,
-}): React.JSX.Element => {
+const DifficultSentencesContainer = (): React.JSX.Element => {
   const [difficultSentencesState, setDifficultSentencesState] = useState([]);
   const [toggleableSentencesState, setToggleableSentencesState] = useState([]);
   const [sentenceBeingHighlightedState, setSentenceBeingHighlightedState] =
     useState('');
 
   const [isShowDueOnly, setIsShowDueOnly] = useState(false);
+
+  const {
+    updateSentenceData,
+    updatePromptState,
+    addSnippet,
+    removeSnippet,
+    pureWords,
+    adhocTargetLanguageSentencesState,
+    targetLanguageLoadedContentMaster,
+    targetLanguageSnippetsState,
+  } = useData();
 
   const {getAllDataReady} = useLoadDifficultSentences({
     adhocTargetLanguageSentencesState,
@@ -93,6 +96,64 @@ const DifficultSentencesContainer = ({
       setIsShowDueOnly(!isShowDueOnly);
     } else {
       setToggleableSentencesState(difficultSentencesState);
+    }
+  };
+
+  const handleRemoveSnippet = async ({snippetId, sentenceId}) => {
+    try {
+      const deletedSnippetId = await removeSnippet({
+        snippetId,
+        sentenceId,
+      });
+      const updatedDifficultSentencesWithSnippet = difficultSentencesState.map(
+        diffSentence => {
+          if (diffSentence.id === sentenceId) {
+            const hasSnippets = diffSentence?.snippets?.length > 0;
+            return {
+              ...diffSentence,
+              snippets: hasSnippets
+                ? diffSentence.snippets.filter(
+                    nestedSnippet => nestedSnippet.id !== deletedSnippetId,
+                  )
+                : [],
+            };
+          }
+          return diffSentence;
+        },
+      );
+
+      setDifficultSentencesState(updatedDifficultSentencesWithSnippet);
+    } catch (error) {
+      console.log('## handleRemoveSnippet error (diff sentence)', error);
+    }
+  };
+
+  const handleAddSnippet = async snippetData => {
+    try {
+      const snippetDataFromAPI = await addSnippet(snippetData);
+
+      const thisSnippetsSentence = snippetDataFromAPI.sentenceId;
+
+      const updatedDifficultSentencesWithSnippet = difficultSentencesState.map(
+        diffSentence => {
+          if (diffSentence.id === thisSnippetsSentence) {
+            const hasSnippets = diffSentence?.snippets?.length > 0;
+            return {
+              ...diffSentence,
+              snippets: hasSnippets
+                ? [
+                    ...diffSentence.snippets,
+                    {...snippetDataFromAPI, saved: true},
+                  ]
+                : [{...snippetDataFromAPI, saved: true}],
+            };
+          }
+          return diffSentence;
+        },
+      );
+      setDifficultSentencesState(updatedDifficultSentencesWithSnippet);
+    } catch (error) {
+      console.log('## Error Difficult sentences adding snippet', error);
     }
   };
 
@@ -188,9 +249,9 @@ const DifficultSentencesContainer = ({
           style={{paddingBottom: 30}}>
           <Wrapper
             toggleableSentencesState={toggleableSentencesState}
-            addSnippet={addSnippet}
+            addSnippet={handleAddSnippet}
             updateSentenceData={updateSentenceDataScreenLevel}
-            removeSnippet={removeSnippet}
+            removeSnippet={handleRemoveSnippet}
             pureWords={pureWords}
             sentenceBeingHighlightedState={sentenceBeingHighlightedState}
             setSentenceBeingHighlightedState={setSentenceBeingHighlightedState}

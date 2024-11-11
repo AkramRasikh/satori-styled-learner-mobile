@@ -50,7 +50,7 @@ const ThisSnippetContainer = ({
     }
   }, [masterAudio, setMasterAudio, isPlaying]);
 
-  const handleSaveSnippet = async () => {
+  const handleSaveSnippet = () => {
     const formattedSnippet = {
       ...snippet,
       pointOfAudioOnClick: undefined,
@@ -58,16 +58,11 @@ const ThisSnippetContainer = ({
       pointInAudio: adjustableStartTime,
       duration: adjustableDuration,
     };
-    try {
-      const thisSnippetDataFromAPI = await addSnippet(formattedSnippet);
-      setMiniSnippets(prev =>
-        prev.filter(
-          snippetData => snippetData.id !== thisSnippetDataFromAPI.id,
-        ),
-      );
-    } catch (error) {
-      console.log('## handleSaveSnippet', error);
-    }
+
+    const addSnippetRes = addSnippet(formattedSnippet);
+    setMiniSnippets(prev =>
+      prev.filter(snippetData => snippetData.id !== addSnippetRes.id),
+    );
   };
 
   const handleRemoveFromTempSnippets = () => {
@@ -76,15 +71,12 @@ const ThisSnippetContainer = ({
     );
   };
 
-  const handleRemoveSnippet = async () => {
-    try {
-      await removeSnippet({
-        snippetId: snippet.id,
-        sentenceId: snippet.sentenceId,
-      });
-    } catch (error) {
-      console.log('## handleRemoveSnippet', error);
-    }
+  const handleRemoveSnippet = () => {
+    removeSnippet({
+      snippetId: snippet.id,
+      sentenceId: snippet.sentenceId,
+    });
+    handleRemoveFromTempSnippets();
   };
 
   const {handleSetEarlierTime, handleSetDuration} = useSnippetControls({
