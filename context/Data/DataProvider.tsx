@@ -143,7 +143,11 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
       setUpdatingSentenceState(sentenceId);
       const resObj = await updateBackEnd();
       if (!isAdhoc) {
-        updateLoadedContentStateAfterSentenceUpdate({topicName, sentenceId});
+        updateLoadedContentStateAfterSentenceUpdate({
+          topicName,
+          sentenceId,
+          resObj,
+        });
       }
       setUpdatePromptState(`${topicName} updated!`);
       setTimeout(() => setUpdatePromptState(''), 2000);

@@ -117,12 +117,13 @@ const DifficultSentencesContainer = ({
         prev.filter(sentenceData => sentenceData.id !== sentenceId),
       );
       if (isRemoveFromDifficultSentences) {
-        setDifficultSentencesState(prev =>
-          prev.filter(sentenceData => sentenceData.id !== sentenceId),
+        const updatedDifficultSentences = difficultSentencesState.filter(
+          sentenceData => sentenceData.id !== sentenceId,
         );
+        setDifficultSentencesState(updatedDifficultSentences);
       } else {
-        setDifficultSentencesState(prev =>
-          prev.map(sentenceData => {
+        const updatedDifficultSentences = difficultSentencesState.map(
+          sentenceData => {
             if (sentenceData.id === sentenceId) {
               return {
                 ...sentenceData,
@@ -130,8 +131,9 @@ const DifficultSentencesContainer = ({
               };
             }
             return sentenceData;
-          }),
+          },
         );
+        setDifficultSentencesState(updatedDifficultSentences);
       }
     } catch (error) {
       console.log('## updateSentenceDataScreenLevel error', error);
