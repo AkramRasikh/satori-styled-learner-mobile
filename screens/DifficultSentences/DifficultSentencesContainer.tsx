@@ -37,7 +37,7 @@ const Wrapper = React.memo(
 
           return (
             <DifficultSentenceWidget
-              key={index}
+              key={sentence.id}
               sentence={sentence}
               updateSentenceData={updateSentenceData}
               dueStatus={dueStatus}

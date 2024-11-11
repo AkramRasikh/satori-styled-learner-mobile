@@ -1,4 +1,4 @@
-import {Text, View} from 'react-native';
+import React, {Text, View} from 'react-native';
 import useLoadAudioInstance from '../hooks/useLoadAudioInstance';
 import {useEffect, useMemo, useRef, useState} from 'react';
 import {getFirebaseAudioURL} from '../hooks/useGetCombinedAudioData';
@@ -77,12 +77,10 @@ const DifficultSentenceWidget = ({
   });
 
   useEffect(() => {
-    // if (filePath?.includes(audioId) && !isLoaded) {
     if (filePath && !isLoaded) {
       triggerLoadURL();
     }
   }, [filePath, triggerLoadURL, isLoaded]);
-  // }, [filePath, triggerLoadURL, audioId, isLoaded]);
 
   const handleLoad = () => {
     loadFile(audioId, url);
@@ -152,7 +150,6 @@ const DifficultSentenceWidget = ({
 
   return (
     <View
-      key={id}
       style={{
         display: 'flex',
         flexDirection: 'column',

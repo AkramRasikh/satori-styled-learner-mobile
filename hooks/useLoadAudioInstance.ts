@@ -10,7 +10,10 @@ const useLoadAudioInstance = ({soundRef, url}) => {
   };
 
   useEffect(() => {
-    if (!triggerHook || !url) {
+    if (!triggerHook) {
+      return;
+    }
+    if (!url) {
       return;
     }
 
