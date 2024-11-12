@@ -148,6 +148,7 @@ const LineContainer = ({
   setMiniSnippets,
   playSound,
   handleAddSnippet,
+  highlightTargetTextState,
 }) => {
   const handleRemoveFromTempSnippets = snippetId => {
     setMiniSnippets(prev =>
@@ -172,6 +173,15 @@ const LineContainer = ({
               item => id === item.sentenceId,
             );
 
+            console.log('## ', {highlightTargetTextState});
+
+            const isHighlightedText = highlightTargetTextState === id;
+            const highlightedTextState = isHighlightedText
+              ? 'orange'
+              : focusThisSentence
+              ? 'yellow'
+              : 'transparent';
+
             return (
               <View
                 style={{
@@ -181,9 +191,7 @@ const LineContainer = ({
                 key={id}>
                 <Text
                   style={{
-                    backgroundColor: focusThisSentence
-                      ? 'yellow'
-                      : 'transparent',
+                    backgroundColor: highlightedTextState,
                     fontSize: 20,
                   }}>
                   <SatoriLine

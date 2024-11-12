@@ -78,7 +78,7 @@ function App(): React.JSX.Element {
                 {props => <WordStudy {...props} />}
               </Stack.Screen>
               <Stack.Screen name="DifficultSentences">
-                {() => <DifficultSentences />}
+                {props => <DifficultSentences {...props} />}
               </Stack.Screen>
             </Stack.Navigator>
           </NavigationContainer>

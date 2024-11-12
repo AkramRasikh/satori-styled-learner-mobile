@@ -23,6 +23,7 @@ const DifficultSentenceContent = ({
   sentenceId,
   updateSentenceData,
   sentence,
+  navigation,
 }) => {
   const [highlightedIndices, setHighlightedIndices] = useState([]);
   const [containerWidth, setContainerWidth] = useState(0);
@@ -57,6 +58,13 @@ const DifficultSentenceContent = ({
 
   const handleOpenGoogleTranslate = () => {
     openGoogleTranslateApp(targetLang);
+  };
+
+  const handleNavigation = () => {
+    navigation.navigate('ContentScreen', {
+      selectedTopic: topic,
+      targetSentenceId: sentenceId,
+    });
   };
 
   const handleSaveWordToFB = ({highlightedWord, highlightedWordSentenceId}) => {
@@ -97,6 +105,7 @@ const DifficultSentenceContent = ({
         dueColorState={dueColorState}
         isCore={isCore}
         dueText={dueText}
+        handleNavigation={handleNavigation}
       />
       <DifficultSentenceTopHeaderActions
         isDueNow={isDueNow}

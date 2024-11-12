@@ -24,6 +24,7 @@ const DifficultSentenceWidget = ({
   sentenceBeingHighlightedState,
   setSentenceBeingHighlightedState,
   dueDate,
+  navigation,
 }) => {
   const [currentTimeState, setCurrentTimeState] = useState(0);
   const [showReviewSettings, setShowReviewSettings] = useState(false);
@@ -204,6 +205,7 @@ const DifficultSentenceWidget = ({
         setSentenceBeingHighlightedState={setSentenceBeingHighlightedState}
         updateSentenceData={updateSentenceData}
         sentence={sentence}
+        navigation={navigation}
       />
       <DifficultSentenceAudioContainer
         isLoaded={isLoaded}

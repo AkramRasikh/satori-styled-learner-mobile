@@ -27,7 +27,7 @@ const ContentScreen = () => {
 
   const {targetLanguageLoadedContentMaster, targetLanguageSnippetsState} =
     useData();
-  const {selectedTopic} = route.params;
+  const {selectedTopic, targetSentenceId} = route.params;
 
   useEffect(() => {
     setSelectedContentState(
@@ -138,6 +138,7 @@ const ContentScreen = () => {
           triggerSentenceIdUpdate={triggerSentenceIdUpdate}
           setTriggerSentenceIdUpdate={setTriggerSentenceIdUpdate}
           setSelectedSnippetsState={setSelectedSnippetsState}
+          targetSentenceId={targetSentenceId}
         />
       </View>
     </ScreenContainerComponent>

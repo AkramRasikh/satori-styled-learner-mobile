@@ -20,6 +20,7 @@ const Wrapper = React.memo(
     pureWords,
     sentenceBeingHighlightedState,
     setSentenceBeingHighlightedState,
+    navigation,
   }) => {
     return (
       <View style={{marginTop: 10}}>
@@ -50,6 +51,7 @@ const Wrapper = React.memo(
               setSentenceBeingHighlightedState={
                 setSentenceBeingHighlightedState
               }
+              navigation={navigation}
             />
           );
         })}
@@ -58,7 +60,7 @@ const Wrapper = React.memo(
   },
 );
 
-const DifficultSentencesContainer = (): React.JSX.Element => {
+const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
   const [difficultSentencesState, setDifficultSentencesState] = useState([]);
   const [toggleableSentencesState, setToggleableSentencesState] = useState([]);
   const [sentenceBeingHighlightedState, setSentenceBeingHighlightedState] =
@@ -216,7 +218,7 @@ const DifficultSentencesContainer = (): React.JSX.Element => {
     }
   }, []);
 
-  if (toggleableSentencesState.length === 0) {
+  if (difficultSentencesState.length === 0) {
     return <LoadingScreen>Getting ready!</LoadingScreen>;
   }
 
@@ -248,13 +250,14 @@ const DifficultSentencesContainer = (): React.JSX.Element => {
           contentInsetAdjustmentBehavior="automatic"
           style={{paddingBottom: 30}}>
           <Wrapper
-            toggleableSentencesState={toggleableSentencesState}
+            toggleableSentencesState={difficultSentencesState}
             addSnippet={handleAddSnippet}
             updateSentenceData={updateSentenceDataScreenLevel}
             removeSnippet={handleRemoveSnippet}
             pureWords={pureWords}
             sentenceBeingHighlightedState={sentenceBeingHighlightedState}
             setSentenceBeingHighlightedState={setSentenceBeingHighlightedState}
+            navigation={navigation}
           />
         </ScrollView>
       </View>

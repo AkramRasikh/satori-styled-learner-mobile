@@ -3,7 +3,7 @@ import DifficultSentencesContainer from './DifficultSentencesContainer';
 import LoadingScreen from '../../components/LoadingScreen';
 import useData from '../../context/Data/useData';
 
-const DifficultSentences = (): React.JSX.Element => {
+const DifficultSentences = ({navigation}): React.JSX.Element => {
   const data = useData();
 
   const dataProviderIsLoading = data.dataProviderIsLoading;
@@ -12,7 +12,7 @@ const DifficultSentences = (): React.JSX.Element => {
     return <LoadingScreen>Loading difficult sentences...</LoadingScreen>;
   }
 
-  return <DifficultSentencesContainer />;
+  return <DifficultSentencesContainer navigation={navigation} />;
 };
 
 export default DifficultSentences;

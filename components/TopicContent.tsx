@@ -42,6 +42,7 @@ const TopicContent = ({
   loadedContent,
   loadedSnippets,
   setSelectedSnippetsState,
+  targetSentenceId,
 }) => {
   const [masterPlay, setMasterPlay] = useState('');
   const [currentTimeState, setCurrentTimeState] = useState(0);
@@ -59,6 +60,7 @@ const TopicContent = ({
   >([]);
   const [initTargetLanguageWordsList, setInitTargetLanguageWordsList] =
     useState(null);
+  const [highlightTargetTextState, setHighlightTargetTextState] = useState('');
   const [updateWordList, setUpdateWordList] = useState(false);
   const [showAdhocSentence, setShowAdhocSentence] = useState(false);
   const [audioLoadingProgress, setAudioLoadingProgress] = useState(0);
@@ -205,6 +207,12 @@ const TopicContent = ({
       fieldToUpdate,
     });
   };
+
+  useEffect(() => {
+    if (targetSentenceId && !(!isLoaded || formattedData?.length === 0)) {
+      setHighlightTargetTextState(targetSentenceId);
+    }
+  }, [targetSentenceId, isLoaded, formattedData]);
 
   useEffect(() => {
     if (targetLanguageLoadedWords?.length !== initTargetLanguageWordsList) {
@@ -477,6 +485,7 @@ const TopicContent = ({
               playSound={playFromHere}
               setMiniSnippets={setMiniSnippets}
               handleAddSnippet={handleAddSnippet}
+              highlightTargetTextState={highlightTargetTextState}
             />
           </ScrollView>
         </View>
@@ -547,6 +556,7 @@ const TopicContent = ({
           playSound={playFromHere}
           setMiniSnippets={setMiniSnippets}
           handleAddSnippet={handleAddSnippet}
+          highlightTargetTextState={highlightTargetTextState}
         />
       </ScrollView>
       <ReviewSection

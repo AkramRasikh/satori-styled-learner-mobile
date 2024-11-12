@@ -1,4 +1,4 @@
-import {Text, View} from 'react-native';
+import {Text, TouchableOpacity, View} from 'react-native';
 
 const DueColorMarker = ({dueColorState}) => (
   <View
@@ -17,6 +17,7 @@ export const DifficultSentenceContentHeader = ({
   dueColorState,
   isCore,
   dueText,
+  handleNavigation,
 }) => {
   return (
     <View style={{display: 'flex', flexDirection: 'row', gap: 5}}>
@@ -28,13 +29,15 @@ export const DifficultSentenceContentHeader = ({
           justifyContent: 'space-between',
           width: '100%',
         }}>
-        <Text
-          style={{
-            fontStyle: 'italic',
-            textDecorationLine: 'underline',
-          }}>
-          {topic} {isCore ? '🧠' : ''}
-        </Text>
+        <TouchableOpacity onPress={handleNavigation}>
+          <Text
+            style={{
+              fontStyle: 'italic',
+              textDecorationLine: 'underline',
+            }}>
+            {topic} {isCore ? '🧠' : ''}
+          </Text>
+        </TouchableOpacity>
         <Text>{dueText} 😓</Text>
       </View>
     </View>
