@@ -250,7 +250,7 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
           contentInsetAdjustmentBehavior="automatic"
           style={{paddingBottom: 30}}>
           <Wrapper
-            toggleableSentencesState={difficultSentencesState}
+            toggleableSentencesState={toggleableSentencesState}
             addSnippet={handleAddSnippet}
             updateSentenceData={updateSentenceDataScreenLevel}
             removeSnippet={handleRemoveSnippet}

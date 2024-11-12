@@ -2,7 +2,6 @@ import {useEffect} from 'react';
 
 const useSetTopicAudioDataInState = ({
   structuredUnifiedData,
-
   topicName,
   contentWithTimeStamps,
   topicData,
