@@ -19,7 +19,8 @@ export const mapSentenceIdsToSeconds = ({
 
     const startAt = isFirst ? 0 : item.startAt;
     const endAt = isLast ? duration : item.endAt - 1;
-    const secondsArr = Array.from({length: endAt - startAt + 1}, (_, i) => {
+    const arrayLength = Math.round(endAt - startAt + 1);
+    const secondsArr = Array.from({length: arrayLength}, (_, i) => {
       arrOfSecondsMappedIds.push(item.id);
       return startAt + i;
     });
