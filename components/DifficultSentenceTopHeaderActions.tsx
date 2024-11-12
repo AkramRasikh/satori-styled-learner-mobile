@@ -1,5 +1,6 @@
 import {Text, TouchableOpacity, View} from 'react-native';
 import SRSTogglesMini from './SRSTogglesMini';
+import {srsRetentionKeyTypes} from '../srs-algo';
 
 const DifficultSentenceTopHeaderActions = ({
   isDueNow,
@@ -30,6 +31,7 @@ const DifficultSentenceTopHeaderActions = ({
           sentence={sentence}
           updateSentenceData={updateSentenceData}
           setShowReviewSettings={setShowReviewSettings}
+          contentType={srsRetentionKeyTypes.sentences}
         />
       ) : null}
       <View

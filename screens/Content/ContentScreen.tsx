@@ -68,24 +68,17 @@ const ContentScreen = () => {
     }
   };
 
-  const updateSentenceData = async ({topicName, sentenceId, fieldToUpdate}) => {
+  const updateSentenceData = async ({sentenceId, fieldToUpdate}) => {
     try {
       const resObj = await updateSentenceDataAPI({
-        topicName,
+        topicName: selectedTopic,
         sentenceId,
         fieldToUpdate,
         language: languageSelectedState,
       });
 
       if (resObj) {
-        const thisTopicDataIndex = targetLanguageLoadedContentState.findIndex(
-          topic => topic.title === topicName,
-        );
-
-        const thisTopicData =
-          targetLanguageLoadedContentState[thisTopicDataIndex];
-
-        const thisTopicUpdateContent = thisTopicData.content.map(
+        const thisTopicUpdateContent = selectedContentState.content.map(
           sentenceData => {
             if (sentenceData.id === sentenceId) {
               return {
@@ -96,28 +89,17 @@ const ContentScreen = () => {
             return sentenceData;
           },
         );
-
-        const newTopicState = {
-          ...thisTopicData,
-          content: thisTopicUpdateContent,
-        };
-
-        const filteredTopics = targetLanguageLoadedContentState.map(topic => {
-          if (topic.title !== topicName) {
-            return topic;
-          }
-          return newTopicState;
-        });
-        setTargetLanguageLoadedContentState(filteredTopics);
-        setUpdatePromptState(`${topicName} updated!`);
+        setUpdatePromptState(`${selectedTopic} updated!`);
         setTimeout(() => setUpdatePromptState(''), 3000);
         setTriggerSentenceIdUpdate({id: sentenceId, fieldToUpdate: resObj});
-        setSelectedContentState(newTopicState);
-        setSelectedSnippetsState(selectedContentState.snippets);
+        setSelectedContentState({
+          ...selectedContentState,
+          content: thisTopicUpdateContent,
+        });
       }
     } catch (error) {
       console.log('## updateSentenceData', {error});
-      setUpdatePromptState(`Error updating sentence for ${topicName}!`);
+      setUpdatePromptState(`Error updating sentence for ${selectedTopic}!`);
       setTimeout(() => setUpdatePromptState(''), 1000);
     }
   };

@@ -1,5 +1,5 @@
 import React, {Text, TouchableOpacity, View} from 'react-native';
-import {getNextScheduledOptions, srsRetentionKeyTypes} from '../srs-algo';
+import {getNextScheduledOptions} from '../srs-algo';
 import {getTimeDiffSRS} from '../utils/getTimeDiffSRS';
 import {getCardDataRelativeToNow, getDueDate} from './SRSTogglesSentences';
 
@@ -7,6 +7,7 @@ const SRSTogglesMini = ({
   sentence,
   updateSentenceData,
   setShowReviewSettings,
+  contentType,
 }) => {
   const timeNow = new Date();
 
@@ -39,7 +40,7 @@ const SRSTogglesMini = ({
 
   const nextScheduledOptions = getNextScheduledOptions({
     card: cardDataRelativeToNow,
-    contentType: srsRetentionKeyTypes.vocab,
+    contentType,
   });
   const againDue = nextScheduledOptions['1'].card.due;
   const hardDue = nextScheduledOptions['2'].card.due;

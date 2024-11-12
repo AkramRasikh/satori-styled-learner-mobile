@@ -1,39 +1,13 @@
-import {Button, Text, TouchableOpacity, View} from 'react-native';
-import {
-  getEmptyCard,
-  getNextScheduledOptions,
-  initCardWithPreviousDateInfo,
-  srsRetentionKeyTypes,
-} from '../srs-algo';
-import {useState} from 'react';
+import React, {Text, TouchableOpacity, View} from 'react-native';
+import {srsRetentionKeyTypes} from '../srs-algo';
 import {getTimeDiffSRS} from '../utils/getTimeDiffSRS';
-import NumberIncrementor from './NumberIncrementor';
+import SRSTogglesMini from './SRSTogglesMini';
 
 const getDueDate = reviewData => {
   if (reviewData?.due) {
     return new Date(reviewData?.due);
   }
   return null;
-};
-const getCardDataRelativeToNow = ({
-  hasDueDate,
-  reviewData,
-  nextReview,
-  reviewHistory,
-}) => {
-  if (hasDueDate) {
-    return reviewData;
-  }
-
-  if (nextReview) {
-    return initCardWithPreviousDateInfo({
-      lastReviewDate: reviewHistory[reviewHistory.length - 1],
-      dueDate: nextReview,
-      reps: reviewHistory.length,
-    });
-  }
-
-  return getEmptyCard();
 };
 
 const SatoriLineSRS = ({
@@ -42,8 +16,8 @@ const SatoriLineSRS = ({
   updateSentenceData,
   setShowReviewSettings,
 }) => {
-  const [nextReviewDateState, setNextReviewDateState] = useState('');
-  const [futureDaysState, setFutureDaysState] = useState(3);
+  console.log('## SatoriLineSRS topicName', topicName);
+
   const timeNow = new Date();
   const tomorrow = new Date();
   tomorrow.setDate(tomorrow.getDate() + 1);
@@ -53,16 +27,8 @@ const SatoriLineSRS = ({
   const hasDueDate = getDueDate(reviewData);
 
   const nextReview = sentence?.nextReview;
-  const reviewHistory = sentence?.reviewHistory;
 
   const hasLegacyReviewSystem = !reviewData?.due && nextReview;
-
-  const cardDataRelativeToNow = getCardDataRelativeToNow({
-    hasDueDate,
-    reviewData,
-    nextReview,
-    reviewHistory,
-  });
 
   const getShouldRemoveLegacyFields = () => {
     if (hasLegacyReviewSystem) {
@@ -73,11 +39,6 @@ const SatoriLineSRS = ({
     }
     return {};
   };
-
-  const nextScheduledOptions = getNextScheduledOptions({
-    card: cardDataRelativeToNow,
-    contentType: srsRetentionKeyTypes.sentences,
-  });
 
   const handleRemoveSentenceReview = async () => {
     try {
@@ -95,62 +56,9 @@ const SatoriLineSRS = ({
     }
   };
 
-  const handleSetManualTime = async daysToManualAdd => {
-    const newDate = new Date();
-    newDate.setDate(newDate.getDate() + daysToManualAdd);
-    const nextReviewData = {
-      ...cardDataRelativeToNow,
-      due: newDate,
-    };
-    try {
-      await updateSentenceData({
-        topicName,
-        sentenceId: sentence.id,
-        fieldToUpdate: {
-          reviewData: nextReviewData,
-          ...getShouldRemoveLegacyFields(),
-        },
-      });
-      setNextReviewDateState(newDate.toISOString());
-      setShowReviewSettings(false);
-    } catch (error) {
-      console.log('## handleSetManualTime error', error);
-    }
-  };
-
-  const handleNextReview = async difficulty => {
-    const nextReviewData = nextScheduledOptions[difficulty].card;
-
-    try {
-      await updateSentenceData({
-        topicName,
-        sentenceId: sentence.id,
-        fieldToUpdate: {
-          reviewData: nextReviewData,
-          ...getShouldRemoveLegacyFields(),
-        },
-      });
-      setNextReviewDateState(nextReviewData.due);
-    } catch (error) {
-      console.log('## handleNextReview', {error});
-    }
-  };
-
   const hasDueDateInFuture = new Date(hasDueDate) > timeNow;
 
-  const tomorrowHardCodedTxt = getTimeDiffSRS({
-    dueTimeStamp: tomorrow,
-    timeNow,
-  }) as string;
-  const goodDue = nextScheduledOptions['3'].card.due;
-  const easyDue = nextScheduledOptions['4'].card.due;
-  const easyText = getTimeDiffSRS({dueTimeStamp: easyDue, timeNow}) as string;
-  const goodDueText = getTimeDiffSRS({
-    dueTimeStamp: goodDue,
-    timeNow,
-  }) as string;
-
-  const showDeleteBtn = nextReviewDateState || hasDueDateInFuture || nextReview;
+  const showDeleteBtn = hasDueDateInFuture || nextReview;
 
   return (
     <View
@@ -160,50 +68,19 @@ const SatoriLineSRS = ({
         justifyContent: 'space-between',
         width: '100%',
       }}>
-      {nextReviewDateState ? (
-        <View style={{padding: 10}}>
-          <Text>
-            {getTimeDiffSRS({dueTimeStamp: nextReviewDateState, timeNow})}
-          </Text>
-        </View>
-      ) : hasDueDateInFuture ? (
+      {hasDueDateInFuture ? (
         <View style={{padding: 10, alignSelf: 'center'}}>
           <Text>
             Due in {getTimeDiffSRS({dueTimeStamp: hasDueDate, timeNow})}
           </Text>
         </View>
       ) : (
-        <View
-          style={{
-            display: 'flex',
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            gap: 10,
-          }}>
-          {!nextReviewDateState || !hasDueDateInFuture || !nextReview ? (
-            <View>
-              <Button
-                title={tomorrowHardCodedTxt}
-                onPress={() => handleSetManualTime(1)}
-              />
-            </View>
-          ) : (
-            <View>
-              <Button
-                title={goodDueText}
-                onPress={() => handleNextReview('3')}
-              />
-            </View>
-          )}
-          <View>
-            <Button title={easyText} onPress={() => handleNextReview('4')} />
-          </View>
-          <NumberIncrementor
-            futureDaysState={futureDaysState}
-            setFutureDaysState={setFutureDaysState}
-            handleSetManualTime={handleSetManualTime}
-          />
-        </View>
+        <SRSTogglesMini
+          sentence={sentence}
+          updateSentenceData={updateSentenceData}
+          setShowReviewSettings={setShowReviewSettings}
+          contentType={srsRetentionKeyTypes.sentences}
+        />
       )}
       {showDeleteBtn && (
         <TouchableOpacity
