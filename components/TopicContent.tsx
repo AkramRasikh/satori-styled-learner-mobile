@@ -268,6 +268,10 @@ const TopicContent = ({
     }
   };
 
+  const handleRemoveWords = () => {
+    setLongPressedWord([]);
+  };
+
   const durationsLengths = durations.length;
   const topicDataLengths = content?.length;
 
@@ -444,7 +448,10 @@ const TopicContent = ({
             handleVideoMode={handleVideoMode}
           />
           {longPressedWord?.length ? (
-            <LongPressedWord getLongPressedWordData={getLongPressedWordData} />
+            <LongPressedWord
+              getLongPressedWordData={getLongPressedWordData}
+              handleRemoveWords={handleRemoveWords}
+            />
           ) : null}
           {hasUnifiedMP3File && (
             <VideoPlayer
@@ -523,7 +530,10 @@ const TopicContent = ({
         handleVideoMode={handleVideoMode}
       />
       {longPressedWord?.length ? (
-        <LongPressedWord getLongPressedWordData={getLongPressedWordData} />
+        <LongPressedWord
+          getLongPressedWordData={getLongPressedWordData}
+          handleRemoveWords={handleRemoveWords}
+        />
       ) : null}
       <ScrollView
         contentInsetAdjustmentBehavior="automatic"
