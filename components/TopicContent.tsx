@@ -241,16 +241,9 @@ const TopicContent = ({
     pauseSound();
   };
 
-  const orderedContent = content?.map((item, index) => {
-    return {
-      ...item,
-      position: index,
-    };
-  });
-
   const durations = useGetCombinedAudioData({
     hasUnifiedMP3File,
-    audioFiles: orderedContent,
+    audioFiles: content,
     hasAlreadyBeenUnified,
     setAudioLoadingProgress,
     isMediaContent,

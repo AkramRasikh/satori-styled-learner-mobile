@@ -173,8 +173,6 @@ const LineContainer = ({
               item => id === item.sentenceId,
             );
 
-            console.log('## ', {highlightTargetTextState});
-
             const isHighlightedText = highlightTargetTextState === id;
             const highlightedTextState = isHighlightedText
               ? 'orange'

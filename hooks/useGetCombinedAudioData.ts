@@ -46,7 +46,6 @@ const useGetCombinedAudioData = ({
           setAudioLoadingProgress?.(prev => (prev += 1));
           return {
             ...audioItem,
-            thisDuration,
             startAt,
             endAt: startAt + thisDuration,
           };
@@ -64,7 +63,7 @@ const useGetCombinedAudioData = ({
                   'Failed to load the sound (useGetCombinedAudioData)',
                   error,
                 );
-                resolve({id: item.id, duration: 0});
+                resolve({id: item.id});
                 return;
               }
               setAudioLoadingProgress?.(prev => (prev += 1));
@@ -74,8 +73,6 @@ const useGetCombinedAudioData = ({
               resolve({
                 ...item,
                 id: item.id,
-                position: index,
-                duration,
                 startAt,
                 endAt,
               });
