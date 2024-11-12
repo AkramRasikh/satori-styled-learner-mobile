@@ -1,21 +1,21 @@
 import {useEffect} from 'react';
 
 export const mapSentenceIdsToSeconds = ({
-  contentArr,
+  contentWithTimeStamps,
   duration,
   isVideoModeState,
   realStartTime,
 }) => {
-  if (!contentArr || !duration) {
+  if (!contentWithTimeStamps || !duration) {
     return null;
   }
   const arrOfSecondsMappedIds: string[] = isVideoModeState
     ? Array.from({length: realStartTime}, () => 'placehoddlderId')
     : [];
 
-  contentArr.forEach((item, index) => {
+  contentWithTimeStamps.forEach((item, index) => {
     const isFirst = index === 0;
-    const isLast = index + 1 === contentArr.length;
+    const isLast = index + 1 === contentWithTimeStamps.length;
 
     const startAt = isFirst ? 0 : item.startAt;
     const endAt = isLast ? duration : item.endAt - 1;
@@ -33,7 +33,7 @@ export const mapSentenceIdsToSeconds = ({
 };
 
 const useSetSecondsToSentenceIds = ({
-  durations,
+  contentWithTimeStamps,
   soundDuration,
   secondsToSentencesMapState,
   setSecondsToSentencesMapState,
@@ -41,14 +41,14 @@ const useSetSecondsToSentenceIds = ({
   realStartTime,
 }) => {
   useEffect(() => {
-    const durationsLengths = durations.length;
+    const hasFormattedContent = contentWithTimeStamps.length;
     if (
       soundDuration &&
-      durationsLengths > 0 &&
+      hasFormattedContent > 0 &&
       secondsToSentencesMapState?.length === 0
     ) {
       const mappedIds = mapSentenceIdsToSeconds({
-        contentArr: durations,
+        contentWithTimeStamps,
         duration: soundDuration,
         isVideoModeState,
         realStartTime,
@@ -56,9 +56,11 @@ const useSetSecondsToSentenceIds = ({
       setSecondsToSentencesMapState(mappedIds);
     }
   }, [
+    realStartTime,
+    isVideoModeState,
     soundDuration,
     secondsToSentencesMapState,
-    durations,
+    contentWithTimeStamps,
     setSecondsToSentencesMapState,
   ]);
 };

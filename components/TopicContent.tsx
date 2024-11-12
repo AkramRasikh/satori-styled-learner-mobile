@@ -241,7 +241,7 @@ const TopicContent = ({
     pauseSound();
   };
 
-  const durations = useGetCombinedAudioData({
+  const contentWithTimeStamps = useGetCombinedAudioData({
     hasUnifiedMP3File,
     audioFiles: content,
     hasAlreadyBeenUnified,
@@ -264,9 +264,6 @@ const TopicContent = ({
   const handleRemoveWords = () => {
     setLongPressedWord([]);
   };
-
-  const durationsLengths = durations.length;
-  const topicDataLengths = content?.length;
 
   const handleAddSnippet = async snippetData => {
     try {
@@ -295,7 +292,7 @@ const TopicContent = ({
     setMiniSnippets,
     longPressedWord,
     getSafeText,
-    topicData: durations,
+    topicData: contentWithTimeStamps,
     miniSnippets,
     topicName,
     masterPlay,
@@ -323,20 +320,18 @@ const TopicContent = ({
     setFormattedData,
     formatTextForTargetWords,
     formattedData,
-    durations,
+    contentWithTimeStamps,
     setUpdateWordList,
     updateWordList,
   });
 
   useSetTopicAudioDataInState({
     structuredUnifiedData,
-    durationsLengths,
     topicName,
-    durations,
+    contentWithTimeStamps,
     topicData: content,
     hasAlreadyBeenUnified,
     setStructuredUnifiedData,
-    topicDataLengths,
   });
 
   useTrackCurrentTimeState({
@@ -351,7 +346,7 @@ const TopicContent = ({
   });
 
   useSetSecondsToSentenceIds({
-    durations,
+    contentWithTimeStamps,
     soundDuration,
     secondsToSentencesMapState,
     setSecondsToSentencesMapState,
@@ -384,7 +379,6 @@ const TopicContent = ({
   }, [
     topicName,
     setStructuredUnifiedData,
-    durations,
     triggerSentenceIdUpdate,
     formattedData,
     content,
@@ -410,7 +404,7 @@ const TopicContent = ({
     return (
       <TopicContentLoader
         audioLoadingProgress={audioLoadingProgress}
-        topicDataLengths={topicDataLengths}
+        topicDataLengths={content.length}
       />
     );
   }

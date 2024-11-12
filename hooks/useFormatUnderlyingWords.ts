@@ -4,12 +4,12 @@ const useFormatUnderlyingWords = ({
   setFormattedData,
   formatTextForTargetWords,
   formattedData,
-  durations,
+  contentWithTimeStamps,
   setUpdateWordList,
   updateWordList,
 }) => {
   useEffect(() => {
-    if (formattedData?.length === 0 && durations?.length > 0) {
+    if (formattedData?.length === 0 && contentWithTimeStamps?.length > 0) {
       setFormattedData(formatTextForTargetWords());
     } else if (formattedData?.length > 0 && updateWordList) {
       setFormattedData(formatTextForTargetWords());
@@ -17,7 +17,7 @@ const useFormatUnderlyingWords = ({
     }
   }, [
     formattedData,
-    durations,
+    contentWithTimeStamps,
     formatTextForTargetWords,
     updateWordList,
     setFormattedData,

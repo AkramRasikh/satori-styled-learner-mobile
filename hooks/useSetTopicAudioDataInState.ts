@@ -2,30 +2,30 @@ import {useEffect} from 'react';
 
 const useSetTopicAudioDataInState = ({
   structuredUnifiedData,
-  durationsLengths,
+
   topicName,
-  durations,
+  contentWithTimeStamps,
   topicData,
   hasAlreadyBeenUnified,
   setStructuredUnifiedData,
-  topicDataLengths,
 }) => {
   useEffect(() => {
-    if (!hasAlreadyBeenUnified && durationsLengths === topicDataLengths) {
+    if (
+      !hasAlreadyBeenUnified &&
+      contentWithTimeStamps.length === topicData.length
+    ) {
       setStructuredUnifiedData(prevState => ({
         ...prevState,
-        [topicName]: {content: durations},
+        [topicName]: {content: contentWithTimeStamps},
       }));
     }
   }, [
     structuredUnifiedData,
-    durationsLengths,
     topicName,
-    durations,
+    contentWithTimeStamps,
     topicData,
     hasAlreadyBeenUnified,
     setStructuredUnifiedData,
-    topicDataLengths,
   ]);
 };
 
