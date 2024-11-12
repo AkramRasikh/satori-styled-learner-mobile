@@ -174,7 +174,7 @@ const TopicContent = ({
       setIsVideoModeState(true);
       setSecondsToSentencesMapState(
         mapSentenceIdsToSeconds({
-          contentArr: durations,
+          contentWithTimeStamps,
           duration: soundDuration,
           isVideoModeState: true,
           realStartTime,
@@ -184,7 +184,7 @@ const TopicContent = ({
       setIsVideoModeState(false);
       setSecondsToSentencesMapState(
         mapSentenceIdsToSeconds({
-          contentArr: durations,
+          contentWithTimeStamps,
           duration: soundDuration,
           isVideoModeState: false,
           realStartTime,
