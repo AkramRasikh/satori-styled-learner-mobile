@@ -10,7 +10,7 @@ export const mapSentenceIdsToSeconds = ({
     return null;
   }
   const arrOfSecondsMappedIds: string[] = isVideoModeState
-    ? Array.from({length: realStartTime}, () => 'placehoddlderId')
+    ? Array.from({length: realStartTime}, () => 'placeholderId')
     : [];
 
   contentWithTimeStamps.forEach((item, index) => {
