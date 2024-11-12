@@ -16,8 +16,6 @@ const SatoriLineSRS = ({
   updateSentenceData,
   setShowReviewSettings,
 }) => {
-  console.log('## SatoriLineSRS topicName', topicName);
-
   const timeNow = new Date();
   const tomorrow = new Date();
   tomorrow.setDate(tomorrow.getDate() + 1);
