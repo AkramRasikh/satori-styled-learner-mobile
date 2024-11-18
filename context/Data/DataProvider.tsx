@@ -258,7 +258,7 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const allStudyDataRes = await getAllData({language});
+        const allStudyDataRes = await getAllData({language, freshData: false});
         const targetLanguageLoadedSentences =
           allStudyDataRes.targetLanguageLoadedSentences;
         const targetLanguageLoadedContent =

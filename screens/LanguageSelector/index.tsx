@@ -2,6 +2,7 @@ import React from 'react';
 import {Image, Text, TouchableOpacity, View} from 'react-native';
 import useLanguageSelector from '../../context/Data/useLanguageSelector';
 import {LanguageEnum} from '../../context/Data/LanguageSelectorProvider';
+import {clearStorage} from '../../api/load-content';
 
 const LanguageSelector = ({navigation}): React.JSX.Element => {
   const {setLanguageSelectedState} = useLanguageSelector();
@@ -52,6 +53,17 @@ const LanguageSelector = ({navigation}): React.JSX.Element => {
               style={{height: 100, resizeMode: 'contain'}}
               source={require(`../../assets/images/japanese-flag.png`)}
             />
+          </TouchableOpacity>
+        </View>
+        <View
+          style={{
+            marginTop: 40,
+            backgroundColor: 'grey',
+            padding: 10,
+            borderRadius: 10,
+          }}>
+          <TouchableOpacity onPress={clearStorage}>
+            <Text>Clear Storage 🗑️</Text>
           </TouchableOpacity>
         </View>
       </View>
