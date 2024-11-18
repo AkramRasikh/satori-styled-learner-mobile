@@ -1,5 +1,4 @@
 import {Text, TouchableOpacity, View} from 'react-native';
-import {getEmptyCard} from '../srs-algo';
 import useOpenGoogleTranslate from './useOpenGoogleTranslate';
 
 const SatoriLineControls = ({
@@ -13,9 +12,6 @@ const SatoriLineControls = ({
   showEng,
   setShowNotes,
   showNotes,
-  hasBeenMarkedAsDifficult,
-  topicName,
-  updateSentenceData,
   highlightMode,
   setHighlightMode,
   setShowWordHintState,
@@ -23,26 +19,6 @@ const SatoriLineControls = ({
   hasWordHint,
 }) => {
   const {openGoogleTranslateApp} = useOpenGoogleTranslate();
-
-  const handleQuickNextDayReview = async () => {
-    const newDate = new Date();
-    newDate.setDate(newDate.getDate() + 1);
-    const nextReviewData = {
-      ...getEmptyCard(),
-      due: newDate,
-    };
-    try {
-      await updateSentenceData({
-        topicName,
-        sentenceId: topicSentence.id,
-        fieldToUpdate: {
-          reviewData: nextReviewData,
-        },
-      });
-    } catch (error) {
-      console.log('## handleQuickNextDayReview error', error);
-    }
-  };
 
   const handleOpenGoogle = () => {
     openGoogleTranslateApp(topicSentence.targetLang);
@@ -83,11 +59,6 @@ const SatoriLineControls = ({
           <TouchableOpacity
             onPress={() => setShowWordHintState(!showWordHintState)}>
             <Text>🔍</Text>
-          </TouchableOpacity>
-        ) : null}
-        {!hasBeenMarkedAsDifficult ? (
-          <TouchableOpacity onPress={handleQuickNextDayReview}>
-            <Text>➕</Text>
           </TouchableOpacity>
         ) : null}
         {highlightMode ? (
