@@ -40,8 +40,6 @@ const TopicContent = ({
   triggerSentenceIdUpdate,
   setTriggerSentenceIdUpdate,
   loadedContent,
-  loadedSnippets,
-  setSelectedSnippetsState,
   targetSentenceId,
 }) => {
   const [masterPlay, setMasterPlay] = useState('');
@@ -67,6 +65,7 @@ const TopicContent = ({
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
   const [currentVideoTimeState, setCurrentVideoTimeState] = useState(0);
   const [videoDurationState, setVideoDurationState] = useState(0);
+  const [selectedSnippetsState, setSelectedSnippetsState] = useState([]);
 
   const {languageSelectedState} = useLanguageSelector();
   const {
@@ -77,7 +76,14 @@ const TopicContent = ({
     addSnippet,
     targetLanguageWordsState: targetLanguageLoadedWords,
     removeSnippet,
+    targetLanguageSnippetsState,
   } = useData();
+
+  useEffect(() => {
+    setSelectedSnippetsState(
+      targetLanguageSnippetsState?.filter(item => item.topicName === topicName),
+    );
+  }, []);
 
   const {reviewHistory, content, nextReview} = loadedContent;
 
@@ -93,10 +99,10 @@ const TopicContent = ({
   const hasAlreadyBeenUnified = structuredUnifiedData[topicName]?.content;
   const snippetsLocalAndDb = useMemo(() => {
     return mergeAndRemoveDuplicates(
-      loadedSnippets?.sort((a, b) => a.pointInAudio - b.pointInAudio),
+      selectedSnippetsState?.sort((a, b) => a.pointInAudio - b.pointInAudio),
       miniSnippets,
     );
-  }, [loadedSnippets, miniSnippets]);
+  }, [selectedSnippetsState, miniSnippets]);
 
   const soundRef = useRef<Sound>(null);
   const videoRef = useRef<VideoRef>(null);

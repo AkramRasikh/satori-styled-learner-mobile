@@ -13,30 +13,22 @@ const ContentScreen = () => {
 
   const [triggerSentenceIdUpdate, setTriggerSentenceIdUpdate] = useState(null);
   const [selectedContentState, setSelectedContentState] = useState(null);
-  const [selectedSnippetsState, setSelectedSnippetsState] = useState([]);
 
   const {
-    targetLanguageSnippetsState,
     targetLanguageLoadedContentMasterState,
     updateSentenceViaContent,
     updateContentMetaData,
     updatePromptState,
   } = useData();
+
   const {targetSentenceId, selectedTopicIndex} = route.params;
 
   const selectedTopic =
     targetLanguageLoadedContentMasterState[selectedTopicIndex].title;
 
   useEffect(() => {
-    const contentState =
-      targetLanguageLoadedContentMasterState[selectedTopicIndex];
     setSelectedContentState(
       targetLanguageLoadedContentMasterState[selectedTopicIndex],
-    );
-    setSelectedSnippetsState(
-      targetLanguageSnippetsState?.filter(
-        item => item.topicName === contentState.title,
-      ),
     );
   }, []);
 
@@ -74,12 +66,10 @@ const ContentScreen = () => {
         <TopicContent
           topicName={selectedTopic}
           loadedContent={selectedContentState}
-          loadedSnippets={selectedSnippetsState}
           updateTopicMetaData={updateMetaData}
           updateSentenceData={updateSentenceDataFunc}
           triggerSentenceIdUpdate={triggerSentenceIdUpdate}
           setTriggerSentenceIdUpdate={setTriggerSentenceIdUpdate}
-          setSelectedSnippetsState={setSelectedSnippetsState}
           targetSentenceId={targetSentenceId}
         />
       </View>
