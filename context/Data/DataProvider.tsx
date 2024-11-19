@@ -14,7 +14,6 @@ export const DataContext = createContext(null);
 
 export const DataProvider = ({children}: PropsWithChildren<{}>) => {
   const [audioTempState, setAudioTempState] = useState({});
-  const [homeScreenData, setHomeScreenData] = useState(null);
   const [updatingSentenceState, setUpdatingSentenceState] = useState('');
   const [
     targetLanguageLoadedContentMaster,
@@ -259,18 +258,14 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
     const fetchData = async () => {
       try {
         const allStudyDataRes = await getAllData({language, freshData: false});
-        const targetLanguageLoadedSentences =
-          allStudyDataRes.targetLanguageLoadedSentences;
-        const targetLanguageLoadedContent =
-          allStudyDataRes.targetLanguageLoadedContent;
-        const targetLanguageLoadedSnippets =
-          allStudyDataRes.targetLanguageLoadedSnippets;
+        const targetLanguageLoadedSentences = allStudyDataRes.sentences;
+        const targetLanguageLoadedContent = allStudyDataRes.content;
+        const targetLanguageLoadedSnippets = allStudyDataRes.snippets;
         const targetLanguageLoadedSnippetsWithSavedTag =
           targetLanguageLoadedSnippets?.map(item => ({
             ...item,
             saved: true,
           }));
-        setHomeScreenData(allStudyDataRes);
         setTargetLanguageSnippetsState(
           targetLanguageLoadedSnippetsWithSavedTag,
         );
@@ -279,7 +274,7 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
             return a.isCore === b.isCore ? 0 : a.isCore ? -1 : 1;
           }),
         );
-        setTargetLanguageWordsState(allStudyDataRes.targetLanguageLoadedWords);
+        setTargetLanguageWordsState(allStudyDataRes.words);
         setAdhocTargetLanguageSentencesState(targetLanguageLoadedSentences);
       } catch (error) {
         console.log('## DataProvider error: ', error);
@@ -298,7 +293,6 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
       value={{
         dataProviderIsLoading,
         provdiderError,
-        homeScreenData,
         saveAudioInstance,
         audioTempState,
         updateSentenceData,

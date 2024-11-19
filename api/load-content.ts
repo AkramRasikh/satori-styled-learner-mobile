@@ -36,7 +36,6 @@ const loadAllContent = async ({language}) => {
 
 const getFreshData = async ({language}) => {
   const withMock = process.env.USE_MOCK_DB;
-  const dataStorageKey = `${language}-data`;
 
   try {
     const loadedData = withMock
@@ -63,25 +62,58 @@ const getFreshData = async ({language}) => {
       getNestedObjectData(adhocSentences)?.adhocSentences || [];
 
     const data = {
-      targetLanguageLoadedContent,
-      targetLanguageLoadedWords,
-      targetLanguageLoadedSnippets,
-      targetLanguageLoadedSentences,
+      content: targetLanguageLoadedContent,
+      words: targetLanguageLoadedWords,
+      snippets: targetLanguageLoadedSnippets,
+      sentences: targetLanguageLoadedSentences,
     };
 
-    await storeDataLocalStorage(dataStorageKey, data);
+    const dataStorageKeyPrefix = `${language}-data-`;
+    await storeDataLocalStorage(dataStorageKeyPrefix + content, data.content);
+    await storeDataLocalStorage(dataStorageKeyPrefix + words, data.words);
+    await storeDataLocalStorage(dataStorageKeyPrefix + snippets, data.snippets);
+    await storeDataLocalStorage(
+      dataStorageKeyPrefix + adhocSentences,
+      data.sentences,
+    );
     return data;
   } catch (error) {
     console.error('## Error getFreshData', error);
   }
 };
 
-export const getAllData = async ({language, freshData}) => {
-  const dataStorageKey = `${language}-data`;
+const getAllDataLocally = async ({language}) => {
+  try {
+    const dataStorageKeyPrefix = `${language}-data-`;
+    const contentData = await getLocalStorageData(
+      dataStorageKeyPrefix + content,
+    );
+    if (!contentData) {
+      return null;
+    }
+    const wordsData = await getLocalStorageData(dataStorageKeyPrefix + words);
+    const snippetsData = await getLocalStorageData(
+      dataStorageKeyPrefix + snippets,
+    );
+    const sentencesData = await getLocalStorageData(
+      dataStorageKeyPrefix + adhocSentences,
+    );
 
+    return {
+      content: contentData,
+      words: wordsData,
+      snippets: snippetsData,
+      sentences: sentencesData,
+    };
+  } catch (error) {
+    console.log('## Error getAllDataLocally', error);
+  }
+};
+
+export const getAllData = async ({language, freshData}) => {
   try {
     if (!freshData) {
-      const storageData = await getLocalStorageData(dataStorageKey);
+      const storageData = await getAllDataLocally({language});
       return storageData ?? (await getFreshData({language}));
     }
 
@@ -89,10 +121,10 @@ export const getAllData = async ({language, freshData}) => {
   } catch (error) {
     console.error('Error fetching data:', error);
     return {
-      satoriData: [],
-      contextHelperData: [],
-      targetLanguageLoadedSnippets: [],
-      targetLanguageLoadedSentences: [],
+      content: [],
+      words: [],
+      snippets: [],
+      sentences: [],
     };
   }
 };
