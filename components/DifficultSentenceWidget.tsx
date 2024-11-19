@@ -97,6 +97,7 @@ const DifficultSentenceWidget = ({
         nextReview: null,
         reviewHistory: null,
       },
+      contentIndex: sentence?.contentIndex,
     });
     setShowReviewSettings(false);
   };

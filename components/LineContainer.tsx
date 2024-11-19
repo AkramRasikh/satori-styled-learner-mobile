@@ -149,6 +149,7 @@ const LineContainer = ({
   playSound,
   handleAddSnippet,
   highlightTargetTextState,
+  contentIndex,
 }) => {
   const handleRemoveFromTempSnippets = snippetId => {
     setMiniSnippets(prev =>
@@ -212,6 +213,7 @@ const LineContainer = ({
                     onLongPress={onLongPress}
                     topicName={topicName}
                     updateSentenceData={updateSentenceData}
+                    contentIndex={contentIndex}
                   />
                 </Text>
 

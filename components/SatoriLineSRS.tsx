@@ -8,6 +8,7 @@ const SatoriLineSRS = ({
   sentence,
   updateSentenceData,
   setShowReviewSettings,
+  contentIndex,
 }) => {
   const timeNow = new Date();
   const tomorrow = new Date();
@@ -40,6 +41,7 @@ const SatoriLineSRS = ({
           reviewData: null,
           ...getShouldRemoveLegacyFields(),
         },
+        contentIndex,
       });
       setShowReviewSettings(false);
     } catch (error) {
@@ -71,6 +73,7 @@ const SatoriLineSRS = ({
           updateSentenceData={updateSentenceData}
           setShowReviewSettings={setShowReviewSettings}
           contentType={srsRetentionKeyTypes.sentences}
+          contentIndex={contentIndex}
         />
       )}
       {showDeleteBtn && (

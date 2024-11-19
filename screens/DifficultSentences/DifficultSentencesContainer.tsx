@@ -164,6 +164,7 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
     topicName,
     sentenceId,
     fieldToUpdate,
+    contentIndex,
   }) => {
     const isRemoveFromDifficultSentences =
       !isAdhoc && fieldToUpdate?.nextReview === null;
@@ -173,6 +174,7 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
         topicName,
         sentenceId,
         fieldToUpdate,
+        contentIndex,
       });
       setToggleableSentencesState(prev =>
         prev.filter(sentenceData => sentenceData.id !== sentenceId),

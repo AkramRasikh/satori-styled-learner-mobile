@@ -11,6 +11,7 @@ const SRSTogglesMini = ({
   updateSentenceData,
   setShowReviewSettings,
   contentType,
+  contentIndex,
 }) => {
   const timeNow = new Date();
 
@@ -61,6 +62,7 @@ const SRSTogglesMini = ({
         reviewData: nextReviewData,
         ...getShouldRemoveLegacyFields(),
       },
+      contentIndex: contentIndex ?? sentence.contentIndex,
     });
   };
 

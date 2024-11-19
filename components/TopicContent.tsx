@@ -82,6 +82,7 @@ const TopicContent = ({
   const {reviewHistory, content, nextReview} = loadedContent;
 
   const isCore = loadedContent?.isCore;
+  const contentIndex = loadedContent?.contentIndex;
   const isMediaContent =
     loadedContent?.origin === 'netflix' || loadedContent?.origin === 'youtube';
   const hasVideo = loadedContent?.hasVideo;
@@ -480,6 +481,7 @@ const TopicContent = ({
               setMiniSnippets={setMiniSnippets}
               handleAddSnippet={handleAddSnippet}
               highlightTargetTextState={highlightTargetTextState}
+              contentIndex={contentIndex}
             />
           </ScrollView>
         </View>
@@ -554,6 +556,7 @@ const TopicContent = ({
           setMiniSnippets={setMiniSnippets}
           handleAddSnippet={handleAddSnippet}
           highlightTargetTextState={highlightTargetTextState}
+          contentIndex={contentIndex}
         />
       </ScrollView>
       <ReviewSection

@@ -54,17 +54,13 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
 
   const updateLoadedContentStateAfterSentenceUpdate = ({
     sentenceId,
-    topicName,
     resObj,
+    contentIndex,
   }) => {
-    const thisTopicDataIndex = targetLanguageLoadedContentMasterState.findIndex(
-      topic => topic.title === topicName,
-    );
+    const updatedState = [...targetLanguageLoadedContentMasterState];
+    const thisTopicData = updatedState[contentIndex];
 
-    const thisTopicData =
-      targetLanguageLoadedContentMasterState[thisTopicDataIndex];
-
-    const thisTopicUpdateContent = thisTopicData.content.map(sentenceData => {
+    const updatedContent = thisTopicData.content.map(sentenceData => {
       if (sentenceData.id === sentenceId) {
         return {
           ...sentenceData,
@@ -74,20 +70,13 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
       return sentenceData;
     });
 
-    const newTopicState = {
+    updatedState[contentIndex] = {
       ...thisTopicData,
-      content: thisTopicUpdateContent,
+      content: updatedContent,
     };
 
-    const filteredTopics = targetLanguageLoadedContentMasterState.map(topic => {
-      if (topic.title !== topicName) {
-        return topic;
-      }
-      return newTopicState;
-    });
-
-    setTargetLanguageLoadedContentMasterState(filteredTopics);
-    return filteredTopics;
+    setTargetLanguageLoadedContentMasterState(updatedState);
+    return updatedState;
   };
 
   const updateContentMetaData = async ({topicName, fieldToUpdate}) => {
@@ -146,6 +135,7 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
     sentenceId,
     fieldToUpdate,
     isAdhoc,
+    contentIndex,
   }) => {
     const updateBackEnd = async () => {
       const resObj = isAdhoc
@@ -169,9 +159,9 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
       if (!isAdhoc) {
         const updatedContentState = updateLoadedContentStateAfterSentenceUpdate(
           {
-            topicName,
             sentenceId,
             resObj,
+            contentIndex,
           },
         );
         await storeDataLocalStorage(

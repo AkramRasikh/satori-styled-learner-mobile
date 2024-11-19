@@ -26,6 +26,7 @@ const SatoriLine = ({
   onLongPress,
   topicName,
   updateSentenceData,
+  contentIndex,
 }) => {
   const [showEng, setShowEng] = useState(false);
   const [showNotes, setShowNotes] = useState(false);
@@ -137,6 +138,7 @@ const SatoriLine = ({
           topicName={topicName}
           updateSentenceData={updateSentenceData}
           setShowReviewSettings={setShowReviewSettings}
+          contentIndex={contentIndex}
         />
       ) : null}
     </Text>

@@ -62,6 +62,7 @@ const ContentScreen = () => {
         sentenceId,
         fieldToUpdate,
         isAdhoc: false,
+        contentIndex: selectedTopicIndex,
       });
 
       if (resObj) {
