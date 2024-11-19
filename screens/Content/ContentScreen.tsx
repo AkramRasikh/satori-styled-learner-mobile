@@ -46,21 +46,21 @@ const ContentScreen = () => {
       fieldToUpdate,
       contentIndex: selectedTopicIndex,
     });
-    setSelectedContentState(thisUpdatedContent);
+    if (thisUpdatedContent) {
+      setSelectedContentState(thisUpdatedContent);
+    }
   };
 
   const updateSentenceDataFunc = async ({sentenceId, fieldToUpdate}) => {
-    try {
-      const updatedSelectedState = await updateSentenceViaContent({
-        topicName: selectedTopic,
-        sentenceId,
-        fieldToUpdate,
-        contentIndex: selectedTopicIndex,
-      });
+    const updatedSelectedState = await updateSentenceViaContent({
+      topicName: selectedTopic,
+      sentenceId,
+      fieldToUpdate,
+      contentIndex: selectedTopicIndex,
+    });
+    if (updatedSelectedState) {
       setSelectedContentState(updatedSelectedState);
       setTriggerSentenceIdUpdate(sentenceId);
-    } catch (error) {
-      console.log('## updateSentenceData', {error});
     }
   };
 
