@@ -9,7 +9,7 @@ import {addSnippetAPI, deleteSnippetAPI} from '../../api/snippet';
 import {makeArrayUnique} from '../../hooks/useHighlightWordToWordBank';
 import saveWordAPI from '../../api/save-word';
 import useLanguageSelector from './useLanguageSelector';
-import {content, snippets, words} from '../../refs';
+import {adhocSentences, content, snippets, words} from '../../refs';
 import {storeDataLocalStorage} from '../../helper-functions/local-storage-utils';
 
 export const DataContext = createContext(null);
@@ -181,7 +181,15 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
         nextReview: setFutureReviewDate(new Date(), 3), // update here!
       });
       setIsAdhocDataLoading(true);
-      setAdhocTargetLanguageSentencesState(prev => [...prev, adhocObject]);
+      const updatedAdhocSentencesState = [
+        ...adhocTargetLanguageSentencesState,
+        adhocObject,
+      ];
+      setAdhocTargetLanguageSentencesState(updatedAdhocSentencesState);
+      await storeDataLocalStorage(
+        dataStorageKeyPrefix + adhocSentences,
+        updatedAdhocSentencesState,
+      );
       return adhocObject;
     } catch (error) {
       setProvdiderError('Error adding adhoc sentence');
