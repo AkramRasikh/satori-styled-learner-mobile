@@ -15,7 +15,6 @@ import {storeDataLocalStorage} from '../../helper-functions/local-storage-utils'
 export const DataContext = createContext(null);
 
 export const DataProvider = ({children}: PropsWithChildren<{}>) => {
-  const [audioTempState, setAudioTempState] = useState({});
   const [updatingSentenceState, setUpdatingSentenceState] = useState('');
   const [
     targetLanguageLoadedContentMaster,
@@ -51,16 +50,6 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
   };
 
   const pureWordsArr = getPureWords();
-
-  const saveAudioInstance = (audioId, soundInstance) => {
-    const isInAudioTempState = audioTempState[audioId];
-    if (!isInAudioTempState) {
-      setAudioTempState(prevState => ({
-        ...prevState,
-        [audioId]: soundInstance,
-      }));
-    }
-  };
 
   const updateLoadedContentStateAfterSentenceUpdate = ({
     sentenceId,
@@ -323,8 +312,6 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
       value={{
         dataProviderIsLoading,
         provdiderError,
-        saveAudioInstance,
-        audioTempState,
         updateSentenceData,
         updatePromptState,
         addAdhocSentenceFunc,
