@@ -9,7 +9,7 @@ import {isMediaContent, isYoutube} from '../utils/is-media-content';
 const today = new Date();
 
 const useOnLoadContentScreen = ({
-  targetLanguageLoadedContentMaster,
+  targetLanguageLoadedContentMasterState,
   setTargetLanguageLoadedContentState,
   setAllTopicsMetaDataState,
 }) => {
@@ -56,7 +56,7 @@ const useOnLoadContentScreen = ({
   };
 
   useEffect(() => {
-    targetLanguageLoadedContentMaster.forEach(item => {
+    targetLanguageLoadedContentMasterState.forEach(item => {
       const generalTopic = getGeneralTopicName(item.title);
       const isMedia = isMediaContent(item?.origin);
       targetContent.push({

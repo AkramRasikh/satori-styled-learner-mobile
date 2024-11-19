@@ -8,10 +8,10 @@ const Home = ({navigation}): React.JSX.Element => {
 
   const dataProviderIsLoading = data.dataProviderIsLoading;
   const provdiderError = data.provdiderError;
-  const targetLanguageLoadedContentMaster =
-    data.targetLanguageLoadedContentMaster;
+  const targetLanguageLoadedContentMasterState =
+    data.targetLanguageLoadedContentMasterState;
 
-  if (dataProviderIsLoading || !targetLanguageLoadedContentMaster) {
+  if (dataProviderIsLoading || !targetLanguageLoadedContentMasterState) {
     return <LoadingScreen>Loading data...</LoadingScreen>;
   }
   if (provdiderError) {
@@ -21,7 +21,9 @@ const Home = ({navigation}): React.JSX.Element => {
   return (
     <HomeContainer
       navigation={navigation}
-      targetLanguageLoadedContentMaster={targetLanguageLoadedContentMaster}
+      targetLanguageLoadedContentMasterState={
+        targetLanguageLoadedContentMasterState
+      }
     />
   );
 };

@@ -25,14 +25,14 @@ const ContentScreen = () => {
   const dataStorageKeyPrefix = `${languageSelectedState}-data-`;
   const {
     targetLanguageSnippetsState,
-    targetLanguageLoadedContentMaster,
-    setTargetLanguageLoadedContentMaster,
+    targetLanguageLoadedContentMasterState,
+    setTargetLanguageLoadedContentMasterState,
   } = useData();
   const {selectedTopic, targetSentenceId} = route.params;
 
   useEffect(() => {
     setSelectedContentState(
-      targetLanguageLoadedContentMaster.find(
+      targetLanguageLoadedContentMasterState.find(
         contentItem => contentItem.title === selectedTopic,
       ),
     );
@@ -51,15 +51,15 @@ const ContentScreen = () => {
         language: languageSelectedState,
       });
       if (resObj) {
-        const thisTopicData = targetLanguageLoadedContentMaster.find(
+        const thisTopicData = targetLanguageLoadedContentMasterState.find(
           topic => topic.title === topicName,
         );
-        const filterTopics = targetLanguageLoadedContentMaster.filter(
+        const filterTopics = targetLanguageLoadedContentMasterState.filter(
           topic => topic.title !== topicName,
         );
         const newTopicState = {...thisTopicData, ...resObj};
         const updatedContentState = [...filterTopics, newTopicState];
-        setTargetLanguageLoadedContentMaster(updatedContentState);
+        setTargetLanguageLoadedContentMasterState(updatedContentState);
         await storeDataLocalStorage(
           dataStorageKeyPrefix + content,
           updatedContentState,

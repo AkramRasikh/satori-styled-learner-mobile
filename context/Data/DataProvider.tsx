@@ -17,8 +17,8 @@ export const DataContext = createContext(null);
 export const DataProvider = ({children}: PropsWithChildren<{}>) => {
   const [updatingSentenceState, setUpdatingSentenceState] = useState('');
   const [
-    targetLanguageLoadedContentMaster,
-    setTargetLanguageLoadedContentMaster,
+    targetLanguageLoadedContentMasterState,
+    setTargetLanguageLoadedContentMasterState,
   ] = useState([]);
   const [targetLanguageSnippetsState, setTargetLanguageSnippetsState] =
     useState([]);
@@ -56,11 +56,12 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
     topicName,
     resObj,
   }) => {
-    const thisTopicDataIndex = targetLanguageLoadedContentMaster.findIndex(
+    const thisTopicDataIndex = targetLanguageLoadedContentMasterState.findIndex(
       topic => topic.title === topicName,
     );
 
-    const thisTopicData = targetLanguageLoadedContentMaster[thisTopicDataIndex];
+    const thisTopicData =
+      targetLanguageLoadedContentMasterState[thisTopicDataIndex];
 
     const thisTopicUpdateContent = thisTopicData.content.map(sentenceData => {
       if (sentenceData.id === sentenceId) {
@@ -77,14 +78,14 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
       content: thisTopicUpdateContent,
     };
 
-    const filteredTopics = targetLanguageLoadedContentMaster.map(topic => {
+    const filteredTopics = targetLanguageLoadedContentMasterState.map(topic => {
       if (topic.title !== topicName) {
         return topic;
       }
       return newTopicState;
     });
 
-    setTargetLanguageLoadedContentMaster(filteredTopics);
+    setTargetLanguageLoadedContentMasterState(filteredTopics);
     return filteredTopics;
   };
 
@@ -288,7 +289,7 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
         setTargetLanguageSnippetsState(
           targetLanguageLoadedSnippetsWithSavedTag,
         );
-        setTargetLanguageLoadedContentMaster(
+        setTargetLanguageLoadedContentMasterState(
           targetLanguageLoadedContent?.sort((a, b) => {
             return a.isCore === b.isCore ? 0 : a.isCore ? -1 : 1;
           }),
@@ -328,8 +329,8 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
         setTargetLanguageWordsState,
         structuredUnifiedData,
         setStructuredUnifiedData,
-        targetLanguageLoadedContentMaster,
-        setTargetLanguageLoadedContentMaster,
+        targetLanguageLoadedContentMasterState,
+        setTargetLanguageLoadedContentMasterState,
       }}>
       {children}
     </DataContext.Provider>

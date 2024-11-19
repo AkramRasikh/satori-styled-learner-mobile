@@ -2,7 +2,7 @@ import {sortByDueDate} from '../utils/sort-by-due-date';
 
 const useLoadDifficultSentences = ({
   adhocTargetLanguageSentencesState,
-  targetLanguageLoadedContentMaster,
+  targetLanguageLoadedContentMasterState,
   targetLanguageSnippetsState,
 }) => {
   const addSnippetsToDifficultSentences = allInitDifficultSentences => {
@@ -18,7 +18,7 @@ const useLoadDifficultSentences = ({
 
   const getSentencesMarkedAsDifficult = () => {
     const difficultSentences = [];
-    targetLanguageLoadedContentMaster?.forEach(contentWidget => {
+    targetLanguageLoadedContentMasterState?.forEach(contentWidget => {
       const thisTopic = contentWidget.title;
       const isCore = contentWidget.isCore;
       const isMediaContent =

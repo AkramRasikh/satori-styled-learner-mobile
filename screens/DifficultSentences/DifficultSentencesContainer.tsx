@@ -75,13 +75,13 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
     removeSnippet,
     pureWords,
     adhocTargetLanguageSentencesState,
-    targetLanguageLoadedContentMaster,
+    targetLanguageLoadedContentMasterState,
     targetLanguageSnippetsState,
   } = useData();
 
   const {getAllDataReady} = useLoadDifficultSentences({
     adhocTargetLanguageSentencesState,
-    targetLanguageLoadedContentMaster,
+    targetLanguageLoadedContentMasterState,
     targetLanguageSnippetsState,
   });
 

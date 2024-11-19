@@ -9,7 +9,7 @@ import ScreenContainerComponent from '../../components/ScreenContainerComponent'
 
 function Home({
   navigation,
-  targetLanguageLoadedContentMaster,
+  targetLanguageLoadedContentMasterState,
 }): React.JSX.Element {
   const [selectedTopic, setSelectedTopic] = useState('');
   const [
@@ -21,7 +21,7 @@ function Home({
     useState('');
 
   useOnLoadContentScreen({
-    targetLanguageLoadedContentMaster,
+    targetLanguageLoadedContentMasterState,
     setTargetLanguageLoadedContentState,
     setAllTopicsMetaDataState,
   });

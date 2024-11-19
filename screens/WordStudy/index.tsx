@@ -11,7 +11,8 @@ const WordStudyScreen = (): React.JSX.Element => {
   const provdiderError = data.provdiderError;
   const targetLanguageWordsState = data.targetLanguageWordsState;
   const targetLanguageLoadedSentences = data.adhocTargetLanguageSentencesState;
-  const targetLanguageLoadedContent = data.targetLanguageLoadedContentMaster;
+  const targetLanguageLoadedContent =
+    data.targetLanguageLoadedContentMasterState;
 
   if (
     targetLanguageWordsState.length === 0 ||
