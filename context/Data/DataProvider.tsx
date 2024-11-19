@@ -9,9 +9,14 @@ import {addSnippetAPI, deleteSnippetAPI} from '../../api/snippet';
 import {makeArrayUnique} from '../../hooks/useHighlightWordToWordBank';
 import saveWordAPI from '../../api/save-word';
 import useLanguageSelector from './useLanguageSelector';
+import {words} from '../../refs';
+import {storeDataLocalStorage} from '../../helper-functions/local-storage-utils';
 
 export const DataContext = createContext(null);
 
+// targetLanguageLoadedContentMaster
+// adhocTargetLanguageSentencesState
+// targetLanguageSnippetsState
 export const DataProvider = ({children}: PropsWithChildren<{}>) => {
   const [audioTempState, setAudioTempState] = useState({});
   const [updatingSentenceState, setUpdatingSentenceState] = useState('');
@@ -33,6 +38,7 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
   const [structuredUnifiedData, setStructuredUnifiedData] = useState([]);
 
   const {languageSelectedState: language} = useLanguageSelector();
+  const dataStorageKeyPrefix = `${language}-data-`;
 
   const getPureWords = () => {
     let pureWords = [];
@@ -93,6 +99,7 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
     });
 
     settargetLanguageLoadedContentMaster(filteredTopics);
+    //
   };
 
   const handleUpdateAdhocSentenceDifficult = async ({
@@ -189,6 +196,7 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
         ...prev,
         {...snippetDataFromAPI, saved: true},
       ]);
+      //
       return snippetDataFromAPI;
     } catch (error) {
       console.log('## error adding snippet (DataProvider.tsx)');
@@ -204,6 +212,7 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
         item => item.id !== deletedSnippetId,
       );
       setTargetLanguageSnippetsState(updatedSnippets);
+      //
       return deletedSnippetId;
     } catch (error) {
       console.log('## error removeSnippet (DataProvider.tsx)');
@@ -226,7 +235,9 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
         isGoogle,
         language,
       });
-      setTargetLanguageWordsState(prev => [...prev, savedWord]);
+      const newWordsState = [...targetLanguageWordsState, savedWord];
+      setTargetLanguageWordsState(newWordsState);
+      await storeDataLocalStorage(dataStorageKeyPrefix + words, newWordsState);
     } catch (error) {
       console.log('## saveWordFirebase Provider err', error);
       setUpdatePromptState(`Error saving ${highlightedWord}`);

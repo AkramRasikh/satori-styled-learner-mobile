@@ -5,6 +5,8 @@ import {deleteWordAPI} from '../../api/delete-word';
 import useLanguageSelector from './useLanguageSelector';
 import useData from './useData';
 import {FlashCardWordType} from '../../screens/WordStudy/types';
+import {storeDataLocalStorage} from '../../helper-functions/local-storage-utils';
+import {words} from '../../refs';
 
 export const WordDataContext = createContext(null);
 
@@ -19,6 +21,7 @@ export const WordDataProvider = ({children}: PropsWithChildren<{}>) => {
     FlashCardWordType[]
   >([]);
   const {languageSelectedState: language} = useLanguageSelector();
+  const dataStorageKeyPrefix = `${language}-data-`;
 
   const {targetLanguageWordsState, setTargetLanguageWordsState} = useData();
 
@@ -60,6 +63,10 @@ export const WordDataProvider = ({children}: PropsWithChildren<{}>) => {
         );
       }
       setTargetLanguageWordsState(targetLanguageWordsStateUpdated);
+      await storeDataLocalStorage(
+        dataStorageKeyPrefix + words,
+        targetLanguageWordsStateUpdated,
+      );
       setUpdatePromptState(`${wordBaseForm} updated!`);
       setTimeout(() => setUpdatePromptState(''), 3000);
       if (dueCardsState?.length > 0) {
@@ -122,6 +129,11 @@ export const WordDataProvider = ({children}: PropsWithChildren<{}>) => {
         item => item.id !== wordId,
       );
       setTargetLanguageWordsState(targetLanguageWordsStateUpdated);
+      await storeDataLocalStorage(
+        dataStorageKeyPrefix + words,
+        targetLanguageWordsStateUpdated,
+      );
+
       setUpdatePromptState(`${wordBaseForm} deleted!`);
       setTimeout(() => setUpdatePromptState(''), 3000);
       if (isTempWord) {
