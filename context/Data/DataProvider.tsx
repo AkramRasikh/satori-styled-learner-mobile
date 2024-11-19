@@ -79,6 +79,11 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
     return updatedState;
   };
 
+  const updatePromptFunc = (promptText, time) => {
+    setUpdatePromptState(promptText);
+    setTimeout(() => setUpdatePromptState(''), time);
+  };
+
   const updateContentMetaData = async ({
     topicName,
     fieldToUpdate,
@@ -102,13 +107,11 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
           dataStorageKeyPrefix + content,
           updatedState,
         );
-        setUpdatePromptState(`${topicName} updated!`);
-        setTimeout(() => setUpdatePromptState(''), 3000);
+        updatePromptFunc(`${topicName} updated!`, 2000);
         return newTopicState;
       }
     } catch (error) {
-      setUpdatePromptState(`Error updating ${topicName}!`);
-      setTimeout(() => setUpdatePromptState(''), 1000);
+      updatePromptFunc(`Error updating ${topicName}!`, 1000);
     }
   };
 
@@ -127,8 +130,7 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
         ...res,
       };
     } catch (error) {
-      setUpdatePromptState('Error saving updating adhoc sentence');
-      setTimeout(() => setUpdatePromptState(''), 2000);
+      updatePromptFunc('Error saving updating adhoc sentence', 2000);
     }
   };
 
@@ -171,13 +173,11 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
           updatedContentState,
         );
       }
-      setUpdatePromptState(`${topicName} updated!`);
-      setTimeout(() => setUpdatePromptState(''), 2000);
+      updatePromptFunc(`${topicName} updated!`, 2000);
       return resObj;
     } catch (error) {
       console.log('## updateSentenceData', {error});
-      setUpdatePromptState(`Error updating sentence for ${topicName}`);
-      setTimeout(() => setUpdatePromptState(''), 2000);
+      updatePromptFunc(`Error updating sentence for ${topicName}`, 2000);
     } finally {
       setUpdatingSentenceState('');
     }
@@ -230,8 +230,7 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
       return snippetDataFromAPI;
     } catch (error) {
       console.log('## error adding snippet (DataProvider.tsx)');
-      setUpdatePromptState('Error adding snippet');
-      setTimeout(() => setUpdatePromptState(''), 2000);
+      updatePromptFunc('Error adding snippet', 2000);
     }
   };
 
@@ -249,8 +248,7 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
       return deletedSnippetId;
     } catch (error) {
       console.log('## error removeSnippet (DataProvider.tsx)');
-      setUpdatePromptState('Error removing snippet');
-      setTimeout(() => setUpdatePromptState(''), 2000);
+      updatePromptFunc('Error removing snippet', 2000);
     }
   };
 
@@ -273,8 +271,7 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
       await storeDataLocalStorage(dataStorageKeyPrefix + words, newWordsState);
     } catch (error) {
       console.log('## saveWordFirebase Provider err', error);
-      setUpdatePromptState(`Error saving ${highlightedWord}`);
-      setTimeout(() => setUpdatePromptState(''), 2000);
+      updatePromptFunc(`Error saving ${highlightedWord}`, 2000);
     }
   };
 
