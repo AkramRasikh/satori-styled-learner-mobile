@@ -9,14 +9,13 @@ import {addSnippetAPI, deleteSnippetAPI} from '../../api/snippet';
 import {makeArrayUnique} from '../../hooks/useHighlightWordToWordBank';
 import saveWordAPI from '../../api/save-word';
 import useLanguageSelector from './useLanguageSelector';
-import {content, words} from '../../refs';
+import {content, snippets, words} from '../../refs';
 import {storeDataLocalStorage} from '../../helper-functions/local-storage-utils';
 
 export const DataContext = createContext(null);
 
-// targetLanguageLoadedContentMaster
 // adhocTargetLanguageSentencesState
-// targetLanguageSnippetsState
+
 export const DataProvider = ({children}: PropsWithChildren<{}>) => {
   const [audioTempState, setAudioTempState] = useState({});
   const [updatingSentenceState, setUpdatingSentenceState] = useState('');
@@ -198,11 +197,16 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
         contentEntry: snippetData,
         language,
       });
-      setTargetLanguageSnippetsState(prev => [
-        ...prev,
+
+      const updatedSnippets = [
+        ...targetLanguageSnippetsState,
         {...snippetDataFromAPI, saved: true},
-      ]);
-      //
+      ];
+      setTargetLanguageSnippetsState(updatedSnippets);
+      await storeDataLocalStorage(
+        dataStorageKeyPrefix + snippets,
+        updatedSnippets,
+      );
       return snippetDataFromAPI;
     } catch (error) {
       console.log('## error adding snippet (DataProvider.tsx)');
@@ -218,7 +222,10 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
         item => item.id !== deletedSnippetId,
       );
       setTargetLanguageSnippetsState(updatedSnippets);
-      //
+      await storeDataLocalStorage(
+        dataStorageKeyPrefix + snippets,
+        updatedSnippets,
+      );
       return deletedSnippetId;
     } catch (error) {
       console.log('## error removeSnippet (DataProvider.tsx)');
