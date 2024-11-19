@@ -45,6 +45,7 @@ const ContentScreen = () => {
       const thisUpdatedContent = await updateContentMetaData({
         topicName,
         fieldToUpdate,
+        contentIndex: selectedTopicIndex,
       });
       setSelectedContentState(thisUpdatedContent);
       setUpdatePromptState(`${topicName} updated!`);

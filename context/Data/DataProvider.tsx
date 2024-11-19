@@ -79,7 +79,11 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
     return updatedState;
   };
 
-  const updateContentMetaData = async ({topicName, fieldToUpdate}) => {
+  const updateContentMetaData = async ({
+    topicName,
+    fieldToUpdate,
+    contentIndex,
+  }) => {
     try {
       const resObj = await updateCreateReviewHistory({
         title: topicName,
@@ -87,18 +91,16 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
         language,
       });
       if (resObj) {
-        const thisTopicData = targetLanguageLoadedContentMasterState.find(
-          topic => topic.title === topicName,
-        );
-        const filterTopics = targetLanguageLoadedContentMasterState.filter(
-          topic => topic.title !== topicName,
-        );
+        const updatedState = [...targetLanguageLoadedContentMasterState];
+        const thisTopicData = updatedState[contentIndex];
         const newTopicState = {...thisTopicData, ...resObj};
-        const updatedContentState = [...filterTopics, newTopicState];
-        setTargetLanguageLoadedContentMasterState(updatedContentState);
+        updatedState[contentIndex] = {
+          ...newTopicState,
+        };
+        setTargetLanguageLoadedContentMasterState(updatedState);
         await storeDataLocalStorage(
           dataStorageKeyPrefix + content,
-          updatedContentState,
+          updatedState,
         );
         setUpdatePromptState(`${topicName} updated!`);
         setTimeout(() => setUpdatePromptState(''), 3000);
