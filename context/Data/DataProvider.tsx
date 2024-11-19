@@ -322,8 +322,14 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
         setTargetLanguageSnippetsState(
           targetLanguageLoadedSnippetsWithSavedTag,
         );
+        const contentIndexed = targetLanguageLoadedContent.map(
+          (contentWidget, contentIndex) => ({
+            ...contentWidget,
+            contentIndex: contentIndex,
+          }),
+        );
         setTargetLanguageLoadedContentMasterState(
-          targetLanguageLoadedContent?.sort((a, b) => {
+          contentIndexed?.sort((a, b) => {
             return a.isCore === b.isCore ? 0 : a.isCore ? -1 : 1;
           }),
         );

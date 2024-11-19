@@ -30,7 +30,13 @@ function Home({
     if (topic === selectedTopic) {
       setSelectedTopic('');
     } else {
-      navigation.navigate('ContentScreen', {selectedTopic: topic});
+      const selectedTopicIndex =
+        targetLanguageLoadedContentMasterState.findIndex(
+          contentWidget => contentWidget.title === topic,
+        );
+      navigation.navigate('ContentScreen', {
+        selectedTopicIndex,
+      });
     }
   };
 

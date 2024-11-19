@@ -62,7 +62,7 @@ const DifficultSentenceContent = ({
 
   const handleNavigation = () => {
     navigation.navigate('ContentScreen', {
-      selectedTopic: topic,
+      selectedTopicIndex: sentence.contentIndex,
       targetSentenceId: sentenceId,
     });
   };

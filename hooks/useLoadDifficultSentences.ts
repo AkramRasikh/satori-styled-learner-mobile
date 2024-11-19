@@ -19,6 +19,7 @@ const useLoadDifficultSentences = ({
   const getSentencesMarkedAsDifficult = () => {
     const difficultSentences = [];
     targetLanguageLoadedContentMasterState?.forEach(contentWidget => {
+      const contentIndex = contentWidget.contentIndex;
       const thisTopic = contentWidget.title;
       const isCore = contentWidget.isCore;
       const isMediaContent =
@@ -34,6 +35,7 @@ const useLoadDifficultSentences = ({
             topic: thisTopic,
             isCore,
             isMediaContent,
+            contentIndex,
             ...sentenceInContent,
           });
         }

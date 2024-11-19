@@ -22,17 +22,20 @@ const ContentScreen = () => {
     updateSentenceData,
     updateContentMetaData,
   } = useData();
-  const {selectedTopic, targetSentenceId} = route.params;
+  const {targetSentenceId, selectedTopicIndex} = route.params;
+
+  const selectedTopic =
+    targetLanguageLoadedContentMasterState[selectedTopicIndex].title;
 
   useEffect(() => {
+    const contentState =
+      targetLanguageLoadedContentMasterState[selectedTopicIndex];
     setSelectedContentState(
-      targetLanguageLoadedContentMasterState.find(
-        contentItem => contentItem.title === selectedTopic,
-      ),
+      targetLanguageLoadedContentMasterState[selectedTopicIndex],
     );
     setSelectedSnippetsState(
       targetLanguageSnippetsState?.filter(
-        item => item.topicName === selectedTopic,
+        item => item.topicName === contentState.title,
       ),
     );
   }, []);
