@@ -1,16 +1,12 @@
 import React, {useEffect, useState} from 'react';
+import {View} from 'react-native';
 import {useRoute} from '@react-navigation/native';
 
 import TopicContent from '../../components/TopicContent';
 import LoadingScreen from '../../components/LoadingScreen';
-import {updateCreateReviewHistory} from '../../api/update-create-review-history';
-import useLanguageSelector from '../../context/Data/useLanguageSelector';
 import ScreenContainerComponent from '../../components/ScreenContainerComponent';
 
 import useData from '../../context/Data/useData';
-import {View} from 'react-native';
-import {storeDataLocalStorage} from '../../helper-functions/local-storage-utils';
-import {content} from '../../refs';
 
 const ContentScreen = () => {
   const route = useRoute();
@@ -20,13 +16,11 @@ const ContentScreen = () => {
   const [selectedSnippetsState, setSelectedSnippetsState] = useState([]);
   const [updatePromptState, setUpdatePromptState] = useState('');
 
-  const {languageSelectedState} = useLanguageSelector();
-  const dataStorageKeyPrefix = `${languageSelectedState}-data-`;
   const {
     targetLanguageSnippetsState,
     targetLanguageLoadedContentMasterState,
-    setTargetLanguageLoadedContentMasterState,
     updateSentenceData,
+    updateContentMetaData,
   } = useData();
   const {selectedTopic, targetSentenceId} = route.params;
 
@@ -43,31 +37,15 @@ const ContentScreen = () => {
     );
   }, []);
 
-  const updateTopicMetaData = async ({topicName, fieldToUpdate}) => {
+  const updateMetaData = async ({topicName, fieldToUpdate}) => {
     try {
-      const resObj = await updateCreateReviewHistory({
-        contentEntry: topicName,
+      const thisUpdatedContent = await updateContentMetaData({
+        topicName,
         fieldToUpdate,
-        language: languageSelectedState,
       });
-      if (resObj) {
-        const thisTopicData = targetLanguageLoadedContentMasterState.find(
-          topic => topic.title === topicName,
-        );
-        const filterTopics = targetLanguageLoadedContentMasterState.filter(
-          topic => topic.title !== topicName,
-        );
-        const newTopicState = {...thisTopicData, ...resObj};
-        const updatedContentState = [...filterTopics, newTopicState];
-        setTargetLanguageLoadedContentMasterState(updatedContentState);
-        await storeDataLocalStorage(
-          dataStorageKeyPrefix + content,
-          updatedContentState,
-        );
-        setSelectedContentState(newTopicState);
-        setUpdatePromptState(`${topicName} updated!`);
-        setTimeout(() => setUpdatePromptState(''), 3000);
-      }
+      setSelectedContentState(thisUpdatedContent);
+      setUpdatePromptState(`${topicName} updated!`);
+      setTimeout(() => setUpdatePromptState(''), 3000);
     } catch (error) {
       setUpdatePromptState(`Error updating ${topicName}!`);
       setTimeout(() => setUpdatePromptState(''), 1000);
@@ -121,7 +99,7 @@ const ContentScreen = () => {
           topicName={selectedTopic}
           loadedContent={selectedContentState}
           loadedSnippets={selectedSnippetsState}
-          updateTopicMetaData={updateTopicMetaData}
+          updateTopicMetaData={updateMetaData}
           updateSentenceData={updateSentenceDataFunc}
           triggerSentenceIdUpdate={triggerSentenceIdUpdate}
           setTriggerSentenceIdUpdate={setTriggerSentenceIdUpdate}

@@ -11,6 +11,7 @@ import saveWordAPI from '../../api/save-word';
 import useLanguageSelector from './useLanguageSelector';
 import {adhocSentences, content, snippets, words} from '../../refs';
 import {storeDataLocalStorage} from '../../helper-functions/local-storage-utils';
+import {updateCreateReviewHistory} from '../../api/update-create-review-history';
 
 export const DataContext = createContext(null);
 
@@ -87,6 +88,37 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
 
     setTargetLanguageLoadedContentMasterState(filteredTopics);
     return filteredTopics;
+  };
+
+  const updateContentMetaData = async ({topicName, fieldToUpdate}) => {
+    try {
+      const resObj = await updateCreateReviewHistory({
+        title: topicName,
+        fieldToUpdate,
+        language,
+      });
+      if (resObj) {
+        const thisTopicData = targetLanguageLoadedContentMasterState.find(
+          topic => topic.title === topicName,
+        );
+        const filterTopics = targetLanguageLoadedContentMasterState.filter(
+          topic => topic.title !== topicName,
+        );
+        const newTopicState = {...thisTopicData, ...resObj};
+        const updatedContentState = [...filterTopics, newTopicState];
+        setTargetLanguageLoadedContentMasterState(updatedContentState);
+        await storeDataLocalStorage(
+          dataStorageKeyPrefix + content,
+          updatedContentState,
+        );
+        setUpdatePromptState(`${topicName} updated!`);
+        setTimeout(() => setUpdatePromptState(''), 3000);
+        return newTopicState;
+      }
+    } catch (error) {
+      setUpdatePromptState(`Error updating ${topicName}!`);
+      setTimeout(() => setUpdatePromptState(''), 1000);
+    }
   };
 
   const handleUpdateAdhocSentenceDifficult = async ({
@@ -331,6 +363,7 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
         setStructuredUnifiedData,
         targetLanguageLoadedContentMasterState,
         setTargetLanguageLoadedContentMasterState,
+        updateContentMetaData,
       }}>
       {children}
     </DataContext.Provider>

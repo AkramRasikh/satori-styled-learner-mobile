@@ -1,10 +1,16 @@
 import {BACKEND_ENDPOINT} from '@env';
 
 export const updateCreateReviewHistory = async ({
-  contentEntry,
+  title,
   fieldToUpdate,
   language,
 }) => {
+  console.log('## updateCreateReviewHistory', {
+    title,
+    fieldToUpdate,
+    language,
+  });
+
   const url = BACKEND_ENDPOINT + '/update-content';
 
   try {
@@ -15,7 +21,7 @@ export const updateCreateReviewHistory = async ({
       },
       body: JSON.stringify({
         language,
-        title: contentEntry,
+        title,
         fieldToUpdate,
       }),
     });
