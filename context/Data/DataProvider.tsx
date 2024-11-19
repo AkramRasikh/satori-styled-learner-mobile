@@ -313,6 +313,7 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
         const targetLanguageLoadedSentences = allStudyDataRes.sentences;
         const targetLanguageLoadedContent = allStudyDataRes.content;
         const targetLanguageLoadedSnippets = allStudyDataRes.snippets;
+        const targetLanguageLoadedWords = allStudyDataRes.words;
         const targetLanguageLoadedSnippetsWithSavedTag =
           targetLanguageLoadedSnippets?.map(item => ({
             ...item,
@@ -326,7 +327,7 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
             return a.isCore === b.isCore ? 0 : a.isCore ? -1 : 1;
           }),
         );
-        setTargetLanguageWordsState(allStudyDataRes.words);
+        setTargetLanguageWordsState(targetLanguageLoadedWords);
         setAdhocTargetLanguageSentencesState(targetLanguageLoadedSentences);
       } catch (error) {
         console.log('## DataProvider error: ', error);
