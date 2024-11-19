@@ -1,14 +1,7 @@
 import React, {Text, TouchableOpacity, View} from 'react-native';
-import {srsRetentionKeyTypes} from '../srs-algo';
+import {getDueDate, srsRetentionKeyTypes} from '../srs-algo';
 import {getTimeDiffSRS} from '../utils/getTimeDiffSRS';
 import SRSTogglesMini from './SRSTogglesMini';
-
-const getDueDate = reviewData => {
-  if (reviewData?.due) {
-    return new Date(reviewData?.due);
-  }
-  return null;
-};
 
 const SatoriLineSRS = ({
   topicName,

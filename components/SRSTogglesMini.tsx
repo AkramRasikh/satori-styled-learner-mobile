@@ -1,7 +1,10 @@
 import React, {Text, TouchableOpacity, View} from 'react-native';
-import {getNextScheduledOptions} from '../srs-algo';
+import {
+  getCardDataRelativeToNow,
+  getDueDate,
+  getNextScheduledOptions,
+} from '../srs-algo';
 import {getTimeDiffSRS} from '../utils/getTimeDiffSRS';
-import {getCardDataRelativeToNow, getDueDate} from './SRSTogglesSentences';
 
 const SRSTogglesMini = ({
   sentence,
