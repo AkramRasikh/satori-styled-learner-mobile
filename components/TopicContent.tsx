@@ -357,17 +357,13 @@ const TopicContent = ({
 
   useEffect(() => {
     if (triggerSentenceIdUpdate) {
-      const idForTriggeredSentence = triggerSentenceIdUpdate.id;
-      const fieldToUpdateForTriggeredSentence =
-        triggerSentenceIdUpdate.fieldToUpdate;
-
-      const updatedFormattedData = formattedData.map(item => {
-        if (idForTriggeredSentence !== item.id) {
+      const updatedFormattedData = formattedData.map((item, sentenceIndex) => {
+        if (triggerSentenceIdUpdate !== item.id) {
           return item;
         }
         return {
           ...item,
-          ...fieldToUpdateForTriggeredSentence,
+          ...content[sentenceIndex],
         };
       });
       setFormattedData(updatedFormattedData);

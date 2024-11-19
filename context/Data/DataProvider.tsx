@@ -183,6 +183,39 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
     }
   };
 
+  const updateSentenceViaContent = async ({
+    topicName,
+    sentenceId,
+    fieldToUpdate,
+    contentIndex,
+  }) => {
+    try {
+      setUpdatingSentenceState(sentenceId);
+      const resObj = await updateSentenceDataAPI({
+        topicName,
+        sentenceId,
+        fieldToUpdate,
+        language,
+      });
+      const updatedContentState = updateLoadedContentStateAfterSentenceUpdate({
+        sentenceId,
+        resObj,
+        contentIndex,
+      });
+      await storeDataLocalStorage(
+        dataStorageKeyPrefix + content,
+        updatedContentState,
+      );
+      updatePromptFunc(`${topicName} updated!`, 2000);
+      return updatedContentState[contentIndex];
+    } catch (error) {
+      console.log('## updateSentenceViaContent', {error});
+      updatePromptFunc(`Error updating sentence for ${topicName}`, 2000);
+    } finally {
+      setUpdatingSentenceState('');
+    }
+  };
+
   const addAdhocSentenceFunc = async ({baseLang, context, topic, tags}) => {
     try {
       const adhocObject = await addAdhocSentenceAPI({
@@ -360,6 +393,7 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
         targetLanguageLoadedContentMasterState,
         setTargetLanguageLoadedContentMasterState,
         updateContentMetaData,
+        updateSentenceViaContent,
       }}>
       {children}
     </DataContext.Provider>

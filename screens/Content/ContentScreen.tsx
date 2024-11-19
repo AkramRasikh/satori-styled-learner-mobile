@@ -18,7 +18,7 @@ const ContentScreen = () => {
   const {
     targetLanguageSnippetsState,
     targetLanguageLoadedContentMasterState,
-    updateSentenceData,
+    updateSentenceViaContent,
     updateContentMetaData,
     updatePromptState,
   } = useData();
@@ -51,32 +51,14 @@ const ContentScreen = () => {
 
   const updateSentenceDataFunc = async ({sentenceId, fieldToUpdate}) => {
     try {
-      const resObj = await updateSentenceData({
+      const updatedSelectedState = await updateSentenceViaContent({
         topicName: selectedTopic,
         sentenceId,
         fieldToUpdate,
-        isAdhoc: false,
         contentIndex: selectedTopicIndex,
       });
-
-      if (resObj) {
-        const thisTopicUpdateContent = selectedContentState.content.map(
-          sentenceData => {
-            if (sentenceData.id === sentenceId) {
-              return {
-                ...sentenceData,
-                ...resObj,
-              };
-            }
-            return sentenceData;
-          },
-        );
-        setTriggerSentenceIdUpdate({id: sentenceId, fieldToUpdate: resObj});
-        setSelectedContentState({
-          ...selectedContentState,
-          content: thisTopicUpdateContent,
-        });
-      }
+      setSelectedContentState(updatedSelectedState);
+      setTriggerSentenceIdUpdate(sentenceId);
     } catch (error) {
       console.log('## updateSentenceData', {error});
     }
