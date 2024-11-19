@@ -22,7 +22,7 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
   const [updatingSentenceState, setUpdatingSentenceState] = useState('');
   const [
     targetLanguageLoadedContentMaster,
-    settargetLanguageLoadedContentMaster,
+    setTargetLanguageLoadedContentMaster,
   ] = useState([]);
   const [targetLanguageSnippetsState, setTargetLanguageSnippetsState] =
     useState([]);
@@ -98,7 +98,7 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
       return newTopicState;
     });
 
-    settargetLanguageLoadedContentMaster(filteredTopics);
+    setTargetLanguageLoadedContentMaster(filteredTopics);
     //
   };
 
@@ -280,7 +280,7 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
         setTargetLanguageSnippetsState(
           targetLanguageLoadedSnippetsWithSavedTag,
         );
-        settargetLanguageLoadedContentMaster(
+        setTargetLanguageLoadedContentMaster(
           targetLanguageLoadedContent?.sort((a, b) => {
             return a.isCore === b.isCore ? 0 : a.isCore ? -1 : 1;
           }),
