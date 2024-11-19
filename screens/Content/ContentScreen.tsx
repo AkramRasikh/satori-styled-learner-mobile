@@ -71,8 +71,6 @@ const ContentScreen = () => {
             return sentenceData;
           },
         );
-        setUpdatePromptState(`${selectedTopic} updated!`);
-        setTimeout(() => setUpdatePromptState(''), 3000);
         setTriggerSentenceIdUpdate({id: sentenceId, fieldToUpdate: resObj});
         setSelectedContentState({
           ...selectedContentState,
@@ -81,8 +79,6 @@ const ContentScreen = () => {
       }
     } catch (error) {
       console.log('## updateSentenceData', {error});
-      setUpdatePromptState(`Error updating sentence for ${selectedTopic}!`);
-      setTimeout(() => setUpdatePromptState(''), 1000);
     }
   };
 
