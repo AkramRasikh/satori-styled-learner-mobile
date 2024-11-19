@@ -10,17 +10,19 @@ import ScreenContainerComponent from '../../components/ScreenContainerComponent'
 import {updateSentenceDataAPI} from '../../api/update-sentence-data';
 import useData from '../../context/Data/useData';
 import {View} from 'react-native';
+import {storeDataLocalStorage} from '../../helper-functions/local-storage-utils';
+import {content} from '../../refs';
 
 const ContentScreen = () => {
   const route = useRoute();
 
   const [triggerSentenceIdUpdate, setTriggerSentenceIdUpdate] = useState(null);
-  const [selectedContentState, setSelectedContentState] = useState({});
+  const [selectedContentState, setSelectedContentState] = useState(null);
   const [selectedSnippetsState, setSelectedSnippetsState] = useState([]);
   const [updatePromptState, setUpdatePromptState] = useState('');
 
   const {languageSelectedState} = useLanguageSelector();
-
+  const dataStorageKeyPrefix = `${languageSelectedState}-data-`;
   const {
     targetLanguageSnippetsState,
     targetLanguageLoadedContentMaster,
@@ -56,7 +58,12 @@ const ContentScreen = () => {
           topic => topic.title !== topicName,
         );
         const newTopicState = {...thisTopicData, ...resObj};
-        setTargetLanguageLoadedContentMaster([...filterTopics, newTopicState]);
+        const updatedContentState = [...filterTopics, newTopicState];
+        setTargetLanguageLoadedContentMaster(updatedContentState);
+        await storeDataLocalStorage(
+          dataStorageKeyPrefix + content,
+          updatedContentState,
+        );
         setSelectedContentState(newTopicState);
         setUpdatePromptState(`${topicName} updated!`);
         setTimeout(() => setUpdatePromptState(''), 3000);
