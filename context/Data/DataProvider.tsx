@@ -314,7 +314,6 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
         audioTempState,
         updateSentenceData,
         updatePromptState,
-        targetLanguageLoadedContentMaster,
         addAdhocSentenceFunc,
         isAdhocDataLoading,
         targetLanguageSnippetsState,
@@ -329,6 +328,8 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
         setTargetLanguageWordsState,
         structuredUnifiedData,
         setStructuredUnifiedData,
+        targetLanguageLoadedContentMaster,
+        setTargetLanguageLoadedContentMaster,
       }}>
       {children}
     </DataContext.Provider>

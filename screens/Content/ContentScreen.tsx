@@ -16,17 +16,16 @@ const ContentScreen = () => {
 
   const [triggerSentenceIdUpdate, setTriggerSentenceIdUpdate] = useState(null);
   const [selectedContentState, setSelectedContentState] = useState({});
-  const [
-    targetLanguageLoadedContentState,
-    setTargetLanguageLoadedContentState,
-  ] = useState([]);
   const [selectedSnippetsState, setSelectedSnippetsState] = useState([]);
   const [updatePromptState, setUpdatePromptState] = useState('');
 
   const {languageSelectedState} = useLanguageSelector();
 
-  const {targetLanguageLoadedContentMaster, targetLanguageSnippetsState} =
-    useData();
+  const {
+    targetLanguageSnippetsState,
+    targetLanguageLoadedContentMaster,
+    setTargetLanguageLoadedContentMaster,
+  } = useData();
   const {selectedTopic, targetSentenceId} = route.params;
 
   useEffect(() => {
@@ -50,14 +49,14 @@ const ContentScreen = () => {
         language: languageSelectedState,
       });
       if (resObj) {
-        const thisTopicData = targetLanguageLoadedContentState.find(
+        const thisTopicData = targetLanguageLoadedContentMaster.find(
           topic => topic.title === topicName,
         );
-        const filterTopics = targetLanguageLoadedContentState.filter(
+        const filterTopics = targetLanguageLoadedContentMaster.filter(
           topic => topic.title !== topicName,
         );
         const newTopicState = {...thisTopicData, ...resObj};
-        setTargetLanguageLoadedContentState([...filterTopics, newTopicState]);
+        setTargetLanguageLoadedContentMaster([...filterTopics, newTopicState]);
         setSelectedContentState(newTopicState);
         setUpdatePromptState(`${topicName} updated!`);
         setTimeout(() => setUpdatePromptState(''), 3000);
