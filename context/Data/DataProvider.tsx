@@ -14,8 +14,6 @@ import {storeDataLocalStorage} from '../../helper-functions/local-storage-utils'
 
 export const DataContext = createContext(null);
 
-// adhocTargetLanguageSentencesState
-
 export const DataProvider = ({children}: PropsWithChildren<{}>) => {
   const [audioTempState, setAudioTempState] = useState({});
   const [updatingSentenceState, setUpdatingSentenceState] = useState('');
