@@ -2,7 +2,7 @@ import React from 'react';
 import {Image, Text, TouchableOpacity, View} from 'react-native';
 import useLanguageSelector from '../../context/Data/useLanguageSelector';
 import {LanguageEnum} from '../../context/Data/LanguageSelectorProvider';
-import {clearStorage} from '../../api/load-content';
+import {clearStorage} from '../../helper-functions/local-storage-utils';
 
 const LanguageSelector = ({navigation}): React.JSX.Element => {
   const {setLanguageSelectedState} = useLanguageSelector();
