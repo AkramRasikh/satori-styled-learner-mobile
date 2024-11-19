@@ -7,7 +7,6 @@ import {updateCreateReviewHistory} from '../../api/update-create-review-history'
 import useLanguageSelector from '../../context/Data/useLanguageSelector';
 import ScreenContainerComponent from '../../components/ScreenContainerComponent';
 
-import {updateSentenceDataAPI} from '../../api/update-sentence-data';
 import useData from '../../context/Data/useData';
 import {View} from 'react-native';
 import {storeDataLocalStorage} from '../../helper-functions/local-storage-utils';
@@ -27,6 +26,7 @@ const ContentScreen = () => {
     targetLanguageSnippetsState,
     targetLanguageLoadedContentMasterState,
     setTargetLanguageLoadedContentMasterState,
+    updateSentenceData,
   } = useData();
   const {selectedTopic, targetSentenceId} = route.params;
 
@@ -74,13 +74,13 @@ const ContentScreen = () => {
     }
   };
 
-  const updateSentenceData = async ({sentenceId, fieldToUpdate}) => {
+  const updateSentenceDataFunc = async ({sentenceId, fieldToUpdate}) => {
     try {
-      const resObj = await updateSentenceDataAPI({
+      const resObj = await updateSentenceData({
         topicName: selectedTopic,
         sentenceId,
         fieldToUpdate,
-        language: languageSelectedState,
+        isAdhoc: false,
       });
 
       if (resObj) {
@@ -122,7 +122,7 @@ const ContentScreen = () => {
           loadedContent={selectedContentState}
           loadedSnippets={selectedSnippetsState}
           updateTopicMetaData={updateTopicMetaData}
-          updateSentenceData={updateSentenceData}
+          updateSentenceData={updateSentenceDataFunc}
           triggerSentenceIdUpdate={triggerSentenceIdUpdate}
           setTriggerSentenceIdUpdate={setTriggerSentenceIdUpdate}
           setSelectedSnippetsState={setSelectedSnippetsState}
