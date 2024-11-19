@@ -9,7 +9,7 @@ import {addSnippetAPI, deleteSnippetAPI} from '../../api/snippet';
 import {makeArrayUnique} from '../../hooks/useHighlightWordToWordBank';
 import saveWordAPI from '../../api/save-word';
 import useLanguageSelector from './useLanguageSelector';
-import {words} from '../../refs';
+import {content, words} from '../../refs';
 import {storeDataLocalStorage} from '../../helper-functions/local-storage-utils';
 
 export const DataContext = createContext(null);
@@ -99,7 +99,7 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
     });
 
     setTargetLanguageLoadedContentMaster(filteredTopics);
-    //
+    return filteredTopics;
   };
 
   const handleUpdateAdhocSentenceDifficult = async ({
@@ -148,11 +148,17 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
       setUpdatingSentenceState(sentenceId);
       const resObj = await updateBackEnd();
       if (!isAdhoc) {
-        updateLoadedContentStateAfterSentenceUpdate({
-          topicName,
-          sentenceId,
-          resObj,
-        });
+        const updatedContentState = updateLoadedContentStateAfterSentenceUpdate(
+          {
+            topicName,
+            sentenceId,
+            resObj,
+          },
+        );
+        await storeDataLocalStorage(
+          dataStorageKeyPrefix + content,
+          updatedContentState,
+        );
       }
       setUpdatePromptState(`${topicName} updated!`);
       setTimeout(() => setUpdatePromptState(''), 2000);
