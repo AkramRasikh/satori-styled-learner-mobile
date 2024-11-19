@@ -5,12 +5,6 @@ export const updateCreateReviewHistory = async ({
   fieldToUpdate,
   language,
 }) => {
-  console.log('## updateCreateReviewHistory', {
-    title,
-    fieldToUpdate,
-    language,
-  });
-
   const url = BACKEND_ENDPOINT + '/update-content';
 
   try {

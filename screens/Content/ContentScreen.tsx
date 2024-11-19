@@ -14,13 +14,13 @@ const ContentScreen = () => {
   const [triggerSentenceIdUpdate, setTriggerSentenceIdUpdate] = useState(null);
   const [selectedContentState, setSelectedContentState] = useState(null);
   const [selectedSnippetsState, setSelectedSnippetsState] = useState([]);
-  const [updatePromptState, setUpdatePromptState] = useState('');
 
   const {
     targetLanguageSnippetsState,
     targetLanguageLoadedContentMasterState,
     updateSentenceData,
     updateContentMetaData,
+    updatePromptState,
   } = useData();
   const {targetSentenceId, selectedTopicIndex} = route.params;
 
@@ -41,19 +41,12 @@ const ContentScreen = () => {
   }, []);
 
   const updateMetaData = async ({topicName, fieldToUpdate}) => {
-    try {
-      const thisUpdatedContent = await updateContentMetaData({
-        topicName,
-        fieldToUpdate,
-        contentIndex: selectedTopicIndex,
-      });
-      setSelectedContentState(thisUpdatedContent);
-      setUpdatePromptState(`${topicName} updated!`);
-      setTimeout(() => setUpdatePromptState(''), 3000);
-    } catch (error) {
-      setUpdatePromptState(`Error updating ${topicName}!`);
-      setTimeout(() => setUpdatePromptState(''), 1000);
-    }
+    const thisUpdatedContent = await updateContentMetaData({
+      topicName,
+      fieldToUpdate,
+      contentIndex: selectedTopicIndex,
+    });
+    setSelectedContentState(thisUpdatedContent);
   };
 
   const updateSentenceDataFunc = async ({sentenceId, fieldToUpdate}) => {
