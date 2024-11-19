@@ -262,8 +262,7 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
       );
       return snippetDataFromAPI;
     } catch (error) {
-      console.log('## error adding snippet (DataProvider.tsx)');
-      updatePromptFunc('Error adding snippet', 2000);
+      updatePromptFunc('❌☠️ Error adding snippet', 2000);
     }
   };
 
