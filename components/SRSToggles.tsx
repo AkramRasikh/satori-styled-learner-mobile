@@ -6,7 +6,7 @@ import {
 } from '../srs-algo';
 import {useState} from 'react';
 import {getTimeDiffSRS} from '../utils/getTimeDiffSRS';
-import useWordData from '../context/Data/useWordData';
+import useWordData from '../context/WordData/useWordData';
 
 const SRSToggles = ({
   reviewData,

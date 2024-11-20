@@ -5,7 +5,7 @@ import {makeArrayUnique} from '../../hooks/useHighlightWordToWordBank';
 import SelectedTopicWordsSection from '../../components/SelectedTopicWordsSection';
 import SelectedCategoriesWordsSection from '../../components/SelectedCategoriesSection';
 import {FlashCardsSectionContainer} from '../../components/FlashcardsWordsSection';
-import useWordData from '../../context/Data/useWordData';
+import useWordData from '../../context/WordData/useWordData';
 import WordStudyCardsCTA from '../../components/WordStudyCardsCTA';
 import ScreenContainerComponent from '../../components/ScreenContainerComponent';
 

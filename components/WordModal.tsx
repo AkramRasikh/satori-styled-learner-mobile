@@ -6,7 +6,7 @@ import useLoadAudioInstance from '../hooks/useLoadAudioInstance';
 import useHighlightWordToWordBank from '../hooks/useHighlightWordToWordBank';
 import SRSToggles from './SRSToggles';
 import DeleteWordSection from './DeleteWordSection';
-import useWordData from '../context/Data/useWordData';
+import useWordData from '../context/WordData/useWordData';
 import useLanguageSelector from '../context/LanguageSelector/useLanguageSelector';
 import SoundWidget from './SoundWidget';
 
