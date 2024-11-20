@@ -53,6 +53,7 @@ const ContentScreen = () => {
     if (updatedSelectedState) {
       setSelectedContentState(updatedSelectedState);
       setTriggerSentenceIdUpdate(sentenceId);
+      return true;
     }
   };
 

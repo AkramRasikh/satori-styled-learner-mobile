@@ -54,7 +54,7 @@ const SRSTogglesMini = ({
   const handleNextReview = async difficulty => {
     const nextReviewData = nextScheduledOptions[difficulty].card;
 
-    updateSentenceData({
+    const hasBeenUpdated = await updateSentenceData({
       isAdhoc,
       topicName: sentence.topic,
       sentenceId: sentence.id,
@@ -64,6 +64,10 @@ const SRSTogglesMini = ({
       },
       contentIndex: contentIndex ?? sentence.contentIndex,
     });
+
+    if (hasBeenUpdated) {
+      setShowReviewSettings(false);
+    }
   };
 
   const againText = getTimeDiffSRS({dueTimeStamp: againDue, timeNow}) as string;
