@@ -102,11 +102,11 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
   };
 
   const handleRemoveSnippet = async ({snippetId, sentenceId}) => {
-    try {
-      const deletedSnippetId = await removeSnippet({
-        snippetId,
-        sentenceId,
-      });
+    const deletedSnippetId = await removeSnippet({
+      snippetId,
+      sentenceId,
+    });
+    if (deletedSnippetId) {
       const updatedDifficultSentencesWithSnippet = difficultSentencesState.map(
         diffSentence => {
           if (diffSentence.id === sentenceId) {
@@ -125,37 +125,65 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
       );
 
       setDifficultSentencesState(updatedDifficultSentencesWithSnippet);
-    } catch (error) {
-      console.log('## handleRemoveSnippet error (diff sentence)', error);
+      if (isShowDueOnly) {
+        const updatedDueSentencesWithSnippets = toggleableSentencesState.map(
+          diffSentence => {
+            if (diffSentence.id === sentenceId) {
+              const hasSnippets = diffSentence?.snippets?.length > 0;
+              return {
+                ...diffSentence,
+                snippets: hasSnippets
+                  ? diffSentence.snippets.filter(
+                      nestedSnippet => nestedSnippet.id !== deletedSnippetId,
+                    )
+                  : [],
+              };
+            }
+            return diffSentence;
+          },
+        );
+        setToggleableSentencesState(updatedDueSentencesWithSnippets);
+      }
     }
   };
 
+  const updateNestedSnippetData = (diffSentence, snippetDataFromAPI) => {
+    const hasSnippets = diffSentence?.snippets?.length > 0;
+
+    const updatedSnippets = hasSnippets
+      ? [...diffSentence.snippets, {...snippetDataFromAPI, saved: true}]
+      : [{...snippetDataFromAPI, saved: true}];
+
+    return {
+      ...diffSentence,
+      snippets: updatedSnippets,
+    };
+  };
+
   const handleAddSnippet = async snippetData => {
-    try {
-      const snippetDataFromAPI = await addSnippet(snippetData);
-
+    const snippetDataFromAPI = await addSnippet(snippetData);
+    if (snippetDataFromAPI) {
       const thisSnippetsSentence = snippetDataFromAPI.sentenceId;
-
       const updatedDifficultSentencesWithSnippet = difficultSentencesState.map(
         diffSentence => {
           if (diffSentence.id === thisSnippetsSentence) {
-            const hasSnippets = diffSentence?.snippets?.length > 0;
-            return {
-              ...diffSentence,
-              snippets: hasSnippets
-                ? [
-                    ...diffSentence.snippets,
-                    {...snippetDataFromAPI, saved: true},
-                  ]
-                : [{...snippetDataFromAPI, saved: true}],
-            };
+            return updateNestedSnippetData(diffSentence, snippetDataFromAPI);
           }
           return diffSentence;
         },
       );
       setDifficultSentencesState(updatedDifficultSentencesWithSnippet);
-    } catch (error) {
-      console.log('## Error Difficult sentences adding snippet', error);
+      if (isShowDueOnly) {
+        const updatedDueSentencesWithSnippets = toggleableSentencesState.map(
+          diffSentence => {
+            if (diffSentence.id === thisSnippetsSentence) {
+              return updateNestedSnippetData(diffSentence, snippetDataFromAPI);
+            }
+            return diffSentence;
+          },
+        );
+        setToggleableSentencesState(updatedDueSentencesWithSnippets);
+      }
     }
   };
 
@@ -168,14 +196,15 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
   }) => {
     const isRemoveFromDifficultSentences =
       !isAdhoc && fieldToUpdate?.nextReview === null;
-    try {
-      const updateDataRes = await updateSentenceData({
-        isAdhoc,
-        topicName,
-        sentenceId,
-        fieldToUpdate,
-        contentIndex,
-      });
+
+    const updateDataRes = await updateSentenceData({
+      isAdhoc,
+      topicName,
+      sentenceId,
+      fieldToUpdate,
+      contentIndex,
+    });
+    if (updateDataRes) {
       setToggleableSentencesState(prev =>
         prev.filter(sentenceData => sentenceData.id !== sentenceId),
       );
@@ -198,8 +227,6 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
         );
         setDifficultSentencesState(updatedDifficultSentences);
       }
-    } catch (error) {
-      console.log('## updateSentenceDataScreenLevel error', error);
     }
   };
 
