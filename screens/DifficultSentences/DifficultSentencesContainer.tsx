@@ -3,14 +3,13 @@ import {ScrollView, Text, View} from 'react-native';
 import LoadingScreen from '../../components/LoadingScreen';
 import PillButton from '../../components/PillButton';
 import ScreenContainerComponent from '../../components/ScreenContainerComponent';
-import useLoadDifficultSentences from '../../hooks/useLoadDifficultSentences';
 import useData from '../../context/Data/useData';
 import DifficultSentenceMapContainer from '../../components/DifficultSentenceMapContainer';
+import useDifficultSentences from '../../context/DifficultSentences/useDifficultSentencesProvider';
 
 const todayDateObj = new Date();
 
 const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
-  const [difficultSentencesState, setDifficultSentencesState] = useState([]);
   const [toggleableSentencesState, setToggleableSentencesState] = useState([]);
   const [sentenceBeingHighlightedState, setSentenceBeingHighlightedState] =
     useState('');
@@ -22,16 +21,13 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
     addSnippet,
     removeSnippet,
     pureWords,
-    adhocTargetLanguageSentencesState,
-    targetLanguageLoadedContentMasterState,
-    targetLanguageSnippetsState,
   } = useData();
 
-  const {getAllDataReady} = useLoadDifficultSentences({
-    adhocTargetLanguageSentencesState,
-    targetLanguageLoadedContentMasterState,
-    targetLanguageSnippetsState,
-  });
+  const {
+    difficultSentencesState,
+    setDifficultSentencesState,
+    removeDifficultSentenceFromState,
+  } = useDifficultSentences();
 
   const showDueInit = arr => {
     const filteredForDueOnly = [...arr].filter(sentence => {
@@ -54,84 +50,13 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
       snippetId,
       sentenceId,
     });
-    if (deletedSnippetId) {
-      const updatedDifficultSentencesWithSnippet = difficultSentencesState.map(
-        diffSentence => {
-          if (diffSentence.id === sentenceId) {
-            const hasSnippets = diffSentence?.snippets?.length > 0;
-            return {
-              ...diffSentence,
-              snippets: hasSnippets
-                ? diffSentence.snippets.filter(
-                    nestedSnippet => nestedSnippet.id !== deletedSnippetId,
-                  )
-                : [],
-            };
-          }
-          return diffSentence;
-        },
-      );
-
-      setDifficultSentencesState(updatedDifficultSentencesWithSnippet);
-      if (isShowDueOnly) {
-        const updatedDueSentencesWithSnippets = toggleableSentencesState.map(
-          diffSentence => {
-            if (diffSentence.id === sentenceId) {
-              const hasSnippets = diffSentence?.snippets?.length > 0;
-              return {
-                ...diffSentence,
-                snippets: hasSnippets
-                  ? diffSentence.snippets.filter(
-                      nestedSnippet => nestedSnippet.id !== deletedSnippetId,
-                    )
-                  : [],
-              };
-            }
-            return diffSentence;
-          },
-        );
-        setToggleableSentencesState(updatedDueSentencesWithSnippets);
-      }
-    }
-  };
-
-  const updateNestedSnippetData = (diffSentence, snippetDataFromAPI) => {
-    const hasSnippets = diffSentence?.snippets?.length > 0;
-
-    const updatedSnippets = hasSnippets
-      ? [...diffSentence.snippets, {...snippetDataFromAPI, saved: true}]
-      : [{...snippetDataFromAPI, saved: true}];
-
-    return {
-      ...diffSentence,
-      snippets: updatedSnippets,
-    };
+    return deletedSnippetId;
   };
 
   const handleAddSnippet = async snippetData => {
     const snippetDataFromAPI = await addSnippet(snippetData);
     if (snippetDataFromAPI) {
-      const thisSnippetsSentence = snippetDataFromAPI.sentenceId;
-      const updatedDifficultSentencesWithSnippet = difficultSentencesState.map(
-        diffSentence => {
-          if (diffSentence.id === thisSnippetsSentence) {
-            return updateNestedSnippetData(diffSentence, snippetDataFromAPI);
-          }
-          return diffSentence;
-        },
-      );
-      setDifficultSentencesState(updatedDifficultSentencesWithSnippet);
-      if (isShowDueOnly) {
-        const updatedDueSentencesWithSnippets = toggleableSentencesState.map(
-          diffSentence => {
-            if (diffSentence.id === thisSnippetsSentence) {
-              return updateNestedSnippetData(diffSentence, snippetDataFromAPI);
-            }
-            return diffSentence;
-          },
-        );
-        setToggleableSentencesState(updatedDueSentencesWithSnippets);
-      }
+      return snippetDataFromAPI;
     }
   };
 
@@ -157,10 +82,7 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
         prev.filter(sentenceData => sentenceData.id !== sentenceId),
       );
       if (isRemoveFromDifficultSentences) {
-        const updatedDifficultSentences = difficultSentencesState.filter(
-          sentenceData => sentenceData.id !== sentenceId,
-        );
-        setDifficultSentencesState(updatedDifficultSentences);
+        removeDifficultSentenceFromState(sentenceId);
       } else {
         const updatedDifficultSentences = difficultSentencesState.map(
           sentenceData => {
@@ -188,11 +110,7 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
   };
 
   useEffect(() => {
-    const difficultSentencesData = getAllDataReady();
-    if (difficultSentencesData?.length > 0) {
-      setDifficultSentencesState(difficultSentencesData);
-      showDueInit(difficultSentencesData);
-    }
+    showDueInit(difficultSentencesState);
   }, []);
 
   if (difficultSentencesState.length === 0) {

@@ -3,19 +3,7 @@ import {sortByDueDate} from '../utils/sort-by-due-date';
 const useLoadDifficultSentences = ({
   adhocTargetLanguageSentencesState,
   targetLanguageLoadedContentMasterState,
-  targetLanguageSnippetsState,
 }) => {
-  const addSnippetsToDifficultSentences = allInitDifficultSentences => {
-    return allInitDifficultSentences.map(sentenceData => {
-      return {
-        ...sentenceData,
-        snippets: targetLanguageSnippetsState.filter(
-          snippetData => snippetData.sentenceId === sentenceData.id,
-        ),
-      };
-    });
-  };
-
   const getSentencesMarkedAsDifficult = () => {
     const difficultSentences = [];
     targetLanguageLoadedContentMasterState?.forEach(contentWidget => {
@@ -62,11 +50,8 @@ const useLoadDifficultSentences = ({
   const getAllDataReady = () => {
     const allInitDifficultSentences =
       getSentencesMarkedAsDifficult()?.sort(sortByDueDate);
-    const difficultSentencesWithSnippets = addSnippetsToDifficultSentences(
-      allInitDifficultSentences,
-    );
 
-    return difficultSentencesWithSnippets;
+    return allInitDifficultSentences;
   };
 
   return {getAllDataReady};

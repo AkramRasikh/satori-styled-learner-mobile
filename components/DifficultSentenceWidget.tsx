@@ -1,12 +1,11 @@
 import React, {Text, View} from 'react-native';
 import useLoadAudioInstance from '../hooks/useLoadAudioInstance';
-import {useEffect, useMemo, useRef, useState} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import {getFirebaseAudioURL} from '../hooks/useGetCombinedAudioData';
 import DifficultSentenceContent from './DifficultSentenceContent';
 import {getDueDateText} from '../utils/get-date-due-status';
 import useMP3File from '../hooks/useMP3File';
 import {generateRandomId} from '../utils/generate-random-id';
-import {mergeAndRemoveDuplicates} from '../utils/merge-and-remove-duplicates';
 import useData from '../context/Data/useData';
 import useLanguageSelector from '../context/LanguageSelector/useLanguageSelector';
 import DifficultSentenceAudioContainer from './DifficultSentenceAudioContainer';
@@ -33,7 +32,11 @@ const DifficultSentenceWidget = ({
   const [showThisWordsDefinitions, setShowThisWordsDefinitions] =
     useState(null);
 
-  const {getThisSentencesWordList, updatingSentenceState} = useData();
+  const {
+    getThisSentencesWordList,
+    updatingSentenceState,
+    targetLanguageSnippetsState,
+  } = useData();
   const {languageSelectedState} = useLanguageSelector();
 
   const id = sentence.id;
@@ -47,12 +50,14 @@ const DifficultSentenceWidget = ({
   const soundRef = useRef();
 
   const matchedWordList = getThisSentencesWordList(targetLang);
-  const snippetsLocalAndDb = useMemo(() => {
-    return mergeAndRemoveDuplicates(
-      sentence?.snippets?.sort((a, b) => a.pointInAudio - b.pointInAudio),
-      miniSnippets,
+
+  useEffect(() => {
+    setMiniSnippets(
+      targetLanguageSnippetsState.filter(
+        snippetData => snippetData.sentenceId === id,
+      ),
     );
-  }, [sentence, miniSnippets]);
+  }, []);
 
   const handleSnippet = currentTime => {
     const snippetId = topic + '-' + generateRandomId();
@@ -228,19 +233,21 @@ const DifficultSentenceWidget = ({
           handleYesSure={handleDeleteContent}
         />
       ) : null}
-      <DifficultSentenceSnippetContainer
-        isLoaded={isLoaded}
-        soundRef={soundRef}
-        snippetsLocalAndDb={snippetsLocalAndDb}
-        setCurrentTimeState={setCurrentTimeState}
-        currentTimeState={currentTimeState}
-        isPlaying={isPlaying}
-        setIsPlaying={setIsPlaying}
-        addSnippet={addSnippet}
-        removeSnippet={removeSnippet}
-        setMiniSnippets={setMiniSnippets}
-        url={url}
-      />
+      {miniSnippets?.length > 0 && (
+        <DifficultSentenceSnippetContainer
+          isLoaded={isLoaded}
+          soundRef={soundRef}
+          snippetsLocalAndDb={miniSnippets}
+          setCurrentTimeState={setCurrentTimeState}
+          currentTimeState={currentTimeState}
+          isPlaying={isPlaying}
+          setIsPlaying={setIsPlaying}
+          addSnippet={addSnippet}
+          removeSnippet={removeSnippet}
+          setMiniSnippets={setMiniSnippets}
+          url={url}
+        />
+      )}
     </View>
   );
 };

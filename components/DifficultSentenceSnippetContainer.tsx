@@ -50,7 +50,7 @@ const ThisSnippetContainer = ({
     }
   }, [masterAudio, setMasterAudio, isPlaying]);
 
-  const handleSaveSnippet = () => {
+  const handleSaveSnippet = async () => {
     const formattedSnippet = {
       ...snippet,
       pointOfAudioOnClick: undefined,
@@ -58,25 +58,33 @@ const ThisSnippetContainer = ({
       pointInAudio: adjustableStartTime,
       duration: adjustableDuration,
     };
+    const addSnippetRes = await addSnippet(formattedSnippet);
+    if (addSnippetRes) {
+      setMiniSnippets(prev =>
+        prev.map(snippetData => {
+          if (snippetData.id === addSnippetRes.id) {
+            return {...addSnippetRes, saved: true};
+          }
+          return snippetData;
+        }),
+      );
+    }
+  };
 
-    const addSnippetRes = addSnippet(formattedSnippet);
+  const handleRemoveFromTempSnippets = successfullyRemovedId => {
     setMiniSnippets(prev =>
-      prev.filter(snippetData => snippetData.id !== addSnippetRes.id),
+      prev.filter(snippetData => snippetData.id !== successfullyRemovedId),
     );
   };
 
-  const handleRemoveFromTempSnippets = () => {
-    setMiniSnippets(prev =>
-      prev.filter(snippetData => snippetData.id !== snippet.id),
-    );
-  };
-
-  const handleRemoveSnippet = () => {
-    removeSnippet({
+  const handleRemoveSnippet = async () => {
+    const successfullyRemovedId = await removeSnippet({
       snippetId: snippet.id,
       sentenceId: snippet.sentenceId,
     });
-    handleRemoveFromTempSnippets();
+    if (successfullyRemovedId) {
+      handleRemoveFromTempSnippets(successfullyRemovedId);
+    }
   };
 
   const {handleSetEarlierTime, handleSetDuration} = useSnippetControls({
