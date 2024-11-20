@@ -141,7 +141,8 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
     isAdhoc,
     contentIndex,
   }) => {
-    const updateBackEnd = async () => {
+    try {
+      setUpdatingSentenceState(sentenceId);
       const resObj = isAdhoc
         ? await handleUpdateAdhocSentenceDifficult({
             sentenceId,
@@ -154,12 +155,6 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
             language,
           });
 
-      return resObj;
-    };
-
-    try {
-      setUpdatingSentenceState(sentenceId);
-      const resObj = await updateBackEnd();
       if (!isAdhoc) {
         const updatedContentState = updateLoadedContentStateAfterSentenceUpdate(
           {

@@ -35,6 +35,19 @@ export const DifficultSentencesProvider = ({
     setDifficultSentencesState(updatedDifficultSentences);
   };
 
+  const updateDifficultSentence = sentenceId => {
+    const updatedState = difficultSentencesState.map(sentenceData => {
+      if (sentenceData.id === sentenceId) {
+        return {
+          ...sentenceData,
+          ...updateDataRes,
+        };
+      }
+      return sentenceData;
+    });
+    setDifficultSentencesState(updatedState);
+  };
+
   useEffect(() => {
     const difficultSentencesData = getAllDataReady();
     if (
@@ -58,6 +71,7 @@ export const DifficultSentencesProvider = ({
         difficultSentencesState,
         setDifficultSentencesState,
         removeDifficultSentenceFromState,
+        updateDifficultSentence,
       }}>
       {children}
     </DifficultSentencesContext.Provider>

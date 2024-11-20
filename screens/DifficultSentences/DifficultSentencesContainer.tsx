@@ -25,8 +25,8 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
 
   const {
     difficultSentencesState,
-    setDifficultSentencesState,
     removeDifficultSentenceFromState,
+    updateDifficultSentence,
   } = useDifficultSentences();
 
   const showDueInit = arr => {
@@ -84,18 +84,7 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
       if (isRemoveFromDifficultSentences) {
         removeDifficultSentenceFromState(sentenceId);
       } else {
-        const updatedDifficultSentences = difficultSentencesState.map(
-          sentenceData => {
-            if (sentenceData.id === sentenceId) {
-              return {
-                ...sentenceData,
-                ...updateDataRes,
-              };
-            }
-            return sentenceData;
-          },
-        );
-        setDifficultSentencesState(updatedDifficultSentences);
+        updateDifficultSentence(sentenceId);
       }
     }
   };
