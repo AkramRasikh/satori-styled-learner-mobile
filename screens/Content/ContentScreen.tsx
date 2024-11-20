@@ -7,6 +7,7 @@ import LoadingScreen from '../../components/LoadingScreen';
 import ScreenContainerComponent from '../../components/ScreenContainerComponent';
 
 import useData from '../../context/Data/useData';
+import useDifficultSentences from '../../context/DifficultSentences/useDifficultSentencesProvider';
 
 const ContentScreen = () => {
   const route = useRoute();
@@ -21,6 +22,12 @@ const ContentScreen = () => {
     updatePromptState,
   } = useData();
 
+  const {
+    removeDifficultSentenceFromState,
+    updateDifficultSentence,
+    addToSentenceToDifficultSentences,
+  } = useDifficultSentences();
+
   const {targetSentenceId, selectedTopicIndex} = route.params;
 
   const selectedTopic =
@@ -32,6 +39,9 @@ const ContentScreen = () => {
     );
   }, []);
 
+  const getThisSentenceData = (state, sentenceId) =>
+    state.find(sentence => sentence.id === sentenceId);
+
   const updateMetaData = async ({topicName, fieldToUpdate}) => {
     const thisUpdatedContent = await updateContentMetaData({
       topicName,
@@ -40,6 +50,42 @@ const ContentScreen = () => {
     });
     if (thisUpdatedContent) {
       setSelectedContentState(thisUpdatedContent);
+    }
+  };
+
+  const updateDifficultSentencesProvider = (
+    updatedContentState,
+    sentenceId,
+  ) => {
+    const prevState = getThisSentenceData(
+      selectedContentState.content,
+      sentenceId,
+    );
+    const newState = getThisSentenceData(
+      updatedContentState.content,
+      sentenceId,
+    );
+
+    const initialSentenceDueState = prevState?.reviewData?.due;
+    const updatedSentenceDueState = newState?.reviewData?.due;
+    const isNewlyDifficulty =
+      !initialSentenceDueState && updatedSentenceDueState;
+    const isUpdatingDifficulty =
+      initialSentenceDueState && updatedSentenceDueState;
+    const isRemoveDifficulty =
+      initialSentenceDueState && !updatedSentenceDueState;
+
+    if (isNewlyDifficulty) {
+      addToSentenceToDifficultSentences({
+        sentenceData: newState,
+      });
+    } else if (isUpdatingDifficulty) {
+      updateDifficultSentence({
+        sentenceId,
+        updateDataRes: newState,
+      });
+    } else if (isRemoveDifficulty) {
+      removeDifficultSentenceFromState(sentenceId);
     }
   };
 
@@ -53,6 +99,7 @@ const ContentScreen = () => {
     if (updatedSelectedState) {
       setSelectedContentState(updatedSelectedState);
       setTriggerSentenceIdUpdate(sentenceId);
+      updateDifficultSentencesProvider(updatedSelectedState, sentenceId);
       return true;
     }
   };

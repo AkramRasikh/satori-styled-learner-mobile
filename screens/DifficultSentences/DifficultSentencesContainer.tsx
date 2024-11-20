@@ -84,7 +84,7 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
       if (isRemoveFromDifficultSentences) {
         removeDifficultSentenceFromState(sentenceId);
       } else {
-        updateDifficultSentence(sentenceId);
+        updateDifficultSentence({sentenceId, updateDataRes});
       }
     }
   };
