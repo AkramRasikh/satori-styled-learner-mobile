@@ -2,7 +2,7 @@ import React from 'react';
 import {createContext, PropsWithChildren, useState} from 'react';
 import {updateWordAPI} from '../../api/update-word-data';
 import {deleteWordAPI} from '../../api/delete-word';
-import useLanguageSelector from './useLanguageSelector';
+import useLanguageSelector from '../LanguageSelector/useLanguageSelector';
 import useData from './useData';
 import {FlashCardWordType} from '../../screens/WordStudy/types';
 import {storeDataLocalStorage} from '../../helper-functions/local-storage-utils';

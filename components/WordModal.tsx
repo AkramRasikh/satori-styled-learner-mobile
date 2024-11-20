@@ -7,7 +7,7 @@ import useHighlightWordToWordBank from '../hooks/useHighlightWordToWordBank';
 import SRSToggles from './SRSToggles';
 import DeleteWordSection from './DeleteWordSection';
 import useWordData from '../context/Data/useWordData';
-import useLanguageSelector from '../context/Data/useLanguageSelector';
+import useLanguageSelector from '../context/LanguageSelector/useLanguageSelector';
 import SoundWidget from './SoundWidget';
 
 const WordStudyAudio = ({sentenceData, isMediaContent}) => {

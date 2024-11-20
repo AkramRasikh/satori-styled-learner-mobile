@@ -8,7 +8,7 @@ import updateAdhocSentenceAPI from '../../api/update-adhoc-sentence';
 import {addSnippetAPI, deleteSnippetAPI} from '../../api/snippet';
 import {makeArrayUnique} from '../../hooks/useHighlightWordToWordBank';
 import saveWordAPI from '../../api/save-word';
-import useLanguageSelector from './useLanguageSelector';
+import useLanguageSelector from '../LanguageSelector/useLanguageSelector';
 import {adhocSentences, content, snippets, words} from '../../refs';
 import {storeDataLocalStorage} from '../../helper-functions/local-storage-utils';
 import {updateCreateReviewHistory} from '../../api/update-create-review-history';

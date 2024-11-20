@@ -1,7 +1,7 @@
 import {useEffect, useState} from 'react';
 import {FIREBASE_ASSETS_URL, FIREBASE_STORAGE_ID} from '@env';
 import Sound from 'react-native-sound';
-import useLanguageSelector from '../context/Data/useLanguageSelector';
+import useLanguageSelector from '../context/LanguageSelector/useLanguageSelector';
 Sound.setCategory('Playback');
 
 export const getFirebaseAudioURL = (mp3FileName: string, language: string) => {

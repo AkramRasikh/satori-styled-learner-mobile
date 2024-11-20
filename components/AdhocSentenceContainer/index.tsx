@@ -19,7 +19,7 @@ import SatoriLineReviewSection from '../SatoriLineReviewSection';
 import useLoadAudioInstance from '../../hooks/useLoadAudioInstance';
 import useMP3File from '../../hooks/useMP3File';
 import {getFirebaseAudioURL} from '../../hooks/useGetCombinedAudioData';
-import useLanguageSelector from '../../context/Data/useLanguageSelector';
+import useLanguageSelector from '../../context/LanguageSelector/useLanguageSelector';
 import SoundWidget from '../SoundWidget';
 
 const AdhocSentenceResponse = ({

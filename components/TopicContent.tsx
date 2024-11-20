@@ -21,7 +21,7 @@ import ReviewSection from './ReviewSection';
 import useMP3File from '../hooks/useMP3File';
 import useLoadAudioInstance from '../hooks/useLoadAudioInstance';
 import AdhocSentenceContainer from './AdhocSentenceContainer';
-import useLanguageSelector from '../context/Data/useLanguageSelector';
+import useLanguageSelector from '../context/LanguageSelector/useLanguageSelector';
 import AudioToggles from './AudioToggles';
 import {VideoRef} from 'react-native-video';
 import VideoPlayer from './VideoPlayer';

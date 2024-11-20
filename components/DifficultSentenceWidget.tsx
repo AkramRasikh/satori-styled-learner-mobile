@@ -8,7 +8,7 @@ import useMP3File from '../hooks/useMP3File';
 import {generateRandomId} from '../utils/generate-random-id';
 import {mergeAndRemoveDuplicates} from '../utils/merge-and-remove-duplicates';
 import useData from '../context/Data/useData';
-import useLanguageSelector from '../context/Data/useLanguageSelector';
+import useLanguageSelector from '../context/LanguageSelector/useLanguageSelector';
 import DifficultSentenceAudioContainer from './DifficultSentenceAudioContainer';
 import DifficultSentenceSnippetContainer from './DifficultSentenceSnippetContainer';
 import AreYouSureSection from './AreYouSureSection';
