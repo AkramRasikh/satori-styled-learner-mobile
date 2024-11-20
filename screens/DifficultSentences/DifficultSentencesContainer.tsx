@@ -1,71 +1,19 @@
 import React, {useEffect, useState} from 'react';
 import {ScrollView, Text, View} from 'react-native';
-import DifficultSentenceWidget from '../../components/DifficultSentenceWidget';
 import LoadingScreen from '../../components/LoadingScreen';
-import {calculateDueDate} from '../../utils/get-date-due-status';
 import PillButton from '../../components/PillButton';
-import {getTimeDiffSRS} from '../../utils/getTimeDiffSRS';
 import ScreenContainerComponent from '../../components/ScreenContainerComponent';
 import useLoadDifficultSentences from '../../hooks/useLoadDifficultSentences';
 import useData from '../../context/Data/useData';
+import DifficultSentenceMapContainer from '../../components/DifficultSentenceMapContainer';
 
 const todayDateObj = new Date();
-
-const Wrapper = React.memo(
-  ({
-    toggleableSentencesState,
-    addSnippet,
-    updateSentenceData,
-    removeSnippet,
-    pureWords,
-    sentenceBeingHighlightedState,
-    setSentenceBeingHighlightedState,
-    navigation,
-  }) => {
-    return (
-      <View style={{marginTop: 10}}>
-        {toggleableSentencesState.map((sentence, index) => {
-          const isLastEl = toggleableSentencesState.length === index + 1;
-          const nextDueTime = sentence?.reviewData?.due || sentence.nextReview;
-          const dueStatus = calculateDueDate({
-            todayDateObj,
-            nextReview: nextDueTime,
-          });
-          const dueDate = getTimeDiffSRS({
-            dueTimeStamp: new Date(nextDueTime),
-            timeNow: todayDateObj,
-          });
-
-          return (
-            <DifficultSentenceWidget
-              key={sentence.id}
-              sentence={sentence}
-              updateSentenceData={updateSentenceData}
-              dueStatus={dueStatus}
-              dueDate={dueDate}
-              isLastEl={isLastEl}
-              addSnippet={addSnippet}
-              removeSnippet={removeSnippet}
-              pureWords={pureWords}
-              sentenceBeingHighlightedState={sentenceBeingHighlightedState}
-              setSentenceBeingHighlightedState={
-                setSentenceBeingHighlightedState
-              }
-              navigation={navigation}
-            />
-          );
-        })}
-      </View>
-    );
-  },
-);
 
 const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
   const [difficultSentencesState, setDifficultSentencesState] = useState([]);
   const [toggleableSentencesState, setToggleableSentencesState] = useState([]);
   const [sentenceBeingHighlightedState, setSentenceBeingHighlightedState] =
     useState('');
-
   const [isShowDueOnly, setIsShowDueOnly] = useState(false);
 
   const {
@@ -278,7 +226,7 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
         <ScrollView
           contentInsetAdjustmentBehavior="automatic"
           style={{paddingBottom: 30}}>
-          <Wrapper
+          <DifficultSentenceMapContainer
             toggleableSentencesState={toggleableSentencesState}
             addSnippet={handleAddSnippet}
             updateSentenceData={updateSentenceDataScreenLevel}
