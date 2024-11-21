@@ -7,6 +7,7 @@ import HighlightTextZone from './HighlightTextZone';
 import useData from '../context/Data/useData';
 import DifficultSentenceContentHeader from './DifficultSentenceContentHeader';
 import DifficultSentenceTopHeaderActions from './DifficultSentenceTopHeaderActions';
+import AreYouSureSection from './AreYouSureSection';
 
 const DifficultSentenceContent = ({
   topic,
@@ -24,6 +25,9 @@ const DifficultSentenceContent = ({
   updateSentenceData,
   sentence,
   navigation,
+  handleClose,
+  handleYesSure,
+  showReviewSettings,
 }) => {
   const [highlightedIndices, setHighlightedIndices] = useState([]);
   const [containerWidth, setContainerWidth] = useState(0);
@@ -119,6 +123,12 @@ const DifficultSentenceContent = ({
         setHighlightedIndices={setHighlightedIndices}
         setShowReviewSettings={setShowReviewSettings}
       />
+      {showReviewSettings ? (
+        <AreYouSureSection
+          handleClose={handleClose}
+          handleYesSure={handleYesSure}
+        />
+      ) : null}
       {highlightMode ? (
         <View
           onLayout={handleLayout} // Attach the onLayout event handler

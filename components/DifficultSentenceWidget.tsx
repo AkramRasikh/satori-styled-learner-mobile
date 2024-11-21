@@ -10,46 +10,56 @@ import useData from '../context/Data/useData';
 import useLanguageSelector from '../context/LanguageSelector/useLanguageSelector';
 import DifficultSentenceAudioContainer from './DifficultSentenceAudioContainer';
 import DifficultSentenceSnippetContainer from './DifficultSentenceSnippetContainer';
-import AreYouSureSection from './AreYouSureSection';
 
-const DifficultSentenceWidget = ({
-  sentence,
-  updateSentenceData,
-  isLastEl,
-  dueStatus,
-  addSnippet,
-  removeSnippet,
-  pureWords,
-  sentenceBeingHighlightedState,
-  setSentenceBeingHighlightedState,
-  dueDate,
-  navigation,
+const TopSection = ({
+  thisSentenceIsLoading,
+  showThisWordsDefinitions,
+  getLongPressedWordData,
 }) => {
+  return (
+    <>
+      {thisSentenceIsLoading && (
+        <View
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            position: 'absolute',
+            right: '50%',
+            top: '50%',
+            opacity: 1,
+            zIndex: 100,
+          }}>
+          <Text
+            style={{
+              fontSize: 30,
+            }}>
+            ⏳
+          </Text>
+        </View>
+      )}
+      <View>
+        {showThisWordsDefinitions?.length > 0 ? (
+          <View
+            style={{
+              paddingTop: 5,
+              borderTopColor: 'gray',
+              borderTopWidth: 1,
+            }}>
+            <Text>{getLongPressedWordData()}</Text>
+          </View>
+        ) : null}
+      </View>
+    </>
+  );
+};
+
+const BottomAudioSection = ({sentence, addSnippet, removeSnippet}) => {
   const [currentTimeState, setCurrentTimeState] = useState(0);
-  const [showReviewSettings, setShowReviewSettings] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [miniSnippets, setMiniSnippets] = useState([]);
-  const [showThisWordsDefinitions, setShowThisWordsDefinitions] =
-    useState(null);
 
-  const {
-    getThisSentencesWordList,
-    updatingSentenceState,
-    targetLanguageSnippetsState,
-  } = useData();
+  const {targetLanguageSnippetsState} = useData();
   const {languageSelectedState} = useLanguageSelector();
-
-  const id = sentence.id;
-  const topic = sentence.topic;
-  const isCore = sentence?.isCore;
-  const baseLang = sentence.baseLang;
-  const targetLang = sentence.targetLang;
-  const isMediaContent = sentence.isMediaContent;
-
-  const audioId = isMediaContent ? topic : id;
-  const soundRef = useRef();
-
-  const matchedWordList = getThisSentencesWordList(targetLang);
 
   useEffect(() => {
     setMiniSnippets(
@@ -58,6 +68,31 @@ const DifficultSentenceWidget = ({
       ),
     );
   }, []);
+
+  const id = sentence.id;
+  const topic = sentence.topic;
+  const isMediaContent = sentence.isMediaContent;
+
+  const audioId = isMediaContent ? topic : id;
+  const soundRef = useRef();
+
+  const url = getFirebaseAudioURL(audioId, languageSelectedState);
+
+  const {loadFile, filePath} = useMP3File(audioId);
+  const {triggerLoadURL, isLoaded} = useLoadAudioInstance({
+    soundRef,
+    url: filePath,
+  });
+
+  const handleLoad = () => {
+    loadFile(audioId, url);
+  };
+
+  useEffect(() => {
+    if (filePath && !isLoaded) {
+      triggerLoadURL();
+    }
+  }, [filePath, triggerLoadURL, isLoaded]);
 
   const handleSnippet = currentTime => {
     const snippetId = topic + '-' + generateRandomId();
@@ -72,25 +107,68 @@ const DifficultSentenceWidget = ({
     setMiniSnippets(prev => [...prev, itemToSave]);
   };
 
-  const url = getFirebaseAudioURL(audioId, languageSelectedState);
+  return (
+    <>
+      <DifficultSentenceAudioContainer
+        isLoaded={isLoaded}
+        soundRef={soundRef}
+        url={url}
+        topic={topic}
+        handleSnippet={handleSnippet}
+        sentence={sentence}
+        isPlaying={isPlaying}
+        setIsPlaying={setIsPlaying}
+        currentTimeState={currentTimeState}
+        setCurrentTimeState={setCurrentTimeState}
+        handleLoad={handleLoad}
+        isMediaContent={isMediaContent}
+      />
+      {miniSnippets?.length > 0 && (
+        <DifficultSentenceSnippetContainer
+          isLoaded={isLoaded}
+          soundRef={soundRef}
+          snippetsLocalAndDb={miniSnippets}
+          setCurrentTimeState={setCurrentTimeState}
+          currentTimeState={currentTimeState}
+          isPlaying={isPlaying}
+          setIsPlaying={setIsPlaying}
+          addSnippet={addSnippet}
+          removeSnippet={removeSnippet}
+          setMiniSnippets={setMiniSnippets}
+          url={url}
+        />
+      )}
+    </>
+  );
+};
 
-  // filePath iccorrectingly has previous
-  const {loadFile, filePath} = useMP3File(audioId);
+const DifficultSentenceWidget = ({
+  sentence,
+  updateSentenceData,
+  isLastEl,
+  dueStatus,
+  addSnippet,
+  removeSnippet,
+  pureWords,
+  sentenceBeingHighlightedState,
+  setSentenceBeingHighlightedState,
+  dueDate,
+  navigation,
+  isFirstEl,
+  indexNum,
+}) => {
+  const [showReviewSettings, setShowReviewSettings] = useState(false);
+  const [showThisWordsDefinitions, setShowThisWordsDefinitions] =
+    useState(null);
 
-  const {triggerLoadURL, isLoaded} = useLoadAudioInstance({
-    soundRef,
-    url: filePath,
-  });
+  const {updatingSentenceState, getThisSentencesWordList} = useData();
 
-  useEffect(() => {
-    if (filePath && !isLoaded) {
-      triggerLoadURL();
-    }
-  }, [filePath, triggerLoadURL, isLoaded]);
-
-  const handleLoad = () => {
-    loadFile(audioId, url);
-  };
+  const id = sentence.id;
+  const topic = sentence.topic;
+  const isCore = sentence?.isCore;
+  const baseLang = sentence.baseLang;
+  const targetLang = sentence.targetLang;
+  const matchedWordList = getThisSentencesWordList(targetLang);
 
   const handleDeleteContent = () => {
     updateSentenceData({
@@ -165,37 +243,11 @@ const DifficultSentenceWidget = ({
         paddingBottom: isLastEl ? 100 : 0,
         opacity: thisSentenceIsLoading ? 0.5 : 1,
       }}>
-      {thisSentenceIsLoading && (
-        <View
-          style={{
-            display: 'flex',
-            justifyContent: 'center',
-            position: 'absolute',
-            right: '50%',
-            top: '50%',
-            opacity: 1,
-            zIndex: 100,
-          }}>
-          <Text
-            style={{
-              fontSize: 30,
-            }}>
-            ⏳
-          </Text>
-        </View>
-      )}
-      <View>
-        {showThisWordsDefinitions?.length > 0 ? (
-          <View
-            style={{
-              paddingTop: 5,
-              borderTopColor: 'gray',
-              borderTopWidth: 1,
-            }}>
-            <Text>{getLongPressedWordData()}</Text>
-          </View>
-        ) : null}
-      </View>
+      <TopSection
+        thisSentenceIsLoading={thisSentenceIsLoading}
+        showThisWordsDefinitions={showThisWordsDefinitions}
+        getLongPressedWordData={getLongPressedWordData}
+      />
       <DifficultSentenceContent
         topic={topic}
         isCore={isCore}
@@ -212,42 +264,15 @@ const DifficultSentenceWidget = ({
         updateSentenceData={updateSentenceData}
         sentence={sentence}
         navigation={navigation}
+        handleClose={() => setShowReviewSettings(false)}
+        handleYesSure={handleDeleteContent}
+        showReviewSettings={showReviewSettings}
       />
-      <DifficultSentenceAudioContainer
-        isLoaded={isLoaded}
-        soundRef={soundRef}
-        url={url}
-        topic={topic}
-        handleSnippet={handleSnippet}
+      <BottomAudioSection
         sentence={sentence}
-        isPlaying={isPlaying}
-        setIsPlaying={setIsPlaying}
-        currentTimeState={currentTimeState}
-        setCurrentTimeState={setCurrentTimeState}
-        handleLoad={handleLoad}
-        isMediaContent={isMediaContent}
+        addSnippet={addSnippet}
+        removeSnippet={removeSnippet}
       />
-      {showReviewSettings ? (
-        <AreYouSureSection
-          handleClose={() => setShowReviewSettings(false)}
-          handleYesSure={handleDeleteContent}
-        />
-      ) : null}
-      {miniSnippets?.length > 0 && (
-        <DifficultSentenceSnippetContainer
-          isLoaded={isLoaded}
-          soundRef={soundRef}
-          snippetsLocalAndDb={miniSnippets}
-          setCurrentTimeState={setCurrentTimeState}
-          currentTimeState={currentTimeState}
-          isPlaying={isPlaying}
-          setIsPlaying={setIsPlaying}
-          addSnippet={addSnippet}
-          removeSnippet={removeSnippet}
-          setMiniSnippets={setMiniSnippets}
-          url={url}
-        />
-      )}
     </View>
   );
 };
