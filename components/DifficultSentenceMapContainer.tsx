@@ -1,5 +1,5 @@
 import React from 'react';
-import {View} from 'react-native';
+import {Button, View} from 'react-native';
 import DifficultSentenceWidget from './DifficultSentenceWidget';
 import {calculateDueDate} from '../utils/get-date-due-status';
 import {getTimeDiffSRS} from '../utils/getTimeDiffSRS';
@@ -15,11 +15,16 @@ const DifficultSentenceMapContainer = ({
   sentenceBeingHighlightedState,
   setSentenceBeingHighlightedState,
   navigation,
+  sliceArrState,
+  setSliceArrState,
+  realCapacity,
 }) => {
   return (
     <View style={{marginTop: 10}}>
       {toggleableSentencesState.map((sentence, index) => {
         const isLastEl = toggleableSentencesState.length === index + 1;
+        const isLastInTotalOrder = realCapacity === index + 1;
+        const moreToLoad = sliceArrState === index + 1 && !isLastInTotalOrder;
         const nextDueTime = sentence?.reviewData?.due || sentence.nextReview;
         const dueStatus = calculateDueDate({
           todayDateObj,
@@ -31,20 +36,32 @@ const DifficultSentenceMapContainer = ({
         });
 
         return (
-          <DifficultSentenceWidget
+          <View
             key={sentence.id}
-            sentence={sentence}
-            updateSentenceData={updateSentenceData}
-            dueStatus={dueStatus}
-            dueDate={dueDate}
-            isLastEl={isLastEl}
-            addSnippet={addSnippet}
-            removeSnippet={removeSnippet}
-            pureWords={pureWords}
-            sentenceBeingHighlightedState={sentenceBeingHighlightedState}
-            setSentenceBeingHighlightedState={setSentenceBeingHighlightedState}
-            navigation={navigation}
-          />
+            style={{
+              paddingBottom: isLastEl ? 100 : 0,
+            }}>
+            <DifficultSentenceWidget
+              sentence={sentence}
+              updateSentenceData={updateSentenceData}
+              dueStatus={dueStatus}
+              dueDate={dueDate}
+              addSnippet={addSnippet}
+              removeSnippet={removeSnippet}
+              pureWords={pureWords}
+              sentenceBeingHighlightedState={sentenceBeingHighlightedState}
+              setSentenceBeingHighlightedState={
+                setSentenceBeingHighlightedState
+              }
+              navigation={navigation}
+            />
+            {moreToLoad && (
+              <Button
+                onPress={() => setSliceArrState(prev => prev + 5)}
+                title="See More"
+              />
+            )}
+          </View>
         );
       })}
     </View>

@@ -145,7 +145,6 @@ const BottomAudioSection = ({sentence, addSnippet, removeSnippet}) => {
 const DifficultSentenceWidget = ({
   sentence,
   updateSentenceData,
-  isLastEl,
   dueStatus,
   addSnippet,
   removeSnippet,
@@ -154,8 +153,6 @@ const DifficultSentenceWidget = ({
   setSentenceBeingHighlightedState,
   dueDate,
   navigation,
-  isFirstEl,
-  indexNum,
 }) => {
   const [showReviewSettings, setShowReviewSettings] = useState(false);
   const [showThisWordsDefinitions, setShowThisWordsDefinitions] =
@@ -240,7 +237,6 @@ const DifficultSentenceWidget = ({
         flexDirection: 'column',
         gap: 10,
         marginBottom: 10,
-        paddingBottom: isLastEl ? 100 : 0,
         opacity: thisSentenceIsLoading ? 0.5 : 1,
       }}>
       <TopSection

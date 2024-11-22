@@ -13,6 +13,7 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
   const [toggleableSentencesState, setToggleableSentencesState] = useState([]);
   const [sentenceBeingHighlightedState, setSentenceBeingHighlightedState] =
     useState('');
+  const [sliceArrState, setSliceArrState] = useState(20);
   const [isShowDueOnly, setIsShowDueOnly] = useState(false);
 
   const {
@@ -106,6 +107,8 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
     return <LoadingScreen>Getting ready!</LoadingScreen>;
   }
 
+  const realCapacity = toggleableSentencesState.length;
+
   return (
     <ScreenContainerComponent
       updatePromptState={updatePromptState}
@@ -134,7 +137,10 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
           contentInsetAdjustmentBehavior="automatic"
           style={{paddingBottom: 30}}>
           <DifficultSentenceMapContainer
-            toggleableSentencesState={toggleableSentencesState}
+            toggleableSentencesState={toggleableSentencesState.slice(
+              0,
+              sliceArrState,
+            )}
             addSnippet={handleAddSnippet}
             updateSentenceData={updateSentenceDataScreenLevel}
             removeSnippet={handleRemoveSnippet}
@@ -142,6 +148,9 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
             sentenceBeingHighlightedState={sentenceBeingHighlightedState}
             setSentenceBeingHighlightedState={setSentenceBeingHighlightedState}
             navigation={navigation}
+            sliceArrState={sliceArrState}
+            setSliceArrState={setSliceArrState}
+            realCapacity={realCapacity}
           />
         </ScrollView>
       </View>
