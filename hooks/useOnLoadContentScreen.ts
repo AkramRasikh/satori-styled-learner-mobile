@@ -87,7 +87,7 @@ const useOnLoadContentScreen = ({
     );
 
     setAllTopicsMetaDataState(allTopicsMetaData);
-  }, []);
+  }, [targetLanguageLoadedContentMasterState]);
 };
 
 export default useOnLoadContentScreen;
