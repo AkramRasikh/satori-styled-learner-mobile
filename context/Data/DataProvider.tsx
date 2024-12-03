@@ -178,6 +178,23 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
     }
   };
 
+  const bulkAddReviews = async ({topicName, sentencesArray, contentIndex}) => {
+    const res = await Promise.all(
+      // currently returning content for each arr
+      sentencesArray.map(
+        async sentenceData =>
+          await updateSentenceViaContent({
+            topicName,
+            sentenceId: sentenceData.id,
+            fieldToUpdate: sentenceData.fieldToUpdate,
+            contentIndex,
+          }),
+      ),
+    );
+
+    return res;
+  };
+
   const updateSentenceViaContent = async ({
     topicName,
     sentenceId,
@@ -387,6 +404,7 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
         setTargetLanguageLoadedContentMasterState,
         updateContentMetaData,
         updateSentenceViaContent,
+        bulkAddReviews,
       }}>
       {children}
     </DataContext.Provider>

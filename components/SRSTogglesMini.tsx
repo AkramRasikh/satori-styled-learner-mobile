@@ -12,6 +12,7 @@ const SRSTogglesMini = ({
   setShowReviewSettings,
   contentType,
   contentIndex,
+  deleteFix,
 }) => {
   const timeNow = new Date();
 
@@ -40,6 +41,26 @@ const SRSTogglesMini = ({
       };
     }
     return {};
+  };
+
+  const handleClose = async () => {
+    setShowReviewSettings(true);
+    if (deleteFix) {
+      const hasBeenUpdated = await updateSentenceData({
+        isAdhoc,
+        topicName: sentence.topic,
+        sentenceId: sentence.id,
+        fieldToUpdate: {
+          reviewData: null,
+          ...getShouldRemoveLegacyFields(),
+        },
+        contentIndex: contentIndex ?? sentence.contentIndex,
+      });
+
+      if (hasBeenUpdated) {
+        setShowReviewSettings(false);
+      }
+    }
   };
 
   const nextScheduledOptions = getNextScheduledOptions({
@@ -130,7 +151,7 @@ const SRSTogglesMini = ({
           padding: 5,
           borderRadius: 10,
         }}
-        onPress={() => setShowReviewSettings(true)}>
+        onPress={handleClose}>
         <Text>🗑️</Text>
       </TouchableOpacity>
     </View>

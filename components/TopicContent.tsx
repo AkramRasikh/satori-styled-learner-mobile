@@ -33,6 +33,11 @@ import useSetSecondsToSentenceIds, {
 import TopicContentAudioSection from './TopicContentAudioSection';
 import useData from '../context/Data/useData';
 import {getGeneralTopicName} from '../utils/get-general-topic-name';
+import {
+  getEmptyCard,
+  getNextScheduledOptions,
+  srsRetentionKeyTypes,
+} from '../srs-algo';
 
 const TopicContent = ({
   topicName,
@@ -78,7 +83,12 @@ const TopicContent = ({
     targetLanguageWordsState: targetLanguageLoadedWords,
     removeSnippet,
     targetLanguageSnippetsState,
+    bulkAddReviews,
   } = useData();
+
+  const hasContentToReview = formattedData?.some(
+    sentenceWidget => sentenceWidget?.reviewData,
+  );
 
   useEffect(() => {
     setSelectedSnippetsState(
@@ -242,6 +252,41 @@ const TopicContent = ({
         </Text>
       );
     });
+  };
+
+  const handleBulkReviews = async () => {
+    const emptyCard = getEmptyCard();
+
+    const nextScheduledOptions = getNextScheduledOptions({
+      card: emptyCard,
+      contentType: srsRetentionKeyTypes.sentences,
+    });
+    const nextDueCard = nextScheduledOptions['2'].card; // 10 mins
+    const sentencesArray = formattedData.map(sentenceWidget => ({
+      id: sentenceWidget.id,
+      fieldToUpdate: {
+        reviewData: nextDueCard,
+      },
+    }));
+    const bulkRes = await bulkAddReviews({
+      sentencesArray,
+      topicName,
+      contentIndex,
+    });
+
+    if (bulkRes) {
+      const updatedFormattedData = formattedData.map((item, sentenceIndex) => {
+        return {
+          ...item,
+          reviewData: nextDueCard,
+        };
+      });
+      setFormattedData(updatedFormattedData);
+      setStructuredUnifiedData(prevState => ({
+        ...prevState,
+        [topicName]: {content: updatedFormattedData},
+      }));
+    }
   };
 
   const handleAddAdhocSentence = () => {
@@ -437,6 +482,8 @@ const TopicContent = ({
             isVideoModeState={isVideoModeState}
             hasVideo={hasVideo}
             handleVideoMode={handleVideoMode}
+            handleBulkReviews={handleBulkReviews}
+            hasContentToReview={hasContentToReview}
           />
           {longPressedWord?.length ? (
             <LongPressedWord
@@ -520,6 +567,8 @@ const TopicContent = ({
         isVideoModeState={isVideoModeState}
         hasVideo={hasVideo}
         handleVideoMode={handleVideoMode}
+        handleBulkReviews={handleBulkReviews}
+        hasContentToReview={hasContentToReview}
       />
       {longPressedWord?.length ? (
         <LongPressedWord

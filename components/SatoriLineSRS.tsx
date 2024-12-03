@@ -74,6 +74,7 @@ const SatoriLineSRS = ({
           setShowReviewSettings={setShowReviewSettings}
           contentType={srsRetentionKeyTypes.sentences}
           contentIndex={contentIndex}
+          deleteFix
         />
       )}
       {showDeleteBtn && (
