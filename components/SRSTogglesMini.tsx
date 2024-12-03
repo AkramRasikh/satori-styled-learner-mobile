@@ -90,7 +90,7 @@ const SRSTogglesMini = ({
           padding: 5,
           borderRadius: 10,
         }}
-        onPress={() => handleNextReview('3')}>
+        onPress={() => handleNextReview('1')}>
         <Text>{againText}</Text>
       </TouchableOpacity>
       <TouchableOpacity
@@ -100,7 +100,7 @@ const SRSTogglesMini = ({
           padding: 5,
           borderRadius: 10,
         }}
-        onPress={() => handleNextReview('3')}>
+        onPress={() => handleNextReview('2')}>
         <Text>{hardText}</Text>
       </TouchableOpacity>
       <TouchableOpacity
