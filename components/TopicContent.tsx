@@ -32,6 +32,7 @@ import useSetSecondsToSentenceIds, {
 } from '../hooks/useSetSecondsToSentenceIds';
 import TopicContentAudioSection from './TopicContentAudioSection';
 import useData from '../context/Data/useData';
+import {getGeneralTopicName} from '../utils/get-general-topic-name';
 
 const TopicContent = ({
   topicName,
@@ -400,7 +401,7 @@ const TopicContent = ({
   };
 
   const videoUrl = hasVideo
-    ? getFirebaseVideoURL('meiji-era-intro', 'japanese')
+    ? getFirebaseVideoURL(getGeneralTopicName(topicName), languageSelectedState)
     : '';
 
   if (!isLoaded || formattedData?.length === 0) {
