@@ -83,7 +83,7 @@ const TopicContent = ({
     targetLanguageWordsState: targetLanguageLoadedWords,
     removeSnippet,
     targetLanguageSnippetsState,
-    bulkAddReviews,
+    sentenceReviewBulk,
   } = useData();
 
   const hasContentToReview = formattedData?.some(
@@ -261,21 +261,17 @@ const TopicContent = ({
       card: emptyCard,
       contentType: srsRetentionKeyTypes.sentences,
     });
-    const nextDueCard = nextScheduledOptions['2'].card; // 10 mins
-    const sentencesArray = formattedData.map(sentenceWidget => ({
-      id: sentenceWidget.id,
+    const nextDueCard = nextScheduledOptions['2'].card;
+    const updatedContent = await sentenceReviewBulk({
+      topicName,
       fieldToUpdate: {
         reviewData: nextDueCard,
       },
-    }));
-    const bulkRes = await bulkAddReviews({
-      sentencesArray,
-      topicName,
       contentIndex,
     });
 
-    if (bulkRes) {
-      const updatedFormattedData = formattedData.map((item, sentenceIndex) => {
+    if (updatedContent) {
+      const updatedFormattedData = formattedData.map(item => {
         return {
           ...item,
           reviewData: nextDueCard,

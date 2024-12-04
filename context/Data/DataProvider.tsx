@@ -12,6 +12,7 @@ import useLanguageSelector from '../LanguageSelector/useLanguageSelector';
 import {adhocSentences, content, snippets, words} from '../../refs';
 import {storeDataLocalStorage} from '../../helper-functions/local-storage-utils';
 import {updateCreateReviewHistory} from '../../api/update-create-review-history';
+import {sentenceReviewBulkAPI} from '../../api/sentence-review-bulk';
 
 export const DataContext = createContext(null);
 
@@ -99,6 +100,38 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
         const updatedState = [...targetLanguageLoadedContentMasterState];
         const thisTopicData = updatedState[contentIndex];
         const newTopicState = {...thisTopicData, ...resObj};
+        updatedState[contentIndex] = {
+          ...newTopicState,
+        };
+        setTargetLanguageLoadedContentMasterState(updatedState);
+        await storeDataLocalStorage(
+          dataStorageKeyPrefix + content,
+          updatedState,
+        );
+        updatePromptFunc(`${topicName} updated!`, 2000);
+        return newTopicState;
+      }
+    } catch (error) {
+      updatePromptFunc(`Error updating ${topicName}!`, 1000);
+    }
+  };
+
+  const sentenceReviewBulk = async ({
+    fieldToUpdate,
+    topicName,
+    contentIndex,
+  }) => {
+    try {
+      const updatedContentRes = await sentenceReviewBulkAPI({
+        title: topicName,
+        fieldToUpdate,
+        language,
+      });
+
+      if (updatedContentRes) {
+        const updatedState = [...targetLanguageLoadedContentMasterState];
+        const thisTopicData = updatedState[contentIndex];
+        const newTopicState = {...thisTopicData, ...updatedContentRes};
         updatedState[contentIndex] = {
           ...newTopicState,
         };
@@ -405,6 +438,7 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
         updateContentMetaData,
         updateSentenceViaContent,
         bulkAddReviews,
+        sentenceReviewBulk,
       }}>
       {children}
     </DataContext.Provider>
