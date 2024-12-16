@@ -29,6 +29,8 @@ const SelectedTopicWordsSection = ({
     }
   };
 
+  const addToConbinedWords = () => {};
+
   useEffect(() => {
     setFlashcardState(selectedTopicWords);
   }, [selectedTopicWords]);
@@ -108,6 +110,19 @@ const SelectedTopicWordsSection = ({
                   {wordData.baseForm}
                 </Text>
               </TouchableOpacity>
+              <View
+                style={{
+                  alignSelf: 'flex-start',
+                  backgroundColor: 'green',
+                  padding: 5,
+                  marginVertical: 5,
+                  borderRadius: 10,
+                }}>
+                <TouchableOpacity onPress={addToConbinedWords}>
+                  <Text>Add to 🗑️</Text>
+                </TouchableOpacity>
+              </View>
+
               {!isSelectedWord && (
                 <SRSToggles
                   reviewData={wordData.reviewData}
