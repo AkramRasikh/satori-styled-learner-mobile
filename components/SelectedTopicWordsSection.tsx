@@ -15,6 +15,7 @@ const SelectedTopicWordsSection = ({
   setSelectedTopic,
 }) => {
   const [flashcardState, setFlashcardState] = useState([]);
+  const [combineWordsListState, setCombineWordsListState] = useState([]);
   const [isShowOptionA, setIsShowOptionA] = useState(true);
   const {width} = Dimensions?.get('window');
 
@@ -29,7 +30,14 @@ const SelectedTopicWordsSection = ({
     }
   };
 
-  const addToConbinedWords = () => {};
+  const addToConbinedWords = wordDataToBasket => {
+    if (!combineWordsListState.some(item => item.id === wordDataToBasket.id)) {
+      setCombineWordsListState(prev => [...prev, wordDataToBasket]);
+    }
+    // word
+    // wordDefinition
+    // context
+  };
 
   useEffect(() => {
     setFlashcardState(selectedTopicWords);
@@ -60,6 +68,23 @@ const SelectedTopicWordsSection = ({
           onPress={() => setSelectedTopic('')}>
           <Text>Other Topics</Text>
         </TouchableOpacity>
+      </View>
+      <View>
+        {combineWordsListState?.map((wordDataInBasket, index) => {
+          const basketText = `${index + 1} ${wordDataInBasket.baseForm} - ${
+            wordDataInBasket.definition
+          }`;
+          return (
+            <View key={wordDataInBasket.id}>
+              <Text
+                style={{
+                  fontSize: 16,
+                }}>
+                {basketText}
+              </Text>
+            </View>
+          );
+        })}
       </View>
       <View
         style={{
@@ -118,7 +143,7 @@ const SelectedTopicWordsSection = ({
                   marginVertical: 5,
                   borderRadius: 10,
                 }}>
-                <TouchableOpacity onPress={addToConbinedWords}>
+                <TouchableOpacity onPress={() => addToConbinedWords(wordData)}>
                   <Text>Add to 🗑️</Text>
                 </TouchableOpacity>
               </View>
