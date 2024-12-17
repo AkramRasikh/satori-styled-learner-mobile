@@ -1,10 +1,31 @@
 import React, {useEffect, useState} from 'react';
-import {Button, Dimensions, Text, TouchableOpacity, View} from 'react-native';
+import {Dimensions, Text, TouchableOpacity, View} from 'react-native';
 
 import AnimatedWordModal from './WordModal';
 import SRSToggles from './SRSToggles';
 import {PillButtonScaled} from './PillButton';
 import {sortByDueDateWords} from '../utils/sort-by-due-date';
+import useData from '../context/Data/useData';
+import AnimatedModal from './AnimatedModal';
+
+const CombineSentenceResponseModal = ({combineWordsListState}) => {
+  return (
+    <View
+      style={{
+        width: '100%',
+        paddingBottom: 10,
+      }}>
+      {combineWordsListState?.map(item => {
+        return (
+          <View key={item.id} style={{display: 'flex', gap: 10}}>
+            <Text style={{fontSize: 20}}>{item.targetLang}</Text>
+            <Text style={{fontSize: 20}}>{item.baseLang}</Text>
+          </View>
+        );
+      })}
+    </View>
+  );
+};
 
 const SelectedTopicWordsSection = ({
   selectedTopicWords,
@@ -15,8 +36,14 @@ const SelectedTopicWordsSection = ({
   setSelectedTopic,
 }) => {
   const [flashcardState, setFlashcardState] = useState([]);
-  const [combineWordsListState, setCombineWordsListState] = useState([]);
+  const [initCombineWordsListState, setInitCombineWordsListState] = useState(
+    [],
+  );
   const [isShowOptionA, setIsShowOptionA] = useState(true);
+
+  const {combineWordsListState, loadingCombineSentences, combineWords} =
+    useData();
+
   const {width} = Dimensions?.get('window');
 
   const handleToggleDueState = () => {
@@ -31,22 +58,31 @@ const SelectedTopicWordsSection = ({
   };
 
   const handleCombineSentences = () => {
-    console.log('## handleCombineSentences');
+    const inputWords = initCombineWordsListState.map(item => {
+      return {
+        word: item.baseForm,
+        wordDefinition: item.definition,
+        context: item.contextData[0].targetLang,
+      };
+    });
+
+    combineWords({inputWords});
   };
+
+  const handleCloseModal = () => {};
 
   const addToConbinedWords = (wordDataToBasket, inBasket) => {
     if (inBasket) {
-      setCombineWordsListState(prev =>
+      setInitCombineWordsListState(prev =>
         prev.filter(item => item.id !== wordDataToBasket.id),
       );
       return;
     }
-    if (!combineWordsListState.some(item => item.id === wordDataToBasket.id)) {
-      setCombineWordsListState(prev => [...prev, wordDataToBasket]);
+    if (
+      !initCombineWordsListState.some(item => item.id === wordDataToBasket.id)
+    ) {
+      setInitCombineWordsListState(prev => [...prev, wordDataToBasket]);
     }
-    // word
-    // wordDefinition
-    // context
   };
 
   useEffect(() => {
@@ -55,6 +91,18 @@ const SelectedTopicWordsSection = ({
 
   return (
     <View>
+      {combineWordsListState?.length > 0 ? (
+        <AnimatedModal visible onClose={handleCloseModal}>
+          <CombineSentenceResponseModal
+            combineWordsListState={combineWordsListState}
+          />
+        </AnimatedModal>
+      ) : null}
+      {loadingCombineSentences ? (
+        <View>
+          <Text>...Data Loading</Text>
+        </View>
+      ) : null}
       <View
         style={{
           display: 'flex',
@@ -79,40 +127,40 @@ const SelectedTopicWordsSection = ({
           <Text>Other Topics</Text>
         </TouchableOpacity>
       </View>
-      <View
-        style={{
-          marginVertical: 10,
-          display: 'flex',
-          gap: 10,
-        }}>
-        <View>
-          {combineWordsListState?.map((wordDataInBasket, index) => {
-            const basketText = `${index + 1} ${wordDataInBasket.baseForm} - ${
-              wordDataInBasket.definition
-            }`;
-            return (
-              <View
-                key={wordDataInBasket.id}
-                style={{
-                  display: 'flex',
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                }}>
-                <Text
+      {initCombineWordsListState.length > 0 ? (
+        <View
+          style={{
+            marginVertical: 10,
+            display: 'flex',
+            gap: 10,
+          }}>
+          <View>
+            {initCombineWordsListState.map((wordDataInBasket, index) => {
+              const basketText = `${index + 1} ${wordDataInBasket.baseForm} - ${
+                wordDataInBasket.definition
+              }`;
+              return (
+                <View
+                  key={wordDataInBasket.id}
                   style={{
-                    fontSize: 16,
+                    display: 'flex',
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
                   }}>
-                  {basketText}
-                </Text>
-                <TouchableOpacity
-                  onPress={() => addToConbinedWords(wordDataInBasket, true)}>
-                  <Text>❌</Text>
-                </TouchableOpacity>
-              </View>
-            );
-          })}
-        </View>
-        {combineWordsListState?.length > 0 && (
+                  <Text
+                    style={{
+                      fontSize: 16,
+                    }}>
+                    {basketText}
+                  </Text>
+                  <TouchableOpacity
+                    onPress={() => addToConbinedWords(wordDataInBasket, true)}>
+                    <Text>❌</Text>
+                  </TouchableOpacity>
+                </View>
+              );
+            })}
+          </View>
           <View
             style={{
               alignSelf: 'center',
@@ -127,8 +175,8 @@ const SelectedTopicWordsSection = ({
               <Text>Combine sentences</Text>
             </TouchableOpacity>
           </View>
-        )}
-      </View>
+        </View>
+      ) : null}
       <View
         style={{
           marginBottom: 10,
@@ -156,8 +204,8 @@ const SelectedTopicWordsSection = ({
           const baseForm = wordData?.baseForm;
           const cardReviewButNotDue = !isCardDue && wordData?.reviewData?.due;
           const inBasket =
-            combineWordsListState.length > 0 &&
-            combineWordsListState.some(item => item.id === wordId);
+            initCombineWordsListState.length > 0 &&
+            initCombineWordsListState.some(item => item.id === wordId);
 
           return (
             <View

@@ -13,8 +13,114 @@ import {adhocSentences, content, snippets, words} from '../../refs';
 import {storeDataLocalStorage} from '../../helper-functions/local-storage-utils';
 import {updateCreateReviewHistory} from '../../api/update-create-review-history';
 import {sentenceReviewBulkAPI} from '../../api/sentence-review-bulk';
+import {combineWordsAPI} from '../../api/combine-words';
 
 export const DataContext = createContext(null);
+
+const combineSentenceResponseExample = [
+  {
+    id: 'c394a0dc-27b8-4ad7-8b5f-1d29fb9f5100',
+    baseLang:
+      'In the first place, the most important thing was to maintain independence as a country.',
+    targetLang: 'まず何よりも大切だったことは国としての独立を維持すること。',
+    matchedWords: ['独立', '維持'],
+    tokenised: [
+      'まず',
+      '何',
+      'より',
+      'も',
+      '大切',
+      'だっ',
+      'た',
+      'こと',
+      'は',
+      '国',
+      'として',
+      'の',
+      '独立',
+      'を',
+      '維持',
+      'する',
+      'こと',
+      '。',
+    ],
+  },
+  {
+    id: '4b2b8186-ca92-4bf9-85d3-8c75ae547cca',
+    baseLang:
+      'When we look towards Europe and America, the great powers are expanding into Asia.',
+    targetLang: '向けてみると欧米列強がアジアへ進出してきて。',
+    matchedWords: ['欧米'],
+    tokenised: [
+      '向け',
+      'て',
+      'みる',
+      'と',
+      '欧米',
+      '列強',
+      'が',
+      'アジア',
+      'へ',
+      '進出',
+      'し',
+      'て',
+      'き',
+      'て',
+      '。',
+    ],
+  },
+  {
+    id: '115d0e4d-1133-4f69-8140-597ad2cb804f',
+    baseLang:
+      'Maintaining independence is critical, especially when observing the expansion of Europe and America.',
+    targetLang: '欧米の進出を見ると、特に独立を維持することが重要です。',
+    matchedWords: ['独立', '維持', '欧米'],
+    tokenised: [
+      '欧米',
+      'の',
+      '進出',
+      'を',
+      '見る',
+      'と',
+      '、',
+      '特に',
+      '独立',
+      'を',
+      '維持',
+      'する',
+      'こと',
+      'が',
+      '重要',
+      'です',
+      '。',
+    ],
+  },
+  {
+    id: 'fdc98d64-cffc-46a3-a090-2af6d87c5be3',
+    baseLang:
+      'The great powers of Europe and America keep their independence, and this is very important.',
+    targetLang: '欧米の列強は独立を維持し、これは非常に重要です。',
+    matchedWords: ['独立', '維持', '欧米'],
+    tokenised: [
+      '欧米',
+      'の',
+      '列強',
+      'は',
+      '独立',
+      'を',
+      '維持',
+      'し',
+      '、',
+      'これ',
+      'は',
+      '非常',
+      'に',
+      '重要',
+      'です',
+      '。',
+    ],
+  },
+];
 
 export const DataProvider = ({children}: PropsWithChildren<{}>) => {
   const [updatingSentenceState, setUpdatingSentenceState] = useState('');
@@ -30,10 +136,15 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
   ] = useState([]);
   const [targetLanguageWordsState, setTargetLanguageWordsState] = useState([]);
   const [dataProviderIsLoading, setDataProviderIsLoading] = useState(true);
+  const [loadingCombineSentences, setLoadingCombineSentences] = useState(false);
   const [provdiderError, setProvdiderError] = useState(null);
   const [updatePromptState, setUpdatePromptState] = useState('');
   const [isAdhocDataLoading, setIsAdhocDataLoading] = useState(false);
   const [structuredUnifiedData, setStructuredUnifiedData] = useState([]);
+  // const [combineWordsListState, setCombineWordsListState] = useState([]);
+  const [combineWordsListState, setCombineWordsListState] = useState(
+    combineSentenceResponseExample,
+  );
 
   const {languageSelectedState: language} = useLanguageSelector();
   const dataStorageKeyPrefix = `${language}-data-`;
@@ -113,6 +224,18 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
       }
     } catch (error) {
       updatePromptFunc(`Error updating ${topicName}!`, 1000);
+    }
+  };
+
+  const combineWords = async ({inputWords}) => {
+    try {
+      setLoadingCombineSentences(true);
+      const combineWordsRes = await combineWordsAPI({inputWords, language});
+      setCombineWordsListState(combineWordsRes);
+    } catch (error) {
+      updatePromptFunc('Error combining words', 1000);
+    } finally {
+      setTimeout(() => setLoadingCombineSentences(false), 2000);
     }
   };
 
@@ -439,6 +562,9 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
         updateSentenceViaContent,
         bulkAddReviews,
         sentenceReviewBulk,
+        combineWordsListState,
+        combineWords,
+        loadingCombineSentences,
       }}>
       {children}
     </DataContext.Provider>
