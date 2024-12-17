@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Dimensions, Text, TouchableOpacity, View} from 'react-native';
+import {Button, Dimensions, Text, TouchableOpacity, View} from 'react-native';
 
 import AnimatedWordModal from './WordModal';
 import SRSToggles from './SRSToggles';
@@ -30,7 +30,17 @@ const SelectedTopicWordsSection = ({
     }
   };
 
-  const addToConbinedWords = wordDataToBasket => {
+  const handleCombineSentences = () => {
+    console.log('## handleCombineSentences');
+  };
+
+  const addToConbinedWords = (wordDataToBasket, inBasket) => {
+    if (inBasket) {
+      setCombineWordsListState(prev =>
+        prev.filter(item => item.id !== wordDataToBasket.id),
+      );
+      return;
+    }
     if (!combineWordsListState.some(item => item.id === wordDataToBasket.id)) {
       setCombineWordsListState(prev => [...prev, wordDataToBasket]);
     }
@@ -69,22 +79,55 @@ const SelectedTopicWordsSection = ({
           <Text>Other Topics</Text>
         </TouchableOpacity>
       </View>
-      <View>
-        {combineWordsListState?.map((wordDataInBasket, index) => {
-          const basketText = `${index + 1} ${wordDataInBasket.baseForm} - ${
-            wordDataInBasket.definition
-          }`;
-          return (
-            <View key={wordDataInBasket.id}>
-              <Text
+      <View
+        style={{
+          marginVertical: 10,
+          display: 'flex',
+          gap: 10,
+        }}>
+        <View>
+          {combineWordsListState?.map((wordDataInBasket, index) => {
+            const basketText = `${index + 1} ${wordDataInBasket.baseForm} - ${
+              wordDataInBasket.definition
+            }`;
+            return (
+              <View
+                key={wordDataInBasket.id}
                 style={{
-                  fontSize: 16,
+                  display: 'flex',
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
                 }}>
-                {basketText}
-              </Text>
-            </View>
-          );
-        })}
+                <Text
+                  style={{
+                    fontSize: 16,
+                  }}>
+                  {basketText}
+                </Text>
+                <TouchableOpacity
+                  onPress={() => addToConbinedWords(wordDataInBasket, true)}>
+                  <Text>❌</Text>
+                </TouchableOpacity>
+              </View>
+            );
+          })}
+        </View>
+        {combineWordsListState?.length > 0 && (
+          <View
+            style={{
+              alignSelf: 'center',
+            }}>
+            <TouchableOpacity
+              onPress={handleCombineSentences}
+              style={{
+                backgroundColor: 'gray',
+                padding: 5,
+                borderRadius: 10,
+              }}>
+              <Text>Combine sentences</Text>
+            </TouchableOpacity>
+          </View>
+        )}
       </View>
       <View
         style={{
@@ -112,6 +155,9 @@ const SelectedTopicWordsSection = ({
           const isCardDue = wordData?.isCardDue;
           const baseForm = wordData?.baseForm;
           const cardReviewButNotDue = !isCardDue && wordData?.reviewData?.due;
+          const inBasket =
+            combineWordsListState.length > 0 &&
+            combineWordsListState.some(item => item.id === wordId);
 
           return (
             <View
@@ -138,13 +184,14 @@ const SelectedTopicWordsSection = ({
               <View
                 style={{
                   alignSelf: 'flex-start',
-                  backgroundColor: 'green',
+                  backgroundColor: inBasket ? 'red' : 'green',
                   padding: 5,
                   marginVertical: 5,
                   borderRadius: 10,
                 }}>
-                <TouchableOpacity onPress={() => addToConbinedWords(wordData)}>
-                  <Text>Add to 🗑️</Text>
+                <TouchableOpacity
+                  onPress={() => addToConbinedWords(wordData, inBasket)}>
+                  <Text>{inBasket ? 'Remove from 🗑️' : 'Add to 🗑️'}</Text>
                 </TouchableOpacity>
               </View>
 
