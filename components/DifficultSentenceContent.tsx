@@ -41,6 +41,7 @@ const DifficultSentenceContent = ({
     sentence?.nextReview || new Date(sentence.reviewData.due) < new Date();
 
   const highlightMode = sentenceId === sentenceBeingHighlightedState;
+  const isSentenceHelper = sentence?.isSentenceHelper;
 
   const {openGoogleTranslateApp} = useOpenGoogleTranslate();
 
@@ -65,10 +66,12 @@ const DifficultSentenceContent = ({
   };
 
   const handleNavigation = () => {
-    navigation.navigate('ContentScreen', {
-      selectedTopicIndex: sentence.contentIndex,
-      targetSentenceId: sentenceId,
-    });
+    if (!isSentenceHelper) {
+      navigation.navigate('ContentScreen', {
+        selectedTopicIndex: sentence.contentIndex,
+        targetSentenceId: sentenceId,
+      });
+    }
   };
 
   const handleSaveWordToFB = ({highlightedWord, highlightedWordSentenceId}) => {

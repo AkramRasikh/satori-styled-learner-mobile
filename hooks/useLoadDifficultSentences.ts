@@ -31,12 +31,14 @@ const useLoadDifficultSentences = ({
     });
 
     adhocTargetLanguageSentencesState.forEach(contentWidget => {
-      const thisTopic = contentWidget.topic;
+      const thisTopic = contentWidget?.topic || 'sentence-helper';
+      const isSentenceHelper = contentWidget?.matchedWords?.length > 0;
       const isCore = contentWidget?.isCore;
       const nextReview = contentWidget?.nextReview;
       if (nextReview || contentWidget?.reviewData?.due) {
         difficultSentences.push({
           topic: thisTopic,
+          isSentenceHelper: isSentenceHelper,
           isCore,
           isAdhoc: true,
           ...contentWidget,
