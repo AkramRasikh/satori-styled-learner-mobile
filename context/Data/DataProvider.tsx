@@ -14,6 +14,8 @@ import {storeDataLocalStorage} from '../../helper-functions/local-storage-utils'
 import {updateCreateReviewHistory} from '../../api/update-create-review-history';
 import {sentenceReviewBulkAPI} from '../../api/sentence-review-bulk';
 import {combineWordsAPI} from '../../api/combine-words';
+import {addSentenceContextAPI} from '../../api/add-sentence-context';
+import {addSentenceAudioAPI} from '../../api/add-sentence-audio';
 
 export const DataContext = createContext(null);
 
@@ -141,10 +143,10 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
   const [updatePromptState, setUpdatePromptState] = useState('');
   const [isAdhocDataLoading, setIsAdhocDataLoading] = useState(false);
   const [structuredUnifiedData, setStructuredUnifiedData] = useState([]);
-  // const [combineWordsListState, setCombineWordsListState] = useState([]);
-  const [combineWordsListState, setCombineWordsListState] = useState(
-    combineSentenceResponseExample,
-  );
+  const [combineWordsListState, setCombineWordsListState] = useState([]);
+  // const [combineWordsListState, setCombineWordsListState] = useState(
+  //   combineSentenceResponseExample,
+  // );
 
   const {languageSelectedState: language} = useLanguageSelector();
   const dataStorageKeyPrefix = `${language}-data-`;
@@ -331,6 +333,28 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
       updatePromptFunc(`Error updating sentence for ${topicName}`, 2000);
     } finally {
       setUpdatingSentenceState('');
+    }
+  };
+
+  const getSentenceAudio = async ({id, sentence}) => {
+    try {
+      const res = await addSentenceAudioAPI({language, id, sentence});
+      return res;
+    } catch (error) {
+      updatePromptFunc(`Error getting audio for  ${sentence}`, 2000);
+    }
+  };
+
+  const addSentenceContext = async contextData => {
+    try {
+      const contextWordsAddedResponse = await addSentenceContextAPI({
+        language,
+        ...contextData,
+      });
+      const contextIds = contextWordsAddedResponse.map(item => item.id);
+      return contextIds;
+    } catch (error) {
+      updatePromptFunc('Error adding context data', 2000);
     }
   };
 
@@ -565,6 +589,9 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
         combineWordsListState,
         combineWords,
         loadingCombineSentences,
+        setCombineWordsListState,
+        addSentenceContext,
+        getSentenceAudio,
       }}>
       {children}
     </DataContext.Provider>
