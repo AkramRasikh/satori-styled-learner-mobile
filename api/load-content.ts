@@ -18,7 +18,7 @@ const loadAllContent = async ({language}) => {
       },
       body: JSON.stringify({
         language,
-        refs: [adhocSentences, content, snippets, words, sentences],
+        refs: [content, snippets, words, sentences],
       }),
     });
 
@@ -58,8 +58,6 @@ const getFreshData = async ({language}) => {
     const targetLanguageLoadedWords = getNestedObjectData(words)?.words || [];
     const targetLanguageLoadedSnippets =
       getNestedObjectData(snippets)?.snippets || [];
-    const targetLanguageLoadedAdhocSentences =
-      getNestedObjectData(adhocSentences)?.adhocSentences || [];
     const targetLanguageLoadedSentences =
       getNestedObjectData(sentences)?.sentences || [];
 
@@ -67,8 +65,7 @@ const getFreshData = async ({language}) => {
       content: targetLanguageLoadedContent,
       words: targetLanguageLoadedWords,
       snippets: targetLanguageLoadedSnippets,
-      sentences: targetLanguageLoadedAdhocSentences,
-      sentenceHelpers: targetLanguageLoadedSentences,
+      sentences: targetLanguageLoadedSentences,
     };
 
     const dataStorageKeyPrefix = `${language}-data-`;
@@ -77,7 +74,7 @@ const getFreshData = async ({language}) => {
     await storeDataLocalStorage(dataStorageKeyPrefix + snippets, data.snippets);
     await storeDataLocalStorage(
       dataStorageKeyPrefix + sentences,
-      data.sentenceHelpers,
+      data.sentences,
     );
     await storeDataLocalStorage(
       dataStorageKeyPrefix + adhocSentences,
