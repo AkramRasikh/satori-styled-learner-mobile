@@ -1,4 +1,4 @@
-import {adhocSentences, content, snippets, words} from '../refs';
+import {adhocSentences, content, snippets, words, sentences} from '../refs';
 import {BACKEND_ENDPOINT} from '@env';
 import mockGetAllRes from '../mock-firestore/mock-get-all-res.json';
 import {
@@ -18,7 +18,7 @@ const loadAllContent = async ({language}) => {
       },
       body: JSON.stringify({
         language,
-        refs: [adhocSentences, content, snippets, words],
+        refs: [adhocSentences, content, snippets, words, sentences],
       }),
     });
 
@@ -58,20 +58,27 @@ const getFreshData = async ({language}) => {
     const targetLanguageLoadedWords = getNestedObjectData(words)?.words || [];
     const targetLanguageLoadedSnippets =
       getNestedObjectData(snippets)?.snippets || [];
-    const targetLanguageLoadedSentences =
+    const targetLanguageLoadedAdhocSentences =
       getNestedObjectData(adhocSentences)?.adhocSentences || [];
+    const targetLanguageLoadedSentences =
+      getNestedObjectData(sentences)?.sentences || [];
 
     const data = {
       content: targetLanguageLoadedContent,
       words: targetLanguageLoadedWords,
       snippets: targetLanguageLoadedSnippets,
-      sentences: targetLanguageLoadedSentences,
+      sentences: targetLanguageLoadedAdhocSentences,
+      sentenceHelpers: targetLanguageLoadedSentences,
     };
 
     const dataStorageKeyPrefix = `${language}-data-`;
     await storeDataLocalStorage(dataStorageKeyPrefix + content, data.content);
     await storeDataLocalStorage(dataStorageKeyPrefix + words, data.words);
     await storeDataLocalStorage(dataStorageKeyPrefix + snippets, data.snippets);
+    await storeDataLocalStorage(
+      dataStorageKeyPrefix + sentences,
+      data.sentenceHelpers,
+    );
     await storeDataLocalStorage(
       dataStorageKeyPrefix + adhocSentences,
       data.sentences,
