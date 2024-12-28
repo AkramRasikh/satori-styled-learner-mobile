@@ -53,7 +53,12 @@ const TopSection = ({
   );
 };
 
-const BottomAudioSection = ({sentence, addSnippet, removeSnippet}) => {
+const BottomAudioSection = ({
+  sentence,
+  addSnippet,
+  removeSnippet,
+  indexNum,
+}) => {
   const [currentTimeState, setCurrentTimeState] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [miniSnippets, setMiniSnippets] = useState([]);
@@ -93,6 +98,13 @@ const BottomAudioSection = ({sentence, addSnippet, removeSnippet}) => {
       triggerLoadURL();
     }
   }, [filePath, triggerLoadURL, isLoaded]);
+
+  useEffect(() => {
+    const isFirst = indexNum === 0;
+    if (!isLoaded && isFirst) {
+      loadFile(audioId, url);
+    }
+  }, [loadFile, isLoaded, indexNum, audioId, url]);
 
   const handleSnippet = currentTime => {
     const snippetId = topic + '-' + generateRandomId();
@@ -153,6 +165,7 @@ const DifficultSentenceWidget = ({
   setSentenceBeingHighlightedState,
   dueDate,
   navigation,
+  indexNum,
 }) => {
   const [showReviewSettings, setShowReviewSettings] = useState(false);
   const [showThisWordsDefinitions, setShowThisWordsDefinitions] =
@@ -268,6 +281,7 @@ const DifficultSentenceWidget = ({
         sentence={sentence}
         addSnippet={addSnippet}
         removeSnippet={removeSnippet}
+        indexNum={indexNum}
       />
     </View>
   );

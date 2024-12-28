@@ -40,6 +40,7 @@ const DifficultSentenceMapContainer = ({
             key={sentence.id}
             style={{
               paddingBottom: isLastEl ? 100 : 0,
+              paddingTop: 70,
             }}>
             <DifficultSentenceWidget
               sentence={sentence}
@@ -54,6 +55,7 @@ const DifficultSentenceMapContainer = ({
                 setSentenceBeingHighlightedState
               }
               navigation={navigation}
+              indexNum={index}
             />
             {moreToLoad && (
               <Button
