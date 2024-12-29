@@ -52,6 +52,12 @@ export const DifficultSentencesProvider = ({
     setDifficultSentencesState(prev => [...prev, sentenceData]);
   };
 
+  const refreshDifficultSentencesInfo = () => {
+    const difficultSentencesData = getAllDataReady();
+    setDifficultSentencesState(difficultSentencesData);
+    setDifficultSentencesHasBeenSetState(true);
+  };
+
   useEffect(() => {
     const difficultSentencesData = getAllDataReady();
     if (
@@ -65,7 +71,6 @@ export const DifficultSentencesProvider = ({
     difficultSentencesHasBeenSetState,
     targetLanguageLoadedContentMasterState,
     adhocTargetLanguageSentencesState,
-    targetLanguageLoadedContentMasterState,
     getAllDataReady,
   ]);
 
@@ -77,6 +82,7 @@ export const DifficultSentencesProvider = ({
         removeDifficultSentenceFromState,
         updateDifficultSentence,
         addToSentenceToDifficultSentences,
+        refreshDifficultSentencesInfo,
       }}>
       {children}
     </DifficultSentencesContext.Provider>

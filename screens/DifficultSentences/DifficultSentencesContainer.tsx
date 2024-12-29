@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {ScrollView, Text, View} from 'react-native';
+import {Button, ScrollView, Text, View} from 'react-native';
 import LoadingScreen from '../../components/LoadingScreen';
 import PillButton from '../../components/PillButton';
 import ScreenContainerComponent from '../../components/ScreenContainerComponent';
@@ -28,6 +28,7 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
     difficultSentencesState,
     removeDifficultSentenceFromState,
     updateDifficultSentence,
+    refreshDifficultSentencesInfo,
   } = useDifficultSentences();
 
   const showDueInit = arr => {
@@ -132,6 +133,9 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
             isShowDueOnly={isShowDueOnly}
             showDueOnlyFunc={showDueOnlyFunc}
           />
+          <View>
+            <Button title="↺" onPress={refreshDifficultSentencesInfo} />
+          </View>
         </View>
         <ScrollView
           contentInsetAdjustmentBehavior="automatic"
