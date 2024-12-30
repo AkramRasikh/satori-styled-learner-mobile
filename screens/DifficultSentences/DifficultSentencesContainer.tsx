@@ -31,6 +31,11 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
     refreshDifficultSentencesInfo,
   } = useDifficultSentences();
 
+  const handleRefreshFunc = () => {
+    refreshDifficultSentencesInfo();
+    showDueInit(difficultSentencesState);
+  };
+
   const showDueInit = arr => {
     const filteredForDueOnly = [...arr].filter(sentence => {
       if (sentence?.nextReview) {
@@ -134,7 +139,7 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
             showDueOnlyFunc={showDueOnlyFunc}
           />
           <View>
-            <Button title="↺" onPress={refreshDifficultSentencesInfo} />
+            <Button title="↺" onPress={handleRefreshFunc} />
           </View>
         </View>
         <ScrollView
