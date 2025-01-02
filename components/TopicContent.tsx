@@ -76,6 +76,7 @@ const TopicContent = ({
 
   const {languageSelectedState} = useLanguageSelector();
   const targetLanguageLoadedWords = useSelector(state => state.words);
+  const targetLanguageSnippetsState = useSelector(state => state.snippets);
 
   const {
     structuredUnifiedData,
@@ -84,7 +85,6 @@ const TopicContent = ({
     saveWordFirebase,
     addSnippet,
     removeSnippet,
-    targetLanguageSnippetsState,
     sentenceReviewBulk,
   } = useData();
 

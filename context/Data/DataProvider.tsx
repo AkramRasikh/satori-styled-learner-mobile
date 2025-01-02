@@ -20,6 +20,7 @@ import {addSentenceAudioAPI} from '../../api/add-sentence-audio';
 import {setLearningContentStateDispatch} from '../../store/contentSlice';
 import {setWordsStateDispatch} from '../../store/wordSlice';
 import {setSentencesStateDispatch} from '../../store/sentencesSlice';
+import {setSnippetsStateDispatch} from '../../store/snippetsSlice';
 
 export const DataContext = createContext(null);
 
@@ -130,8 +131,6 @@ const combineSentenceResponseExample = [
 
 export const DataProvider = ({children}: PropsWithChildren<{}>) => {
   const [updatingSentenceState, setUpdatingSentenceState] = useState('');
-  const [targetLanguageSnippetsState, setTargetLanguageSnippetsState] =
-    useState([]);
 
   const [dataProviderIsLoading, setDataProviderIsLoading] = useState(true);
   const [loadingCombineSentences, setLoadingCombineSentences] = useState(false);
@@ -146,6 +145,7 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
   const adhocTargetLanguageSentencesState = useSelector(
     state => state.sentences,
   );
+  const targetLanguageSnippetsState = useSelector(state => state.snippets);
   const targetLanguageWordsState = useSelector(state => state.words);
   const targetLanguageLoadedContentMasterState = useSelector(
     state => state.learningContent,
@@ -451,7 +451,7 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
         ...targetLanguageSnippetsState,
         {...snippetDataFromAPI, saved: true},
       ];
-      setTargetLanguageSnippetsState(updatedSnippets);
+      dispatch(setSnippetsStateDispatch(updatedSnippets));
       await storeDataLocalStorage(
         dataStorageKeyPrefix + snippets,
         updatedSnippets,
@@ -468,7 +468,7 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
       const updatedSnippets = targetLanguageSnippetsState.filter(
         item => item.id !== deletedSnippetId,
       );
-      setTargetLanguageSnippetsState(updatedSnippets);
+      dispatch(setSnippetsStateDispatch(updatedSnippets));
       await storeDataLocalStorage(
         dataStorageKeyPrefix + snippets,
         updatedSnippets,
@@ -536,8 +536,8 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
             ...item,
             saved: true,
           }));
-        setTargetLanguageSnippetsState(
-          targetLanguageLoadedSnippetsWithSavedTag,
+        dispatch(
+          setSnippetsStateDispatch(targetLanguageLoadedSnippetsWithSavedTag),
         );
         const sortedContent = targetLanguageLoadedContent
           ?.sort((a, b) => {
@@ -571,7 +571,6 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
         updatePromptState,
         addAdhocSentenceFunc,
         isAdhocDataLoading,
-        targetLanguageSnippetsState,
         addSnippet,
         removeSnippet,
         pureWords: pureWordsArr,

@@ -1,4 +1,5 @@
 import React, {Text, View} from 'react-native';
+import {useSelector} from 'react-redux';
 import useLoadAudioInstance from '../hooks/useLoadAudioInstance';
 import {useEffect, useRef, useState} from 'react';
 import {getFirebaseAudioURL} from '../hooks/useGetCombinedAudioData';
@@ -63,7 +64,7 @@ const BottomAudioSection = ({
   const [isPlaying, setIsPlaying] = useState(false);
   const [miniSnippets, setMiniSnippets] = useState([]);
 
-  const {targetLanguageSnippetsState} = useData();
+  const targetLanguageSnippetsState = useSelector(state => state.snippets);
   const {languageSelectedState} = useLanguageSelector();
 
   useEffect(() => {
