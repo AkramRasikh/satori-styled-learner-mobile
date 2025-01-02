@@ -12,11 +12,7 @@ import useLanguageSelector from '../context/LanguageSelector/useLanguageSelector
 import DifficultSentenceAudioContainer from './DifficultSentenceAudioContainer';
 import DifficultSentenceSnippetContainer from './DifficultSentenceSnippetContainer';
 
-const TopSection = ({
-  thisSentenceIsLoading,
-  showThisWordsDefinitions,
-  getLongPressedWordData,
-}) => {
+const TopSection = ({thisSentenceIsLoading}) => {
   return (
     <>
       {thisSentenceIsLoading && (
@@ -38,18 +34,6 @@ const TopSection = ({
           </Text>
         </View>
       )}
-      <View>
-        {showThisWordsDefinitions?.length > 0 ? (
-          <View
-            style={{
-              paddingTop: 5,
-              borderTopColor: 'gray',
-              borderTopWidth: 1,
-            }}>
-            <Text>{getLongPressedWordData()}</Text>
-          </View>
-        ) : null}
-      </View>
     </>
   );
 };
@@ -253,11 +237,7 @@ const DifficultSentenceWidget = ({
         marginBottom: 10,
         opacity: thisSentenceIsLoading ? 0.5 : 1,
       }}>
-      <TopSection
-        thisSentenceIsLoading={thisSentenceIsLoading}
-        showThisWordsDefinitions={showThisWordsDefinitions}
-        getLongPressedWordData={getLongPressedWordData}
-      />
+      <TopSection thisSentenceIsLoading={thisSentenceIsLoading} />
       <DifficultSentenceContent
         topic={topic}
         isCore={isCore}
@@ -284,6 +264,18 @@ const DifficultSentenceWidget = ({
         removeSnippet={removeSnippet}
         indexNum={indexNum}
       />
+      <View>
+        {showThisWordsDefinitions?.length > 0 ? (
+          <View
+            style={{
+              paddingTop: 5,
+              borderTopColor: 'gray',
+              borderTopWidth: 1,
+            }}>
+            <Text>{getLongPressedWordData()}</Text>
+          </View>
+        ) : null}
+      </View>
     </View>
   );
 };
