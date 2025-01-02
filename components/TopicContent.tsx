@@ -189,6 +189,12 @@ const TopicContent = ({
     topicName,
   });
 
+  const handleVideoPause = () => {
+    if (isVideoPlaying && isVideoModeState) {
+      setIsVideoPlaying(false);
+    }
+  };
+
   const handleVideoMode = (switchToVideoMode: boolean) => {
     if (switchToVideoMode) {
       setIsVideoModeState(true);
@@ -512,7 +518,7 @@ const TopicContent = ({
               saveWordFirebase={saveWordFirebase}
               engMaster={engMaster}
               isPlaying={isVideoPlaying}
-              pauseSound={pauseSound}
+              pauseSound={handleVideoPause}
               width={width}
               snippetsLocalAndDb={snippetsLocalAndDb}
               masterPlay={masterPlay}
