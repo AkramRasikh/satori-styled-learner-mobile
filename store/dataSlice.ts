@@ -9,12 +9,12 @@ const dataSlice = createSlice({
   name: 'content',
   initialState: [],
   reducers: {
-    setLearningContentState: (state, action) => {
-      state = action.payload;
+    setLearningContentStateDispatch: (state, action) => {
+      return (state = action.payload);
     },
   },
 });
 
-export const {setLearningContentState} = dataSlice.actions;
+export const {setLearningContentStateDispatch} = dataSlice.actions;
 
 export default dataSlice.reducer;

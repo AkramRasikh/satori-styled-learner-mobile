@@ -16,6 +16,8 @@ import {sentenceReviewBulkAPI} from '../../api/sentence-review-bulk';
 import {combineWordsAPI} from '../../api/combine-words';
 import {addSentenceContextAPI} from '../../api/add-sentence-context';
 import {addSentenceAudioAPI} from '../../api/add-sentence-audio';
+import {useDispatch} from 'react-redux';
+import {setLearningContentStateDispatch} from '../../store/dataSlice';
 
 export const DataContext = createContext(null);
 
@@ -147,6 +149,7 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
   // const [combineWordsListState, setCombineWordsListState] = useState(
   //   combineSentenceResponseExample,
   // );
+  const dispatch = useDispatch();
 
   const {languageSelectedState: language} = useLanguageSelector();
   const dataStorageKeyPrefix = `${language}-data-`;
@@ -535,16 +538,16 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
         setTargetLanguageSnippetsState(
           targetLanguageLoadedSnippetsWithSavedTag,
         );
-        setTargetLanguageLoadedContentMasterState(
-          targetLanguageLoadedContent
-            ?.sort((a, b) => {
-              return a.isCore === b.isCore ? 0 : a.isCore ? -1 : 1;
-            })
-            .map((contentWidget, contentIndex) => ({
-              ...contentWidget,
-              contentIndex: contentIndex,
-            })),
-        );
+        const sortedContent = targetLanguageLoadedContent
+          ?.sort((a, b) => {
+            return a.isCore === b.isCore ? 0 : a.isCore ? -1 : 1;
+          })
+          .map((contentWidget, contentIndex) => ({
+            ...contentWidget,
+            contentIndex: contentIndex,
+          }));
+        setTargetLanguageLoadedContentMasterState(sortedContent);
+        dispatch(setLearningContentStateDispatch(sortedContent));
         setTargetLanguageWordsState(targetLanguageLoadedWords);
         setAdhocTargetLanguageSentencesState(targetLanguageLoadedSentences);
       } catch (error) {
