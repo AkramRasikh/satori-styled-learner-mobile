@@ -17,7 +17,7 @@ import {sentenceReviewBulkAPI} from '../../api/sentence-review-bulk';
 import {combineWordsAPI} from '../../api/combine-words';
 import {addSentenceContextAPI} from '../../api/add-sentence-context';
 import {addSentenceAudioAPI} from '../../api/add-sentence-audio';
-import {setLearningContentStateDispatch} from '../../store/dataSlice';
+import {setLearningContentStateDispatch} from '../../store/contentSlice';
 import {setWordsStateDispatch} from '../../store/wordSlice';
 import {setSentencesStateDispatch} from '../../store/sentencesSlice';
 
