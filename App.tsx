@@ -1,6 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import {AppState} from 'react-native';
 import RNFS from 'react-native-fs';
+import {Provider} from 'react-redux';
+import store from './store';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {enableScreens} from 'react-native-screens'; // Import this line
@@ -55,39 +57,41 @@ function App(): React.JSX.Element {
   };
 
   return (
-    <LanguageSelectorProvider>
-      <DataProvider>
-        <DifficultSentencesProvider>
-          <SafeAreaProvider>
-            <NavigationContainer>
-              <Stack.Navigator
-                initialRouteName="LanguageSelector" // This sets the default screen
-                screenOptions={{headerShown: false}} // Optional: Hide headers
-              >
-                <Stack.Screen name="ContentScreen">
-                  {props => <ContentScreen {...props} />}
-                </Stack.Screen>
-                <Stack.Screen name="VideoTestScreen">
-                  {props => <VideoTestScreen {...props} />}
-                </Stack.Screen>
-                <Stack.Screen name="LanguageSelector">
-                  {props => <LanguageSelectorScreen {...props} />}
-                </Stack.Screen>
-                <Stack.Screen name="Home">
-                  {props => <Home {...props} />}
-                </Stack.Screen>
-                <Stack.Screen name="WordStudy">
-                  {props => <WordStudy {...props} />}
-                </Stack.Screen>
-                <Stack.Screen name="DifficultSentences">
-                  {props => <DifficultSentences {...props} />}
-                </Stack.Screen>
-              </Stack.Navigator>
-            </NavigationContainer>
-          </SafeAreaProvider>
-        </DifficultSentencesProvider>
-      </DataProvider>
-    </LanguageSelectorProvider>
+    <Provider store={store}>
+      <LanguageSelectorProvider>
+        <DataProvider>
+          <DifficultSentencesProvider>
+            <SafeAreaProvider>
+              <NavigationContainer>
+                <Stack.Navigator
+                  initialRouteName="LanguageSelector" // This sets the default screen
+                  screenOptions={{headerShown: false}} // Optional: Hide headers
+                >
+                  <Stack.Screen name="ContentScreen">
+                    {props => <ContentScreen {...props} />}
+                  </Stack.Screen>
+                  <Stack.Screen name="VideoTestScreen">
+                    {props => <VideoTestScreen {...props} />}
+                  </Stack.Screen>
+                  <Stack.Screen name="LanguageSelector">
+                    {props => <LanguageSelectorScreen {...props} />}
+                  </Stack.Screen>
+                  <Stack.Screen name="Home">
+                    {props => <Home {...props} />}
+                  </Stack.Screen>
+                  <Stack.Screen name="WordStudy">
+                    {props => <WordStudy {...props} />}
+                  </Stack.Screen>
+                  <Stack.Screen name="DifficultSentences">
+                    {props => <DifficultSentences {...props} />}
+                  </Stack.Screen>
+                </Stack.Navigator>
+              </NavigationContainer>
+            </SafeAreaProvider>
+          </DifficultSentencesProvider>
+        </DataProvider>
+      </LanguageSelectorProvider>
+    </Provider>
   );
 }
 
