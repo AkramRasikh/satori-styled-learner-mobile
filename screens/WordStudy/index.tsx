@@ -10,8 +10,8 @@ const WordStudyScreen = (): React.JSX.Element => {
 
   const dataProviderIsLoading = data.dataProviderIsLoading;
   const provdiderError = data.provdiderError;
-  const targetLanguageWordsState = data.targetLanguageWordsState;
   const targetLanguageLoadedSentences = data.adhocTargetLanguageSentencesState;
+  const targetLanguageWordsState = useSelector(state => state.words);
   const targetLanguageLoadedContent = useSelector(
     state => state.learningContent,
   );

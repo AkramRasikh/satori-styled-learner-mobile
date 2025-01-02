@@ -1,4 +1,5 @@
 import React, {useEffect, useMemo, useRef, useState} from 'react';
+import {useSelector} from 'react-redux';
 import Sound from 'react-native-sound';
 import {View, Text, ScrollView, Dimensions} from 'react-native';
 import useSoundHook from '../hooks/useSoundHook';
@@ -74,13 +75,14 @@ const TopicContent = ({
   const [selectedSnippetsState, setSelectedSnippetsState] = useState([]);
 
   const {languageSelectedState} = useLanguageSelector();
+  const targetLanguageLoadedWords = useSelector(state => state.words);
+
   const {
     structuredUnifiedData,
     setStructuredUnifiedData,
     pureWords: pureWordsUnique,
     saveWordFirebase,
     addSnippet,
-    targetLanguageWordsState: targetLanguageLoadedWords,
     removeSnippet,
     targetLanguageSnippetsState,
     sentenceReviewBulk,

@@ -1,4 +1,5 @@
 import React, {useEffect, useState} from 'react';
+import {useSelector} from 'react-redux';
 import {ScrollView, View} from 'react-native';
 import useFormatWordsToStudy from '../../hooks/useFormatWordsToStudy';
 import {makeArrayUnique} from '../../hooks/useHighlightWordToWordBank';
@@ -18,6 +19,7 @@ function WordStudyContainer({
   const [showDueCardsState, setShowDueCardsState] = useState<boolean>(false);
 
   const wordCategories = makeArrayUnique([...tagsState, ...generalTopicState]);
+  const targetLanguageWordsState = useSelector(state => state.words);
 
   const {
     deleteWord,
@@ -32,7 +34,6 @@ function WordStudyContainer({
     selectedWordState,
     setSelectedWordState,
     updatePromptState,
-    targetLanguageWordsState,
     tempNewStudyCardsState,
     setTempNewStudyCardsState,
   } = useWordData();

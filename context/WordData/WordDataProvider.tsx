@@ -1,12 +1,13 @@
 import React from 'react';
 import {createContext, PropsWithChildren, useState} from 'react';
+import {useDispatch, useSelector} from 'react-redux';
 import {updateWordAPI} from '../../api/update-word-data';
 import {deleteWordAPI} from '../../api/delete-word';
 import useLanguageSelector from '../LanguageSelector/useLanguageSelector';
-import useData from '../Data/useData';
 import {FlashCardWordType} from '../../screens/WordStudy/types';
 import {storeDataLocalStorage} from '../../helper-functions/local-storage-utils';
 import {words} from '../../refs';
+import {setWordsStateDispatch} from '../../store/wordSlice';
 
 export const WordDataContext = createContext(null);
 
@@ -20,10 +21,11 @@ export const WordDataProvider = ({children}: PropsWithChildren<{}>) => {
   const [tempNewStudyCardsState, setTempNewStudyCardsState] = useState<
     FlashCardWordType[]
   >([]);
+  const dispatch = useDispatch();
   const {languageSelectedState: language} = useLanguageSelector();
   const dataStorageKeyPrefix = `${language}-data-`;
 
-  const {targetLanguageWordsState, setTargetLanguageWordsState} = useData();
+  const targetLanguageWordsState = useSelector(state => state.words);
 
   const updateWordData = async ({
     wordId,
@@ -62,7 +64,7 @@ export const WordDataProvider = ({children}: PropsWithChildren<{}>) => {
           prev.filter(wordData => wordData.id !== wordId),
         );
       }
-      setTargetLanguageWordsState(targetLanguageWordsStateUpdated);
+      dispatch(setWordsStateDispatch(targetLanguageWordsStateUpdated));
       await storeDataLocalStorage(
         dataStorageKeyPrefix + words,
         targetLanguageWordsStateUpdated,
@@ -128,7 +130,7 @@ export const WordDataProvider = ({children}: PropsWithChildren<{}>) => {
       const targetLanguageWordsStateUpdated = targetLanguageWordsState.filter(
         item => item.id !== wordId,
       );
-      setTargetLanguageWordsState(targetLanguageWordsStateUpdated);
+      dispatch(setWordsStateDispatch(targetLanguageWordsStateUpdated));
       await storeDataLocalStorage(
         dataStorageKeyPrefix + words,
         targetLanguageWordsStateUpdated,
@@ -164,7 +166,6 @@ export const WordDataProvider = ({children}: PropsWithChildren<{}>) => {
         setSelectedTopic,
         selectedWordState,
         setSelectedWordState,
-        targetLanguageWordsState,
         tempNewStudyCardsState,
         setTempNewStudyCardsState,
       }}>

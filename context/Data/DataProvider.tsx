@@ -18,6 +18,7 @@ import {combineWordsAPI} from '../../api/combine-words';
 import {addSentenceContextAPI} from '../../api/add-sentence-context';
 import {addSentenceAudioAPI} from '../../api/add-sentence-audio';
 import {setLearningContentStateDispatch} from '../../store/dataSlice';
+import {setWordsStateDispatch} from '../../store/wordSlice';
 
 export const DataContext = createContext(null);
 
@@ -134,7 +135,6 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
     adhocTargetLanguageSentencesState,
     setAdhocTargetLanguageSentencesState,
   ] = useState([]);
-  const [targetLanguageWordsState, setTargetLanguageWordsState] = useState([]);
   const [dataProviderIsLoading, setDataProviderIsLoading] = useState(true);
   const [loadingCombineSentences, setLoadingCombineSentences] = useState(false);
   const [provdiderError, setProvdiderError] = useState(null);
@@ -145,6 +145,8 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
   // const [combineWordsListState, setCombineWordsListState] = useState(
   //   combineSentenceResponseExample,
   // );
+
+  const targetLanguageWordsState = useSelector(state => state.words);
   const targetLanguageLoadedContentMasterState = useSelector(
     state => state.learningContent,
   );
@@ -493,7 +495,7 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
         language,
       });
       const newWordsState = [...targetLanguageWordsState, savedWord];
-      setTargetLanguageWordsState(newWordsState);
+      dispatch(setWordsStateDispatch(newWordsState));
       await storeDataLocalStorage(dataStorageKeyPrefix + words, newWordsState);
     } catch (error) {
       console.log('## saveWordFirebase Provider err', error);
@@ -546,7 +548,7 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
             contentIndex: contentIndex,
           }));
         dispatch(setLearningContentStateDispatch(sortedContent));
-        setTargetLanguageWordsState(targetLanguageLoadedWords);
+        dispatch(setWordsStateDispatch(targetLanguageLoadedWords));
         setAdhocTargetLanguageSentencesState(targetLanguageLoadedSentences);
       } catch (error) {
         console.log('## DataProvider error: ', error);
@@ -572,13 +574,11 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
         targetLanguageSnippetsState,
         addSnippet,
         removeSnippet,
-        targetLanguageWordsState,
         pureWords: pureWordsArr,
         saveWordFirebase,
         getThisSentencesWordList,
         adhocTargetLanguageSentencesState,
         updatingSentenceState,
-        setTargetLanguageWordsState,
         structuredUnifiedData,
         setStructuredUnifiedData,
         updateContentMetaData,
