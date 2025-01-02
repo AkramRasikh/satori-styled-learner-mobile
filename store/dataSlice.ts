@@ -1,7 +1,12 @@
 import {createSlice} from '@reduxjs/toolkit';
 
+// content
+// words
+// snippets
+// sentences
+
 const dataSlice = createSlice({
-  name: 'counter',
+  name: 'content',
   initialState: {value: 0},
   reducers: {
     increment: state => {
