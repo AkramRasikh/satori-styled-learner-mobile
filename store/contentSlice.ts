@@ -1,11 +1,6 @@
 import {createSlice} from '@reduxjs/toolkit';
 
-// content
-// words
-// snippets
-// sentences
-
-const dataSlice = createSlice({
+const contentSlice = createSlice({
   name: 'content',
   initialState: [],
   reducers: {
@@ -15,6 +10,6 @@ const dataSlice = createSlice({
   },
 });
 
-export const {setLearningContentStateDispatch} = dataSlice.actions;
+export const {setLearningContentStateDispatch} = contentSlice.actions;
 
-export default dataSlice.reducer;
+export default contentSlice.reducer;
