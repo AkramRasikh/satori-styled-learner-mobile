@@ -5,7 +5,6 @@ import React, {
   useState,
 } from 'react';
 import useLoadDifficultSentences from '../../hooks/useLoadDifficultSentences';
-import useData from '../Data/useData';
 
 export const DifficultSentencesContext = createContext(null);
 
@@ -18,11 +17,7 @@ export const DifficultSentencesProvider = ({
     setDifficultSentencesHasBeenSetState,
   ] = useState(false);
 
-  const {adhocTargetLanguageSentencesState} = useData();
-
-  const {getAllDataReady} = useLoadDifficultSentences({
-    adhocTargetLanguageSentencesState,
-  });
+  const {getAllDataReady} = useLoadDifficultSentences();
 
   const removeDifficultSentenceFromState = sentenceId => {
     const updatedDifficultSentences = difficultSentencesState.filter(
@@ -63,11 +58,7 @@ export const DifficultSentencesProvider = ({
       setDifficultSentencesState(difficultSentencesData);
       setDifficultSentencesHasBeenSetState(true);
     }
-  }, [
-    difficultSentencesHasBeenSetState,
-    adhocTargetLanguageSentencesState,
-    getAllDataReady,
-  ]);
+  }, [difficultSentencesHasBeenSetState, getAllDataReady]);
 
   return (
     <DifficultSentencesContext.Provider

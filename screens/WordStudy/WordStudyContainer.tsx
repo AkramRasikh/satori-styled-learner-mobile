@@ -10,16 +10,18 @@ import useWordData from '../../context/WordData/useWordData';
 import WordStudyCardsCTA from '../../components/WordStudyCardsCTA';
 import ScreenContainerComponent from '../../components/ScreenContainerComponent';
 
-function WordStudyContainer({
-  targetLanguageLoadedSentences,
-  targetLanguageLoadedContent,
-}): React.JSX.Element {
+function WordStudyContainer(): React.JSX.Element {
   const [tagsState, setTagsState] = useState<string[]>([]);
   const [generalTopicState, setGeneralTopicState] = useState<string[]>([]);
   const [showDueCardsState, setShowDueCardsState] = useState<boolean>(false);
 
-  const wordCategories = makeArrayUnique([...tagsState, ...generalTopicState]);
+  const targetLanguageLoadedSentences = useSelector(state => state.sentences);
   const targetLanguageWordsState = useSelector(state => state.words);
+  const targetLanguageLoadedContent = useSelector(
+    state => state.learningContent,
+  );
+
+  const wordCategories = makeArrayUnique([...tagsState, ...generalTopicState]);
 
   const {
     deleteWord,

@@ -1,9 +1,12 @@
 import {useSelector} from 'react-redux';
 import {sortByDueDate} from '../utils/sort-by-due-date';
 
-const useLoadDifficultSentences = ({adhocTargetLanguageSentencesState}) => {
+const useLoadDifficultSentences = () => {
   const targetLanguageLoadedContentMasterState = useSelector(
     state => state.learningContent,
+  );
+  const adhocTargetLanguageSentencesState = useSelector(
+    state => state.sentences,
   );
 
   const getSentencesMarkedAsDifficult = () => {

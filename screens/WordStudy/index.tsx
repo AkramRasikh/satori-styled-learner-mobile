@@ -1,5 +1,4 @@
 import React from 'react';
-import {useSelector} from 'react-redux';
 import LoadingScreen from '../../components/LoadingScreen';
 import useData from '../../context/Data/useData';
 import WordStudyContainer from './WordStudyContainer';
@@ -10,17 +9,7 @@ const WordStudyScreen = (): React.JSX.Element => {
 
   const dataProviderIsLoading = data.dataProviderIsLoading;
   const provdiderError = data.provdiderError;
-  const targetLanguageLoadedSentences = data.adhocTargetLanguageSentencesState;
-  const targetLanguageWordsState = useSelector(state => state.words);
-  const targetLanguageLoadedContent = useSelector(
-    state => state.learningContent,
-  );
-
-  if (
-    targetLanguageWordsState.length === 0 ||
-    targetLanguageLoadedContent.length === 0 ||
-    dataProviderIsLoading
-  ) {
+  if (dataProviderIsLoading) {
     return <LoadingScreen>Loading data...</LoadingScreen>;
   }
   if (provdiderError) {
@@ -29,10 +18,7 @@ const WordStudyScreen = (): React.JSX.Element => {
 
   return (
     <WordDataProvider>
-      <WordStudyContainer
-        targetLanguageLoadedSentences={targetLanguageLoadedSentences}
-        targetLanguageLoadedContent={targetLanguageLoadedContent}
-      />
+      <WordStudyContainer />
     </WordDataProvider>
   );
 };
