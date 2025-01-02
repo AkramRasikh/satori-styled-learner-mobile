@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {View} from 'react-native';
+import {useSelector} from 'react-redux';
 import {useRoute} from '@react-navigation/native';
 
 import TopicContent from '../../components/TopicContent';
@@ -15,12 +16,12 @@ const ContentScreen = () => {
   const [triggerSentenceIdUpdate, setTriggerSentenceIdUpdate] = useState(null);
   const [selectedContentState, setSelectedContentState] = useState(null);
 
-  const {
-    targetLanguageLoadedContentMasterState,
-    updateSentenceViaContent,
-    updateContentMetaData,
-    updatePromptState,
-  } = useData();
+  const targetLanguageLoadedContentMasterState = useSelector(
+    state => state.learningContent,
+  );
+
+  const {updateSentenceViaContent, updateContentMetaData, updatePromptState} =
+    useData();
 
   const {
     removeDifficultSentenceFromState,

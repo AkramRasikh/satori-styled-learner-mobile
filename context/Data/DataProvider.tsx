@@ -1,5 +1,6 @@
 import React from 'react';
 import {createContext, PropsWithChildren, useEffect, useState} from 'react';
+import {useDispatch, useSelector} from 'react-redux';
 import {getAllData} from '../../api/load-content';
 import {updateSentenceDataAPI} from '../../api/update-sentence-data';
 import addAdhocSentenceAPI from '../../api/add-adhoc-sentence';
@@ -16,7 +17,6 @@ import {sentenceReviewBulkAPI} from '../../api/sentence-review-bulk';
 import {combineWordsAPI} from '../../api/combine-words';
 import {addSentenceContextAPI} from '../../api/add-sentence-context';
 import {addSentenceAudioAPI} from '../../api/add-sentence-audio';
-import {useDispatch} from 'react-redux';
 import {setLearningContentStateDispatch} from '../../store/dataSlice';
 
 export const DataContext = createContext(null);
@@ -128,10 +128,6 @@ const combineSentenceResponseExample = [
 
 export const DataProvider = ({children}: PropsWithChildren<{}>) => {
   const [updatingSentenceState, setUpdatingSentenceState] = useState('');
-  const [
-    targetLanguageLoadedContentMasterState,
-    setTargetLanguageLoadedContentMasterState,
-  ] = useState([]);
   const [targetLanguageSnippetsState, setTargetLanguageSnippetsState] =
     useState([]);
   const [
@@ -149,6 +145,9 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
   // const [combineWordsListState, setCombineWordsListState] = useState(
   //   combineSentenceResponseExample,
   // );
+  const targetLanguageLoadedContentMasterState = useSelector(
+    state => state.learningContent,
+  );
   const dispatch = useDispatch();
 
   const {languageSelectedState: language} = useLanguageSelector();
@@ -192,7 +191,7 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
       content: updatedContent,
     };
 
-    setTargetLanguageLoadedContentMasterState(updatedState);
+    dispatch(setLearningContentStateDispatch(updatedState));
     return updatedState;
   };
 
@@ -219,7 +218,7 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
         updatedState[contentIndex] = {
           ...newTopicState,
         };
-        setTargetLanguageLoadedContentMasterState(updatedState);
+        dispatch(setLearningContentStateDispatch(updatedState));
         await storeDataLocalStorage(
           dataStorageKeyPrefix + content,
           updatedState,
@@ -263,7 +262,7 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
         updatedState[contentIndex] = {
           ...newTopicState,
         };
-        setTargetLanguageLoadedContentMasterState(updatedState);
+        dispatch(setLearningContentStateDispatch(updatedState));
         await storeDataLocalStorage(
           dataStorageKeyPrefix + content,
           updatedState,
@@ -546,7 +545,6 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
             ...contentWidget,
             contentIndex: contentIndex,
           }));
-        setTargetLanguageLoadedContentMasterState(sortedContent);
         dispatch(setLearningContentStateDispatch(sortedContent));
         setTargetLanguageWordsState(targetLanguageLoadedWords);
         setAdhocTargetLanguageSentencesState(targetLanguageLoadedSentences);
@@ -583,8 +581,6 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
         setTargetLanguageWordsState,
         structuredUnifiedData,
         setStructuredUnifiedData,
-        targetLanguageLoadedContentMasterState,
-        setTargetLanguageLoadedContentMasterState,
         updateContentMetaData,
         updateSentenceViaContent,
         bulkAddReviews,

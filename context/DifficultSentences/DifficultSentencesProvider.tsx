@@ -18,14 +18,10 @@ export const DifficultSentencesProvider = ({
     setDifficultSentencesHasBeenSetState,
   ] = useState(false);
 
-  const {
-    adhocTargetLanguageSentencesState,
-    targetLanguageLoadedContentMasterState,
-  } = useData();
+  const {adhocTargetLanguageSentencesState} = useData();
 
   const {getAllDataReady} = useLoadDifficultSentences({
     adhocTargetLanguageSentencesState,
-    targetLanguageLoadedContentMasterState,
   });
 
   const removeDifficultSentenceFromState = sentenceId => {
@@ -69,7 +65,6 @@ export const DifficultSentencesProvider = ({
     }
   }, [
     difficultSentencesHasBeenSetState,
-    targetLanguageLoadedContentMasterState,
     adhocTargetLanguageSentencesState,
     getAllDataReady,
   ]);
