@@ -131,7 +131,6 @@ const combineSentenceResponseExample = [
 
 export const DataProvider = ({children}: PropsWithChildren<{}>) => {
   const [updatingSentenceState, setUpdatingSentenceState] = useState('');
-
   const [dataProviderIsLoading, setDataProviderIsLoading] = useState(true);
   const [loadingCombineSentences, setLoadingCombineSentences] = useState(false);
   const [provdiderError, setProvdiderError] = useState(null);
