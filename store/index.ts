@@ -3,7 +3,7 @@ import dataReducer from './dataSlice';
 
 const store = configureStore({
   reducer: {
-    counter: dataReducer,
+    learningContent: dataReducer,
   },
 });
 

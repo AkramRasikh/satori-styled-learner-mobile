@@ -7,20 +7,14 @@ import {createSlice} from '@reduxjs/toolkit';
 
 const dataSlice = createSlice({
   name: 'content',
-  initialState: {value: 0},
+  initialState: [],
   reducers: {
-    increment: state => {
-      state.value += 1;
-    },
-    decrement: state => {
-      state.value -= 1;
-    },
-    incrementByAmount: (state, action) => {
-      state.value += action.payload;
+    setLearningContentState: (state, action) => {
+      state = action.payload;
     },
   },
 });
 
-export const {increment, decrement, incrementByAmount} = dataSlice.actions;
+export const {setLearningContentState} = dataSlice.actions;
 
 export default dataSlice.reducer;
