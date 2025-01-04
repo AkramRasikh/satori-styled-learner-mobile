@@ -18,11 +18,10 @@ const DifficultSentenceTopHeaderActions = ({
     setHighlightedIndices([]);
     setSentenceBeingHighlightedState('');
   };
+  const handleShowWords = () => {};
   return (
     <View
       style={{
-        display: 'flex',
-        flexDirection: 'row',
         gap: 5,
         justifyContent: isDueNow ? 'space-between' : 'flex-end',
       }}>
@@ -36,11 +35,14 @@ const DifficultSentenceTopHeaderActions = ({
       ) : null}
       <View
         style={{
-          display: 'flex',
           flexDirection: 'row',
-          gap: 10,
+          gap: 15,
           marginVertical: 'auto',
+          alignSelf: 'flex-end',
         }}>
+        <TouchableOpacity onPress={handleShowWords}>
+          <Text>📖</Text>
+        </TouchableOpacity>
         {sentence.id !== sentenceBeingHighlightedState ? (
           <TouchableOpacity onPress={handleSettingHighlightmode}>
             <Text>🖌️</Text>
