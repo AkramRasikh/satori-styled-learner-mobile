@@ -13,12 +13,12 @@ const DifficultSentenceTopHeaderActions = ({
   handleOpenGoogleTranslate,
   setHighlightedIndices,
   setShowReviewSettings,
+  handleShowWords,
 }) => {
   const handleCloseHighlighting = () => {
     setHighlightedIndices([]);
     setSentenceBeingHighlightedState('');
   };
-  const handleShowWords = () => {};
   return (
     <View
       style={{

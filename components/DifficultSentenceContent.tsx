@@ -28,6 +28,7 @@ const DifficultSentenceContent = ({
   handleClose,
   handleYesSure,
   showReviewSettings,
+  handleShowAllMatchedWords,
 }) => {
   const [highlightedIndices, setHighlightedIndices] = useState([]);
   const [containerWidth, setContainerWidth] = useState(0);
@@ -74,11 +75,16 @@ const DifficultSentenceContent = ({
     }
   };
 
-  const handleSaveWordToFB = ({highlightedWord, highlightedWordSentenceId}) => {
+  const handleSaveWordToFB = ({
+    highlightedWord,
+    highlightedWordSentenceId,
+    isGoogle,
+  }) => {
     saveWordFirebase({
       highlightedWord,
       highlightedWordSentenceId,
       contextSentence: targetLang,
+      isGoogle,
     });
     setSentenceBeingHighlightedState('');
   };
@@ -125,6 +131,7 @@ const DifficultSentenceContent = ({
         handleOpenGoogleTranslate={handleOpenGoogleTranslate}
         setHighlightedIndices={setHighlightedIndices}
         setShowReviewSettings={setShowReviewSettings}
+        handleShowWords={handleShowAllMatchedWords}
       />
       {showReviewSettings ? (
         <AreYouSureSection

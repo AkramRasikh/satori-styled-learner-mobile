@@ -155,6 +155,9 @@ const DifficultSentenceWidget = ({
   const [showReviewSettings, setShowReviewSettings] = useState(false);
   const [showThisWordsDefinitions, setShowThisWordsDefinitions] =
     useState(null);
+  const [showAllMatchedWordsState, setShowAllMatchedWordsState] =
+    useState(false);
+  const [matchedWordListState, setMatchedWordListState] = useState([]);
 
   const {updatingSentenceState, getThisSentencesWordList} = useData();
 
@@ -163,7 +166,16 @@ const DifficultSentenceWidget = ({
   const isCore = sentence?.isCore;
   const baseLang = sentence.baseLang;
   const targetLang = sentence.targetLang;
-  const matchedWordList = getThisSentencesWordList(targetLang);
+  const numberOfWords = pureWords.length;
+
+  const handleShowAllMatchedWords = () => {
+    setShowAllMatchedWordsState(!showAllMatchedWordsState);
+  };
+
+  useEffect(() => {
+    const matchedWordList = getThisSentencesWordList(targetLang);
+    setMatchedWordListState(matchedWordList);
+  }, [numberOfWords]);
 
   const handleDeleteContent = () => {
     updateSentenceData({
@@ -212,8 +224,47 @@ const DifficultSentenceWidget = ({
     });
   };
 
+  const seperatedWords = (word, index) => {
+    const surfaceForm = word.surfaceForm;
+    const baseForm = word.baseForm;
+    const phonetic = word.phonetic || word.transliteration;
+    const definition = word.definition;
+
+    const indexToNumber = index + 1;
+
+    return (
+      indexToNumber +
+      ') ' +
+      surfaceForm +
+      ', ' +
+      baseForm +
+      ', ' +
+      phonetic +
+      ', ' +
+      definition
+    );
+  };
+  const matchedWordsMap = () => {
+    if (matchedWordListState?.length === 0) {
+      return null;
+    }
+
+    return matchedWordListState.map((item, index) => {
+      return (
+        <View
+          style={{
+            paddingTop: 5,
+            borderTopColor: 'gray',
+            borderTopWidth: 1,
+          }}>
+          <Text>{seperatedWords(item, index)}</Text>
+        </View>
+      );
+    });
+  };
+
   const generalLongPress = text => {
-    const longPressedTexts = matchedWordList.filter(word =>
+    const longPressedTexts = matchedWordListState.filter(word =>
       text.includes(word.surfaceForm),
     );
     return longPressedTexts;
@@ -257,6 +308,7 @@ const DifficultSentenceWidget = ({
         handleClose={() => setShowReviewSettings(false)}
         handleYesSure={handleDeleteContent}
         showReviewSettings={showReviewSettings}
+        handleShowAllMatchedWords={handleShowAllMatchedWords}
       />
       <BottomAudioSection
         sentence={sentence}
@@ -276,6 +328,8 @@ const DifficultSentenceWidget = ({
           </View>
         ) : null}
       </View>
+
+      {showAllMatchedWordsState && matchedWordsMap()}
     </View>
   );
 };

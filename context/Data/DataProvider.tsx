@@ -158,8 +158,12 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
     let pureWords = [];
 
     targetLanguageWordsState?.forEach(wordData => {
-      pureWords.push(wordData.baseForm);
-      pureWords.push(wordData.surfaceForm);
+      if (wordData?.baseForm) {
+        pureWords.push(wordData.baseForm);
+      }
+      if (wordData?.surfaceForm) {
+        pureWords.push(wordData.surfaceForm);
+      }
     });
 
     const pureWordsUnique =
