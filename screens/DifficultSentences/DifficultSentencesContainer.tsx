@@ -7,8 +7,6 @@ import useData from '../../context/Data/useData';
 import DifficultSentenceMapContainer from '../../components/DifficultSentenceMapContainer';
 import useDifficultSentences from '../../context/DifficultSentences/useDifficultSentencesProvider';
 
-const todayDateObj = new Date();
-
 const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
   const [toggleableSentencesState, setToggleableSentencesState] = useState([]);
   const [sentenceBeingHighlightedState, setSentenceBeingHighlightedState] =
@@ -37,6 +35,7 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
   };
 
   const showDueInit = arr => {
+    const todayDateObj = new Date();
     const filteredForDueOnly = [...arr].filter(sentence => {
       if (sentence?.nextReview) {
         return sentence.nextReview < todayDateObj;
