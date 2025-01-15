@@ -476,7 +476,7 @@ const TopicContent = ({
   if (isVideoModeState) {
     return (
       <>
-        {/* {showReviewSectionState && (
+        {showReviewSectionState && (
           <AnimatedModal
             visible
             onClose={() => setShowReviewSectionState(false)}>
@@ -487,7 +487,7 @@ const TopicContent = ({
               updateTopicMetaData={updateTopicMetaData}
             />
           </AnimatedModal>
-        )} */}
+        )}
         <View>
           <View>
             <DisplaySettings
