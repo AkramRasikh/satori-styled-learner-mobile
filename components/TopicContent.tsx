@@ -39,6 +39,7 @@ import {
   getNextScheduledOptions,
   srsRetentionKeyTypes,
 } from '../srs-algo';
+import AnimatedModal from './AnimatedModal';
 
 const TopicContent = ({
   topicName,
@@ -58,6 +59,7 @@ const TopicContent = ({
   const [engMaster, setEngMaster] = useState(true);
   const [highlightMode, setHighlightMode] = useState(false);
   const [isVideoModeState, setIsVideoModeState] = useState(false);
+  const [showReviewSectionState, setShowReviewSectionState] = useState(false);
   const [highlightedIndices, setHighlightedIndices] = useState([]);
   const [formattedData, setFormattedData] = useState([]);
   const [secondsToSentencesMapState, setSecondsToSentencesMapState] = useState<
@@ -473,167 +475,182 @@ const TopicContent = ({
 
   if (isVideoModeState) {
     return (
-      <View>
-        <View>
-          <DisplaySettings
-            englishOnly={englishOnly}
-            setEnglishOnly={setEnglishOnly}
-            engMaster={engMaster}
-            setEngMaster={setEngMaster}
-            handleIsCore={handleIsCore}
-            isCore={isCore}
-            handleAddAdhocSentence={handleAddAdhocSentence}
-            isVideoModeState={isVideoModeState}
-            hasVideo={hasVideo}
-            handleVideoMode={handleVideoMode}
-            handleBulkReviews={handleBulkReviews}
-            hasContentToReview={hasContentToReview}
-          />
-          {longPressedWord?.length ? (
-            <LongPressedWord
-              getLongPressedWordData={getLongPressedWordData}
-              handleRemoveWords={handleRemoveWords}
-            />
-          ) : null}
-          {hasUnifiedMP3File && (
-            <VideoPlayer
-              url={videoUrl}
-              videoRef={videoRef}
-              isPlaying={isVideoPlaying}
-              onProgressHandler={setCurrentVideoTimeState}
-              setVideoDuration={setVideoDurationState}
-            />
-          )}
-          <ScrollView
-            contentInsetAdjustmentBehavior="automatic"
-            style={{
-              maxHeight: height * 0.45,
-            }}>
-            <LineContainer
-              formattedData={formattedData}
-              playFromThisSentence={handlePlayFromThisSentence}
-              englishOnly={englishOnly}
-              highlightedIndices={highlightedIndices}
-              setHighlightedIndices={setHighlightedIndices}
-              saveWordFirebase={saveWordFirebase}
-              engMaster={engMaster}
-              isPlaying={isVideoPlaying}
-              pauseSound={handleVideoPause}
-              width={width}
-              snippetsLocalAndDb={snippetsLocalAndDb}
-              masterPlay={masterPlay}
-              highlightMode={highlightMode}
-              setHighlightMode={setHighlightMode}
-              onLongPress={onLongPress}
+      <>
+        {/* {showReviewSectionState && (
+          <AnimatedModal
+            visible
+            onClose={() => setShowReviewSectionState(false)}>
+            <ReviewSection
               topicName={topicName}
-              updateSentenceData={updateSentenceData}
-              currentTimeState={currentTimeState}
-              addSnippet={addSnippet}
-              removeSnippet={removeSnippet}
-              deleteSnippet={deleteSnippet}
-              playSound={playFromHere}
-              setMiniSnippets={setMiniSnippets}
-              handleAddSnippet={handleAddSnippet}
-              highlightTargetTextState={highlightTargetTextState}
-              contentIndex={contentIndex}
+              reviewHistory={reviewHistory}
+              nextReview={nextReview}
+              updateTopicMetaData={updateTopicMetaData}
             />
-          </ScrollView>
-        </View>
+          </AnimatedModal>
+        )} */}
         <View>
-          <AudioToggles
-            isPlaying={isVideoPlaying}
-            playSound={playVideo}
-            seekHandler={seekHandler}
-            jumpAudioValue={jumpAudioValue}
-            progress={progress}
-          />
+          <View>
+            <DisplaySettings
+              englishOnly={englishOnly}
+              setEnglishOnly={setEnglishOnly}
+              engMaster={engMaster}
+              setEngMaster={setEngMaster}
+              handleIsCore={handleIsCore}
+              isCore={isCore}
+              handleAddAdhocSentence={handleAddAdhocSentence}
+              isVideoModeState={isVideoModeState}
+              hasVideo={hasVideo}
+              handleVideoMode={handleVideoMode}
+              handleBulkReviews={handleBulkReviews}
+              hasContentToReview={hasContentToReview}
+            />
+            {longPressedWord?.length ? (
+              <LongPressedWord
+                getLongPressedWordData={getLongPressedWordData}
+                handleRemoveWords={handleRemoveWords}
+              />
+            ) : null}
+            {hasUnifiedMP3File && (
+              <VideoPlayer
+                url={videoUrl}
+                videoRef={videoRef}
+                isPlaying={isVideoPlaying}
+                onProgressHandler={setCurrentVideoTimeState}
+                setVideoDuration={setVideoDurationState}
+              />
+            )}
+            <ScrollView
+              contentInsetAdjustmentBehavior="automatic"
+              style={{
+                maxHeight: height * 0.45,
+              }}>
+              <LineContainer
+                formattedData={formattedData}
+                playFromThisSentence={handlePlayFromThisSentence}
+                englishOnly={englishOnly}
+                highlightedIndices={highlightedIndices}
+                setHighlightedIndices={setHighlightedIndices}
+                saveWordFirebase={saveWordFirebase}
+                engMaster={engMaster}
+                isPlaying={isVideoPlaying}
+                pauseSound={handleVideoPause}
+                width={width}
+                snippetsLocalAndDb={snippetsLocalAndDb}
+                masterPlay={masterPlay}
+                highlightMode={highlightMode}
+                setHighlightMode={setHighlightMode}
+                onLongPress={onLongPress}
+                topicName={topicName}
+                updateSentenceData={updateSentenceData}
+                currentTimeState={currentTimeState}
+                addSnippet={addSnippet}
+                removeSnippet={removeSnippet}
+                deleteSnippet={deleteSnippet}
+                playSound={playFromHere}
+                setMiniSnippets={setMiniSnippets}
+                handleAddSnippet={handleAddSnippet}
+                highlightTargetTextState={highlightTargetTextState}
+                contentIndex={contentIndex}
+              />
+            </ScrollView>
+          </View>
+          <View>
+            <AudioToggles
+              isPlaying={isVideoPlaying}
+              playSound={playVideo}
+              seekHandler={seekHandler}
+              jumpAudioValue={jumpAudioValue}
+              progress={progress}
+            />
+          </View>
+        </View>
+      </>
+    );
+  }
+
+  return (
+    <>
+      {showReviewSectionState && (
+        <AnimatedModal visible onClose={() => setShowReviewSectionState(false)}>
           <ReviewSection
             topicName={topicName}
             reviewHistory={reviewHistory}
             nextReview={nextReview}
             updateTopicMetaData={updateTopicMetaData}
           />
-        </View>
-      </View>
-    );
-  }
-
-  return (
-    <View>
-      <DisplaySettings
-        englishOnly={englishOnly}
-        setEnglishOnly={setEnglishOnly}
-        engMaster={engMaster}
-        setEngMaster={setEngMaster}
-        handleIsCore={handleIsCore}
-        isCore={isCore}
-        handleAddAdhocSentence={handleAddAdhocSentence}
-        isVideoModeState={isVideoModeState}
-        hasVideo={hasVideo}
-        handleVideoMode={handleVideoMode}
-        handleBulkReviews={handleBulkReviews}
-        hasContentToReview={hasContentToReview}
-      />
-      {longPressedWord?.length ? (
-        <LongPressedWord
-          getLongPressedWordData={getLongPressedWordData}
-          handleRemoveWords={handleRemoveWords}
-        />
-      ) : null}
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={{
-          maxHeight: height * 0.6,
-        }}>
-        <LineContainer
-          formattedData={formattedData}
-          playFromThisSentence={handlePlayFromThisSentence}
-          // playFromThisSentence={playFromThisSentence}
-          englishOnly={englishOnly}
-          highlightedIndices={highlightedIndices}
-          setHighlightedIndices={setHighlightedIndices}
-          saveWordFirebase={saveWordFirebase}
-          engMaster={engMaster}
-          isPlaying={isPlaying}
-          pauseSound={pauseSound}
-          width={width}
-          snippetsLocalAndDb={snippetsLocalAndDb}
-          masterPlay={masterPlay}
-          highlightMode={highlightMode}
-          setHighlightMode={setHighlightMode}
-          onLongPress={onLongPress}
-          topicName={topicName}
-          updateSentenceData={updateSentenceData}
-          currentTimeState={currentTimeState}
-          addSnippet={addSnippet}
-          removeSnippet={removeSnippet}
-          deleteSnippet={deleteSnippet}
-          playSound={playFromHere}
-          setMiniSnippets={setMiniSnippets}
-          handleAddSnippet={handleAddSnippet}
-          highlightTargetTextState={highlightTargetTextState}
-          contentIndex={contentIndex}
-        />
-      </ScrollView>
-      <ReviewSection
-        topicName={topicName}
-        reviewHistory={reviewHistory}
-        nextReview={nextReview}
-        updateTopicMetaData={updateTopicMetaData}
-      />
-      {hasUnifiedMP3File && (
-        <TopicContentAudioSection
-          isPlaying={isPlaying}
-          playSound={playSound}
-          pauseSound={pauseSound}
-          rewindSound={rewindSound}
-          forwardSound={forwardSound}
-          getTimeStamp={getTimeStamp}
-          currentTimeState={currentTimeState}
-          soundDuration={soundDuration}
-        />
+        </AnimatedModal>
       )}
-    </View>
+      <View>
+        <DisplaySettings
+          englishOnly={englishOnly}
+          setEnglishOnly={setEnglishOnly}
+          engMaster={engMaster}
+          setEngMaster={setEngMaster}
+          handleIsCore={handleIsCore}
+          isCore={isCore}
+          handleAddAdhocSentence={handleAddAdhocSentence}
+          isVideoModeState={isVideoModeState}
+          hasVideo={hasVideo}
+          handleVideoMode={handleVideoMode}
+          handleBulkReviews={handleBulkReviews}
+          hasContentToReview={hasContentToReview}
+        />
+        {longPressedWord?.length ? (
+          <LongPressedWord
+            getLongPressedWordData={getLongPressedWordData}
+            handleRemoveWords={handleRemoveWords}
+          />
+        ) : null}
+        <ScrollView
+          contentInsetAdjustmentBehavior="automatic"
+          style={{
+            maxHeight: height * 0.7,
+          }}>
+          <LineContainer
+            formattedData={formattedData}
+            playFromThisSentence={handlePlayFromThisSentence}
+            // playFromThisSentence={playFromThisSentence}
+            englishOnly={englishOnly}
+            highlightedIndices={highlightedIndices}
+            setHighlightedIndices={setHighlightedIndices}
+            saveWordFirebase={saveWordFirebase}
+            engMaster={engMaster}
+            isPlaying={isPlaying}
+            pauseSound={pauseSound}
+            width={width}
+            snippetsLocalAndDb={snippetsLocalAndDb}
+            masterPlay={masterPlay}
+            highlightMode={highlightMode}
+            setHighlightMode={setHighlightMode}
+            onLongPress={onLongPress}
+            topicName={topicName}
+            updateSentenceData={updateSentenceData}
+            currentTimeState={currentTimeState}
+            addSnippet={addSnippet}
+            removeSnippet={removeSnippet}
+            deleteSnippet={deleteSnippet}
+            playSound={playFromHere}
+            setMiniSnippets={setMiniSnippets}
+            handleAddSnippet={handleAddSnippet}
+            highlightTargetTextState={highlightTargetTextState}
+            contentIndex={contentIndex}
+          />
+        </ScrollView>
+        {hasUnifiedMP3File && (
+          <TopicContentAudioSection
+            isPlaying={isPlaying}
+            playSound={playSound}
+            pauseSound={pauseSound}
+            rewindSound={rewindSound}
+            forwardSound={forwardSound}
+            getTimeStamp={getTimeStamp}
+            currentTimeState={currentTimeState}
+            soundDuration={soundDuration}
+            setShowReviewSectionState={setShowReviewSectionState}
+          />
+        )}
+      </View>
+    </>
   );
 };
 

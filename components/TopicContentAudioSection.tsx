@@ -10,6 +10,7 @@ const TopicContentAudioSection = ({
   getTimeStamp,
   currentTimeState,
   soundDuration,
+  setShowReviewSectionState,
   jumpAudioValue = 5,
 }) => {
   const progress =
@@ -40,6 +41,12 @@ const TopicContentAudioSection = ({
           flexDirection: 'row',
           justifyContent: 'space-between',
         }}>
+        <Button
+          mode="contained"
+          onPress={() => setShowReviewSectionState(prev => !prev)}
+          buttonColor="grey">
+          🕰️
+        </Button>
         <Button mode="contained" onPress={getTimeStamp} buttonColor="grey">
           ✂️
         </Button>
