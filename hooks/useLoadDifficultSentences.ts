@@ -39,8 +39,9 @@ const useLoadDifficultSentences = () => {
       const thisTopic = contentWidget?.topic || 'sentence-helper';
       const isSentenceHelper = contentWidget?.matchedWords?.length > 0;
       const isCore = contentWidget?.isCore;
-      const nextReview = contentWidget?.nextReview;
-      if (nextReview || contentWidget?.reviewData?.due) {
+      const nextReview =
+        contentWidget?.nextReview || contentWidget?.reviewData?.due;
+      if (nextReview) {
         difficultSentences.push({
           topic: thisTopic,
           isSentenceHelper: isSentenceHelper,
