@@ -519,6 +519,16 @@ const TopicContent = ({
                 setVideoDuration={setVideoDurationState}
               />
             )}
+            <View>
+              <AudioToggles
+                isPlaying={isVideoPlaying}
+                playSound={playVideo}
+                seekHandler={seekHandler}
+                jumpAudioValue={jumpAudioValue}
+                progress={progress}
+                setShowReviewSectionState={setShowReviewSectionState}
+              />
+            </View>
             <ScrollView
               contentInsetAdjustmentBehavior="automatic"
               style={{
@@ -553,16 +563,6 @@ const TopicContent = ({
                 contentIndex={contentIndex}
               />
             </ScrollView>
-          </View>
-          <View>
-            <AudioToggles
-              isPlaying={isVideoPlaying}
-              playSound={playVideo}
-              seekHandler={seekHandler}
-              jumpAudioValue={jumpAudioValue}
-              progress={progress}
-              setShowReviewSectionState={setShowReviewSectionState}
-            />
           </View>
         </View>
       </>
