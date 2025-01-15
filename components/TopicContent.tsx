@@ -522,7 +522,7 @@ const TopicContent = ({
             <ScrollView
               contentInsetAdjustmentBehavior="automatic"
               style={{
-                maxHeight: height * 0.5,
+                maxHeight: height * 0.52,
               }}>
               <LineContainer
                 formattedData={formattedData}
@@ -605,7 +605,7 @@ const TopicContent = ({
         <ScrollView
           contentInsetAdjustmentBehavior="automatic"
           style={{
-            maxHeight: height * 0.7,
+            maxHeight: height * 0.73,
           }}>
           <LineContainer
             formattedData={formattedData}
