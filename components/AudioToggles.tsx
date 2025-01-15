@@ -10,6 +10,7 @@ const AudioToggles = ({
   progress,
   // seekToTimestamp,
   // getTimeStamp,
+  setShowReviewSectionState,
 }) => {
   return (
     <View
@@ -31,6 +32,14 @@ const AudioToggles = ({
           display: 'flex',
           flexDirection: 'row',
         }}>
+        {setShowReviewSectionState && (
+          <Button
+            mode="contained"
+            buttonColor="grey"
+            onPress={() => setShowReviewSectionState?.(prev => !prev)}>
+            🕰️
+          </Button>
+        )}
         <Button
           mode="contained"
           onPress={() => seekHandler(false)}

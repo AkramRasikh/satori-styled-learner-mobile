@@ -522,7 +522,7 @@ const TopicContent = ({
             <ScrollView
               contentInsetAdjustmentBehavior="automatic"
               style={{
-                maxHeight: height * 0.45,
+                maxHeight: height * 0.5,
               }}>
               <LineContainer
                 formattedData={formattedData}
@@ -561,6 +561,7 @@ const TopicContent = ({
               seekHandler={seekHandler}
               jumpAudioValue={jumpAudioValue}
               progress={progress}
+              setShowReviewSectionState={setShowReviewSectionState}
             />
           </View>
         </View>
