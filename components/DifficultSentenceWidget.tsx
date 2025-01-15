@@ -252,6 +252,7 @@ const DifficultSentenceWidget = ({
     return matchedWordListState.map((item, index) => {
       return (
         <View
+          key={index}
           style={{
             paddingTop: 5,
             borderTopColor: 'gray',
