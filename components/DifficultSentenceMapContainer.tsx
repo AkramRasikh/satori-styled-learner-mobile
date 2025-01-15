@@ -4,8 +4,6 @@ import DifficultSentenceWidget from './DifficultSentenceWidget';
 import {calculateDueDate} from '../utils/get-date-due-status';
 import {getTimeDiffSRS} from '../utils/getTimeDiffSRS';
 
-const todayDateObj = new Date();
-
 const DifficultSentenceMapContainer = ({
   toggleableSentencesState,
   addSnippet,
@@ -19,6 +17,7 @@ const DifficultSentenceMapContainer = ({
   setSliceArrState,
   realCapacity,
 }) => {
+  const todayDateObj = new Date();
   return (
     <View style={{marginTop: 10}}>
       {toggleableSentencesState.map((sentence, index) => {
