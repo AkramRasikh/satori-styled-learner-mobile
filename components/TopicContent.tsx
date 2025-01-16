@@ -490,20 +490,6 @@ const TopicContent = ({
         )}
         <View>
           <View>
-            <DisplaySettings
-              englishOnly={englishOnly}
-              setEnglishOnly={setEnglishOnly}
-              engMaster={engMaster}
-              setEngMaster={setEngMaster}
-              handleIsCore={handleIsCore}
-              isCore={isCore}
-              handleAddAdhocSentence={handleAddAdhocSentence}
-              isVideoModeState={isVideoModeState}
-              hasVideo={hasVideo}
-              handleVideoMode={handleVideoMode}
-              handleBulkReviews={handleBulkReviews}
-              hasContentToReview={hasContentToReview}
-            />
             {longPressedWord?.length ? (
               <LongPressedWord
                 getLongPressedWordData={getLongPressedWordData}
@@ -532,8 +518,26 @@ const TopicContent = ({
             <ScrollView
               contentInsetAdjustmentBehavior="automatic"
               style={{
-                maxHeight: height * 0.52,
+                maxHeight: height * 0.58,
+                paddingVertical: 5,
               }}>
+              <View style={{alignSelf: 'center'}}>
+                <Text>{topicName}</Text>
+              </View>
+              <DisplaySettings
+                englishOnly={englishOnly}
+                setEnglishOnly={setEnglishOnly}
+                engMaster={engMaster}
+                setEngMaster={setEngMaster}
+                handleIsCore={handleIsCore}
+                isCore={isCore}
+                handleAddAdhocSentence={handleAddAdhocSentence}
+                isVideoModeState={isVideoModeState}
+                hasVideo={hasVideo}
+                handleVideoMode={handleVideoMode}
+                handleBulkReviews={handleBulkReviews}
+                hasContentToReview={hasContentToReview}
+              />
               <LineContainer
                 formattedData={formattedData}
                 playFromThisSentence={handlePlayFromThisSentence}
@@ -582,20 +586,6 @@ const TopicContent = ({
         </AnimatedModal>
       )}
       <View>
-        <DisplaySettings
-          englishOnly={englishOnly}
-          setEnglishOnly={setEnglishOnly}
-          engMaster={engMaster}
-          setEngMaster={setEngMaster}
-          handleIsCore={handleIsCore}
-          isCore={isCore}
-          handleAddAdhocSentence={handleAddAdhocSentence}
-          isVideoModeState={isVideoModeState}
-          hasVideo={hasVideo}
-          handleVideoMode={handleVideoMode}
-          handleBulkReviews={handleBulkReviews}
-          hasContentToReview={hasContentToReview}
-        />
         {longPressedWord?.length ? (
           <LongPressedWord
             getLongPressedWordData={getLongPressedWordData}
@@ -605,8 +595,25 @@ const TopicContent = ({
         <ScrollView
           contentInsetAdjustmentBehavior="automatic"
           style={{
-            maxHeight: height * 0.73,
+            maxHeight: height * 0.8,
           }}>
+          <View style={{alignSelf: 'center'}}>
+            <Text>{topicName}</Text>
+          </View>
+          <DisplaySettings
+            englishOnly={englishOnly}
+            setEnglishOnly={setEnglishOnly}
+            engMaster={engMaster}
+            setEngMaster={setEngMaster}
+            handleIsCore={handleIsCore}
+            isCore={isCore}
+            handleAddAdhocSentence={handleAddAdhocSentence}
+            isVideoModeState={isVideoModeState}
+            hasVideo={hasVideo}
+            handleVideoMode={handleVideoMode}
+            handleBulkReviews={handleBulkReviews}
+            hasContentToReview={hasContentToReview}
+          />
           <LineContainer
             formattedData={formattedData}
             playFromThisSentence={handlePlayFromThisSentence}
