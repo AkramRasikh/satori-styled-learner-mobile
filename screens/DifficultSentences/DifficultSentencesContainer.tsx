@@ -146,6 +146,25 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
         removeDifficultSentenceFromState(sentenceId);
       } else {
         updateDifficultSentence({sentenceId, updateDataRes});
+        const isNumberForthisTopicOne =
+          generalTopicsAvailableState[selectedGeneralTopicState] === 1;
+        if (isNumberForthisTopicOne) {
+          const {
+            [selectedGeneralTopicState]: _,
+            ...updatedWithoutSelectedTopic
+          } = generalTopicsAvailableState;
+
+          setGeneralTopicsAvailableState({
+            ...updatedWithoutSelectedTopic,
+          });
+          setSelectedGeneralTopicState('');
+        } else {
+          setGeneralTopicsAvailableState({
+            ...generalTopicsAvailableState,
+            [selectedGeneralTopicState]:
+              generalTopicsAvailableState[selectedGeneralTopicState] - 1,
+          });
+        }
       }
     }
   };
