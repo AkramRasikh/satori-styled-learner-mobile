@@ -11,6 +11,8 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
   const [toggleableSentencesState, setToggleableSentencesState] = useState([]);
   const [sentenceBeingHighlightedState, setSentenceBeingHighlightedState] =
     useState('');
+  const [selectedGeneralTopicState, setSelectedGeneralTopicState] =
+    useState('');
   const [generalTopicsAvailableState, setGeneralTopicsAvailableState] =
     useState(null);
   const [sliceArrState, setSliceArrState] = useState(20);
@@ -39,16 +41,22 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
 
   const handleRefreshFunc = () => {
     refreshDifficultSentencesInfo();
+    setSelectedGeneralTopicState('');
     showDueInit(difficultSentencesState);
+  };
+
+  const isDueCheck = (sentence, todayDateObj) => {
+    return (
+      (sentence?.nextReview && sentence.nextReview < todayDateObj) ||
+      new Date(sentence?.reviewData?.due) < todayDateObj
+    );
   };
 
   const showDueInit = arr => {
     const todayDateObj = new Date();
     const toggleableSentenceTopics = [];
     const filteredForDueOnly = [...arr].filter(sentence => {
-      const isCurrentlyDue =
-        (sentence?.nextReview && sentence.nextReview < todayDateObj) ||
-        new Date(sentence?.reviewData?.due) < todayDateObj;
+      const isCurrentlyDue = isDueCheck(sentence, todayDateObj);
 
       if (sentence.generalTopic && isCurrentlyDue) {
         toggleableSentenceTopics.push(sentence.generalTopic);
@@ -92,6 +100,25 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
     if (snippetDataFromAPI) {
       return snippetDataFromAPI;
     }
+  };
+
+  const getThisTopicsContent = topic => {
+    const todayDateObj = new Date();
+
+    const updatedToggleStateWithSelectedTopic = [
+      ...difficultSentencesState,
+    ].filter(i => {
+      const thisTopic = i.generalTopic === topic;
+      const timeCheckEligibility =
+        (isShowDueOnly && isDueCheck(i, todayDateObj)) || !isShowDueOnly;
+      return thisTopic && timeCheckEligibility;
+    });
+    setToggleableSentencesState(updatedToggleStateWithSelectedTopic);
+  };
+
+  const handleShowThisTopicsSentences = topic => {
+    setSelectedGeneralTopicState(topic);
+    getThisTopicsContent(topic);
   };
 
   const updateSentenceDataScreenLevel = async ({
@@ -185,14 +212,28 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
           contentInsetAdjustmentBehavior="automatic"
           style={{paddingBottom: 30}}>
           {generalTopicsAvailableState ? (
-            <View>
+            <View
+              style={{display: 'flex', flexDirection: 'row', flexWrap: 'wrap'}}>
               {Object.entries(generalTopicsAvailableState).map(
-                ([key, value]) => {
+                ([generalTopic, numberOfSentences]) => {
                   return (
-                    <View key={key}>
-                      <TouchableOpacity>
+                    <View
+                      key={generalTopic}
+                      style={{
+                        backgroundColor:
+                          generalTopic === selectedGeneralTopicState
+                            ? '#ff9999'
+                            : 'grey',
+                        margin: 5,
+                        padding: 5,
+                        borderRadius: 5,
+                      }}>
+                      <TouchableOpacity
+                        onPress={() =>
+                          handleShowThisTopicsSentences(generalTopic)
+                        }>
                         <Text>
-                          {key} ({value})
+                          {generalTopic} ({numberOfSentences})
                         </Text>
                       </TouchableOpacity>
                     </View>
