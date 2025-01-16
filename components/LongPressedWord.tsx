@@ -10,6 +10,10 @@ const LongPressedWord = ({getLongPressedWordData, handleRemoveWords}) => {
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'space-between',
+        position: 'absolute',
+        zIndex: 100,
+        backgroundColor: '#f2f0ef',
+        width: '100%',
       }}>
       <Text>{getLongPressedWordData()}</Text>
       <TouchableOpacity onPress={handleRemoveWords}>
