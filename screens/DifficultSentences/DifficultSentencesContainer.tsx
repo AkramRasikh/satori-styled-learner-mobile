@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Button, ScrollView, Text, View} from 'react-native';
+import {Button, ScrollView, Text, TouchableOpacity, View} from 'react-native';
 import LoadingScreen from '../../components/LoadingScreen';
 import PillButton from '../../components/PillButton';
 import ScreenContainerComponent from '../../components/ScreenContainerComponent';
@@ -11,6 +11,8 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
   const [toggleableSentencesState, setToggleableSentencesState] = useState([]);
   const [sentenceBeingHighlightedState, setSentenceBeingHighlightedState] =
     useState('');
+  const [generalTopicsAvailableState, setGeneralTopicsAvailableState] =
+    useState(null);
   const [sliceArrState, setSliceArrState] = useState(20);
   const [isShowDueOnly, setIsShowDueOnly] = useState(false);
 
@@ -29,6 +31,12 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
     refreshDifficultSentencesInfo,
   } = useDifficultSentences();
 
+  const countOccurrences = arr =>
+    arr.reduce((acc, current) => {
+      acc[current] = (acc[current] || 0) + 1;
+      return acc;
+    }, {});
+
   const handleRefreshFunc = () => {
     refreshDifficultSentencesInfo();
     showDueInit(difficultSentencesState);
@@ -36,18 +44,38 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
 
   const showDueInit = arr => {
     const todayDateObj = new Date();
+    const toggleableSentenceTopics = [];
     const filteredForDueOnly = [...arr].filter(sentence => {
-      if (sentence?.nextReview) {
-        return sentence.nextReview < todayDateObj;
-      } else {
-        return new Date(sentence?.reviewData?.due) < todayDateObj;
+      const isCurrentlyDue =
+        (sentence?.nextReview && sentence.nextReview < todayDateObj) ||
+        new Date(sentence?.reviewData?.due) < todayDateObj;
+
+      if (sentence.generalTopic && isCurrentlyDue) {
+        toggleableSentenceTopics.push(sentence.generalTopic);
       }
+      return isCurrentlyDue;
     });
     if (filteredForDueOnly?.length > 0) {
+      if (toggleableSentenceTopics.length > 0) {
+        setGeneralTopicsAvailableState(
+          countOccurrences(toggleableSentenceTopics),
+        );
+      }
       setToggleableSentencesState(filteredForDueOnly);
       setIsShowDueOnly(!isShowDueOnly);
     } else {
+      const generalTopicsCollectively = [];
+      difficultSentencesState.forEach(sentence => {
+        if (sentence.generalTopic) {
+          generalTopicsCollectively.push(sentence.generalTopic);
+        }
+      });
       setToggleableSentencesState(difficultSentencesState);
+      if (generalTopicsCollectively.length > 0) {
+        setGeneralTopicsAvailableState(
+          countOccurrences(generalTopicsCollectively),
+        );
+      }
     }
   };
 
@@ -99,6 +127,18 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
     if (!isShowDueOnly) {
       showDueInit(toggleableSentencesState);
     } else {
+      const generalTopicsCollectively = [];
+      difficultSentencesState.forEach(sentence => {
+        if (sentence.generalTopic) {
+          generalTopicsCollectively.push(sentence.generalTopic);
+        }
+      });
+      setToggleableSentencesState(difficultSentencesState);
+      if (generalTopicsCollectively.length > 0) {
+        setGeneralTopicsAvailableState(
+          countOccurrences(generalTopicsCollectively),
+        );
+      }
       setToggleableSentencesState(difficultSentencesState);
       setIsShowDueOnly(!isShowDueOnly);
     }
@@ -144,6 +184,24 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
         <ScrollView
           contentInsetAdjustmentBehavior="automatic"
           style={{paddingBottom: 30}}>
+          {generalTopicsAvailableState ? (
+            <View>
+              {Object.entries(generalTopicsAvailableState).map(
+                ([key, value]) => {
+                  return (
+                    <View key={key}>
+                      <TouchableOpacity>
+                        <Text>
+                          {key} ({value})
+                        </Text>
+                      </TouchableOpacity>
+                    </View>
+                  );
+                },
+              )}
+            </View>
+          ) : null}
+
           <DifficultSentenceMapContainer
             toggleableSentencesState={toggleableSentencesState.slice(
               0,

@@ -1,5 +1,6 @@
 import {useSelector} from 'react-redux';
 import {sortByDueDate} from '../utils/sort-by-due-date';
+import {getGeneralTopicName} from '../utils/get-general-topic-name';
 
 const useLoadDifficultSentences = () => {
   const targetLanguageLoadedContentMasterState = useSelector(
@@ -24,11 +25,14 @@ const useLoadDifficultSentences = () => {
           sentenceInContent?.nextReview ||
           sentenceInContent?.reviewData?.due
         ) {
+          const thisGeneralTopicsName = getGeneralTopicName(thisTopic);
+
           difficultSentences.push({
             topic: thisTopic,
             isCore,
             isMediaContent,
             contentIndex,
+            generalTopic: thisGeneralTopicsName,
             ...sentenceInContent,
           });
         }

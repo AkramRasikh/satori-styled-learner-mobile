@@ -22,6 +22,7 @@ const DifficultSentenceMapContainer = ({
     <View style={{marginTop: 10}}>
       {toggleableSentencesState.map((sentence, index) => {
         const isLastEl = toggleableSentencesState.length === index + 1;
+        const isFirst = 0 === index;
         const isLastInTotalOrder = realCapacity === index + 1;
         const moreToLoad = sliceArrState === index + 1 && !isLastInTotalOrder;
         const nextDueTime = sentence?.reviewData?.due || sentence.nextReview;
@@ -39,7 +40,7 @@ const DifficultSentenceMapContainer = ({
             key={sentence.id}
             style={{
               paddingBottom: isLastEl ? 100 : 0,
-              paddingTop: 70,
+              paddingTop: !isFirst ? 70 : 0,
             }}>
             <DifficultSentenceWidget
               sentence={sentence}
