@@ -509,6 +509,10 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
   const getThisSentencesWordList = sentence => {
     let matchedWordsData = [];
     targetLanguageWordsState.forEach(word => {
+      if (!word) {
+        // quick fix
+        return;
+      }
       const baseForm = word.baseForm;
       const surfaceForm = word.surfaceForm;
       if (sentence.includes(baseForm)) {
