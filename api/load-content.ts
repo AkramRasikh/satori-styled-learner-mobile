@@ -1,6 +1,5 @@
 import {adhocSentences, content, snippets, words, sentences} from '../refs';
 import {BACKEND_ENDPOINT} from '@env';
-import mockGetAllRes from '../mock-firestore/mock-get-all-res.json';
 import {
   getLocalStorageData,
   storeDataLocalStorage,
@@ -35,12 +34,10 @@ const loadAllContent = async ({language}) => {
 };
 
 const getFreshData = async ({language}) => {
-  const withMock = process.env.USE_MOCK_DB;
+  // const withMock = process.env.USE_MOCK_DB;
 
   try {
-    const loadedData = withMock
-      ? mockGetAllRes
-      : await loadAllContent({language});
+    const loadedData = await loadAllContent({language});
 
     const getNestedObjectData = thisRef => {
       return loadedData.find(el => {
