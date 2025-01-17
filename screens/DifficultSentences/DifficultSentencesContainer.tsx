@@ -134,42 +134,19 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
     const isRemoveFromDifficultSentences =
       !isAdhoc && fieldToUpdate?.nextReview === null;
 
-    const updateDataRes = await updateSentenceData({
+    if (isRemoveFromDifficultSentences) {
+      removeDifficultSentenceFromState(sentenceId);
+    } else {
+      updateDifficultSentence({sentenceId, updateDataRes: fieldToUpdate});
+    }
+
+    await updateSentenceData({
       isAdhoc,
       topicName,
       sentenceId,
       fieldToUpdate,
       contentIndex,
     });
-    if (updateDataRes) {
-      setToggleableSentencesState(prev =>
-        prev.filter(sentenceData => sentenceData.id !== sentenceId),
-      );
-      if (isRemoveFromDifficultSentences) {
-        removeDifficultSentenceFromState(sentenceId);
-      } else {
-        updateDifficultSentence({sentenceId, updateDataRes});
-        const isNumberForthisTopicOne =
-          generalTopicsAvailableState[selectedGeneralTopicState] === 1;
-        if (isNumberForthisTopicOne) {
-          const {
-            [selectedGeneralTopicState]: _,
-            ...updatedWithoutSelectedTopic
-          } = generalTopicsAvailableState;
-
-          setGeneralTopicsAvailableState({
-            ...updatedWithoutSelectedTopic,
-          });
-          setSelectedGeneralTopicState('');
-        } else {
-          setGeneralTopicsAvailableState({
-            ...generalTopicsAvailableState,
-            [selectedGeneralTopicState]:
-              generalTopicsAvailableState[selectedGeneralTopicState] - 1,
-          });
-        }
-      }
-    }
   };
 
   useEffect(() => {
