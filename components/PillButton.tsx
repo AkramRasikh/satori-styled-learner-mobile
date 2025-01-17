@@ -1,7 +1,7 @@
 import React from 'react';
 import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
 
-const PillButton = ({isShowDueOnly, showDueOnlyFunc}) => {
+const PillButton = ({isShowDueOnly, setIsShowDueOnly}) => {
   return (
     <View style={styles.container}>
       <TouchableOpacity
@@ -10,7 +10,7 @@ const PillButton = ({isShowDueOnly, showDueOnlyFunc}) => {
           isShowDueOnly ? styles.activeButton : styles.inactiveButton,
           styles.leftButton,
         ]}
-        onPress={showDueOnlyFunc}>
+        onPress={() => setIsShowDueOnly(true)}>
         <Text style={styles.text}>
           {isShowDueOnly && <Text>✅</Text>} Due only
         </Text>
@@ -21,7 +21,7 @@ const PillButton = ({isShowDueOnly, showDueOnlyFunc}) => {
           !isShowDueOnly ? styles.activeButton : styles.inactiveButton,
           styles.rightButton,
         ]}
-        onPress={showDueOnlyFunc}>
+        onPress={() => setIsShowDueOnly(false)}>
         <Text style={styles.text}>All {!isShowDueOnly && <Text>✅</Text>}</Text>
       </TouchableOpacity>
     </View>

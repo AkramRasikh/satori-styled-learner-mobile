@@ -16,7 +16,8 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
   const [generalTopicsAvailableState, setGeneralTopicsAvailableState] =
     useState(null);
   const [sliceArrState, setSliceArrState] = useState(20);
-  const [isShowDueOnly, setIsShowDueOnly] = useState(false);
+  const [isShowDueOnly, setIsShowDueOnly] = useState(true);
+  const [isMountedState, setIsMountedState] = useState(true);
 
   const {
     updateSentenceData,
@@ -33,6 +34,21 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
     refreshDifficultSentencesInfo,
   } = useDifficultSentences();
 
+  const handleRemoveSnippet = async ({snippetId, sentenceId}) => {
+    const deletedSnippetId = await removeSnippet({
+      snippetId,
+      sentenceId,
+    });
+    return deletedSnippetId;
+  };
+
+  const handleAddSnippet = async snippetData => {
+    const snippetDataFromAPI = await addSnippet(snippetData);
+    if (snippetDataFromAPI) {
+      return snippetDataFromAPI;
+    }
+  };
+
   const countOccurrences = arr =>
     arr.reduce((acc, current) => {
       acc[current] = (acc[current] || 0) + 1;
@@ -42,7 +58,8 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
   const handleRefreshFunc = () => {
     refreshDifficultSentencesInfo();
     setSelectedGeneralTopicState('');
-    showDueInit(difficultSentencesState);
+    showDueInit();
+    setIsMountedState(true);
   };
 
   const isDueCheck = (sentence, todayDateObj) => {
@@ -52,10 +69,10 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
     );
   };
 
-  const showDueInit = arr => {
+  const showDueInit = () => {
     const todayDateObj = new Date();
     const toggleableSentenceTopics = [];
-    const filteredForDueOnly = [...arr].filter(sentence => {
+    const filteredForDueOnly = [...difficultSentencesState].filter(sentence => {
       const isCurrentlyDue = isDueCheck(sentence, todayDateObj);
 
       if (sentence.generalTopic && isCurrentlyDue) {
@@ -70,7 +87,6 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
         );
       }
       setToggleableSentencesState(filteredForDueOnly);
-      setIsShowDueOnly(!isShowDueOnly);
     } else {
       const generalTopicsCollectively = [];
       difficultSentencesState.forEach(sentence => {
@@ -87,38 +103,12 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
     }
   };
 
-  const handleRemoveSnippet = async ({snippetId, sentenceId}) => {
-    const deletedSnippetId = await removeSnippet({
-      snippetId,
-      sentenceId,
-    });
-    return deletedSnippetId;
-  };
-
-  const handleAddSnippet = async snippetData => {
-    const snippetDataFromAPI = await addSnippet(snippetData);
-    if (snippetDataFromAPI) {
-      return snippetDataFromAPI;
-    }
-  };
-
-  const getThisTopicsContent = topic => {
-    const todayDateObj = new Date();
-
-    const updatedToggleStateWithSelectedTopic = [
-      ...difficultSentencesState,
-    ].filter(i => {
-      const thisTopic = i.generalTopic === topic;
-      const timeCheckEligibility =
-        (isShowDueOnly && isDueCheck(i, todayDateObj)) || !isShowDueOnly;
-      return thisTopic && timeCheckEligibility;
-    });
-    setToggleableSentencesState(updatedToggleStateWithSelectedTopic);
-  };
-
   const handleShowThisTopicsSentences = topic => {
-    setSelectedGeneralTopicState(topic);
-    getThisTopicsContent(topic);
+    if (topic === selectedGeneralTopicState) {
+      setSelectedGeneralTopicState('');
+    } else {
+      setSelectedGeneralTopicState(topic);
+    }
   };
 
   const updateSentenceDataScreenLevel = async ({
@@ -169,26 +159,39 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
     }
   };
 
-  const showDueOnlyFunc = () => {
-    if (!isShowDueOnly) {
-      showDueInit(toggleableSentencesState);
-    } else {
-      const generalTopicsCollectively = [];
-      difficultSentencesState.forEach(sentence => {
-        if (sentence.generalTopic) {
-          generalTopicsCollectively.push(sentence.generalTopic);
+  useEffect(() => {
+    if (isMountedState) {
+      const todayDateObj = new Date();
+
+      const toggleableSentenceTopics = [];
+
+      const updatedToggleStateWithSelectedTopic = [
+        ...difficultSentencesState,
+      ].filter(i => {
+        const thisTopic =
+          !selectedGeneralTopicState ||
+          i.generalTopic === selectedGeneralTopicState;
+        const timeCheckEligibility =
+          !isShowDueOnly || isDueCheck(i, todayDateObj);
+        if (timeCheckEligibility) {
+          toggleableSentenceTopics.push(i.generalTopic);
         }
-      });
-      setToggleableSentencesState(difficultSentencesState);
-      if (generalTopicsCollectively.length > 0) {
-        setGeneralTopicsAvailableState(
-          countOccurrences(generalTopicsCollectively),
+
+        return (
+          (!selectedGeneralTopicState || thisTopic) && timeCheckEligibility
         );
-      }
-      setToggleableSentencesState(difficultSentencesState);
-      setIsShowDueOnly(!isShowDueOnly);
+      });
+      setToggleableSentencesState(updatedToggleStateWithSelectedTopic);
+      setGeneralTopicsAvailableState(
+        countOccurrences(toggleableSentenceTopics),
+      );
     }
-  };
+  }, [
+    difficultSentencesState,
+    selectedGeneralTopicState,
+    isShowDueOnly,
+    isMountedState,
+  ]);
 
   useEffect(() => {
     showDueInit(difficultSentencesState);
@@ -221,7 +224,7 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
           }}>
           <PillButton
             isShowDueOnly={isShowDueOnly}
-            showDueOnlyFunc={showDueOnlyFunc}
+            setIsShowDueOnly={setIsShowDueOnly}
           />
           <View>
             <Button title="↺" onPress={handleRefreshFunc} />
