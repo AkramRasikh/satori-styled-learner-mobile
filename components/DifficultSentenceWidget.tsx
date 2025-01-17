@@ -1,4 +1,4 @@
-import React, {Text, View} from 'react-native';
+import React, {Text, TouchableOpacity, View} from 'react-native';
 import {useSelector} from 'react-redux';
 import useLoadAudioInstance from '../hooks/useLoadAudioInstance';
 import {useEffect, useRef, useState} from 'react';
@@ -151,6 +151,7 @@ const DifficultSentenceWidget = ({
   dueDate,
   navigation,
   indexNum,
+  handleSelectWord,
 }) => {
   const [showReviewSettings, setShowReviewSettings] = useState(false);
   const [showThisWordsDefinitions, setShowThisWordsDefinitions] =
@@ -258,7 +259,9 @@ const DifficultSentenceWidget = ({
             borderTopColor: 'gray',
             borderTopWidth: 1,
           }}>
-          <Text>{seperatedWords(item, index)}</Text>
+          <TouchableOpacity onPress={() => handleSelectWord(item)}>
+            <Text>{seperatedWords(item, index)}</Text>
+          </TouchableOpacity>
         </View>
       );
     });

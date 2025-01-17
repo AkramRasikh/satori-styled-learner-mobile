@@ -6,11 +6,13 @@ import ScreenContainerComponent from '../../components/ScreenContainerComponent'
 import useData from '../../context/Data/useData';
 import DifficultSentenceMapContainer from '../../components/DifficultSentenceMapContainer';
 import useDifficultSentences from '../../context/DifficultSentences/useDifficultSentencesProvider';
+import WordModalDifficultSentence from '../../components/WordModalDifficultSentence';
 
 const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
   const [toggleableSentencesState, setToggleableSentencesState] = useState([]);
   const [sentenceBeingHighlightedState, setSentenceBeingHighlightedState] =
     useState('');
+  const [selectedDueCardState, setSelectedDueCardState] = useState(null);
   const [selectedGeneralTopicState, setSelectedGeneralTopicState] =
     useState('');
   const [generalTopicsAvailableState, setGeneralTopicsAvailableState] =
@@ -149,6 +151,14 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
     });
   };
 
+  const handleSelectWord = selectingWord => {
+    setSelectedDueCardState(selectingWord);
+  };
+
+  const handleDeleteWord = () => {
+    console.log('## handleDeleteWord');
+  };
+
   useEffect(() => {
     if (isMountedState) {
       const todayDateObj = new Date();
@@ -220,6 +230,13 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
             <Button title="↺" onPress={handleRefreshFunc} />
           </View>
         </View>
+        {selectedDueCardState && (
+          <WordModalDifficultSentence
+            visible={selectedDueCardState}
+            onClose={() => setSelectedDueCardState(null)}
+            deleteWord={() => handleDeleteWord(selectedDueCardState)}
+          />
+        )}
         <ScrollView
           contentInsetAdjustmentBehavior="automatic"
           style={{paddingBottom: 30}}>
@@ -270,6 +287,7 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
             sliceArrState={sliceArrState}
             setSliceArrState={setSliceArrState}
             realCapacity={realCapacity}
+            handleSelectWord={handleSelectWord}
           />
         </ScrollView>
       </View>
