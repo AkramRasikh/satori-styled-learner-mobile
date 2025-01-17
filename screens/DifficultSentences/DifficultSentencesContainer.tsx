@@ -204,6 +204,7 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
     selectedGeneralTopicState,
     isShowDueOnly,
     isMountedState,
+    countOccurrences,
   ]);
 
   useEffect(() => {
