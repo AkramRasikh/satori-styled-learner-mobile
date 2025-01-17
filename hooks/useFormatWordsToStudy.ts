@@ -19,6 +19,11 @@ const useFormatWordsToStudy = ({
 
     const formattedTargetLanguageWordData = targetLanguageWordsState.map(
       wordData => {
+        if (!wordData) {
+          // quick fix
+          return;
+        }
+
         const thisWordsContext = wordData.contexts;
         const reviewCardDue = wordData?.reviewData?.due;
 
