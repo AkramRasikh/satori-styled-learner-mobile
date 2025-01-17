@@ -49,11 +49,24 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
     }
   };
 
+  const sortObj = reducedObj => {
+    const keys = Object.keys(reducedObj);
+    keys.sort();
+
+    const sortedObj = {};
+    keys.forEach(key => {
+      sortedObj[key] = reducedObj[key];
+    });
+    return sortedObj;
+  };
+
   const countOccurrences = arr =>
-    arr.reduce((acc, current) => {
-      acc[current] = (acc[current] || 0) + 1;
-      return acc;
-    }, {});
+    sortObj(
+      arr.reduce((acc, current) => {
+        acc[current] = (acc[current] || 0) + 1;
+        return acc;
+      }, {}),
+    );
 
   const handleRefreshFunc = () => {
     refreshDifficultSentencesInfo();
