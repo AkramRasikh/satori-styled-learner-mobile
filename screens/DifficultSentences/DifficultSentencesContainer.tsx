@@ -23,7 +23,7 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
   const [isMountedState, setIsMountedState] = useState(true);
 
   const targetLanguageWordsState = useSelector(state => state.words);
-
+  const numberOfWords = targetLanguageWordsState.length;
   const {
     updateSentenceData,
     updatePromptState,
@@ -40,6 +40,10 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
     updateDifficultSentence,
     refreshDifficultSentencesInfo,
   } = useDifficultSentences();
+
+  const handleNavigationToWords = () => {
+    navigation.navigate('WordStudy');
+  };
 
   const handleRemoveSnippet = async ({snippetId, sentenceId}) => {
     const deletedSnippetId = await removeSnippet({
@@ -291,6 +295,18 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
               )}
             </View>
           ) : null}
+          <View
+            style={{
+              alignSelf: 'flex-start',
+              backgroundColor: '#90EE90',
+              margin: 5,
+              padding: 5,
+              borderRadius: 5,
+            }}>
+            <TouchableOpacity onPress={handleNavigationToWords}>
+              <Text>Words ({numberOfWords})</Text>
+            </TouchableOpacity>
+          </View>
 
           <DifficultSentenceMapContainer
             toggleableSentencesState={toggleableSentencesState.slice(
