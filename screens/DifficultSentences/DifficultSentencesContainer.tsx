@@ -27,6 +27,7 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
     addSnippet,
     removeSnippet,
     pureWords,
+    deleteWord,
   } = useData();
 
   const {
@@ -155,8 +156,15 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
     setSelectedDueCardState(selectingWord);
   };
 
-  const handleDeleteWord = () => {
+  const handleDeleteWord = async () => {
     console.log('## handleDeleteWord');
+
+    await deleteWord({
+      wordId: selectedDueCardState.id,
+      wordBaseForm: selectedDueCardState.baseForm,
+    });
+
+    setSelectedDueCardState(null);
   };
 
   useEffect(() => {

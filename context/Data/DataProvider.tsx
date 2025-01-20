@@ -21,6 +21,7 @@ import {setLearningContentStateDispatch} from '../../store/contentSlice';
 import {setWordsStateDispatch} from '../../store/wordSlice';
 import {setSentencesStateDispatch} from '../../store/sentencesSlice';
 import {setSnippetsStateDispatch} from '../../store/snippetsSlice';
+import {deleteWordAPI} from '../../api/delete-word';
 
 export const DataContext = createContext(null);
 
@@ -465,6 +466,26 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
     }
   };
 
+  const deleteWord = async ({wordId, wordBaseForm}) => {
+    try {
+      await deleteWordAPI({wordId, language});
+      const targetLanguageWordsStateUpdated = targetLanguageWordsState.filter(
+        item => item.id !== wordId,
+      );
+      dispatch(setWordsStateDispatch(targetLanguageWordsStateUpdated));
+      await storeDataLocalStorage(
+        dataStorageKeyPrefix + words,
+        targetLanguageWordsStateUpdated,
+      );
+      setUpdatePromptState(`${wordBaseForm} deleted!`);
+      setTimeout(() => setUpdatePromptState(''), 3000);
+    } catch (error) {
+      setUpdatePromptState(`Error deleting ${wordBaseForm} 😟!`);
+      setTimeout(() => setUpdatePromptState(''), 3000);
+      console.log('## deleteWord', {error});
+    }
+  };
+
   const removeSnippet = async ({snippetId}) => {
     try {
       const deletedSnippetId = await deleteSnippetAPI({snippetId, language});
@@ -596,6 +617,7 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
         setCombineWordsListState,
         addSentenceContext,
         getSentenceAudio,
+        deleteWord,
       }}>
       {children}
     </DataContext.Provider>

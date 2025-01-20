@@ -5,7 +5,7 @@ import {View, Text, StyleSheet, TouchableOpacity, Animated} from 'react-native';
 // import useLoadAudioInstance from '../hooks/useLoadAudioInstance';
 import useHighlightWordToWordBank from '../hooks/useHighlightWordToWordBank';
 // import SRSToggles from './SRSToggles';
-// import DeleteWordSection from './DeleteWordSection';
+import DeleteWordSection from './DeleteWordSection';
 // import useWordData from '../context/WordData/useWordData';
 // import useLanguageSelector from '../context/LanguageSelector/useLanguageSelector';
 // import SoundWidget from './SoundWidget';
@@ -31,11 +31,6 @@ const WordModalDifficultSentence = ({
   const {underlineWordsInSentence} = useHighlightWordToWordBank({
     pureWordsUnique: [baseForm, surfaceForm],
   });
-
-  const handleSnooze = async () => {
-    console.log('## handleSnooze');
-    // await updateWordData({
-  };
 
   useEffect(() => {
     Animated.parallel([
@@ -136,10 +131,7 @@ const WordModalDifficultSentence = ({
           baseForm={baseForm}
           isTempWord={isTempWord}
         /> */}
-        {/* <DeleteWordSection
-          deleteContent={deleteWord}
-          handleSnooze={handleSnooze}
-        /> */}
+        <DeleteWordSection deleteContent={deleteWord} />
       </Animated.View>
     </View>
   );
