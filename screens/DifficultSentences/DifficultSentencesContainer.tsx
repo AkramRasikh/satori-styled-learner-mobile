@@ -1,4 +1,5 @@
 import React, {useEffect, useState} from 'react';
+import {useSelector} from 'react-redux';
 import {Button, ScrollView, Text, TouchableOpacity, View} from 'react-native';
 import LoadingScreen from '../../components/LoadingScreen';
 import PillButton from '../../components/PillButton';
@@ -21,6 +22,8 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
   const [isShowDueOnly, setIsShowDueOnly] = useState(true);
   const [isMountedState, setIsMountedState] = useState(true);
 
+  const targetLanguageWordsState = useSelector(state => state.words);
+
   const {
     updateSentenceData,
     updatePromptState,
@@ -28,6 +31,7 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
     removeSnippet,
     pureWords,
     deleteWord,
+    updateWordData,
   } = useData();
 
   const {
@@ -127,6 +131,11 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
     }
   };
 
+  const handleWordUpdate = wordData => {
+    updateWordData(wordData);
+    setSelectedDueCardState(null);
+  };
+
   const updateSentenceDataScreenLevel = async ({
     isAdhoc,
     topicName,
@@ -153,17 +162,19 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
   };
 
   const handleSelectWord = selectingWord => {
-    setSelectedDueCardState(selectingWord);
+    const mostUpToDateWord = targetLanguageWordsState.find(
+      i => i.id === selectingWord.id,
+    );
+    if (mostUpToDateWord) {
+      setSelectedDueCardState(mostUpToDateWord);
+    }
   };
 
   const handleDeleteWord = async () => {
-    console.log('## handleDeleteWord');
-
     await deleteWord({
       wordId: selectedDueCardState.id,
       wordBaseForm: selectedDueCardState.baseForm,
     });
-
     setSelectedDueCardState(null);
   };
 
@@ -241,6 +252,7 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
         {selectedDueCardState && (
           <WordModalDifficultSentence
             visible={selectedDueCardState}
+            updateWordData={handleWordUpdate}
             onClose={() => setSelectedDueCardState(null)}
             deleteWord={() => handleDeleteWord(selectedDueCardState)}
           />

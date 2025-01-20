@@ -1,37 +1,10 @@
 import React, {useEffect, useRef} from 'react';
 import {View, Text, StyleSheet, TouchableOpacity, Animated} from 'react-native';
-// import {getFirebaseAudioURL} from '../hooks/useGetCombinedAudioData';
-// import useMP3File from '../hooks/useMP3File';
-// import useLoadAudioInstance from '../hooks/useLoadAudioInstance';
 import useHighlightWordToWordBank from '../hooks/useHighlightWordToWordBank';
-// import SRSToggles from './SRSToggles';
+import {DifficultSentencesSRSToggles} from './SRSToggles';
 import DeleteWordSection from './DeleteWordSection';
-// import useWordData from '../context/WordData/useWordData';
-// import useLanguageSelector from '../context/LanguageSelector/useLanguageSelector';
-// import SoundWidget from './SoundWidget';
 
-const WordModalDifficultSentence = ({
-  visible,
-  onClose,
-  deleteWord,
-  isTempWord,
-}) => {
-  const fadeAnim = useRef(new Animated.Value(0)).current;
-  const scaleAnim = useRef(new Animated.Value(0.8)).current;
-
-  const id = visible.id;
-  const baseForm = visible.baseForm;
-  const surfaceForm = visible.surfaceForm;
-  const transliteration = visible.transliteration;
-  const definition = visible.definition;
-  const phonetic = visible.phonetic || transliteration;
-  const sentenceExamples = visible?.contextData;
-  const reviewData = visible?.reviewData;
-
-  const {underlineWordsInSentence} = useHighlightWordToWordBank({
-    pureWordsUnique: [baseForm, surfaceForm],
-  });
-
+const useFadeInModal = ({fadeAnim, scaleAnim}) => {
   useEffect(() => {
     Animated.parallel([
       Animated.timing(fadeAnim, {
@@ -61,6 +34,63 @@ const WordModalDifficultSentence = ({
       ]);
     };
   }, []);
+};
+
+const ModalBaseUI = ({
+  onClose,
+  baseForm,
+  surfaceForm,
+  definition,
+  phonetic,
+  transliteration,
+}) => {
+  return (
+    <>
+      <View
+        style={{
+          display: 'flex',
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          marginBottom: 10,
+        }}>
+        <Text style={styles.modalTitle}>{baseForm}</Text>
+        <TouchableOpacity style={styles.closeButton} onPress={onClose}>
+          <Text style={styles.closeButtonText}>Close</Text>
+        </TouchableOpacity>
+      </View>
+      <Text style={styles.modalContent}>Surface Form: {surfaceForm}</Text>
+      <Text style={styles.modalContent}>Definition: {definition}</Text>
+      <Text style={styles.modalContent}>Phonetic: {phonetic}</Text>
+      <Text style={styles.modalContent}>
+        Transliteration: {transliteration}
+      </Text>
+    </>
+  );
+};
+
+const WordModalDifficultSentence = ({
+  visible,
+  onClose,
+  deleteWord,
+  updateWordData,
+}) => {
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+  const scaleAnim = useRef(new Animated.Value(0.8)).current;
+
+  const id = visible.id;
+  const baseForm = visible.baseForm;
+  const surfaceForm = visible.surfaceForm;
+  const transliteration = visible.transliteration;
+  const definition = visible.definition;
+  const phonetic = visible.phonetic || transliteration;
+  const sentenceExamples = visible?.contextData;
+  const reviewData = visible?.reviewData;
+
+  const {underlineWordsInSentence} = useHighlightWordToWordBank({
+    pureWordsUnique: [baseForm, surfaceForm],
+  });
+
+  useFadeInModal({fadeAnim, scaleAnim});
 
   const getSafeText = targetText => {
     const textSegments = underlineWordsInSentence(targetText);
@@ -85,24 +115,14 @@ const WordModalDifficultSentence = ({
           styles.modalContainer,
           {opacity: fadeAnim, transform: [{scale: scaleAnim}]},
         ]}>
-        <View
-          style={{
-            display: 'flex',
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            marginBottom: 10,
-          }}>
-          <Text style={styles.modalTitle}>{baseForm}</Text>
-          <TouchableOpacity style={styles.closeButton} onPress={onClose}>
-            <Text style={styles.closeButtonText}>Close</Text>
-          </TouchableOpacity>
-        </View>
-        <Text style={styles.modalContent}>Surface Form: {surfaceForm}</Text>
-        <Text style={styles.modalContent}>Definition: {definition}</Text>
-        <Text style={styles.modalContent}>Phonetic: {phonetic}</Text>
-        <Text style={styles.modalContent}>
-          Transliteration: {transliteration}
-        </Text>
+        <ModalBaseUI
+          onClose={onClose}
+          baseForm={baseForm}
+          surfaceForm={surfaceForm}
+          definition={definition}
+          phonetic={phonetic}
+          transliteration={transliteration}
+        />
         <View>
           {sentenceExamples?.map((exampleSentence, index) => {
             const exampleNumber = index + 1 + ') ';
@@ -125,12 +145,17 @@ const WordModalDifficultSentence = ({
             );
           })}
         </View>
-        {/* <SRSToggles
-          reviewData={reviewData}
+        {!reviewData ? (
+          <View>
+            <Text style={{fontStyle: 'italic'}}>Not yet reviewed</Text>
+          </View>
+        ) : null}
+        <DifficultSentencesSRSToggles
           id={id}
+          reviewData={reviewData}
           baseForm={baseForm}
-          isTempWord={isTempWord}
-        /> */}
+          updateWordData={updateWordData}
+        />
         <DeleteWordSection deleteContent={deleteWord} />
       </Animated.View>
     </View>

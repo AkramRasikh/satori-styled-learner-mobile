@@ -22,6 +22,7 @@ import {setWordsStateDispatch} from '../../store/wordSlice';
 import {setSentencesStateDispatch} from '../../store/sentencesSlice';
 import {setSnippetsStateDispatch} from '../../store/snippetsSlice';
 import {deleteWordAPI} from '../../api/delete-word';
+import {updateWordAPI} from '../../api/update-word-data';
 
 export const DataContext = createContext(null);
 
@@ -466,6 +467,39 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
     }
   };
 
+  const updateWordData = async ({wordId, wordBaseForm, fieldToUpdate}) => {
+    try {
+      const updatedWordProperties = await updateWordAPI({
+        wordId,
+        fieldToUpdate,
+        language,
+      });
+
+      const targetLanguageWordsStateUpdated = targetLanguageWordsState.map(
+        item => {
+          const thisWordId = item.id === wordId;
+          if (thisWordId) {
+            return {
+              ...item,
+              ...updatedWordProperties,
+            };
+          }
+          return item;
+        },
+      );
+      dispatch(setWordsStateDispatch(targetLanguageWordsStateUpdated));
+      await storeDataLocalStorage(
+        dataStorageKeyPrefix + words,
+        targetLanguageWordsStateUpdated,
+      );
+      setUpdatePromptState(`${wordBaseForm} updated!`);
+      setTimeout(() => setUpdatePromptState(''), 3000);
+      return true;
+    } catch (error) {
+      console.log('## updateWordData', {error});
+    }
+  };
+
   const deleteWord = async ({wordId, wordBaseForm}) => {
     try {
       await deleteWordAPI({wordId, language});
@@ -618,6 +652,7 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
         addSentenceContext,
         getSentenceAudio,
         deleteWord,
+        updateWordData,
       }}>
       {children}
     </DataContext.Provider>
