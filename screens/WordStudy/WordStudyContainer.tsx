@@ -14,6 +14,7 @@ function WordStudyContainer(): React.JSX.Element {
   const [tagsState, setTagsState] = useState<string[]>([]);
   const [generalTopicState, setGeneralTopicState] = useState<string[]>([]);
   const [showDueCardsState, setShowDueCardsState] = useState<boolean>(false);
+  const [sliceArrState, setSliceArrState] = useState(20);
 
   const targetLanguageLoadedSentences = useSelector(state => state.sentences);
   const targetLanguageWordsState = useSelector(state => state.words);
@@ -55,6 +56,10 @@ function WordStudyContainer(): React.JSX.Element {
       setShowDueCardsState(false);
     }
   }, [wordStudyState, dueCardsState]);
+
+  const handleExpandWordArray = () => {
+    setSliceArrState(prev => prev + 5);
+  };
 
   const handleShowDueCards = () => {
     if (dueCardsState?.length === 0) {
@@ -141,6 +146,7 @@ function WordStudyContainer(): React.JSX.Element {
   };
 
   const hasSelectedTopicWords = selectedTopic && selectedTopicWords?.length > 0;
+  const realCapacity = dueCardsState.length;
 
   const showFlashCardSection =
     tempNewStudyCardsState?.length > 0 ||
@@ -150,6 +156,8 @@ function WordStudyContainer(): React.JSX.Element {
     !hasSelectedTopicWords &&
     !showDueCardsState &&
     tempNewStudyCardsState?.length === 0;
+
+  const slicedDueState = dueCardsState.slice(0, sliceArrState); // is there an issue with this?
 
   return (
     <ScreenContainerComponent updatePromptState={updatePromptState}>
@@ -167,8 +175,11 @@ function WordStudyContainer(): React.JSX.Element {
         {showFlashCardSection && (
           <FlashCardsSectionContainer
             handleDeleteWordFlashCard={handleDeleteWordFlashCard}
-            dueCardsState={dueCardsState}
+            dueCardsState={slicedDueState}
             tempNewStudyCardsState={tempNewStudyCardsState}
+            handleExpandWordArray={handleExpandWordArray}
+            realCapacity={realCapacity}
+            sliceArrState={sliceArrState}
           />
         )}
         {showWordCategories && (
