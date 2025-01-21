@@ -15,6 +15,7 @@ function WordStudyContainer(): React.JSX.Element {
   const [showDueCardsState, setShowDueCardsState] = useState<boolean>(true);
   const [sliceArrState, setSliceArrState] = useState(20);
   const [showCategories, setShowCategories] = useState(false);
+  const [isMountedState, setIsMountedState] = useState(false);
 
   const targetLanguageLoadedSentences = useSelector(state => state.sentences);
   const targetLanguageWordsState = useSelector(state => state.words);
@@ -146,22 +147,26 @@ function WordStudyContainer(): React.JSX.Element {
   };
 
   useEffect(() => {
+    setIsMountedState(true);
+  }, []);
+
+  useEffect(() => {
     const todayDateObj = new Date();
 
-    if (selectedTopic) {
+    if (isMountedState) {
       const thisCategoriesWords = [...wordStudyState].filter(wordData => {
         const timeCheckEligibility =
           !showDueCardsState || isDueCheck(wordData, todayDateObj);
         if (timeCheckEligibility) {
           return wordData.thisWordsCategories.some(
-            oneCategory => oneCategory === selectedTopic,
+            oneCategory => oneCategory === selectedTopic || !selectedTopic,
           );
         }
         return false;
       });
       setDueCardsState(thisCategoriesWords);
     }
-  }, [selectedTopic, wordStudyState, showDueCardsState]);
+  }, [selectedTopic, wordStudyState, isMountedState, showDueCardsState]);
 
   const realCapacity = dueCardsState.length;
   const fullCapacity = targetLanguageWordsState.length;
