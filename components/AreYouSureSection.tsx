@@ -3,7 +3,6 @@ import {Button, Text, TouchableOpacity, View} from 'react-native';
 export const QuickAreYouSureSection = ({handleClose, handleYesSure}) => (
   <View
     style={{
-      paddingVertical: 10,
       display: 'flex',
       flexDirection: 'row',
       justifyContent: 'space-around',
