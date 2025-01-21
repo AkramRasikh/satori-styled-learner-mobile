@@ -55,12 +55,6 @@ const FlashcardsWordsSection = ({
 
         const moreToLoad = sliceArrState === index + 1 && !isLastInTotalOrder;
 
-        console.log('## ', {
-          moreToLoad,
-          realCapacity,
-          sliceArrState,
-        });
-
         return (
           <View
             key={wordId}
