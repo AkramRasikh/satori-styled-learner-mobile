@@ -35,11 +35,6 @@ export const WordDataProvider = ({children}: PropsWithChildren<{}>) => {
     isTempWord,
   }) => {
     try {
-      const updatedWordProperties = await updateWordAPI({
-        wordId,
-        fieldToUpdate,
-        language,
-      });
       const targetLanguageWordsStateUpdated = targetLanguageWordsState.map(
         item => {
           const thisWordId = item.id === wordId;
@@ -53,7 +48,7 @@ export const WordDataProvider = ({children}: PropsWithChildren<{}>) => {
           if (thisWordId) {
             return {
               ...item,
-              ...updatedWordProperties,
+              ...fieldToUpdate,
             };
           }
           return item;
@@ -65,10 +60,6 @@ export const WordDataProvider = ({children}: PropsWithChildren<{}>) => {
         );
       }
       dispatch(setWordsStateDispatch(targetLanguageWordsStateUpdated));
-      await storeDataLocalStorage(
-        dataStorageKeyPrefix + words,
-        targetLanguageWordsStateUpdated,
-      );
       setUpdatePromptState(`${wordBaseForm} updated!`);
       setTimeout(() => setUpdatePromptState(''), 3000);
       if (dueCardsState?.length > 0) {
@@ -84,7 +75,7 @@ export const WordDataProvider = ({children}: PropsWithChildren<{}>) => {
           if (thisWordId) {
             return {
               ...item,
-              ...updatedWordProperties,
+              ...fieldToUpdate,
             };
           }
           return item;
@@ -110,7 +101,7 @@ export const WordDataProvider = ({children}: PropsWithChildren<{}>) => {
           if (thisWordId) {
             return {
               ...item,
-              ...updatedWordProperties,
+              ...fieldToUpdate,
             };
           }
           return item;
@@ -118,6 +109,15 @@ export const WordDataProvider = ({children}: PropsWithChildren<{}>) => {
         setSelectedTopicWords(updateSelectedTopicWords);
       }
 
+      await updateWordAPI({
+        wordId,
+        fieldToUpdate,
+        language,
+      });
+      await storeDataLocalStorage(
+        dataStorageKeyPrefix + words,
+        targetLanguageWordsStateUpdated,
+      );
       return true;
     } catch (error) {
       console.log('## updateWordData', {error});
@@ -126,7 +126,6 @@ export const WordDataProvider = ({children}: PropsWithChildren<{}>) => {
 
   const deleteWord = async ({wordId, wordBaseForm, isTempWord}) => {
     try {
-      await deleteWordAPI({wordId, language});
       const targetLanguageWordsStateUpdated = targetLanguageWordsState.filter(
         item => item.id !== wordId,
       );
@@ -143,6 +142,7 @@ export const WordDataProvider = ({children}: PropsWithChildren<{}>) => {
           prev.filter(wordData => wordData.id !== wordId),
         );
       }
+      await deleteWordAPI({wordId, language});
     } catch (error) {
       setUpdatePromptState(`Error deleting ${wordBaseForm} 😟!`);
       setTimeout(() => setUpdatePromptState(''), 3000);

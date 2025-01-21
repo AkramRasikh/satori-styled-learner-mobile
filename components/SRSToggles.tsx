@@ -31,13 +31,19 @@ const SRSToggles = ({
   const goodDue = nextScheduledOptions['3'].card.due;
   const easyDue = nextScheduledOptions['4'].card.due;
 
-  const handleNextReview = async difficulty => {
+  const handleNextReview = difficulty => {
     const nextReviewData = nextScheduledOptions[difficulty].card;
     try {
-      await updateWordData({
+      updateWordData({
         wordId: id,
         wordBaseForm: baseForm,
-        fieldToUpdate: {reviewData: nextReviewData},
+        fieldToUpdate: {
+          reviewData: {
+            ...nextReviewData,
+            due: nextReviewData.due.toISOString(),
+            last_review: nextReviewData.last_review.toISOString(),
+          },
+        },
         isTempWord,
       });
       setNextReviewDateState(nextReviewData.due);
