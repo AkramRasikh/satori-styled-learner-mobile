@@ -1,20 +1,20 @@
 import React, {useEffect, useState} from 'react';
 import {useSelector} from 'react-redux';
-import {ScrollView, View} from 'react-native';
+import {ScrollView, Text, TouchableOpacity, View} from 'react-native';
 import useFormatWordsToStudy from '../../hooks/useFormatWordsToStudy';
 import {makeArrayUnique} from '../../hooks/useHighlightWordToWordBank';
-import SelectedTopicWordsSection from '../../components/SelectedTopicWordsSection';
 import SelectedCategoriesWordsSection from '../../components/SelectedCategoriesSection';
 import {FlashCardsSectionContainer} from '../../components/FlashcardsWordsSection';
 import useWordData from '../../context/WordData/useWordData';
-import WordStudyCardsCTA from '../../components/WordStudyCardsCTA';
 import ScreenContainerComponent from '../../components/ScreenContainerComponent';
+import PillButton from '../../components/PillButton';
 
 function WordStudyContainer(): React.JSX.Element {
   const [tagsState, setTagsState] = useState<string[]>([]);
   const [generalTopicState, setGeneralTopicState] = useState<string[]>([]);
-  const [showDueCardsState, setShowDueCardsState] = useState<boolean>(false);
+  const [showDueCardsState, setShowDueCardsState] = useState<boolean>(true);
   const [sliceArrState, setSliceArrState] = useState(20);
+  const [showCategories, setShowCategories] = useState(false);
 
   const targetLanguageLoadedSentences = useSelector(state => state.sentences);
   const targetLanguageWordsState = useSelector(state => state.words);
@@ -50,12 +50,6 @@ function WordStudyContainer(): React.JSX.Element {
     targetLanguageLoadedSentences,
     setDueCardsState,
   });
-
-  useEffect(() => {
-    if (showDueCardsState && dueCardsState?.length === 0) {
-      setShowDueCardsState(false);
-    }
-  }, [wordStudyState, dueCardsState]);
 
   const handleExpandWordArray = () => {
     setSliceArrState(prev => prev + 5);
@@ -95,12 +89,6 @@ function WordStudyContainer(): React.JSX.Element {
   };
 
   const handleShowThisCategoriesWords = category => {
-    const thisCategoriesWords = wordStudyState.filter(wordData =>
-      wordData.thisWordsCategories.some(
-        oneCategory => oneCategory === category,
-      ),
-    );
-    setSelectedTopicWords(thisCategoriesWords);
     setSelectedTopic(category);
   };
 
@@ -145,17 +133,40 @@ function WordStudyContainer(): React.JSX.Element {
     }
   };
 
-  const hasSelectedTopicWords = selectedTopic && selectedTopicWords?.length > 0;
+  const isDueCheck = (wordData, todayDateObj) => {
+    return (
+      (wordData?.nextReview && wordData.nextReview < todayDateObj) ||
+      new Date(wordData?.reviewData?.due) < todayDateObj
+    );
+  };
+
+  const handleRemoveSelectedTopic = () => {
+    setSelectedTopic('');
+    setDueCardsState(wordStudyState);
+  };
+
+  useEffect(() => {
+    const todayDateObj = new Date();
+
+    if (selectedTopic) {
+      const thisCategoriesWords = [...wordStudyState].filter(wordData => {
+        const timeCheckEligibility =
+          !showDueCardsState || isDueCheck(wordData, todayDateObj);
+        if (timeCheckEligibility) {
+          return wordData.thisWordsCategories.some(
+            oneCategory => oneCategory === selectedTopic,
+          );
+        }
+        return false;
+      });
+      setDueCardsState(thisCategoriesWords);
+    }
+  }, [selectedTopic, wordStudyState, showDueCardsState]);
+
   const realCapacity = dueCardsState.length;
+  const fullCapacity = targetLanguageWordsState.length;
 
-  const showFlashCardSection =
-    tempNewStudyCardsState?.length > 0 ||
-    (showDueCardsState && !hasSelectedTopicWords);
-
-  const showWordCategories =
-    !hasSelectedTopicWords &&
-    !showDueCardsState &&
-    tempNewStudyCardsState?.length === 0;
+  const numOfCategories = wordCategories.length;
 
   const slicedDueState = dueCardsState.slice(0, sliceArrState); // is there an issue with this?
 
@@ -164,42 +175,74 @@ function WordStudyContainer(): React.JSX.Element {
       <ScrollView
         contentInsetAdjustmentBehavior="automatic"
         style={{padding: 10}}>
-        {!hasSelectedTopicWords && (
-          <WordStudyCardsCTA
-            dueCardsState={dueCardsState}
-            handleShowDueCards={handleShowDueCards}
-            handleShowNewRandomCards={handleShowNewRandomCards}
+        <View
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            flexWrap: 'wrap',
+            justifyContent: 'space-around',
+            alignItems: 'center',
+            paddingBottom: 10,
+          }}>
+          <PillButton
+            isShowDueOnly={showDueCardsState}
+            setIsShowDueOnly={setShowDueCardsState}
           />
-        )}
-
-        {showFlashCardSection && (
-          <FlashCardsSectionContainer
-            handleDeleteWordFlashCard={handleDeleteWordFlashCard}
-            dueCardsState={slicedDueState}
-            tempNewStudyCardsState={tempNewStudyCardsState}
-            handleExpandWordArray={handleExpandWordArray}
-            realCapacity={realCapacity}
-            sliceArrState={sliceArrState}
-          />
-        )}
-        {showWordCategories && (
+          {!selectedTopic ? (
+            <TouchableOpacity
+              style={{
+                backgroundColor: 'grey',
+                margin: 5,
+                padding: 5,
+                borderRadius: 5,
+              }}
+              onPress={() => setShowCategories(!showCategories)}>
+              <Text>Categories ({numOfCategories})</Text>
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+                flexWrap: 'wrap',
+                backgroundColor: 'yellow',
+                alignSelf: 'center',
+                padding: 5,
+                marginBottom: 5,
+                borderRadius: 5,
+              }}
+              onPress={handleRemoveSelectedTopic}>
+              <Text>{selectedTopic} ❌</Text>
+            </TouchableOpacity>
+          )}
+        </View>
+        <View
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            flexWrap: 'wrap',
+            justifyContent: 'space-around',
+            alignItems: 'center',
+            paddingBottom: 10,
+          }}>
+          <Text>
+            {realCapacity}/{fullCapacity}
+          </Text>
+        </View>
+        {showCategories && !selectedTopic && (
           <SelectedCategoriesWordsSection
             wordCategories={wordCategories}
             handleShowThisCategoriesWords={handleShowThisCategoriesWords}
           />
         )}
-        {hasSelectedTopicWords ? (
-          <View>
-            <SelectedTopicWordsSection
-              selectedTopicWords={selectedTopicWords}
-              selectedWordState={selectedWordState}
-              setSelectedWordState={setSelectedWordState}
-              handleDeleteWord={handleDeleteWord}
-              selectedTopic={selectedTopic}
-              setSelectedTopic={setSelectedTopic}
-            />
-          </View>
-        ) : null}
+        <FlashCardsSectionContainer
+          handleDeleteWordFlashCard={handleDeleteWordFlashCard}
+          dueCardsState={slicedDueState}
+          tempNewStudyCardsState={tempNewStudyCardsState}
+          handleExpandWordArray={handleExpandWordArray}
+          realCapacity={realCapacity}
+          sliceArrState={sliceArrState}
+        />
       </ScrollView>
     </ScreenContainerComponent>
   );

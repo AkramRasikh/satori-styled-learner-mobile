@@ -43,7 +43,6 @@ const FlashcardsWordsSection = ({
         flexDirection: 'row',
         flexWrap: 'wrap',
         gap: 5,
-        paddingBottom: 30,
       }}>
       {dueCardsState?.map((wordData, index) => {
         const isLastEl = dueCardsState.length === index + 1;
@@ -52,6 +51,9 @@ const FlashcardsWordsSection = ({
         const isSelectedWord = selectedDueCardState?.id === wordId;
         const baseForm = wordData.baseForm;
         const isLastInTotalOrder = realCapacity === index + 1;
+        const isCardDue = wordData?.isCardDue;
+        const cardReviewButNotDue = !isCardDue && wordData?.reviewData?.due;
+        const freshCard = !cardReviewButNotDue && !isCardDue;
 
         const moreToLoad = sliceArrState === index + 1 && !isLastInTotalOrder;
 
@@ -68,6 +70,9 @@ const FlashcardsWordsSection = ({
                 padding: 5,
                 borderRadius: 5,
                 width: isSelectedWord ? width * 0.9 : 'auto',
+                backgroundColor: cardReviewButNotDue
+                  ? '#ADD8E6'
+                  : isCardDue && 'pink',
               }}>
               <TouchableOpacity
                 style={{
@@ -80,7 +85,7 @@ const FlashcardsWordsSection = ({
                     fontSize: 24,
                   }}>
                   {listTextNumber}
-                  {baseForm}
+                  {baseForm} {freshCard ? '🆕' : ''}
                 </Text>
               </TouchableOpacity>
               {!isSelectedWord && (
