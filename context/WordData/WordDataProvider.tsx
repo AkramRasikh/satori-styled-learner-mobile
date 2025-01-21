@@ -15,9 +15,7 @@ export const WordDataProvider = ({children}: PropsWithChildren<{}>) => {
   const [wordStudyState, setWordStudyState] = useState([]);
   const [dueCardsState, setDueCardsState] = useState([]);
   const [updatePromptState, setUpdatePromptState] = useState('');
-  const [selectedTopicWords, setSelectedTopicWords] = useState([]);
   const [selectedTopic, setSelectedTopic] = useState('');
-  const [selectedWordState, setSelectedWordState] = useState(null);
   const [tempNewStudyCardsState, setTempNewStudyCardsState] = useState<
     FlashCardWordType[]
   >([]);
@@ -88,26 +86,6 @@ export const WordDataProvider = ({children}: PropsWithChildren<{}>) => {
         );
         setDueCardsState(updatedSelectedTopicWords);
       }
-      if (selectedTopicWords?.length > 0) {
-        const updateSelectedTopicWords = selectedTopicWords.map(item => {
-          const thisWordId = item.id === wordId;
-          if (thisWordId && isSnooze) {
-            return {
-              ...item,
-              ...fieldToUpdate,
-              reviewData: null,
-            };
-          }
-          if (thisWordId) {
-            return {
-              ...item,
-              ...fieldToUpdate,
-            };
-          }
-          return item;
-        });
-        setSelectedTopicWords(updateSelectedTopicWords);
-      }
 
       await updateWordAPI({
         wordId,
@@ -160,12 +138,8 @@ export const WordDataProvider = ({children}: PropsWithChildren<{}>) => {
         setWordStudyState,
         dueCardsState,
         setDueCardsState,
-        selectedTopicWords,
-        setSelectedTopicWords,
         selectedTopic,
         setSelectedTopic,
-        selectedWordState,
-        setSelectedWordState,
         tempNewStudyCardsState,
         setTempNewStudyCardsState,
       }}>

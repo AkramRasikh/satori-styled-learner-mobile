@@ -32,11 +32,8 @@ function WordStudyContainer(): React.JSX.Element {
     dueCardsState,
     setDueCardsState,
     selectedTopicWords,
-    setSelectedTopicWords,
     selectedTopic,
     setSelectedTopic,
-    selectedWordState,
-    setSelectedWordState,
     updatePromptState,
     tempNewStudyCardsState,
     setTempNewStudyCardsState,
@@ -100,27 +97,6 @@ function WordStudyContainer(): React.JSX.Element {
       });
     } catch (error) {
       console.log('## Error handleDeleteWordFlashCard', {error});
-    }
-  };
-
-  const handleDeleteWord = async () => {
-    if (!selectedWordState) {
-      return;
-    }
-    const selectedWordId = selectedWordState.id;
-    const wordBaseForm = selectedWordState.baseForm;
-    try {
-      await deleteWord({
-        wordId: selectedWordId,
-        wordBaseForm,
-      });
-      const updatedSelectedTopicWords = selectedTopicWords.filter(
-        item => item.id !== selectedWordId,
-      );
-      setSelectedWordState(null);
-      setSelectedTopicWords(updatedSelectedTopicWords);
-    } catch (error) {
-      console.log('## Error handleDeleteWord', {error});
     }
   };
 
