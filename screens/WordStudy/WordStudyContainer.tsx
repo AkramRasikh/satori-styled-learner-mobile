@@ -90,14 +90,14 @@ function WordStudyContainer(): React.JSX.Element {
     const selectedWordId = wordFromFlashCard.id;
     const wordBaseForm = wordFromFlashCard.baseForm;
     try {
+      const updatedWordState = wordStudyState.filter(
+        item => item.id !== selectedWordId,
+      );
+      setWordStudyState(updatedWordState);
       await deleteWord({
         wordId: selectedWordId,
         wordBaseForm,
       });
-      const updatedSelectedTopicWords = dueCardsState.filter(
-        item => item.id !== selectedWordId,
-      );
-      setDueCardsState(updatedSelectedTopicWords);
     } catch (error) {
       console.log('## Error handleDeleteWordFlashCard', {error});
     }
