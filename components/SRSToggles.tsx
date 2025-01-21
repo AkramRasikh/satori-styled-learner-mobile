@@ -190,6 +190,7 @@ export const SRSTogglesQuickComprehensive = ({
       isTempWord,
     });
   };
+  const hasDueDateInFuture = new Date(hasDueDate) > timeNow;
 
   const againText = getTimeDiffSRS({dueTimeStamp: againDue, timeNow}) as string;
   const hardText = getTimeDiffSRS({dueTimeStamp: hardDue, timeNow}) as string;
@@ -212,46 +213,59 @@ export const SRSTogglesQuickComprehensive = ({
             justifyContent: 'space-between',
             marginVertical: 5,
           }}>
-          <TouchableOpacity
-            style={{
-              alignSelf: 'center',
-              backgroundColor: '#6082B6',
-              padding: 5,
-              borderRadius: 10,
-            }}
-            onPress={() => handleNextReview('1')}>
-            <Text>{againText}</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={{
-              alignSelf: 'center',
-              backgroundColor: '#6082B6',
-              padding: 5,
-              borderRadius: 10,
-            }}
-            onPress={() => handleNextReview('2')}>
-            <Text>{hardText}</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={{
-              alignSelf: 'center',
-              backgroundColor: '#6082B6',
-              padding: 5,
-              borderRadius: 10,
-            }}
-            onPress={() => handleNextReview('3')}>
-            <Text>{goodText}</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={{
-              alignSelf: 'center',
-              backgroundColor: '#6082B6',
-              padding: 5,
-              borderRadius: 10,
-            }}
-            onPress={() => handleNextReview('4')}>
-            <Text>{easyText}</Text>
-          </TouchableOpacity>
+          {hasDueDateInFuture ? (
+            <View
+              style={{
+                alignSelf: 'center',
+              }}>
+              <Text>
+                Due in {getTimeDiffSRS({dueTimeStamp: hasDueDate, timeNow})}
+              </Text>
+            </View>
+          ) : (
+            <>
+              <TouchableOpacity
+                style={{
+                  alignSelf: 'center',
+                  backgroundColor: '#6082B6',
+                  padding: 5,
+                  borderRadius: 10,
+                }}
+                onPress={() => handleNextReview('1')}>
+                <Text>{againText}</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={{
+                  alignSelf: 'center',
+                  backgroundColor: '#6082B6',
+                  padding: 5,
+                  borderRadius: 10,
+                }}
+                onPress={() => handleNextReview('2')}>
+                <Text>{hardText}</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={{
+                  alignSelf: 'center',
+                  backgroundColor: '#6082B6',
+                  padding: 5,
+                  borderRadius: 10,
+                }}
+                onPress={() => handleNextReview('3')}>
+                <Text>{goodText}</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={{
+                  alignSelf: 'center',
+                  backgroundColor: '#6082B6',
+                  padding: 5,
+                  borderRadius: 10,
+                }}
+                onPress={() => handleNextReview('4')}>
+                <Text>{easyText}</Text>
+              </TouchableOpacity>
+            </>
+          )}
           <TouchableOpacity
             style={{
               alignSelf: 'center',
