@@ -4,7 +4,6 @@ import {useDispatch, useSelector} from 'react-redux';
 import {updateWordAPI} from '../../api/update-word-data';
 import {deleteWordAPI} from '../../api/delete-word';
 import useLanguageSelector from '../LanguageSelector/useLanguageSelector';
-import {FlashCardWordType} from '../../screens/WordStudy/types';
 import {storeDataLocalStorage} from '../../helper-functions/local-storage-utils';
 import {words} from '../../refs';
 import {setWordsStateDispatch} from '../../store/wordSlice';
