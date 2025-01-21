@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {Dimensions, Text, TouchableOpacity, View} from 'react-native';
 import AnimatedWordModal from './WordModal';
-import SRSToggles from './SRSToggles';
+import {SRSTogglesQuickComprehensive} from './SRSToggles';
 
 export const FlashCardsSectionContainer = ({
   handleDeleteWordFlashCard,
@@ -66,12 +66,12 @@ const FlashcardsWordsSection = ({
               </Text>
             </TouchableOpacity>
             {!isSelectedWord && (
-              <SRSToggles
+              <SRSTogglesQuickComprehensive
                 reviewData={wordData.reviewData}
                 id={wordId}
                 baseForm={baseForm}
-                limitedOptionsMode
                 isTempWord={isTempWord}
+                deleteWord={() => handleDeleteWord(wordData)}
               />
             )}
             {isSelectedWord && (
