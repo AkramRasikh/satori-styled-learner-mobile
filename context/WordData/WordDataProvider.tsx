@@ -16,9 +16,6 @@ export const WordDataProvider = ({children}: PropsWithChildren<{}>) => {
   const [dueCardsState, setDueCardsState] = useState([]);
   const [updatePromptState, setUpdatePromptState] = useState('');
   const [selectedTopic, setSelectedTopic] = useState('');
-  const [tempNewStudyCardsState, setTempNewStudyCardsState] = useState<
-    FlashCardWordType[]
-  >([]);
   const dispatch = useDispatch();
   const {languageSelectedState: language} = useLanguageSelector();
   const dataStorageKeyPrefix = `${language}-data-`;
@@ -30,7 +27,6 @@ export const WordDataProvider = ({children}: PropsWithChildren<{}>) => {
     wordBaseForm,
     fieldToUpdate,
     isSnooze,
-    isTempWord,
   }) => {
     try {
       const targetLanguageWordsStateUpdated = targetLanguageWordsState.map(
@@ -52,11 +48,6 @@ export const WordDataProvider = ({children}: PropsWithChildren<{}>) => {
           return item;
         },
       );
-      if (isTempWord) {
-        setTempNewStudyCardsState(prev =>
-          prev.filter(wordData => wordData.id !== wordId),
-        );
-      }
       dispatch(setWordsStateDispatch(targetLanguageWordsStateUpdated));
       setUpdatePromptState(`${wordBaseForm} updated!`);
       setTimeout(() => setUpdatePromptState(''), 3000);
@@ -102,7 +93,7 @@ export const WordDataProvider = ({children}: PropsWithChildren<{}>) => {
     }
   };
 
-  const deleteWord = async ({wordId, wordBaseForm, isTempWord}) => {
+  const deleteWord = async ({wordId, wordBaseForm}) => {
     try {
       const targetLanguageWordsStateUpdated = targetLanguageWordsState.filter(
         item => item.id !== wordId,
@@ -115,11 +106,6 @@ export const WordDataProvider = ({children}: PropsWithChildren<{}>) => {
 
       setUpdatePromptState(`${wordBaseForm} deleted!`);
       setTimeout(() => setUpdatePromptState(''), 3000);
-      if (isTempWord) {
-        setTempNewStudyCardsState(prev =>
-          prev.filter(wordData => wordData.id !== wordId),
-        );
-      }
       await deleteWordAPI({wordId, language});
     } catch (error) {
       setUpdatePromptState(`Error deleting ${wordBaseForm} 😟!`);
@@ -140,8 +126,6 @@ export const WordDataProvider = ({children}: PropsWithChildren<{}>) => {
         setDueCardsState,
         selectedTopic,
         setSelectedTopic,
-        tempNewStudyCardsState,
-        setTempNewStudyCardsState,
       }}>
       {children}
     </WordDataContext.Provider>

@@ -31,12 +31,9 @@ function WordStudyContainer(): React.JSX.Element {
     setWordStudyState,
     dueCardsState,
     setDueCardsState,
-    selectedTopicWords,
     selectedTopic,
     setSelectedTopic,
     updatePromptState,
-    tempNewStudyCardsState,
-    setTempNewStudyCardsState,
   } = useWordData();
 
   useFormatWordsToStudy({
@@ -51,29 +48,6 @@ function WordStudyContainer(): React.JSX.Element {
 
   const handleExpandWordArray = () => {
     setSliceArrState(prev => prev + 5);
-  };
-
-  const getRandomInt = max => {
-    return Math.floor(Math.random() * max);
-  };
-
-  const handleShowNewRandomCards = () => {
-    // general word check
-    const randomNewWordPool = wordStudyState.filter(item => !item?.reviewData);
-    const numberOfNewCards = randomNewWordPool.length;
-    const newCardArr = [];
-    const newCardLimit =
-      randomNewWordPool.length >= 4 ? 4 : randomNewWordPool.length;
-
-    for (let i = 0; newCardLimit > newCardArr.length; i++) {
-      const randomGeneratedNumber = getRandomInt(numberOfNewCards);
-      if (!newCardArr.includes(randomGeneratedNumber)) {
-        newCardArr.push(randomGeneratedNumber);
-      }
-    }
-
-    const newStudyArr = newCardArr.map(arrIndex => randomNewWordPool[arrIndex]);
-    setTempNewStudyCardsState(newStudyArr);
   };
 
   const handleShowThisCategoriesWords = category => {
@@ -219,7 +193,6 @@ function WordStudyContainer(): React.JSX.Element {
         <FlashCardsSectionContainer
           handleDeleteWordFlashCard={handleDeleteWordFlashCard}
           dueCardsState={slicedDueState}
-          tempNewStudyCardsState={tempNewStudyCardsState}
           handleExpandWordArray={handleExpandWordArray}
           realCapacity={realCapacity}
           sliceArrState={sliceArrState}

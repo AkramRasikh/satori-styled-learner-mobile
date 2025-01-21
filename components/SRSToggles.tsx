@@ -9,13 +9,7 @@ import {getTimeDiffSRS} from '../utils/getTimeDiffSRS';
 import useWordData from '../context/WordData/useWordData';
 import {QuickAreYouSureSection} from './AreYouSureSection';
 
-const SRSToggles = ({
-  reviewData,
-  id,
-  baseForm,
-  limitedOptionsMode,
-  isTempWord,
-}) => {
+const SRSToggles = ({reviewData, id, baseForm, limitedOptionsMode}) => {
   const [nextReviewDateState, setNextReviewDateState] = useState('');
   const timeNow = new Date();
   const hasDueDate = reviewData?.due ? new Date(reviewData?.due) : null; // check if due yet
@@ -45,7 +39,6 @@ const SRSToggles = ({
             last_review: nextReviewData.last_review.toISOString(),
           },
         },
-        isTempWord,
       });
       setNextReviewDateState(nextReviewData.due);
     } catch (error) {
@@ -150,7 +143,6 @@ export const SRSTogglesQuickComprehensive = ({
   id,
   reviewData,
   baseForm,
-  isTempWord,
   deleteWord,
 }) => {
   const [showAreYouSureSectionState, setShowAreYouSureSectionState] =
@@ -187,7 +179,6 @@ export const SRSTogglesQuickComprehensive = ({
           last_review: nextReviewData.last_review.toISOString(),
         },
       },
-      isTempWord,
     });
   };
   const hasDueDateInFuture = new Date(hasDueDate) > timeNow;
@@ -295,7 +286,6 @@ export const DifficultSentencesSRSToggles = ({
   reviewData,
   baseForm,
   limitedOptionsMode,
-  isTempWord,
   updateWordData,
 }) => {
   const [nextReviewDateState, setNextReviewDateState] = useState('');
@@ -320,7 +310,6 @@ export const DifficultSentencesSRSToggles = ({
         wordId: id,
         wordBaseForm: baseForm,
         fieldToUpdate: {reviewData: nextReviewData},
-        isTempWord,
       });
       setNextReviewDateState(nextReviewData.due);
     } catch (error) {

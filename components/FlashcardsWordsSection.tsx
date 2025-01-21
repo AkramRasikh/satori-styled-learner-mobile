@@ -6,18 +6,14 @@ import {SRSTogglesQuickComprehensive} from './SRSToggles';
 export const FlashCardsSectionContainer = ({
   handleDeleteWordFlashCard,
   dueCardsState,
-  tempNewStudyCardsState,
   handleExpandWordArray,
   sliceArrState,
   realCapacity,
 }) => {
-  const isTemp = tempNewStudyCardsState?.length > 0;
-  const flashCards = isTemp ? tempNewStudyCardsState : dueCardsState;
   return (
     <FlashcardsWordsSection
-      dueCardsState={flashCards}
+      dueCardsState={dueCardsState}
       handleDeleteWord={handleDeleteWordFlashCard}
-      isTempWord={isTemp}
       handleExpandWordArray={handleExpandWordArray}
       sliceArrState={sliceArrState}
       realCapacity={realCapacity}
@@ -28,7 +24,6 @@ export const FlashCardsSectionContainer = ({
 const FlashcardsWordsSection = ({
   dueCardsState,
   handleDeleteWord,
-  isTempWord,
   handleExpandWordArray,
   sliceArrState,
   realCapacity,
@@ -93,7 +88,6 @@ const FlashcardsWordsSection = ({
                   reviewData={wordData.reviewData}
                   id={wordId}
                   baseForm={baseForm}
-                  isTempWord={isTempWord}
                   deleteWord={() => handleDeleteWord(wordData)}
                 />
               )}
@@ -102,7 +96,6 @@ const FlashcardsWordsSection = ({
                   visible={wordData}
                   onClose={() => setSelectedDueCardState(null)}
                   deleteWord={() => handleDeleteWord(wordData)}
-                  isTempWord={isTempWord}
                 />
               )}
             </View>
