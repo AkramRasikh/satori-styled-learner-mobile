@@ -210,7 +210,7 @@ export const SRSTogglesQuickComprehensive = ({
             flexDirection: 'row',
             gap: 10,
             justifyContent: 'space-between',
-            marginTop: 5,
+            marginVertical: 5,
           }}>
           <TouchableOpacity
             style={{
