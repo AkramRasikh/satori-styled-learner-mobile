@@ -56,16 +56,6 @@ function WordStudyContainer(): React.JSX.Element {
     setSliceArrState(prev => prev + 5);
   };
 
-  const handleShowDueCards = () => {
-    if (dueCardsState?.length === 0) {
-      return;
-    }
-    if (showDueCardsState) {
-      setShowDueCardsState(false);
-    } else {
-      setShowDueCardsState(true);
-    }
-  };
   const getRandomInt = max => {
     return Math.floor(Math.random() * max);
   };
