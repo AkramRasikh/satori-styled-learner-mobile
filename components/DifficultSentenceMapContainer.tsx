@@ -17,6 +17,8 @@ const DifficultSentenceMapContainer = ({
   setSliceArrState,
   realCapacity,
   handleSelectWord,
+  handleWordUpdate,
+  deleteWord,
 }) => {
   const todayDateObj = new Date();
   return (
@@ -57,6 +59,8 @@ const DifficultSentenceMapContainer = ({
               }
               navigation={navigation}
               handleSelectWord={handleSelectWord}
+              handleWordUpdate={handleWordUpdate}
+              deleteWord={deleteWord}
               indexNum={index}
             />
             {moreToLoad && (

@@ -324,6 +324,8 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
             setSliceArrState={setSliceArrState}
             realCapacity={realCapacity}
             handleSelectWord={handleSelectWord}
+            handleWordUpdate={handleWordUpdate}
+            deleteWord={deleteWord}
           />
         </ScrollView>
       </View>

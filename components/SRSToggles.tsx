@@ -281,6 +281,148 @@ export const SRSTogglesQuickComprehensive = ({
   );
 };
 
+export const SRSTogglesQuickComprehensiveDiffSentencesWords = ({
+  id,
+  reviewData,
+  baseForm,
+  deleteWord,
+  updateWordData,
+}) => {
+  const [showAreYouSureSectionState, setShowAreYouSureSectionState] =
+    useState(false);
+  const timeNow = new Date();
+  const hasDueDate = reviewData?.due ? new Date(reviewData?.due) : null; // check if due yet
+
+  const cardDataRelativeToNow = hasDueDate ? reviewData : getEmptyCard();
+
+  const nextScheduledOptions = getNextScheduledOptions({
+    card: cardDataRelativeToNow,
+    contentType: srsRetentionKeyTypes.vocab,
+  });
+  const againDue = nextScheduledOptions['1'].card.due;
+  const hardDue = nextScheduledOptions['2'].card.due;
+  const goodDue = nextScheduledOptions['3'].card.due;
+  const easyDue = nextScheduledOptions['4'].card.due;
+
+  const handleYesSure = () => {
+    deleteWord();
+    setShowAreYouSureSectionState(false);
+  };
+
+  const handleNextReview = difficulty => {
+    const nextReviewData = nextScheduledOptions[difficulty].card;
+    updateWordData({
+      wordId: id,
+      wordBaseForm: baseForm,
+      fieldToUpdate: {
+        reviewData: {
+          ...nextReviewData,
+          due: nextReviewData.due.toISOString(),
+          last_review: nextReviewData.last_review.toISOString(),
+        },
+      },
+    });
+  };
+  const hasDueDateInFuture = new Date(hasDueDate) > timeNow;
+
+  const againText = getTimeDiffSRS({dueTimeStamp: againDue, timeNow}) as string;
+  const hardText = getTimeDiffSRS({dueTimeStamp: hardDue, timeNow}) as string;
+  const goodText = getTimeDiffSRS({dueTimeStamp: goodDue, timeNow}) as string;
+  const easyText = getTimeDiffSRS({dueTimeStamp: easyDue, timeNow}) as string;
+
+  return (
+    <View>
+      <View
+        style={{
+          display: 'flex',
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+        }}>
+        <View
+          style={{
+            display: 'flex',
+            gap: 10,
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            marginVertical: 5,
+          }}>
+          {hasDueDateInFuture ? (
+            <View
+              style={{
+                alignSelf: 'center',
+              }}>
+              <Text>
+                Due in {getTimeDiffSRS({dueTimeStamp: hasDueDate, timeNow})}
+              </Text>
+            </View>
+          ) : (
+            <>
+              <TouchableOpacity
+                style={{
+                  alignSelf: 'center',
+                  backgroundColor: '#6082B6',
+                  padding: 5,
+                  borderRadius: 10,
+                }}
+                onPress={() => handleNextReview('1')}>
+                <Text>{againText}</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={{
+                  alignSelf: 'center',
+                  backgroundColor: '#6082B6',
+                  padding: 5,
+                  borderRadius: 10,
+                }}
+                onPress={() => handleNextReview('2')}>
+                <Text>{hardText}</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={{
+                  alignSelf: 'center',
+                  backgroundColor: '#6082B6',
+                  padding: 5,
+                  borderRadius: 10,
+                }}
+                onPress={() => handleNextReview('3')}>
+                <Text>{goodText}</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={{
+                  alignSelf: 'center',
+                  backgroundColor: '#6082B6',
+                  padding: 5,
+                  borderRadius: 10,
+                }}
+                onPress={() => handleNextReview('4')}>
+                <Text>{easyText}</Text>
+              </TouchableOpacity>
+            </>
+          )}
+          <TouchableOpacity
+            style={{
+              alignSelf: 'center',
+              backgroundColor: 'darkred',
+              padding: 5,
+              borderRadius: 10,
+            }}
+            onPress={() =>
+              setShowAreYouSureSectionState(!showAreYouSureSectionState)
+            }>
+            <Text>🗑️</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+      {showAreYouSureSectionState && (
+        <QuickAreYouSureSection
+          handleClose={() => setShowAreYouSureSectionState(false)}
+          handleYesSure={handleYesSure}
+        />
+      )}
+    </View>
+  );
+};
+
 export const DifficultSentencesSRSToggles = ({
   id,
   reviewData,

@@ -11,6 +11,7 @@ import useData from '../context/Data/useData';
 import useLanguageSelector from '../context/LanguageSelector/useLanguageSelector';
 import DifficultSentenceAudioContainer from './DifficultSentenceAudioContainer';
 import DifficultSentenceSnippetContainer from './DifficultSentenceSnippetContainer';
+import {SRSTogglesQuickComprehensiveDiffSentencesWords} from './SRSToggles';
 
 const TopSection = ({thisSentenceIsLoading}) => {
   return (
@@ -152,6 +153,8 @@ const DifficultSentenceWidget = ({
   navigation,
   indexNum,
   handleSelectWord,
+  handleWordUpdate,
+  deleteWord,
 }) => {
   const [showReviewSettings, setShowReviewSettings] = useState(false);
   const [showThisWordsDefinitions, setShowThisWordsDefinitions] =
@@ -171,6 +174,21 @@ const DifficultSentenceWidget = ({
 
   const handleShowAllMatchedWords = () => {
     setShowAllMatchedWordsState(!showAllMatchedWordsState);
+  };
+
+  const handleUpdateWordFinal = wordData => {
+    handleWordUpdate(wordData);
+    const updatedMatchedWordListState = matchedWordListState.map(item => {
+      if (item.id === wordData.wordId) {
+        console.log('### handleUpdateWordFinal 3');
+        return {
+          ...item,
+          ...wordData.fieldToUpdate,
+        };
+      }
+      return item;
+    });
+    setMatchedWordListState(updatedMatchedWordListState);
   };
 
   useEffect(() => {
@@ -251,6 +269,7 @@ const DifficultSentenceWidget = ({
     }
 
     return matchedWordListState.map((item, index) => {
+      const noReview = !item?.reviewData;
       return (
         <View
           key={index}
@@ -258,10 +277,24 @@ const DifficultSentenceWidget = ({
             paddingTop: 5,
             borderTopColor: 'gray',
             borderTopWidth: 1,
+            gap: 5,
           }}>
           <TouchableOpacity onPress={() => handleSelectWord(item)}>
-            <Text>{seperatedWords(item, index)}</Text>
+            <Text>
+              {seperatedWords(item, index)} {noReview ? '🆕' : ''}
+            </Text>
           </TouchableOpacity>
+          {noReview && (
+            <SRSTogglesQuickComprehensiveDiffSentencesWords
+              id={item.id}
+              reviewData={item?.reviewData}
+              baseForm={item?.baseForm}
+              updateWordData={handleUpdateWordFinal}
+              deleteWord={async () =>
+                await deleteWord({wordId: item.id, wordBaseForm: item.baseForm})
+              }
+            />
+          )}
         </View>
       );
     });
