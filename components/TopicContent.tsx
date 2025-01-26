@@ -21,7 +21,6 @@ import useSetTopicAudioDataInState from '../hooks/useSetTopicAudioDataInState';
 import ReviewSection from './ReviewSection';
 import useMP3File from '../hooks/useMP3File';
 import useLoadAudioInstance from '../hooks/useLoadAudioInstance';
-import AdhocSentenceContainer from './AdhocSentenceContainer';
 import useLanguageSelector from '../context/LanguageSelector/useLanguageSelector';
 import AudioToggles from './AudioToggles';
 import {VideoRef} from 'react-native-video';
@@ -69,7 +68,6 @@ const TopicContent = ({
     useState(null);
   const [highlightTargetTextState, setHighlightTargetTextState] = useState('');
   const [updateWordList, setUpdateWordList] = useState(false);
-  const [showAdhocSentence, setShowAdhocSentence] = useState(false);
   const [audioLoadingProgress, setAudioLoadingProgress] = useState(0);
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
   const [currentVideoTimeState, setCurrentVideoTimeState] = useState(0);
@@ -110,10 +108,6 @@ const TopicContent = ({
   const realStartTime = loadedContent?.realStartTime;
 
   const hasUnifiedMP3File = loadedContent.hasAudio;
-  const hasSomeReviewedSentences = formattedData?.some(
-    item => item?.reviewData,
-  );
-
   const hasAlreadyBeenUnified = structuredUnifiedData[topicName]?.content;
   const snippetsLocalAndDb = useMemo(() => {
     return mergeAndRemoveDuplicates(
@@ -299,11 +293,6 @@ const TopicContent = ({
     }
   };
 
-  const handleAddAdhocSentence = () => {
-    setShowAdhocSentence(true);
-    pauseSound();
-  };
-
   const contentWithTimeStamps = useGetCombinedAudioData({
     hasUnifiedMP3File,
     audioFiles: content,
@@ -468,15 +457,6 @@ const TopicContent = ({
     );
   }
 
-  if (showAdhocSentence) {
-    return (
-      <AdhocSentenceContainer
-        topicName={topicName}
-        setShowAdhocSentence={setShowAdhocSentence}
-      />
-    );
-  }
-
   if (isVideoModeState) {
     return (
       <>
@@ -490,7 +470,7 @@ const TopicContent = ({
               nextReview={nextReview}
               updateTopicMetaData={updateTopicMetaData}
               handleBulkReviews={handleBulkReviews}
-              hasSomeReviewedSentences={hasSomeReviewedSentences}
+              hasSomeReviewedSentences={hasContentToReview}
             />
           </AnimatedModal>
         )}
@@ -537,12 +517,9 @@ const TopicContent = ({
                 setEngMaster={setEngMaster}
                 handleIsCore={handleIsCore}
                 isCore={isCore}
-                handleAddAdhocSentence={handleAddAdhocSentence}
                 isVideoModeState={isVideoModeState}
                 hasVideo={hasVideo}
                 handleVideoMode={handleVideoMode}
-                handleBulkReviews={handleBulkReviews}
-                hasContentToReview={hasContentToReview}
               />
               <LineContainer
                 formattedData={formattedData}
@@ -589,7 +566,7 @@ const TopicContent = ({
             nextReview={nextReview}
             updateTopicMetaData={updateTopicMetaData}
             handleBulkReviews={handleBulkReviews}
-            hasSomeReviewedSentences={hasSomeReviewedSentences}
+            hasSomeReviewedSentences={hasContentToReview}
           />
         </AnimatedModal>
       )}
@@ -615,12 +592,9 @@ const TopicContent = ({
             setEngMaster={setEngMaster}
             handleIsCore={handleIsCore}
             isCore={isCore}
-            handleAddAdhocSentence={handleAddAdhocSentence}
             isVideoModeState={isVideoModeState}
             hasVideo={hasVideo}
             handleVideoMode={handleVideoMode}
-            handleBulkReviews={handleBulkReviews}
-            hasContentToReview={hasContentToReview}
           />
           <LineContainer
             formattedData={formattedData}

@@ -22,12 +22,9 @@ const DisplaySettings = ({
   setEngMaster,
   handleIsCore,
   isCore,
-  handleAddAdhocSentence,
   isVideoModeState,
   hasVideo,
   handleVideoMode,
-  handleBulkReviews,
-  hasContentToReview,
 }) => {
   let defaultSettingsArr = [
     {func: setEnglishOnly, bool: englishOnly, text: 'Eng only'},
@@ -57,33 +54,6 @@ const DisplaySettings = ({
       {defaultSettingsArr?.map((settingItem, index) => {
         return <SettingBlock key={index} {...settingItem} />;
       })}
-      {!hasContentToReview ? (
-        <View>
-          <TouchableOpacity
-            onPress={handleBulkReviews}
-            style={{
-              padding: 10,
-              borderRadius: 50,
-            }}>
-            <Text>📆</Text>
-          </TouchableOpacity>
-        </View>
-      ) : (
-        <View
-          style={{
-            margin: 10,
-          }}>
-          <TouchableOpacity
-            onPress={handleAddAdhocSentence}
-            style={{
-              padding: 10,
-              backgroundColor: 'grey',
-              borderRadius: 50,
-            }}>
-            <Text>➕</Text>
-          </TouchableOpacity>
-        </View>
-      )}
     </View>
   );
 };
