@@ -256,12 +256,14 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
     fieldToUpdate,
     topicName,
     contentIndex,
+    removeReview,
   }) => {
     try {
       const updatedContentRes = await sentenceReviewBulkAPI({
         title: topicName,
         fieldToUpdate,
         language,
+        removeReview,
       });
 
       if (updatedContentRes) {

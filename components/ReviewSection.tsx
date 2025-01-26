@@ -40,6 +40,8 @@ const ReviewSection = ({
   nextReview,
   topicName,
   updateTopicMetaData,
+  handleBulkReviews,
+  hasSomeReviewedSentences,
 }) => {
   const [futureDaysState, setFutureDaysState] = useState(3);
 
@@ -56,6 +58,10 @@ const ReviewSection = ({
 
   const updateExistingReviewHistory = () => {
     return [...reviewHistory, new Date()];
+  };
+
+  const handleBulkReviewsFunc = () => {
+    handleBulkReviews({removeReview: hasSomeReviewedSentences});
   };
 
   const setNextReviewDate = () => {
@@ -92,31 +98,47 @@ const ReviewSection = ({
         paddingLeft: 10,
         paddingBottom: 10,
         width: '100%',
-        borderTopWidth: 2,
-        borderColor: 'black',
-        flexDirection: 'row',
-        flexWrap: 'wrap',
-        alignItems: 'center',
-        justifyContent: 'space-between',
       }}>
-      <View>
+      <TouchableOpacity
+        onPress={handleBulkReviewsFunc}
+        style={{
+          padding: 10,
+          backgroundColor: '#FFC5CB',
+          borderRadius: 10,
+          marginVertical: 'auto',
+          alignSelf: 'center',
+        }}>
+        <Text>
+          🕰️{' '}
+          {hasSomeReviewedSentences ? 'Remove all reviews' : 'Bulk add reviews'}
+        </Text>
+      </TouchableOpacity>
+      <View
+        style={{
+          flexDirection: 'row',
+          flexWrap: 'wrap',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+        }}>
         <Text>{nextReviewText}</Text>
       </View>
-      <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
-        <TouchableOpacity
-          style={{
-            padding: 10,
-            backgroundColor: 'grey',
-            borderRadius: 10,
-            marginVertical: 'auto',
-          }}
-          onPress={setNextReviewDate}>
-          <Text>{futureStateText}</Text>
-        </TouchableOpacity>
-        <FutureDateIncrementor
-          futureDaysState={futureDaysState}
-          setFutureDaysState={setFutureDaysState}
-        />
+      <View>
+        <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
+          <TouchableOpacity
+            style={{
+              padding: 10,
+              backgroundColor: 'grey',
+              borderRadius: 10,
+              marginVertical: 'auto',
+            }}
+            onPress={setNextReviewDate}>
+            <Text>{futureStateText}</Text>
+          </TouchableOpacity>
+          <FutureDateIncrementor
+            futureDaysState={futureDaysState}
+            setFutureDaysState={setFutureDaysState}
+          />
+        </View>
       </View>
     </View>
   );

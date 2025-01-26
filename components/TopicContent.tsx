@@ -110,6 +110,9 @@ const TopicContent = ({
   const realStartTime = loadedContent?.realStartTime;
 
   const hasUnifiedMP3File = loadedContent.hasAudio;
+  const hasSomeReviewedSentences = formattedData?.some(
+    item => item?.reviewData,
+  );
 
   const hasAlreadyBeenUnified = structuredUnifiedData[topicName]?.content;
   const snippetsLocalAndDb = useMemo(() => {
@@ -264,7 +267,7 @@ const TopicContent = ({
     });
   };
 
-  const handleBulkReviews = async () => {
+  const handleBulkReviews = async ({removeReview}) => {
     const emptyCard = getEmptyCard();
 
     const nextScheduledOptions = getNextScheduledOptions({
@@ -278,13 +281,14 @@ const TopicContent = ({
         reviewData: nextDueCard,
       },
       contentIndex,
+      removeReview,
     });
 
     if (updatedContent) {
       const updatedFormattedData = formattedData.map(item => {
         return {
           ...item,
-          reviewData: nextDueCard,
+          reviewData: removeReview ? null : nextDueCard,
         };
       });
       setFormattedData(updatedFormattedData);
@@ -485,6 +489,8 @@ const TopicContent = ({
               reviewHistory={reviewHistory}
               nextReview={nextReview}
               updateTopicMetaData={updateTopicMetaData}
+              handleBulkReviews={handleBulkReviews}
+              hasSomeReviewedSentences={hasSomeReviewedSentences}
             />
           </AnimatedModal>
         )}
@@ -582,6 +588,8 @@ const TopicContent = ({
             reviewHistory={reviewHistory}
             nextReview={nextReview}
             updateTopicMetaData={updateTopicMetaData}
+            handleBulkReviews={handleBulkReviews}
+            hasSomeReviewedSentences={hasSomeReviewedSentences}
           />
         </AnimatedModal>
       )}

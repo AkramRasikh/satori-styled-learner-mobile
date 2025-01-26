@@ -4,6 +4,7 @@ export const sentenceReviewBulkAPI = async ({
   title,
   fieldToUpdate,
   language,
+  removeReview,
 }) => {
   const url = BACKEND_ENDPOINT + '/sentence-review-bulk';
 
@@ -17,6 +18,7 @@ export const sentenceReviewBulkAPI = async ({
         language,
         title,
         fieldToUpdate,
+        removeReview,
       }),
     });
 
