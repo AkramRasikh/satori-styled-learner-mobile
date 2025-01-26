@@ -140,6 +140,7 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
   const [isAdhocDataLoading, setIsAdhocDataLoading] = useState(false);
   const [structuredUnifiedData, setStructuredUnifiedData] = useState([]);
   const [combineWordsListState, setCombineWordsListState] = useState([]);
+  const [updateMetaDataState, setUpdateMetaDataState] = useState(0);
   // const [combineWordsListState, setCombineWordsListState] = useState(
   //   combineSentenceResponseExample,
   // );
@@ -226,6 +227,7 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
           ...newTopicState,
         };
         dispatch(setLearningContentStateDispatch(updatedState));
+        setUpdateMetaDataState(prev => prev + 1);
         await storeDataLocalStorage(
           dataStorageKeyPrefix + content,
           updatedState,
@@ -653,6 +655,7 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
         getSentenceAudio,
         deleteWord,
         updateWordData,
+        updateMetaDataState,
       }}>
       {children}
     </DataContext.Provider>

@@ -6,6 +6,7 @@ import HomeContainerToSentencesOrWords from '../../components/HomeContainerToSen
 import Topics from '../../components/Topics';
 import useOnLoadContentScreen from '../../hooks/useOnLoadContentScreen';
 import ScreenContainerComponent from '../../components/ScreenContainerComponent';
+import useData from '../../context/Data/useData';
 
 function Home({
   navigation,
@@ -20,10 +21,13 @@ function Home({
   const [selectedGeneralTopicState, setSelectedGeneralTopicState] =
     useState('');
 
+  const {updateMetaDataState} = useData();
+
   useOnLoadContentScreen({
     targetLanguageLoadedContentMasterState,
     setTargetLanguageLoadedContentState,
     setAllTopicsMetaDataState,
+    updateMetaDataState,
   });
 
   const handleShowTopic = topic => {

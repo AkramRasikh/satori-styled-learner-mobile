@@ -12,6 +12,7 @@ const useOnLoadContentScreen = ({
   targetLanguageLoadedContentMasterState,
   setTargetLanguageLoadedContentState,
   setAllTopicsMetaDataState,
+  updateMetaDataState,
 }) => {
   const generalTopicObjKeys: string[] = [];
   const allTopicsMetaData = [];
@@ -85,9 +86,8 @@ const useOnLoadContentScreen = ({
         return a.isCore === b.isCore ? 0 : a.isCore ? -1 : 1;
       }),
     );
-
     setAllTopicsMetaDataState(allTopicsMetaData);
-  }, []);
+  }, [updateMetaDataState]);
 };
 
 export default useOnLoadContentScreen;
