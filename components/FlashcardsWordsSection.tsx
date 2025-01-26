@@ -31,6 +31,10 @@ const FlashcardsWordsSection = ({
   const [selectedDueCardState, setSelectedDueCardState] = useState();
   const {width} = Dimensions?.get('window');
 
+  const handleCloseModal = () => {
+    setSelectedDueCardState(null);
+  };
+
   return (
     <View
       style={{
@@ -94,7 +98,7 @@ const FlashcardsWordsSection = ({
               {isSelectedWord && (
                 <AnimatedWordModal
                   visible={wordData}
-                  onClose={() => setSelectedDueCardState(null)}
+                  onClose={handleCloseModal}
                   deleteWord={() => handleDeleteWord(wordData)}
                 />
               )}

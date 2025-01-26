@@ -9,7 +9,13 @@ import {getTimeDiffSRS} from '../utils/getTimeDiffSRS';
 import useWordData from '../context/WordData/useWordData';
 import {QuickAreYouSureSection} from './AreYouSureSection';
 
-const SRSToggles = ({reviewData, id, baseForm, limitedOptionsMode}) => {
+const SRSToggles = ({
+  reviewData,
+  id,
+  baseForm,
+  limitedOptionsMode,
+  onCloseModal,
+}) => {
   const [nextReviewDateState, setNextReviewDateState] = useState('');
   const timeNow = new Date();
   const hasDueDate = reviewData?.due ? new Date(reviewData?.due) : null; // check if due yet
@@ -41,6 +47,7 @@ const SRSToggles = ({reviewData, id, baseForm, limitedOptionsMode}) => {
         },
       });
       setNextReviewDateState(nextReviewData.due);
+      onCloseModal?.();
     } catch (error) {
       console.log('## handleNextReview', {error});
     }
