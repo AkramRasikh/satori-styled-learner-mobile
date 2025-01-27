@@ -53,7 +53,10 @@ const useFormatWordsToStudy = ({
                 tags,
                 isMediaContent,
               });
-              if (!generalTopics.includes(generalTopicTitle)) {
+              if (
+                generalTopicTitle &&
+                !generalTopics.includes(generalTopicTitle)
+              ) {
                 generalTopics.push(generalTopicTitle);
               }
               thisWordsCategories.push(generalTopicTitle);
@@ -81,7 +84,10 @@ const useFormatWordsToStudy = ({
                 title: generalTopicTitle,
                 tags,
               });
-              if (!generalTopics.includes(generalTopicTitle)) {
+              if (
+                generalTopicTitle &&
+                !generalTopics.includes(generalTopicTitle)
+              ) {
                 generalTopics.push(generalTopicTitle);
               }
 
