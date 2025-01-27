@@ -12,6 +12,7 @@ import useLanguageSelector from '../context/LanguageSelector/useLanguageSelector
 import DifficultSentenceAudioContainer from './DifficultSentenceAudioContainer';
 import DifficultSentenceSnippetContainer from './DifficultSentenceSnippetContainer';
 import {SRSTogglesQuickComprehensiveDiffSentencesWords} from './SRSToggles';
+import useHighlightWordToWordBank from '../hooks/useHighlightWordToWordBank';
 
 const TopSection = ({thisSentenceIsLoading}) => {
   return (
@@ -140,6 +141,23 @@ const BottomAudioSection = ({
   );
 };
 
+const getHexCode = index => {
+  const hexCodeArr = [
+    '#E04E2E', //- Muted Orange-Red
+    '#D6AB00', //- Soft Yellow
+    '#2EBF4D', //- Calmer Green
+    '#2D4FCB', //- Mellow Blue
+    '#E02C8E', //- Gentle Pink
+    '#2EDBC8', //- Subtle Aqua
+    '#E07A2E', //- Soft Warm Orange
+    '#9E2CCE', //- Muted Purple
+    '#E02C2C', //- Softer Red
+    '#2ECC70', //- Subdued Mint Green
+  ];
+
+  return hexCodeArr[index % hexCodeArr.length];
+};
+
 const DifficultSentenceWidget = ({
   sentence,
   updateSentenceData,
@@ -164,6 +182,10 @@ const DifficultSentenceWidget = ({
   const [matchedWordListState, setMatchedWordListState] = useState([]);
 
   const {updatingSentenceState, getThisSentencesWordList} = useData();
+
+  const {underlineWordsInSentence} = useHighlightWordToWordBank({
+    pureWordsUnique: pureWords,
+  });
 
   const id = sentence.id;
   const topic = sentence.topic;
@@ -243,25 +265,13 @@ const DifficultSentenceWidget = ({
     });
   };
 
-  const seperatedWords = (word, index) => {
+  const seperatedWords = word => {
     const surfaceForm = word.surfaceForm;
     const baseForm = word.baseForm;
     const phonetic = word.phonetic || word.transliteration;
     const definition = word.definition;
 
-    const indexToNumber = index + 1;
-
-    return (
-      indexToNumber +
-      ') ' +
-      surfaceForm +
-      ', ' +
-      baseForm +
-      ', ' +
-      phonetic +
-      ', ' +
-      definition
-    );
+    return surfaceForm + ', ' + baseForm + ', ' + phonetic + ', ' + definition;
   };
   const matchedWordsMap = () => {
     if (matchedWordListState?.length === 0) {
@@ -281,7 +291,14 @@ const DifficultSentenceWidget = ({
           }}>
           <TouchableOpacity onPress={() => handleSelectWord(item)}>
             <Text>
-              {seperatedWords(item, index)} {noReview ? '🆕' : ''}
+              <Text
+                style={{
+                  color: getHexCode(index),
+                  fontWeight: 'bold',
+                }}>
+                {index + 1 + ') '}
+              </Text>
+              {seperatedWords(item)} {noReview ? '🆕' : ''}
             </Text>
           </TouchableOpacity>
           {noReview && (
@@ -314,6 +331,38 @@ const DifficultSentenceWidget = ({
     }
   };
 
+  const getSafeText = targetText => {
+    const textSegments = underlineWordsInSentence(targetText);
+    return textSegments.map((segment, index) => {
+      const isPartOfMatchedWord =
+        showAllMatchedWordsState &&
+        matchedWordListState?.findIndex(
+          item => item.surfaceForm === segment.text,
+        );
+
+      return (
+        <Text
+          key={index}
+          id={segment.id}
+          selectable={true}
+          style={[
+            segment.style,
+            {
+              fontSize: 20,
+              lineHeight: 24,
+              color:
+                showAllMatchedWordsState && isPartOfMatchedWord >= 0
+                  ? getHexCode(isPartOfMatchedWord)
+                  : 'black',
+            },
+          ]}
+          onLongPress={() => onLongPress(segment.text)}>
+          {segment.text}
+        </Text>
+      );
+    });
+  };
+
   const {dueColorState} = getDueDateText(dueStatus);
 
   return (
@@ -335,8 +384,6 @@ const DifficultSentenceWidget = ({
         setShowReviewSettings={setShowReviewSettings}
         dueText={dueDate}
         dueColorState={dueColorState}
-        pureWords={pureWords}
-        onLongPress={onLongPress}
         sentenceBeingHighlightedState={sentenceBeingHighlightedState}
         setSentenceBeingHighlightedState={setSentenceBeingHighlightedState}
         updateSentenceData={updateSentenceData}
@@ -346,6 +393,7 @@ const DifficultSentenceWidget = ({
         handleYesSure={handleDeleteContent}
         showReviewSettings={showReviewSettings}
         handleShowAllMatchedWords={handleShowAllMatchedWords}
+        safeTextFunc={getSafeText}
       />
       <BottomAudioSection
         sentence={sentence}

@@ -1,6 +1,5 @@
 import React, {useState} from 'react';
 import {Text, View} from 'react-native';
-import useHighlightWordToWordBank from '../hooks/useHighlightWordToWordBank';
 import Clipboard from '@react-native-clipboard/clipboard';
 import useOpenGoogleTranslate from './useOpenGoogleTranslate';
 import HighlightTextZone from './HighlightTextZone';
@@ -17,8 +16,6 @@ const DifficultSentenceContent = ({
   dueText,
   setShowReviewSettings,
   dueColorState,
-  pureWords,
-  onLongPress,
   sentenceBeingHighlightedState,
   setSentenceBeingHighlightedState,
   sentenceId,
@@ -29,15 +26,13 @@ const DifficultSentenceContent = ({
   handleYesSure,
   showReviewSettings,
   handleShowAllMatchedWords,
+  safeTextFunc,
 }) => {
   const [highlightedIndices, setHighlightedIndices] = useState([]);
   const [containerWidth, setContainerWidth] = useState(0);
 
   const {saveWordFirebase} = useData();
 
-  const {underlineWordsInSentence} = useHighlightWordToWordBank({
-    pureWordsUnique: pureWords,
-  });
   const isDueNow =
     sentence?.nextReview || new Date(sentence.reviewData.due) < new Date();
 
@@ -89,28 +84,6 @@ const DifficultSentenceContent = ({
     setSentenceBeingHighlightedState('');
   };
 
-  const getSafeText = targetText => {
-    const textSegments = underlineWordsInSentence(targetText);
-    return textSegments.map((segment, index) => {
-      return (
-        <React.Fragment key={index}>
-          <Text
-            id={segment.id}
-            selectable={true}
-            style={[
-              segment.style,
-              {
-                fontSize: 20,
-                lineHeight: 24,
-              },
-            ]}
-            onLongPress={() => onLongPress(segment.text)}>
-            {segment.text}
-          </Text>
-        </React.Fragment>
-      );
-    });
-  };
   return (
     <>
       <DifficultSentenceContentHeader
@@ -154,7 +127,7 @@ const DifficultSentenceContent = ({
           />
         </View>
       ) : (
-        <Text>{getSafeText(targetLang)}</Text>
+        <Text>{safeTextFunc(targetLang)}</Text>
       )}
       <View>
         <Text>{baseLang}</Text>
