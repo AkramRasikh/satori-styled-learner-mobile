@@ -213,7 +213,10 @@ const DifficultSentenceWidget = ({
 
   useEffect(() => {
     const matchedWordList = getThisSentencesWordList(targetLang);
-    setMatchedWordListState(matchedWordList);
+    if (matchedWordList?.length > 1) {
+      matchedWordList.sort((a, b) => (a.index > b.index ? 1 : -1));
+      setMatchedWordListState(matchedWordList);
+    }
   }, [numberOfWords]);
 
   const handleDeleteContent = () => {
@@ -309,8 +312,7 @@ const DifficultSentenceWidget = ({
                   ? getHexCode(isPartOfMatchedWord)
                   : 'black',
             },
-          ]}
-          onLongPress={() => onLongPress(segment.text)}>
+          ]}>
           {segment.text}
         </Text>
       );

@@ -575,13 +575,13 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
       const baseForm = word.baseForm;
       const surfaceForm = word.surfaceForm;
       if (sentence.includes(baseForm)) {
-        matchedWordsData.push(word);
+        matchedWordsData.push({...word, index: sentence.indexOf(baseForm)});
 
         return;
       }
 
       if (sentence.includes(surfaceForm)) {
-        matchedWordsData.push(word);
+        matchedWordsData.push({...word, index: sentence.indexOf(surfaceForm)});
         return;
       }
     });
