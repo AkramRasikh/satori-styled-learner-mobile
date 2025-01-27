@@ -175,8 +175,6 @@ const DifficultSentenceWidget = ({
   deleteWord,
 }) => {
   const [showReviewSettings, setShowReviewSettings] = useState(false);
-  const [showThisWordsDefinitions, setShowThisWordsDefinitions] =
-    useState(null);
   const [showAllMatchedWordsState, setShowAllMatchedWordsState] =
     useState(false);
   const [matchedWordListState, setMatchedWordListState] = useState([]);
@@ -235,36 +233,6 @@ const DifficultSentenceWidget = ({
 
   const thisSentenceIsLoading = updatingSentenceState === sentence.id;
 
-  const getLongPressedWordData = () => {
-    if (!showThisWordsDefinitions) {
-      return;
-    }
-    return showThisWordsDefinitions.map((word, index) => {
-      const surfaceForm = word.surfaceForm;
-      const baseForm = word.baseForm;
-      const phonetic = word.phonetic || word.transliteration;
-      const definition = word.definition;
-
-      const isLastInArr = index + 1 === showThisWordsDefinitions.length;
-
-      const newLine = !isLastInArr ? '\n' : '';
-      const indexToNumber = index + 1;
-
-      return (
-        indexToNumber +
-        ') ' +
-        surfaceForm +
-        ', ' +
-        baseForm +
-        ', ' +
-        phonetic +
-        ', ' +
-        definition +
-        newLine
-      );
-    });
-  };
-
   const seperatedWords = word => {
     const surfaceForm = word.surfaceForm;
     const baseForm = word.baseForm;
@@ -315,20 +283,6 @@ const DifficultSentenceWidget = ({
         </View>
       );
     });
-  };
-
-  const generalLongPress = text => {
-    const longPressedTexts = matchedWordListState.filter(word =>
-      text.includes(word.surfaceForm),
-    );
-    return longPressedTexts;
-  };
-
-  const onLongPress = text => {
-    const longPressedTexts = generalLongPress(text);
-    if (longPressedTexts.length > 0) {
-      setShowThisWordsDefinitions(longPressedTexts);
-    }
   };
 
   const getSafeText = targetText => {
@@ -401,19 +355,6 @@ const DifficultSentenceWidget = ({
         removeSnippet={removeSnippet}
         indexNum={indexNum}
       />
-      <View>
-        {showThisWordsDefinitions?.length > 0 ? (
-          <View
-            style={{
-              paddingTop: 5,
-              borderTopColor: 'gray',
-              borderTopWidth: 1,
-            }}>
-            <Text>{getLongPressedWordData()}</Text>
-          </View>
-        ) : null}
-      </View>
-
       {showAllMatchedWordsState && matchedWordsMap()}
     </View>
   );
