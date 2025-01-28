@@ -467,13 +467,24 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
       const baseForm = word.baseForm;
       const surfaceForm = word.surfaceForm;
       if (sentence.includes(baseForm)) {
-        matchedWordsData.push({...word, index: sentence.indexOf(baseForm)});
+        const indexOfBaseForm = sentence.indexOf(baseForm);
+        matchedWordsData.push({
+          ...word,
+          indexStart: indexOfBaseForm,
+          indexEnd: indexOfBaseForm + baseForm.length,
+        });
 
         return;
       }
 
       if (sentence.includes(surfaceForm)) {
-        matchedWordsData.push({...word, index: sentence.indexOf(surfaceForm)});
+        const indexOfSurfaceForm = sentence.indexOf(surfaceForm);
+
+        matchedWordsData.push({
+          ...word,
+          indexStart: indexOfSurfaceForm,
+          indexEnd: indexOfSurfaceForm + surfaceForm.length,
+        });
         return;
       }
     });

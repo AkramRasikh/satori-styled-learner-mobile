@@ -127,7 +127,7 @@ const DifficultSentenceContent = ({
           />
         </View>
       ) : (
-        <Text>{safeTextFunc(targetLang)}</Text>
+        safeTextFunc(targetLang)
       )}
       <View>
         <Text>{baseLang}</Text>

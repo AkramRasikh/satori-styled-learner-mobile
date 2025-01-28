@@ -13,6 +13,7 @@ import DifficultSentenceAudioContainer from './DifficultSentenceAudioContainer';
 import DifficultSentenceSnippetContainer from './DifficultSentenceSnippetContainer';
 import {SRSTogglesQuickComprehensiveDiffSentencesWords} from './SRSToggles';
 import useHighlightWordToWordBank from '../hooks/useHighlightWordToWordBank';
+import {checkOverlap} from '../utils/check-word-overlap';
 
 const TopSection = ({thisSentenceIsLoading}) => {
   return (
@@ -212,11 +213,13 @@ const DifficultSentenceWidget = ({
   };
 
   useEffect(() => {
-    const matchedWordList = getThisSentencesWordList(targetLang);
-    if (matchedWordList?.length > 1) {
-      matchedWordList.sort((a, b) => (a.index > b.index ? 1 : -1));
-      setMatchedWordListState(matchedWordList);
-    }
+    const matchedWordList = getThisSentencesWordList(targetLang).map(
+      (item, index) => ({
+        ...item,
+        colorIndex: index,
+      }),
+    );
+    setMatchedWordListState(matchedWordList);
   }, [numberOfWords]);
 
   const handleDeleteContent = () => {
@@ -267,7 +270,7 @@ const DifficultSentenceWidget = ({
                   color: getHexCode(index),
                   fontWeight: 'bold',
                 }}>
-                {index + 1 + ') '}
+                ({index + 1 + ') '}
               </Text>
               {seperatedWords(item)} {noReview ? '🆕' : ''}
             </Text>
@@ -279,7 +282,10 @@ const DifficultSentenceWidget = ({
               baseForm={item?.baseForm}
               updateWordData={handleUpdateWordFinal}
               deleteWord={async () =>
-                await deleteWord({wordId: item.id, wordBaseForm: item.baseForm})
+                await deleteWord({
+                  wordId: item.id,
+                  wordBaseForm: item.baseForm,
+                })
               }
             />
           )}
@@ -288,35 +294,113 @@ const DifficultSentenceWidget = ({
     });
   };
 
-  const getSafeText = targetText => {
+  const getSafeTextDefault = targetText => {
     const textSegments = underlineWordsInSentence(targetText);
-    return textSegments.map((segment, index) => {
-      const isPartOfMatchedWord =
-        showAllMatchedWordsState &&
-        matchedWordListState?.findIndex(
-          item => item.surfaceForm === segment.text,
-        );
+    return (
+      <Text>
+        {textSegments.map((segment, index) => {
+          return (
+            <Text
+              key={index}
+              id={segment.id}
+              selectable={true}
+              style={[
+                segment.style,
+                {
+                  fontSize: 20,
+                  lineHeight: 24,
+                },
+              ]}>
+              {segment.text}
+            </Text>
+          );
+        })}
+      </Text>
+    );
+  };
 
-      return (
-        <Text
-          key={index}
-          id={segment.id}
-          selectable={true}
-          style={[
-            segment.style,
-            {
-              fontSize: 20,
-              lineHeight: 24,
-              color:
-                showAllMatchedWordsState && isPartOfMatchedWord >= 0
-                  ? getHexCode(isPartOfMatchedWord)
-                  : 'black',
-            },
-          ]}>
-          {segment.text}
-        </Text>
-      );
-    });
+  const getSafeText = targetText => {
+    if (!showAllMatchedWordsState) {
+      return getSafeTextDefault(targetLang);
+    }
+
+    const textSegments = underlineWordsInSentence(targetText);
+    const wordsInOverlapCheck = checkOverlap(matchedWordListState);
+    return (
+      <Text>
+        {textSegments.map((segment, index) => {
+          const isPartOfPerfectlyMatchedWord = wordsInOverlapCheck?.find(
+            item =>
+              item.surfaceForm === segment.text ||
+              item.baseForm === segment.text,
+          );
+          const isPartOfMatchedWordIndex = wordsInOverlapCheck?.findIndex(
+            item =>
+              item.surfaceForm === segment.text ||
+              item.baseForm === segment.text,
+          );
+
+          const thisWordsNestedWords =
+            isPartOfPerfectlyMatchedWord &&
+            wordsInOverlapCheck?.filter(
+              item => item?.nestedIn === isPartOfPerfectlyMatchedWord?.id,
+            );
+
+          const nestedCoordinates = thisWordsNestedWords?.map(item => {
+            const nestedValueIndex = matchedWordListState.find(nestedItem => {
+              if (
+                nestedItem.surfaceForm === item.surfaceForm ||
+                nestedItem.baseForm === item.baseForm
+              ) {
+                return true;
+              }
+              return false;
+            });
+            return nestedValueIndex.colorIndex;
+          });
+
+          return (
+            <Text
+              key={index}
+              id={segment.id}
+              selectable={true}
+              style={[
+                segment.style,
+                {
+                  fontSize: 20,
+                  lineHeight: 24,
+                },
+              ]}>
+              {nestedCoordinates?.map(item => {
+                return (
+                  <Text
+                    key={item}
+                    style={{
+                      color: getHexCode(item),
+                      fontSize: 10,
+                      fontWeight: 'bold',
+                      display: 'flex',
+                      flexDirection: 'row',
+                      flexWrap: 'wrap',
+                    }}>
+                    ({item + 1})
+                  </Text>
+                );
+              })}
+              <Text
+                style={{
+                  color:
+                    isPartOfMatchedWordIndex > -1
+                      ? getHexCode(isPartOfPerfectlyMatchedWord.colorIndex)
+                      : 'black',
+                }}>
+                {segment.text}
+              </Text>
+            </Text>
+          );
+        })}
+      </Text>
+    );
   };
 
   const {dueColorState} = getDueDateText(dueStatus);
