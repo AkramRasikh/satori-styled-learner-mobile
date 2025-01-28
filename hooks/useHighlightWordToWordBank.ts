@@ -1,11 +1,17 @@
-export const makeArrayUnique = array => [...new Set(array)];
+export const makeArrayUnique = array => {
+  if (array.length === 0) {
+    return [];
+  }
+  const setArr = [...new Set(array)];
+  if (setArr?.length > 1) {
+    return setArr.sort((a, b) => b.length - a.length);
+  }
+  return setArr;
+};
 
 const useHighlightWordToWordBank = ({pureWordsUnique}) => {
   const underlineWordsInSentence = sentence => {
-    const masterBank = makeArrayUnique([
-      // ...savedWords,
-      ...(pureWordsUnique || []),
-    ]);
+    const masterBank = makeArrayUnique(pureWordsUnique);
     if (masterBank?.length === 0) return [{text: sentence, style: {}}];
 
     const pattern = new RegExp(`(${masterBank.join('|')})`, 'g');
