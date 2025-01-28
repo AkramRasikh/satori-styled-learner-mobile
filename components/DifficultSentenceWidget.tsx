@@ -319,6 +319,38 @@ const DifficultSentenceWidget = ({
     );
   };
 
+  const getUIWithNestedWords = (nestedCoordinates, segment, colorIndex) => {
+    return (
+      <View>
+        {nestedCoordinates.map(item => {
+          return (
+            <Text
+              key={item}
+              style={{
+                color: getHexCode(item),
+                fontSize: 10,
+                fontWeight: 'bold',
+                display: 'flex',
+                flexDirection: 'row',
+                flexWrap: 'wrap',
+              }}>
+              ({item + 1})
+            </Text>
+          );
+        })}
+        <Text
+          style={{
+            ...segment.style,
+            fontSize: 20,
+            lineHeight: 24,
+            color: getHexCode(colorIndex),
+          }}>
+          {segment.text}
+        </Text>
+      </View>
+    );
+  };
+
   const getSafeText = targetText => {
     if (!showAllMatchedWordsState) {
       return getSafeTextDefault(targetLang);
@@ -368,34 +400,21 @@ const DifficultSentenceWidget = ({
                 segment.style,
                 {
                   fontSize: 20,
-                  lineHeight: 24,
-                },
-              ]}>
-              {nestedCoordinates?.map(item => {
-                return (
-                  <Text
-                    key={item}
-                    style={{
-                      color: getHexCode(item),
-                      fontSize: 10,
-                      fontWeight: 'bold',
-                      display: 'flex',
-                      flexDirection: 'row',
-                      flexWrap: 'wrap',
-                    }}>
-                    ({item + 1})
-                  </Text>
-                );
-              })}
-              <Text
-                style={{
+                  lineHeight: nestedCoordinates?.length === 0 && 24,
                   color:
+                    nestedCoordinates?.length === 0 &&
                     isPartOfMatchedWordIndex > -1
                       ? getHexCode(isPartOfPerfectlyMatchedWord.colorIndex)
                       : 'black',
-                }}>
-                {segment.text}
-              </Text>
+                },
+              ]}>
+              {nestedCoordinates?.length > 0
+                ? getUIWithNestedWords(
+                    nestedCoordinates,
+                    segment,
+                    isPartOfPerfectlyMatchedWord.colorIndex,
+                  )
+                : segment.text}
             </Text>
           );
         })}
