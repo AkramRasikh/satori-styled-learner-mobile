@@ -288,12 +288,30 @@ export const SRSTogglesQuickComprehensive = ({
   );
 };
 
+const GenericButton = ({clearBtns, children, onPress}) => {
+  return (
+    <TouchableOpacity
+      style={{
+        alignSelf: 'center',
+        backgroundColor: clearBtns ? 'transparent' : '#6082B6',
+        borderColor: clearBtns ? clearBtns : '#6082B6',
+        borderWidth: clearBtns ? 2 : 0,
+        padding: 5,
+        borderRadius: 10,
+      }}
+      onPress={onPress}>
+      {children}
+    </TouchableOpacity>
+  );
+};
+
 export const SRSTogglesQuickComprehensiveDiffSentencesWords = ({
   id,
   reviewData,
   baseForm,
   deleteWord,
   updateWordData,
+  clearBtns,
 }) => {
   const [showAreYouSureSectionState, setShowAreYouSureSectionState] =
     useState(false);
@@ -306,8 +324,7 @@ export const SRSTogglesQuickComprehensiveDiffSentencesWords = ({
     card: cardDataRelativeToNow,
     contentType: srsRetentionKeyTypes.vocab,
   });
-  const againDue = nextScheduledOptions['1'].card.due;
-  const hardDue = nextScheduledOptions['2'].card.due;
+
   const goodDue = nextScheduledOptions['3'].card.due;
   const easyDue = nextScheduledOptions['4'].card.due;
 
@@ -332,8 +349,6 @@ export const SRSTogglesQuickComprehensiveDiffSentencesWords = ({
   };
   const hasDueDateInFuture = new Date(hasDueDate) > timeNow;
 
-  const againText = getTimeDiffSRS({dueTimeStamp: againDue, timeNow}) as string;
-  const hardText = getTimeDiffSRS({dueTimeStamp: hardDue, timeNow}) as string;
   const goodText = getTimeDiffSRS({dueTimeStamp: goodDue, timeNow}) as string;
   const easyText = getTimeDiffSRS({dueTimeStamp: easyDue, timeNow}) as string;
 
@@ -341,84 +356,47 @@ export const SRSTogglesQuickComprehensiveDiffSentencesWords = ({
     <View>
       <View
         style={{
+          gap: 10,
           display: 'flex',
           flexDirection: 'row',
-          justifyContent: 'space-between',
+          alignSelf: 'flex-end',
+          marginVertical: 5,
         }}>
-        <View
-          style={{
-            display: 'flex',
-            gap: 10,
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            marginVertical: 5,
-          }}>
-          {hasDueDateInFuture ? (
-            <View
-              style={{
-                alignSelf: 'center',
-              }}>
-              <Text>
-                Due in {getTimeDiffSRS({dueTimeStamp: hasDueDate, timeNow})}
-              </Text>
-            </View>
-          ) : (
-            <>
-              <TouchableOpacity
-                style={{
-                  alignSelf: 'center',
-                  backgroundColor: '#6082B6',
-                  padding: 5,
-                  borderRadius: 10,
-                }}
-                onPress={() => handleNextReview('1')}>
-                <Text>{againText}</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={{
-                  alignSelf: 'center',
-                  backgroundColor: '#6082B6',
-                  padding: 5,
-                  borderRadius: 10,
-                }}
-                onPress={() => handleNextReview('2')}>
-                <Text>{hardText}</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={{
-                  alignSelf: 'center',
-                  backgroundColor: '#6082B6',
-                  padding: 5,
-                  borderRadius: 10,
-                }}
-                onPress={() => handleNextReview('3')}>
-                <Text>{goodText}</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={{
-                  alignSelf: 'center',
-                  backgroundColor: '#6082B6',
-                  padding: 5,
-                  borderRadius: 10,
-                }}
-                onPress={() => handleNextReview('4')}>
-                <Text>{easyText}</Text>
-              </TouchableOpacity>
-            </>
-          )}
-          <TouchableOpacity
+        {hasDueDateInFuture ? (
+          <View
             style={{
               alignSelf: 'center',
-              backgroundColor: 'darkred',
-              padding: 5,
-              borderRadius: 10,
-            }}
-            onPress={() =>
-              setShowAreYouSureSectionState(!showAreYouSureSectionState)
-            }>
-            <Text>🗑️</Text>
-          </TouchableOpacity>
-        </View>
+            }}>
+            <Text>
+              Due in {getTimeDiffSRS({dueTimeStamp: hasDueDate, timeNow})}
+            </Text>
+          </View>
+        ) : (
+          <>
+            <GenericButton
+              clearBtns={clearBtns}
+              onPress={() => handleNextReview('3')}>
+              <Text>{goodText}</Text>
+            </GenericButton>
+            <GenericButton
+              clearBtns={clearBtns}
+              onPress={() => handleNextReview('4')}>
+              <Text>{easyText}</Text>
+            </GenericButton>
+          </>
+        )}
+        <TouchableOpacity
+          style={{
+            alignSelf: 'center',
+            borderWidth: 2,
+            padding: 5,
+            borderRadius: 10,
+          }}
+          onPress={() =>
+            setShowAreYouSureSectionState(!showAreYouSureSectionState)
+          }>
+          <Text>🗑️</Text>
+        </TouchableOpacity>
       </View>
       {showAreYouSureSectionState && (
         <QuickAreYouSureSection

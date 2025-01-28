@@ -333,6 +333,7 @@ const DifficultSentenceWidget = ({
               reviewData={item?.reviewData}
               baseForm={item?.baseForm}
               updateWordData={handleUpdateWordFinal}
+              clearBtns={getHexCode(index)}
               deleteWord={async () =>
                 await deleteWord({
                   wordId: item.id,
