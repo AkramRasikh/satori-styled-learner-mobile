@@ -58,7 +58,6 @@ const DifficultSentenceWidget = ({
     handleWordUpdate(wordData);
     const updatedMatchedWordListState = matchedWordListState.map(item => {
       if (item.id === wordData.wordId) {
-        console.log('### handleUpdateWordFinal 3');
         return {
           ...item,
           ...wordData.fieldToUpdate,
