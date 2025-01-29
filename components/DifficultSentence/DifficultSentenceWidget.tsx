@@ -1,9 +1,8 @@
-import React, {Text, TouchableOpacity, View} from 'react-native';
+import React, {Text, View} from 'react-native';
 import {useEffect, useState} from 'react';
 import DifficultSentenceTextContainer from './DifficultSentenceTextContainer';
 import {getDueDateText} from '../../utils/get-date-due-status';
 import useData from '../../context/Data/useData';
-import {SRSTogglesQuickComprehensiveDiffSentencesWords} from '../SRSToggles';
 import useHighlightWordToWordBank from '../../hooks/useHighlightWordToWordBank';
 import {checkOverlap} from '../../utils/check-word-overlap';
 import DifficultSentenceTitleAndStatus from './DifficultSentenceTitleAndStatus';
@@ -12,75 +11,10 @@ import Clipboard from '@react-native-clipboard/clipboard';
 import useOpenGoogleTranslate from '../useOpenGoogleTranslate';
 import AreYouSureSection from '../AreYouSureSection';
 import DifficultSentenceAudioContainer from './DifficultSentenceAudioContainer';
-
-const NestedwordsWithHyphens = ({
-  segment,
-  nestedCoordinates,
-  colorIndex,
-  getHexCode,
-}) => {
-  const [textWidth, setTextWidth] = useState(0);
-
-  return (
-    <View>
-      <View
-        style={{
-          display: 'flex',
-          flexDirection: 'row',
-          flexWrap: 'wrap',
-          justifyContent: 'space-around',
-          maxWidth: textWidth,
-        }}>
-        {nestedCoordinates.map(item => {
-          return (
-            <Text
-              key={item}
-              style={{
-                color: getHexCode(item),
-                fontSize: 8,
-                fontWeight: 'bold',
-                display: 'flex',
-                flexDirection: 'row',
-                flexWrap: 'wrap',
-              }}>
-              ({item + 1})
-            </Text>
-          );
-        })}
-      </View>
-      <Text
-        style={{
-          ...segment.style,
-          fontSize: 20,
-          lineHeight: 24,
-          color: getHexCode(colorIndex),
-        }}
-        onLayout={event => {
-          const {width} = event.nativeEvent.layout;
-          setTextWidth(width);
-        }}>
-        {segment.text}
-      </Text>
-    </View>
-  );
-};
-
-const getHexCode = index => {
-  const hexCodeArr = [
-    '#E04E2E', //- Muted Orange-Red
-    '#D6AB00', //- Soft Yellow
-    '#2EBF4D', //- Calmer Green
-    '#2D4FCB', //- Mellow Blue
-    '#E02C8E', //- Gentle Pink
-    '#2EDBC8', //- Subtle Aqua
-    '#E07A2E', //- Soft Warm Orange
-    '#9E2CCE', //- Muted Purple
-    '#E02C2C', //- Softer Red
-    '#2ECC70', //- Subdued Mint Green
-  ];
-
-  return hexCodeArr[index % hexCodeArr.length];
-};
+import TextSegment from '../TextSegment';
+import {getHexCode} from '../../utils/get-hex-code';
+import TextSegmentWithOverlap from '../TextSegmentWithWordOverlap';
+import DifficultSentenceMappedWords from './DifficultSentenceMappedWords';
 
 const DifficultSentenceWidget = ({
   sentence,
@@ -161,96 +95,27 @@ const DifficultSentenceWidget = ({
     setShowReviewSettings(false);
   };
 
-  const seperatedWords = word => {
-    const surfaceForm = word.surfaceForm;
-    const baseForm = word.baseForm;
-    const phonetic = word.phonetic || word.transliteration;
-    const definition = word.definition;
-
-    return surfaceForm + ', ' + baseForm + ', ' + phonetic + ', ' + definition;
-  };
   const matchedWordsMap = () => {
     if (matchedWordListState?.length === 0) {
       return null;
     }
-
     return matchedWordListState.map((item, index) => {
-      const noReview = !item?.reviewData;
       return (
-        <View
+        <DifficultSentenceMappedWords
           key={index}
-          style={{
-            paddingTop: 5,
-            borderTopColor: 'gray',
-            borderTopWidth: 1,
-            gap: 5,
-          }}>
-          <TouchableOpacity onPress={() => handleSelectWord(item)}>
-            <Text>
-              <Text
-                style={{
-                  color: getHexCode(index),
-                  fontWeight: 'bold',
-                }}>
-                ({index + 1 + ') '}
-              </Text>
-              {seperatedWords(item)} {noReview ? '🆕' : ''}
-            </Text>
-          </TouchableOpacity>
-          {noReview && (
-            <SRSTogglesQuickComprehensiveDiffSentencesWords
-              id={item.id}
-              reviewData={item?.reviewData}
-              baseForm={item?.baseForm}
-              updateWordData={handleUpdateWordFinal}
-              clearBtns={getHexCode(index)}
-              deleteWord={async () =>
-                await deleteWord({
-                  wordId: item.id,
-                  wordBaseForm: item.baseForm,
-                })
-              }
-            />
-          )}
-        </View>
+          item={item}
+          handleSelectWord={handleSelectWord}
+          deleteWord={deleteWord}
+          handleUpdateWordFinal={handleUpdateWordFinal}
+          indexNum={index}
+        />
       );
     });
   };
 
   const getSafeTextDefault = targetText => {
     const textSegments = underlineWordsInSentence(targetText);
-    return (
-      <Text>
-        {textSegments.map((segment, index) => {
-          return (
-            <Text
-              key={index}
-              id={segment.id}
-              selectable={true}
-              style={[
-                segment.style,
-                {
-                  fontSize: 20,
-                  lineHeight: 24,
-                },
-              ]}>
-              {segment.text}
-            </Text>
-          );
-        })}
-      </Text>
-    );
-  };
-
-  const getUIWithNestedWords = (nestedCoordinates, segment, colorIndex) => {
-    return (
-      <NestedwordsWithHyphens
-        segment={segment}
-        nestedCoordinates={nestedCoordinates}
-        colorIndex={colorIndex}
-        getHexCode={getHexCode}
-      />
-    );
+    return <TextSegment textSegments={textSegments} />;
   };
 
   const getSafeText = targetText => {
@@ -310,13 +175,15 @@ const DifficultSentenceWidget = ({
                       : 'black',
                 },
               ]}>
-              {nestedCoordinates?.length > 0
-                ? getUIWithNestedWords(
-                    nestedCoordinates,
-                    segment,
-                    isPartOfPerfectlyMatchedWord.colorIndex,
-                  )
-                : segment.text}
+              {nestedCoordinates?.length > 0 ? (
+                <TextSegmentWithOverlap
+                  segment={segment}
+                  nestedCoordinates={nestedCoordinates}
+                  colorIndex={isPartOfPerfectlyMatchedWord.colorIndex}
+                />
+              ) : (
+                segment.text
+              )}
             </Text>
           );
         })}
