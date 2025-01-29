@@ -1,8 +1,8 @@
 import {Text, TouchableOpacity, View} from 'react-native';
-import SRSTogglesMini from './SRSTogglesMini';
-import {srsRetentionKeyTypes} from '../srs-algo';
+import SRSTogglesMini from '../SRSTogglesMini';
+import {srsRetentionKeyTypes} from '../../srs-algo';
 
-const DifficultSentenceTopHeaderActions = ({
+const DifficultSentenceActions = ({
   isDueNow,
   updateSentenceData,
   sentence,
@@ -63,4 +63,4 @@ const DifficultSentenceTopHeaderActions = ({
   );
 };
 
-export default DifficultSentenceTopHeaderActions;
+export default DifficultSentenceActions;

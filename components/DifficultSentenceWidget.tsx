@@ -3,7 +3,7 @@ import {useSelector} from 'react-redux';
 import useLoadAudioInstance from '../hooks/useLoadAudioInstance';
 import {useEffect, useRef, useState} from 'react';
 import {getFirebaseAudioURL} from '../hooks/useGetCombinedAudioData';
-import DifficultSentenceContent from './DifficultSentenceContent';
+import DifficultSentenceContent from './DifficultSentence/DifficultSentenceTextContainer';
 import {getDueDateText} from '../utils/get-date-due-status';
 import useMP3File from '../hooks/useMP3File';
 import {generateRandomId} from '../utils/generate-random-id';
@@ -15,6 +15,10 @@ import {SRSTogglesQuickComprehensiveDiffSentencesWords} from './SRSToggles';
 import useHighlightWordToWordBank from '../hooks/useHighlightWordToWordBank';
 import {checkOverlap} from '../utils/check-word-overlap';
 import DifficultSentenceTitleAndStatus from './DifficultSentence/DifficultSentenceTitleAndStatus';
+import DifficultSentenceActions from './DifficultSentence/DifficultSentenceActions';
+import Clipboard from '@react-native-clipboard/clipboard';
+import useOpenGoogleTranslate from './useOpenGoogleTranslate';
+import AreYouSureSection from './AreYouSureSection';
 
 const NestedwordsWithHyphens = ({
   segment,
@@ -206,6 +210,7 @@ const DifficultSentenceWidget = ({
   const [showAllMatchedWordsState, setShowAllMatchedWordsState] =
     useState(false);
   const [matchedWordListState, setMatchedWordListState] = useState([]);
+  const [highlightedIndices, setHighlightedIndices] = useState([]);
 
   const {getThisSentencesWordList} = useData();
 
@@ -438,7 +443,27 @@ const DifficultSentenceWidget = ({
     }
   };
 
+  const handleSettingHighlightmode = () => {
+    if (sentence.id === sentenceBeingHighlightedState) {
+      setSentenceBeingHighlightedState('');
+    } else {
+      setSentenceBeingHighlightedState(sentence.id);
+    }
+  };
+
+  const {openGoogleTranslateApp} = useOpenGoogleTranslate();
+
+  const handleOpenGoogleTranslate = () => {
+    openGoogleTranslateApp(targetLang);
+  };
+
   const {dueColorState} = getDueDateText(dueStatus);
+
+  const handleCopyText = () => {
+    Clipboard.setString(targetLang);
+  };
+  const isDueNow =
+    sentence?.nextReview || new Date(sentence.reviewData.due) < new Date();
 
   return (
     <View
@@ -453,20 +478,34 @@ const DifficultSentenceWidget = ({
         dueText={dueDate}
         handleNavigation={handleNavigation}
       />
+      <DifficultSentenceActions
+        isDueNow={isDueNow}
+        updateSentenceData={updateSentenceData}
+        sentence={sentence}
+        sentenceBeingHighlightedState={sentenceBeingHighlightedState}
+        handleSettingHighlightmode={handleSettingHighlightmode}
+        setSentenceBeingHighlightedState={setSentenceBeingHighlightedState}
+        handleCopyText={handleCopyText}
+        handleOpenGoogleTranslate={handleOpenGoogleTranslate}
+        setHighlightedIndices={setHighlightedIndices}
+        setShowReviewSettings={setShowReviewSettings}
+        handleShowWords={handleShowAllMatchedWords}
+      />
+      {showReviewSettings ? (
+        <AreYouSureSection
+          handleClose={() => setShowReviewSettings(false)}
+          handleYesSure={handleDeleteContent}
+        />
+      ) : null}
       <DifficultSentenceContent
         targetLang={targetLang}
         baseLang={baseLang}
         sentenceId={id}
-        setShowReviewSettings={setShowReviewSettings}
         sentenceBeingHighlightedState={sentenceBeingHighlightedState}
         setSentenceBeingHighlightedState={setSentenceBeingHighlightedState}
-        updateSentenceData={updateSentenceData}
-        sentence={sentence}
-        handleClose={() => setShowReviewSettings(false)}
-        handleYesSure={handleDeleteContent}
-        showReviewSettings={showReviewSettings}
-        handleShowAllMatchedWords={handleShowAllMatchedWords}
         safeTextFunc={getSafeText}
+        highlightedIndices={highlightedIndices}
+        setHighlightedIndices={setHighlightedIndices}
       />
       <BottomAudioSection
         sentence={sentence}
