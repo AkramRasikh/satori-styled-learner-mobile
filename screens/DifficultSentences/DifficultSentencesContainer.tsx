@@ -1,14 +1,15 @@
 import React, {useEffect, useState} from 'react';
 import {useSelector} from 'react-redux';
-import {Button, ScrollView, Text, TouchableOpacity, View} from 'react-native';
+import {ScrollView, View} from 'react-native';
 import LoadingScreen from '../../components/LoadingScreen';
-import PillButton from '../../components/PillButton';
 import ScreenContainerComponent from '../../components/ScreenContainerComponent';
 import useData from '../../context/Data/useData';
 import useDifficultSentences from '../../context/DifficultSentences/useDifficultSentencesProvider';
 import WordModalDifficultSentence from '../../components/WordModalDifficultSentence';
 import DifficultSentenceComponent from '../../components/DifficultSentence';
 import DifficultSentenceHeaderSection from './DifficultSentencesHeaderSection';
+import DifficultSentencesTopics from './DifficultSentencesTopics';
+import DifficultSentencesWordNavigator from './DifficultSentencesWordNavigator';
 
 const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
   const [toggleableSentencesState, setToggleableSentencesState] = useState([]);
@@ -250,49 +251,16 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
           contentInsetAdjustmentBehavior="automatic"
           style={{paddingBottom: 30}}>
           {generalTopicsAvailableState ? (
-            <View
-              style={{display: 'flex', flexDirection: 'row', flexWrap: 'wrap'}}>
-              {Object.entries(generalTopicsAvailableState).map(
-                ([generalTopic, numberOfSentences]) => {
-                  return (
-                    <View
-                      key={generalTopic}
-                      style={{
-                        backgroundColor:
-                          generalTopic === selectedGeneralTopicState
-                            ? '#ff9999'
-                            : 'grey',
-                        margin: 5,
-                        padding: 5,
-                        borderRadius: 5,
-                      }}>
-                      <TouchableOpacity
-                        onPress={() =>
-                          handleShowThisTopicsSentences(generalTopic)
-                        }>
-                        <Text>
-                          {generalTopic} ({numberOfSentences})
-                        </Text>
-                      </TouchableOpacity>
-                    </View>
-                  );
-                },
-              )}
-            </View>
+            <DifficultSentencesTopics
+              generalTopicsAvailableState={generalTopicsAvailableState}
+              handleShowThisTopicsSentences={handleShowThisTopicsSentences}
+              selectedGeneralTopicState={selectedGeneralTopicState}
+            />
           ) : null}
-          <View
-            style={{
-              alignSelf: 'flex-start',
-              backgroundColor: '#90EE90',
-              margin: 5,
-              padding: 5,
-              borderRadius: 5,
-            }}>
-            <TouchableOpacity onPress={handleNavigationToWords}>
-              <Text>Words ({numberOfWords})</Text>
-            </TouchableOpacity>
-          </View>
-
+          <DifficultSentencesWordNavigator
+            handleNavigationToWords={handleNavigationToWords}
+            numberOfWords={numberOfWords}
+          />
           <View style={{marginTop: 10}}>
             {toggleableSentencesState.map((sentence, index) => {
               const toggleableSentencesStateLength =
