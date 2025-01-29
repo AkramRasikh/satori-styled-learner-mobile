@@ -138,7 +138,7 @@ const ThisSnippetContainer = ({
     />
   );
 };
-const DifficultSentenceSnippetContainer = ({
+const DifficultSentenceSnippets = ({
   isLoaded,
   soundRef,
   snippetsLocalAndDb,
@@ -173,4 +173,4 @@ const DifficultSentenceSnippetContainer = ({
     : null;
 };
 
-export default DifficultSentenceSnippetContainer;
+export default DifficultSentenceSnippets;

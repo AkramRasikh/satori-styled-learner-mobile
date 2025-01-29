@@ -6,7 +6,7 @@ import useMP3File from '../../hooks/useMP3File';
 import useLoadAudioInstance from '../../hooks/useLoadAudioInstance';
 import {generateRandomId} from '../../utils/generate-random-id';
 import DifficultSentenceAudioContainer from '../DifficultSentenceAudioContainer';
-import DifficultSentenceSnippetContainer from './DifficultSentenceSnippetContainer';
+import DifficultSentenceSnippets from './DifficultSentenceSnippets';
 
 const DifficultSentenceAudioSection = ({
   sentence,
@@ -91,7 +91,7 @@ const DifficultSentenceAudioSection = ({
         isMediaContent={isMediaContent}
       />
       {miniSnippets?.length > 0 && (
-        <DifficultSentenceSnippetContainer
+        <DifficultSentenceSnippets
           isLoaded={isLoaded}
           soundRef={soundRef}
           snippetsLocalAndDb={miniSnippets}
