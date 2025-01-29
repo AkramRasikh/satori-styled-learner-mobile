@@ -4,24 +4,18 @@ import Clipboard from '@react-native-clipboard/clipboard';
 import useOpenGoogleTranslate from './useOpenGoogleTranslate';
 import HighlightTextZone from './HighlightTextZone';
 import useData from '../context/Data/useData';
-import DifficultSentenceContentHeader from './DifficultSentenceContentHeader';
 import DifficultSentenceTopHeaderActions from './DifficultSentenceTopHeaderActions';
 import AreYouSureSection from './AreYouSureSection';
 
 const DifficultSentenceContent = ({
-  topic,
-  isCore,
   targetLang,
   baseLang,
-  dueText,
   setShowReviewSettings,
-  dueColorState,
   sentenceBeingHighlightedState,
   setSentenceBeingHighlightedState,
   sentenceId,
   updateSentenceData,
   sentence,
-  navigation,
   handleClose,
   handleYesSure,
   showReviewSettings,
@@ -37,7 +31,6 @@ const DifficultSentenceContent = ({
     sentence?.nextReview || new Date(sentence.reviewData.due) < new Date();
 
   const highlightMode = sentenceId === sentenceBeingHighlightedState;
-  const isSentenceHelper = sentence?.isSentenceHelper;
 
   const {openGoogleTranslateApp} = useOpenGoogleTranslate();
 
@@ -61,14 +54,14 @@ const DifficultSentenceContent = ({
     openGoogleTranslateApp(targetLang);
   };
 
-  const handleNavigation = () => {
-    if (!isSentenceHelper) {
-      navigation.navigate('ContentScreen', {
-        selectedTopicIndex: sentence.contentIndex,
-        targetSentenceId: sentenceId,
-      });
-    }
-  };
+  // const handleNavigation = () => {
+  //   if (!isSentenceHelper) {
+  //     navigation.navigate('ContentScreen', {
+  //       selectedTopicIndex: sentence.contentIndex,
+  //       targetSentenceId: sentenceId,
+  //     });
+  //   }
+  // };
 
   const handleSaveWordToFB = ({
     highlightedWord,
@@ -86,13 +79,6 @@ const DifficultSentenceContent = ({
 
   return (
     <>
-      <DifficultSentenceContentHeader
-        topic={topic}
-        dueColorState={dueColorState}
-        isCore={isCore}
-        dueText={dueText}
-        handleNavigation={handleNavigation}
-      />
       <DifficultSentenceTopHeaderActions
         isDueNow={isDueNow}
         updateSentenceData={updateSentenceData}

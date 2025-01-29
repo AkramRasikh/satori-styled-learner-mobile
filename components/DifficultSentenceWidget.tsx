@@ -14,6 +14,7 @@ import DifficultSentenceSnippetContainer from './DifficultSentenceSnippetContain
 import {SRSTogglesQuickComprehensiveDiffSentencesWords} from './SRSToggles';
 import useHighlightWordToWordBank from '../hooks/useHighlightWordToWordBank';
 import {checkOverlap} from '../utils/check-word-overlap';
+import DifficultSentenceTitleAndStatus from './DifficultSentence/DifficultSentenceTitleAndStatus';
 
 const NestedwordsWithHyphens = ({
   segment,
@@ -426,6 +427,17 @@ const DifficultSentenceWidget = ({
     );
   };
 
+  const handleNavigation = () => {
+    const isSentenceHelper = sentence?.isSentenceHelper;
+
+    if (!isSentenceHelper) {
+      navigation.navigate('ContentScreen', {
+        selectedTopicIndex: sentence.contentIndex,
+        targetSentenceId: sentence.id,
+      });
+    }
+  };
+
   const {dueColorState} = getDueDateText(dueStatus);
 
   return (
@@ -434,20 +446,22 @@ const DifficultSentenceWidget = ({
         gap: 10,
         marginBottom: 10,
       }}>
-      <DifficultSentenceContent
+      <DifficultSentenceTitleAndStatus
         topic={topic}
+        dueColorState={dueColorState}
         isCore={isCore}
+        dueText={dueDate}
+        handleNavigation={handleNavigation}
+      />
+      <DifficultSentenceContent
         targetLang={targetLang}
         baseLang={baseLang}
         sentenceId={id}
         setShowReviewSettings={setShowReviewSettings}
-        dueText={dueDate}
-        dueColorState={dueColorState}
         sentenceBeingHighlightedState={sentenceBeingHighlightedState}
         setSentenceBeingHighlightedState={setSentenceBeingHighlightedState}
         updateSentenceData={updateSentenceData}
         sentence={sentence}
-        navigation={navigation}
         handleClose={() => setShowReviewSettings(false)}
         handleYesSure={handleDeleteContent}
         showReviewSettings={showReviewSettings}

@@ -1,4 +1,4 @@
-import {Text, TouchableOpacity, View} from 'react-native';
+import React, {Text, TouchableOpacity, View} from 'react-native';
 
 const DueColorMarker = ({dueColorState}) => (
   <View
@@ -12,7 +12,7 @@ const DueColorMarker = ({dueColorState}) => (
   />
 );
 
-export const DifficultSentenceContentHeader = ({
+const DifficultSentenceTitleAndStatus = ({
   topic,
   dueColorState,
   isCore,
@@ -44,4 +44,4 @@ export const DifficultSentenceContentHeader = ({
   );
 };
 
-export default DifficultSentenceContentHeader;
+export default DifficultSentenceTitleAndStatus;
