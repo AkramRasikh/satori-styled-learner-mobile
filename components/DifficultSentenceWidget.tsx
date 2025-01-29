@@ -67,32 +67,6 @@ const NestedwordsWithHyphens = ({
   );
 };
 
-const TopSection = ({thisSentenceIsLoading}) => {
-  return (
-    <>
-      {thisSentenceIsLoading && (
-        <View
-          style={{
-            display: 'flex',
-            justifyContent: 'center',
-            position: 'absolute',
-            right: '50%',
-            top: '50%',
-            opacity: 1,
-            zIndex: 100,
-          }}>
-          <Text
-            style={{
-              fontSize: 30,
-            }}>
-            ⏳
-          </Text>
-        </View>
-      )}
-    </>
-  );
-};
-
 const BottomAudioSection = ({
   sentence,
   addSnippet,
@@ -232,7 +206,7 @@ const DifficultSentenceWidget = ({
     useState(false);
   const [matchedWordListState, setMatchedWordListState] = useState([]);
 
-  const {updatingSentenceState, getThisSentencesWordList} = useData();
+  const {getThisSentencesWordList} = useData();
 
   const {underlineWordsInSentence} = useHighlightWordToWordBank({
     pureWordsUnique: pureWords,
@@ -288,8 +262,6 @@ const DifficultSentenceWidget = ({
     });
     setShowReviewSettings(false);
   };
-
-  const thisSentenceIsLoading = updatingSentenceState === sentence.id;
 
   const seperatedWords = word => {
     const surfaceForm = word.surfaceForm;
@@ -459,13 +431,9 @@ const DifficultSentenceWidget = ({
   return (
     <View
       style={{
-        display: 'flex',
-        flexDirection: 'column',
         gap: 10,
         marginBottom: 10,
-        opacity: thisSentenceIsLoading ? 0.5 : 1,
       }}>
-      <TopSection thisSentenceIsLoading={thisSentenceIsLoading} />
       <DifficultSentenceContent
         topic={topic}
         isCore={isCore}

@@ -5,9 +5,9 @@ import LoadingScreen from '../../components/LoadingScreen';
 import PillButton from '../../components/PillButton';
 import ScreenContainerComponent from '../../components/ScreenContainerComponent';
 import useData from '../../context/Data/useData';
-import DifficultSentenceMapContainer from '../../components/DifficultSentenceMapContainer';
 import useDifficultSentences from '../../context/DifficultSentences/useDifficultSentencesProvider';
 import WordModalDifficultSentence from '../../components/WordModalDifficultSentence';
+import DifficultSentenceContainer from '../../components/DifficultSentence';
 
 const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
   const [toggleableSentencesState, setToggleableSentencesState] = useState([]);
@@ -308,25 +308,36 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
             </TouchableOpacity>
           </View>
 
-          <DifficultSentenceMapContainer
-            toggleableSentencesState={toggleableSentencesState.slice(
-              0,
-              sliceArrState,
-            )}
-            addSnippet={handleAddSnippet}
-            updateSentenceData={updateSentenceDataScreenLevel}
-            removeSnippet={handleRemoveSnippet}
-            pureWords={pureWords}
-            sentenceBeingHighlightedState={sentenceBeingHighlightedState}
-            setSentenceBeingHighlightedState={setSentenceBeingHighlightedState}
-            navigation={navigation}
-            sliceArrState={sliceArrState}
-            setSliceArrState={setSliceArrState}
-            realCapacity={realCapacity}
-            handleSelectWord={handleSelectWord}
-            handleWordUpdate={handleWordUpdate}
-            deleteWord={deleteWord}
-          />
+          <View style={{marginTop: 10}}>
+            {toggleableSentencesState.map((sentence, index) => {
+              const toggleableSentencesStateLength =
+                toggleableSentencesState.slice(0, sliceArrState).length;
+              return (
+                <DifficultSentenceContainer
+                  toggleableSentencesStateLength={
+                    toggleableSentencesStateLength
+                  }
+                  addSnippet={handleAddSnippet}
+                  updateSentenceData={updateSentenceDataScreenLevel}
+                  removeSnippet={handleRemoveSnippet}
+                  pureWords={pureWords}
+                  sentenceBeingHighlightedState={sentenceBeingHighlightedState}
+                  setSentenceBeingHighlightedState={
+                    setSentenceBeingHighlightedState
+                  }
+                  navigation={navigation}
+                  sliceArrState={sliceArrState}
+                  setSliceArrState={setSliceArrState}
+                  realCapacity={realCapacity}
+                  handleSelectWord={handleSelectWord}
+                  handleWordUpdate={handleWordUpdate}
+                  deleteWord={deleteWord}
+                  sentence={sentence}
+                  indexNum={index}
+                />
+              );
+            })}
+          </View>
         </ScrollView>
       </View>
     </ScreenContainerComponent>

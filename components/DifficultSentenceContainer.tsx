@@ -4,7 +4,7 @@ import DifficultSentenceWidget from './DifficultSentenceWidget';
 import {calculateDueDate} from '../utils/get-date-due-status';
 import {getTimeDiffSRS} from '../utils/getTimeDiffSRS';
 
-const DifficultSentenceMapContainer = ({
+const DifficultSentenceContainer = ({
   toggleableSentencesState,
   addSnippet,
   updateSentenceData,
@@ -76,4 +76,4 @@ const DifficultSentenceMapContainer = ({
   );
 };
 
-export default DifficultSentenceMapContainer;
+export default DifficultSentenceContainer;
