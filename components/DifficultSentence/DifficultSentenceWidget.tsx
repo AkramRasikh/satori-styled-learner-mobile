@@ -1,4 +1,4 @@
-import React, {Text, View} from 'react-native';
+import React, {View} from 'react-native';
 import {useEffect, useState} from 'react';
 import DifficultSentenceTextContainer from './DifficultSentenceTextContainer';
 import {getDueDateText} from '../../utils/get-date-due-status';
@@ -12,9 +12,8 @@ import useOpenGoogleTranslate from '../useOpenGoogleTranslate';
 import AreYouSureSection from '../AreYouSureSection';
 import DifficultSentenceAudioContainer from './DifficultSentenceAudioContainer';
 import TextSegment from '../TextSegment';
-import {getHexCode} from '../../utils/get-hex-code';
-import TextSegmentWithOverlap from '../TextSegmentWithWordOverlap';
 import DifficultSentenceMappedWords from './DifficultSentenceMappedWords';
+import TextSegmentContainer from '../TextSegmentContainer';
 
 const DifficultSentenceWidget = ({
   sentence,
@@ -126,68 +125,11 @@ const DifficultSentenceWidget = ({
     const textSegments = underlineWordsInSentence(targetText);
     const wordsInOverlapCheck = checkOverlap(matchedWordListState);
     return (
-      <Text>
-        {textSegments.map((segment, index) => {
-          const isPartOfPerfectlyMatchedWord = wordsInOverlapCheck?.find(
-            item =>
-              item.surfaceForm === segment.text ||
-              item.baseForm === segment.text,
-          );
-          const isPartOfMatchedWordIndex = wordsInOverlapCheck?.findIndex(
-            item =>
-              item.surfaceForm === segment.text ||
-              item.baseForm === segment.text,
-          );
-
-          const thisWordsNestedWords =
-            isPartOfPerfectlyMatchedWord &&
-            wordsInOverlapCheck?.filter(
-              item => item?.nestedIn === isPartOfPerfectlyMatchedWord?.id,
-            );
-
-          const nestedCoordinates = thisWordsNestedWords?.map(item => {
-            const nestedValueIndex = matchedWordListState.find(nestedItem => {
-              if (
-                nestedItem.surfaceForm === item.surfaceForm ||
-                nestedItem.baseForm === item.baseForm
-              ) {
-                return true;
-              }
-              return false;
-            });
-            return nestedValueIndex.colorIndex;
-          });
-
-          return (
-            <Text
-              key={index}
-              id={segment.id}
-              selectable={true}
-              style={[
-                segment.style,
-                {
-                  fontSize: 20,
-                  lineHeight: nestedCoordinates?.length === 0 && 24,
-                  color:
-                    nestedCoordinates?.length === 0 &&
-                    isPartOfMatchedWordIndex > -1
-                      ? getHexCode(isPartOfPerfectlyMatchedWord.colorIndex)
-                      : 'black',
-                },
-              ]}>
-              {nestedCoordinates?.length > 0 ? (
-                <TextSegmentWithOverlap
-                  segment={segment}
-                  nestedCoordinates={nestedCoordinates}
-                  colorIndex={isPartOfPerfectlyMatchedWord.colorIndex}
-                />
-              ) : (
-                segment.text
-              )}
-            </Text>
-          );
-        })}
-      </Text>
+      <TextSegmentContainer
+        textSegments={textSegments}
+        wordsInOverlapCheck={wordsInOverlapCheck}
+        matchedWordListState={matchedWordListState}
+      />
     );
   };
 
