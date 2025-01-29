@@ -8,6 +8,7 @@ import useData from '../../context/Data/useData';
 import useDifficultSentences from '../../context/DifficultSentences/useDifficultSentencesProvider';
 import WordModalDifficultSentence from '../../components/WordModalDifficultSentence';
 import DifficultSentenceComponent from '../../components/DifficultSentence';
+import DifficultSentenceHeaderSection from './DifficultSentencesHeaderSection';
 
 const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
   const [toggleableSentencesState, setToggleableSentencesState] = useState([]);
@@ -230,28 +231,13 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
       updatePromptState={updatePromptState}
       marginBottom={30}>
       <View style={{padding: 10, paddingBottom: 30}}>
-        <View>
-          <Text>
-            Difficult Sentences: ({toggleableSentencesState.length}/
-            {difficultSentencesState.length})
-          </Text>
-        </View>
-        <View
-          style={{
-            display: 'flex',
-            flexDirection: 'row',
-            justifyContent: 'space-around',
-            alignItems: 'center',
-            padding: 5,
-          }}>
-          <PillButton
-            isShowDueOnly={isShowDueOnly}
-            setIsShowDueOnly={setIsShowDueOnly}
-          />
-          <View>
-            <Button title="↺" onPress={handleRefreshFunc} />
-          </View>
-        </View>
+        <DifficultSentenceHeaderSection
+          isShowDueOnly={isShowDueOnly}
+          setIsShowDueOnly={setIsShowDueOnly}
+          toggleableSentencesState={toggleableSentencesState}
+          difficultSentencesState={difficultSentencesState}
+          handleRefreshFunc={handleRefreshFunc}
+        />
         {selectedDueCardState && (
           <WordModalDifficultSentence
             visible={selectedDueCardState}
