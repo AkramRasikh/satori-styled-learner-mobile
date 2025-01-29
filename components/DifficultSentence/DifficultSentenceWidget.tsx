@@ -1,17 +1,17 @@
 import React, {Text, TouchableOpacity, View} from 'react-native';
 import {useEffect, useState} from 'react';
-import DifficultSentenceTextContainer from './DifficultSentence/DifficultSentenceTextContainer';
-import {getDueDateText} from '../utils/get-date-due-status';
-import useData from '../context/Data/useData';
-import {SRSTogglesQuickComprehensiveDiffSentencesWords} from './SRSToggles';
-import useHighlightWordToWordBank from '../hooks/useHighlightWordToWordBank';
-import {checkOverlap} from '../utils/check-word-overlap';
-import DifficultSentenceTitleAndStatus from './DifficultSentence/DifficultSentenceTitleAndStatus';
-import DifficultSentenceActions from './DifficultSentence/DifficultSentenceActions';
+import DifficultSentenceTextContainer from './DifficultSentenceTextContainer';
+import {getDueDateText} from '../../utils/get-date-due-status';
+import useData from '../../context/Data/useData';
+import {SRSTogglesQuickComprehensiveDiffSentencesWords} from '../SRSToggles';
+import useHighlightWordToWordBank from '../../hooks/useHighlightWordToWordBank';
+import {checkOverlap} from '../../utils/check-word-overlap';
+import DifficultSentenceTitleAndStatus from './DifficultSentenceTitleAndStatus';
+import DifficultSentenceActions from './DifficultSentenceActions';
 import Clipboard from '@react-native-clipboard/clipboard';
-import useOpenGoogleTranslate from './useOpenGoogleTranslate';
-import AreYouSureSection from './AreYouSureSection';
-import DifficultSentenceAudio from './DifficultSentence/DifficultSentenceAudioContainer';
+import useOpenGoogleTranslate from '../useOpenGoogleTranslate';
+import AreYouSureSection from '../AreYouSureSection';
+import DifficultSentenceAudio from './DifficultSentenceAudioContainer';
 
 const NestedwordsWithHyphens = ({
   segment,

@@ -2,7 +2,7 @@ import React from 'react';
 import {Button, View} from 'react-native';
 import {calculateDueDate} from '../../utils/get-date-due-status';
 import {getTimeDiffSRS} from '../../utils/getTimeDiffSRS';
-import DifficultSentenceWidget from '../DifficultSentenceWidget';
+import DifficultSentenceWidget from './DifficultSentenceWidget';
 import useData from '../../context/Data/useData';
 import LoadingWidget from '../LoadingWidget';
 
