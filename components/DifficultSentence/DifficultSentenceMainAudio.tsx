@@ -1,7 +1,7 @@
 import {Text, TouchableOpacity, View} from 'react-native';
-import SoundWidget from './SoundWidget';
+import SoundWidget from '../SoundWidget';
 
-const DifficultSentenceAudioContainer = ({
+const DifficultSentenceMainAudio = ({
   isLoaded,
   soundRef,
   url,
@@ -40,4 +40,4 @@ const DifficultSentenceAudioContainer = ({
   );
 };
 
-export default DifficultSentenceAudioContainer;
+export default DifficultSentenceMainAudio;

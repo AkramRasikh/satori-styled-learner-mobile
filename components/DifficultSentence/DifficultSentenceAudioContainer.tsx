@@ -5,10 +5,10 @@ import {getFirebaseAudioURL} from '../../hooks/useGetCombinedAudioData';
 import useMP3File from '../../hooks/useMP3File';
 import useLoadAudioInstance from '../../hooks/useLoadAudioInstance';
 import {generateRandomId} from '../../utils/generate-random-id';
-import DifficultSentenceAudioContainer from '../DifficultSentenceAudioContainer';
+import DifficultSentenceMainAudio from './DifficultSentenceMainAudio';
 import DifficultSentenceSnippets from './DifficultSentenceSnippets';
 
-const DifficultSentenceAudioSection = ({
+const DifficultSentenceAudioContainer = ({
   sentence,
   addSnippet,
   removeSnippet,
@@ -76,7 +76,7 @@ const DifficultSentenceAudioSection = ({
 
   return (
     <>
-      <DifficultSentenceAudioContainer
+      <DifficultSentenceMainAudio
         isLoaded={isLoaded}
         soundRef={soundRef}
         url={url}
@@ -109,4 +109,4 @@ const DifficultSentenceAudioSection = ({
   );
 };
 
-export default DifficultSentenceAudioSection;
+export default DifficultSentenceAudioContainer;

@@ -11,7 +11,7 @@ import DifficultSentenceActions from './DifficultSentence/DifficultSentenceActio
 import Clipboard from '@react-native-clipboard/clipboard';
 import useOpenGoogleTranslate from './useOpenGoogleTranslate';
 import AreYouSureSection from './AreYouSureSection';
-import DifficultSentenceAudio from './DifficultSentence/DifficultSentenceAudioSection';
+import DifficultSentenceAudio from './DifficultSentence/DifficultSentenceAudioContainer';
 
 const NestedwordsWithHyphens = ({
   segment,
