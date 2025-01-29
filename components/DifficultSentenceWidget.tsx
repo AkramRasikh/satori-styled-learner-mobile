@@ -1,16 +1,8 @@
 import React, {Text, TouchableOpacity, View} from 'react-native';
-import {useSelector} from 'react-redux';
-import useLoadAudioInstance from '../hooks/useLoadAudioInstance';
-import {useEffect, useRef, useState} from 'react';
-import {getFirebaseAudioURL} from '../hooks/useGetCombinedAudioData';
-import DifficultSentenceContent from './DifficultSentence/DifficultSentenceTextContainer';
+import {useEffect, useState} from 'react';
+import DifficultSentenceTextContainer from './DifficultSentence/DifficultSentenceTextContainer';
 import {getDueDateText} from '../utils/get-date-due-status';
-import useMP3File from '../hooks/useMP3File';
-import {generateRandomId} from '../utils/generate-random-id';
 import useData from '../context/Data/useData';
-import useLanguageSelector from '../context/LanguageSelector/useLanguageSelector';
-import DifficultSentenceAudioContainer from './DifficultSentenceAudioContainer';
-import DifficultSentenceSnippetContainer from './DifficultSentenceSnippetContainer';
 import {SRSTogglesQuickComprehensiveDiffSentencesWords} from './SRSToggles';
 import useHighlightWordToWordBank from '../hooks/useHighlightWordToWordBank';
 import {checkOverlap} from '../utils/check-word-overlap';
@@ -19,6 +11,7 @@ import DifficultSentenceActions from './DifficultSentence/DifficultSentenceActio
 import Clipboard from '@react-native-clipboard/clipboard';
 import useOpenGoogleTranslate from './useOpenGoogleTranslate';
 import AreYouSureSection from './AreYouSureSection';
+import DifficultSentenceAudio from './DifficultSentence/DifficultSentenceAudioSection';
 
 const NestedwordsWithHyphens = ({
   segment,
@@ -69,107 +62,6 @@ const NestedwordsWithHyphens = ({
         {segment.text}
       </Text>
     </View>
-  );
-};
-
-const BottomAudioSection = ({
-  sentence,
-  addSnippet,
-  removeSnippet,
-  indexNum,
-}) => {
-  const [currentTimeState, setCurrentTimeState] = useState(0);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [miniSnippets, setMiniSnippets] = useState([]);
-
-  const targetLanguageSnippetsState = useSelector(state => state.snippets);
-  const {languageSelectedState} = useLanguageSelector();
-
-  useEffect(() => {
-    setMiniSnippets(
-      targetLanguageSnippetsState.filter(
-        snippetData => snippetData.sentenceId === id,
-      ),
-    );
-  }, []);
-
-  const id = sentence.id;
-  const topic = sentence.topic;
-  const isMediaContent = sentence.isMediaContent;
-
-  const audioId = isMediaContent ? topic : id;
-  const soundRef = useRef();
-
-  const url = getFirebaseAudioURL(audioId, languageSelectedState);
-
-  const {loadFile, filePath} = useMP3File(audioId);
-  const {triggerLoadURL, isLoaded} = useLoadAudioInstance({
-    soundRef,
-    url: filePath,
-  });
-
-  const handleLoad = () => {
-    loadFile(audioId, url);
-  };
-
-  useEffect(() => {
-    if (filePath && !isLoaded) {
-      triggerLoadURL();
-    }
-  }, [filePath, triggerLoadURL, isLoaded]);
-
-  useEffect(() => {
-    const isFirst = indexNum === 0;
-    if (!isLoaded && isFirst) {
-      loadFile(audioId, url);
-    }
-  }, [loadFile, isLoaded, indexNum, audioId, url]);
-
-  const handleSnippet = currentTime => {
-    const snippetId = topic + '-' + generateRandomId();
-    const itemToSave = {
-      id: snippetId,
-      sentenceId: id,
-      pointInAudio: currentTime,
-      isIsolated: true,
-      url,
-      topicName: topic,
-    };
-    setMiniSnippets(prev => [...prev, itemToSave]);
-  };
-
-  return (
-    <>
-      <DifficultSentenceAudioContainer
-        isLoaded={isLoaded}
-        soundRef={soundRef}
-        url={url}
-        topic={topic}
-        handleSnippet={handleSnippet}
-        sentence={sentence}
-        isPlaying={isPlaying}
-        setIsPlaying={setIsPlaying}
-        currentTimeState={currentTimeState}
-        setCurrentTimeState={setCurrentTimeState}
-        handleLoad={handleLoad}
-        isMediaContent={isMediaContent}
-      />
-      {miniSnippets?.length > 0 && (
-        <DifficultSentenceSnippetContainer
-          isLoaded={isLoaded}
-          soundRef={soundRef}
-          snippetsLocalAndDb={miniSnippets}
-          setCurrentTimeState={setCurrentTimeState}
-          currentTimeState={currentTimeState}
-          isPlaying={isPlaying}
-          setIsPlaying={setIsPlaying}
-          addSnippet={addSnippet}
-          removeSnippet={removeSnippet}
-          setMiniSnippets={setMiniSnippets}
-          url={url}
-        />
-      )}
-    </>
   );
 };
 
@@ -497,7 +389,7 @@ const DifficultSentenceWidget = ({
           handleYesSure={handleDeleteContent}
         />
       ) : null}
-      <DifficultSentenceContent
+      <DifficultSentenceTextContainer
         targetLang={targetLang}
         baseLang={baseLang}
         sentenceId={id}
@@ -507,7 +399,7 @@ const DifficultSentenceWidget = ({
         highlightedIndices={highlightedIndices}
         setHighlightedIndices={setHighlightedIndices}
       />
-      <BottomAudioSection
+      <DifficultSentenceAudio
         sentence={sentence}
         addSnippet={addSnippet}
         removeSnippet={removeSnippet}

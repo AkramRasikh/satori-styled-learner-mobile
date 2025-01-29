@@ -314,6 +314,7 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
                 toggleableSentencesState.slice(0, sliceArrState).length;
               return (
                 <DifficultSentenceContainer
+                  key={sentence.id}
                   toggleableSentencesStateLength={
                     toggleableSentencesStateLength
                   }

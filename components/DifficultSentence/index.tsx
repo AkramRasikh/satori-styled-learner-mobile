@@ -46,7 +46,6 @@ const DifficultSentenceContainer = ({
 
   return (
     <View
-      key={sentence.id}
       style={{
         paddingBottom: isLastEl ? 100 : 0,
         paddingTop: !isFirst ? 70 : 0,

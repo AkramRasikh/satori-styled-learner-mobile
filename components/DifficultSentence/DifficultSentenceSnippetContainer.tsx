@@ -1,8 +1,8 @@
 import {useEffect, useState} from 'react';
-import useSoundHook from '../hooks/useSoundHook';
-import useSnippetControls from '../hooks/useSnippetControls';
-import useSnippetManageAudioStop from '../hooks/useSnippetManageAudioStop';
-import MiniSnippetTimeChangeHandlers from './MiniSnippetTimeChangeHandlers';
+import useSoundHook from '../../hooks/useSoundHook';
+import useSnippetControls from '../../hooks/useSnippetControls';
+import useSnippetManageAudioStop from '../../hooks/useSnippetManageAudioStop';
+import MiniSnippetTimeChangeHandlers from '../MiniSnippetTimeChangeHandlers';
 
 const hasBeenSnippedFromCollectiveURL = snippet => {
   const snippetURL = snippet.url;
@@ -138,7 +138,6 @@ const ThisSnippetContainer = ({
     />
   );
 };
-
 const DifficultSentenceSnippetContainer = ({
   isLoaded,
   soundRef,
