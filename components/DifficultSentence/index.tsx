@@ -2,7 +2,7 @@ import React from 'react';
 import {Button, View} from 'react-native';
 import {calculateDueDate} from '../../utils/get-date-due-status';
 import {getTimeDiffSRS} from '../../utils/getTimeDiffSRS';
-import DifficultSentenceWidget from './DifficultSentenceWidget';
+import DifficultSentenceBody from './DifficultSentenceBody';
 import useData from '../../context/Data/useData';
 import LoadingWidget from '../LoadingWidget';
 
@@ -52,7 +52,7 @@ const DifficultSentenceComponent = ({
         opacity: thisSentenceIsLoading ? 0.5 : 1,
       }}>
       {thisSentenceIsLoading && <LoadingWidget />}
-      <DifficultSentenceWidget
+      <DifficultSentenceBody
         sentence={sentence}
         updateSentenceData={updateSentenceData}
         dueStatus={dueStatus}

@@ -93,24 +93,6 @@ const DifficultSentenceWidget = ({
     setShowReviewSettings(false);
   };
 
-  const matchedWordsMap = () => {
-    if (matchedWordListState?.length === 0) {
-      return null;
-    }
-    return matchedWordListState.map((item, index) => {
-      return (
-        <DifficultSentenceMappedWords
-          key={index}
-          item={item}
-          handleSelectWord={handleSelectWord}
-          deleteWord={deleteWord}
-          handleUpdateWordFinal={handleUpdateWordFinal}
-          indexNum={index}
-        />
-      );
-    });
-  };
-
   const getSafeTextDefault = targetText => {
     const textSegments = underlineWordsInSentence(targetText);
     return <TextSegment textSegments={textSegments} />;
@@ -213,7 +195,20 @@ const DifficultSentenceWidget = ({
         removeSnippet={removeSnippet}
         indexNum={indexNum}
       />
-      {showAllMatchedWordsState && matchedWordsMap()}
+      {matchedWordListState?.length > 0 &&
+        showAllMatchedWordsState &&
+        matchedWordListState.map((item, index) => {
+          return (
+            <DifficultSentenceMappedWords
+              key={index}
+              item={item}
+              handleSelectWord={handleSelectWord}
+              deleteWord={deleteWord}
+              handleUpdateWordFinal={handleUpdateWordFinal}
+              indexNum={index}
+            />
+          );
+        })}
     </View>
   );
 };
