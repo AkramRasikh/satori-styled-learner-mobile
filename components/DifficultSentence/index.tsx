@@ -11,7 +11,6 @@ const DifficultSentenceComponent = ({
   addSnippet,
   updateSentenceData,
   removeSnippet,
-  pureWords,
   sentenceBeingHighlightedState,
   setSentenceBeingHighlightedState,
   navigation,
@@ -59,7 +58,6 @@ const DifficultSentenceComponent = ({
         dueDate={dueDate}
         addSnippet={addSnippet}
         removeSnippet={removeSnippet}
-        pureWords={pureWords}
         sentenceBeingHighlightedState={sentenceBeingHighlightedState}
         setSentenceBeingHighlightedState={setSentenceBeingHighlightedState}
         navigation={navigation}

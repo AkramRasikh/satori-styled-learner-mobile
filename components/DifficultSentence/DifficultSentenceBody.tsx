@@ -15,13 +15,12 @@ import TextSegment from '../TextSegment';
 import DifficultSentenceMappedWords from './DifficultSentenceMappedWords';
 import TextSegmentContainer from '../TextSegmentContainer';
 
-const DifficultSentenceWidget = ({
+const DifficultSentenceBody = ({
   sentence,
   updateSentenceData,
   dueStatus,
   addSnippet,
   removeSnippet,
-  pureWords,
   sentenceBeingHighlightedState,
   setSentenceBeingHighlightedState,
   dueDate,
@@ -37,7 +36,7 @@ const DifficultSentenceWidget = ({
   const [matchedWordListState, setMatchedWordListState] = useState([]);
   const [highlightedIndices, setHighlightedIndices] = useState([]);
 
-  const {getThisSentencesWordList} = useData();
+  const {getThisSentencesWordList, pureWords} = useData();
 
   const {underlineWordsInSentence} = useHighlightWordToWordBank({
     pureWordsUnique: pureWords,
@@ -215,4 +214,4 @@ const DifficultSentenceWidget = ({
   );
 };
 
-export default DifficultSentenceWidget;
+export default DifficultSentenceBody;

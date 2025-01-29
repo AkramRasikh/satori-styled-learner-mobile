@@ -29,7 +29,6 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
     updatePromptState,
     addSnippet,
     removeSnippet,
-    pureWords,
     deleteWord,
     updateWordData,
   } = useData();
@@ -321,7 +320,6 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
                   addSnippet={handleAddSnippet}
                   updateSentenceData={updateSentenceDataScreenLevel}
                   removeSnippet={handleRemoveSnippet}
-                  pureWords={pureWords}
                   sentenceBeingHighlightedState={sentenceBeingHighlightedState}
                   setSentenceBeingHighlightedState={
                     setSentenceBeingHighlightedState
