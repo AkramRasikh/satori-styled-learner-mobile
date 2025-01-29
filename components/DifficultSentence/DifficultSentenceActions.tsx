@@ -35,6 +35,7 @@ const DifficultSentenceActions = ({
       ) : null}
       <View
         style={{
+          marginTop: 5,
           flexDirection: 'row',
           gap: 15,
           marginVertical: 'auto',
