@@ -147,6 +147,9 @@ const DifficultSentenceWidget = ({
   const isDueNow =
     sentence?.nextReview || new Date(sentence.reviewData.due) < new Date();
 
+  const showMatchedWordsKey =
+    matchedWordListState?.length > 0 && showAllMatchedWordsState;
+
   return (
     <View
       style={{
@@ -195,8 +198,7 @@ const DifficultSentenceWidget = ({
         removeSnippet={removeSnippet}
         indexNum={indexNum}
       />
-      {matchedWordListState?.length > 0 &&
-        showAllMatchedWordsState &&
+      {showMatchedWordsKey &&
         matchedWordListState.map((item, index) => {
           return (
             <DifficultSentenceMappedWords
