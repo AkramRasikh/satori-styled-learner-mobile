@@ -392,7 +392,7 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
       setTimeout(() => setUpdatePromptState(''), 3000);
       return true;
     } catch (error) {
-      console.log('## updateWordData', {error});
+      console.log('## updateWordData DataProvider', {error});
     }
   };
 

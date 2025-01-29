@@ -88,7 +88,7 @@ export const WordDataProvider = ({children}: PropsWithChildren<{}>) => {
       );
       return true;
     } catch (error) {
-      console.log('## updateWordData', {error});
+      console.log('## updateWordData WordProvider', {error});
     }
   };
 
