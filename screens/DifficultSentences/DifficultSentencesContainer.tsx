@@ -7,7 +7,7 @@ import ScreenContainerComponent from '../../components/ScreenContainerComponent'
 import useData from '../../context/Data/useData';
 import useDifficultSentences from '../../context/DifficultSentences/useDifficultSentencesProvider';
 import WordModalDifficultSentence from '../../components/WordModalDifficultSentence';
-import DifficultSentenceContainer from '../../components/DifficultSentence';
+import DifficultSentenceComponent from '../../components/DifficultSentence';
 
 const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
   const [toggleableSentencesState, setToggleableSentencesState] = useState([]);
@@ -313,7 +313,7 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
               const toggleableSentencesStateLength =
                 toggleableSentencesState.slice(0, sliceArrState).length;
               return (
-                <DifficultSentenceContainer
+                <DifficultSentenceComponent
                   key={sentence.id}
                   toggleableSentencesStateLength={
                     toggleableSentencesStateLength

@@ -6,7 +6,7 @@ import DifficultSentenceWidget from './DifficultSentenceWidget';
 import useData from '../../context/Data/useData';
 import LoadingWidget from '../LoadingWidget';
 
-const DifficultSentenceContainer = ({
+const DifficultSentenceComponent = ({
   toggleableSentencesStateLength,
   addSnippet,
   updateSentenceData,
@@ -78,4 +78,4 @@ const DifficultSentenceContainer = ({
   );
 };
 
-export default DifficultSentenceContainer;
+export default DifficultSentenceComponent;
