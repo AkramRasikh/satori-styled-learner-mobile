@@ -3,7 +3,6 @@ import {Button, View} from 'react-native';
 import {calculateDueDate} from '../../utils/get-date-due-status';
 import {getTimeDiffSRS} from '../../utils/getTimeDiffSRS';
 import DifficultSentenceBody from './DifficultSentenceBody';
-import useData from '../../context/Data/useData';
 import LoadingWidget from '../LoadingWidget';
 
 const DifficultSentenceComponent = ({
@@ -22,9 +21,8 @@ const DifficultSentenceComponent = ({
   deleteWord,
   sentence,
   indexNum,
+  updatingSentenceState,
 }) => {
-  const {updatingSentenceState} = useData();
-
   const todayDateObj = new Date();
 
   const isLastEl = toggleableSentencesStateLength === indexNum + 1;

@@ -33,6 +33,7 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
     removeSnippet,
     deleteWord,
     updateWordData,
+    updatingSentenceState,
   } = useData();
 
   const {
@@ -226,6 +227,11 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
   }
 
   const realCapacity = toggleableSentencesState.length;
+  const slicedRenderedSentenceArr = toggleableSentencesState.slice(
+    0,
+    sliceArrState,
+  );
+  const toggleableSentencesStateLength = slicedRenderedSentenceArr.length;
 
   return (
     <ScreenContainerComponent
@@ -262,34 +268,29 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
             numberOfWords={numberOfWords}
           />
           <View style={{marginTop: 10}}>
-            {toggleableSentencesState.map((sentence, index) => {
-              const toggleableSentencesStateLength =
-                toggleableSentencesState.slice(0, sliceArrState).length;
-              return (
-                <DifficultSentenceComponent
-                  key={sentence.id}
-                  toggleableSentencesStateLength={
-                    toggleableSentencesStateLength
-                  }
-                  addSnippet={handleAddSnippet}
-                  updateSentenceData={updateSentenceDataScreenLevel}
-                  removeSnippet={handleRemoveSnippet}
-                  sentenceBeingHighlightedState={sentenceBeingHighlightedState}
-                  setSentenceBeingHighlightedState={
-                    setSentenceBeingHighlightedState
-                  }
-                  navigation={navigation}
-                  sliceArrState={sliceArrState}
-                  setSliceArrState={setSliceArrState}
-                  realCapacity={realCapacity}
-                  handleSelectWord={handleSelectWord}
-                  handleWordUpdate={handleWordUpdate}
-                  deleteWord={deleteWord}
-                  sentence={sentence}
-                  indexNum={index}
-                />
-              );
-            })}
+            {slicedRenderedSentenceArr.map((sentence, index) => (
+              <DifficultSentenceComponent
+                key={sentence.id}
+                toggleableSentencesStateLength={toggleableSentencesStateLength}
+                addSnippet={handleAddSnippet}
+                updateSentenceData={updateSentenceDataScreenLevel}
+                removeSnippet={handleRemoveSnippet}
+                sentenceBeingHighlightedState={sentenceBeingHighlightedState}
+                setSentenceBeingHighlightedState={
+                  setSentenceBeingHighlightedState
+                }
+                navigation={navigation}
+                sliceArrState={sliceArrState}
+                setSliceArrState={setSliceArrState}
+                realCapacity={realCapacity}
+                handleSelectWord={handleSelectWord}
+                handleWordUpdate={handleWordUpdate}
+                deleteWord={deleteWord}
+                sentence={sentence}
+                updatingSentenceState={updatingSentenceState}
+                indexNum={index}
+              />
+            ))}
           </View>
         </ScrollView>
       </View>
