@@ -11,7 +11,7 @@ import DifficultSentenceActions from './DifficultSentenceActions';
 import Clipboard from '@react-native-clipboard/clipboard';
 import useOpenGoogleTranslate from '../useOpenGoogleTranslate';
 import AreYouSureSection from '../AreYouSureSection';
-import DifficultSentenceAudio from './DifficultSentenceAudioContainer';
+import DifficultSentenceAudioContainer from './DifficultSentenceAudioContainer';
 
 const NestedwordsWithHyphens = ({
   segment,
@@ -399,7 +399,7 @@ const DifficultSentenceWidget = ({
         highlightedIndices={highlightedIndices}
         setHighlightedIndices={setHighlightedIndices}
       />
-      <DifficultSentenceAudio
+      <DifficultSentenceAudioContainer
         sentence={sentence}
         addSnippet={addSnippet}
         removeSnippet={removeSnippet}
