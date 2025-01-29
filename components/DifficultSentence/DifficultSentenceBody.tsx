@@ -36,7 +36,7 @@ const DifficultSentenceBody = ({
   const [matchedWordListState, setMatchedWordListState] = useState([]);
   const [highlightedIndices, setHighlightedIndices] = useState([]);
 
-  const {getThisSentencesWordList, pureWords} = useData();
+  const {getThisSentencesWordList, pureWords, saveWordFirebase} = useData();
 
   const {underlineWordsInSentence} = useHighlightWordToWordBank({
     pureWordsUnique: pureWords,
@@ -115,7 +115,6 @@ const DifficultSentenceBody = ({
 
   const handleNavigation = () => {
     const isSentenceHelper = sentence?.isSentenceHelper;
-
     if (!isSentenceHelper) {
       navigation.navigate('ContentScreen', {
         selectedTopicIndex: sentence.contentIndex,
@@ -190,6 +189,7 @@ const DifficultSentenceBody = ({
         safeTextFunc={getSafeText}
         highlightedIndices={highlightedIndices}
         setHighlightedIndices={setHighlightedIndices}
+        saveWordFirebase={saveWordFirebase}
       />
       <DifficultSentenceAudioContainer
         sentence={sentence}

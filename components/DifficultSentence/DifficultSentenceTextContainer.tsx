@@ -1,7 +1,6 @@
 import React, {useState} from 'react';
 import {Text, View} from 'react-native';
 import HighlightTextZone from '../HighlightTextZone';
-import useData from '../../context/Data/useData';
 
 const DifficultSentenceTextContainer = ({
   targetLang,
@@ -12,10 +11,9 @@ const DifficultSentenceTextContainer = ({
   safeTextFunc,
   highlightedIndices,
   setHighlightedIndices,
+  saveWordFirebase,
 }) => {
   const [containerWidth, setContainerWidth] = useState(0);
-
-  const {saveWordFirebase} = useData();
 
   const highlightMode = sentenceId === sentenceBeingHighlightedState;
 
