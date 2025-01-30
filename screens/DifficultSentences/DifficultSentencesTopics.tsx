@@ -1,34 +1,38 @@
-import React, {Text, TouchableOpacity, View} from 'react-native';
+import React, {View} from 'react-native';
+import {FAB, MD2Colors} from 'react-native-paper';
 
 const DifficultSentencesTopics = ({
   generalTopicsAvailableState,
   handleShowThisTopicsSentences,
   selectedGeneralTopicState,
-}) => (
-  <View style={{display: 'flex', flexDirection: 'row', flexWrap: 'wrap'}}>
-    {Object.entries(generalTopicsAvailableState).map(
-      ([generalTopic, numberOfSentences]) => {
+}) => {
+  const statesMappedArr = Object.entries(generalTopicsAvailableState);
+  return (
+    <View
+      style={{
+        display: 'flex',
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        gap: 5,
+        marginTop: 10,
+      }}>
+      {statesMappedArr.map(([generalTopic, numberOfSentences]) => {
+        const isSelected = generalTopic === selectedGeneralTopicState;
+        const label = `${generalTopic} (${numberOfSentences})`;
         return (
-          <View
-            key={generalTopic}
+          <FAB
+            label={label}
+            onPress={() => handleShowThisTopicsSentences(generalTopic)}
+            customSize={30}
+            icon={isSelected ? 'check' : ''}
             style={{
-              backgroundColor:
-                generalTopic === selectedGeneralTopicState ? '#ff9999' : 'grey',
-              margin: 5,
-              padding: 5,
-              borderRadius: 5,
-            }}>
-            <TouchableOpacity
-              onPress={() => handleShowThisTopicsSentences(generalTopic)}>
-              <Text>
-                {generalTopic} ({numberOfSentences})
-              </Text>
-            </TouchableOpacity>
-          </View>
+              backgroundColor: isSelected ? MD2Colors.purple100 : '',
+            }}
+          />
         );
-      },
-    )}
-  </View>
-);
+      })}
+    </View>
+  );
+};
 
 export default DifficultSentencesTopics;

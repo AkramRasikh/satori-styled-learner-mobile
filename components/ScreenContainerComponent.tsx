@@ -10,7 +10,7 @@ const ScreenContainerComponent = ({
   return (
     <SafeAreaView
       style={{
-        backgroundColor: '#D3D3D3',
+        backgroundColor: '#FFEEEE',
         minHeight: '100%',
         marginBottom,
       }}>

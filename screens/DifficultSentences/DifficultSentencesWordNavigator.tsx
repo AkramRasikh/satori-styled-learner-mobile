@@ -1,21 +1,27 @@
-import React, {Text, TouchableOpacity, View} from 'react-native';
+import React, {View} from 'react-native';
+import {FAB, MD2Colors} from 'react-native-paper';
 
 const DifficultSentencesWordNavigator = ({
   handleNavigationToWords,
   numberOfWords,
-}) => (
-  <View
-    style={{
-      alignSelf: 'flex-start',
-      backgroundColor: '#90EE90',
-      margin: 5,
-      padding: 5,
-      borderRadius: 5,
-    }}>
-    <TouchableOpacity onPress={handleNavigationToWords}>
-      <Text>Words ({numberOfWords})</Text>
-    </TouchableOpacity>
-  </View>
-);
+}) => {
+  const label = `Words (${numberOfWords})`;
+  return (
+    <View
+      style={{
+        marginTop: 5,
+        alignSelf: 'flex-start',
+      }}>
+      <FAB
+        label={label}
+        onPress={handleNavigationToWords}
+        customSize={30}
+        style={{
+          backgroundColor: MD2Colors.green100,
+        }}
+      />
+    </View>
+  );
+};
 
 export default DifficultSentencesWordNavigator;
