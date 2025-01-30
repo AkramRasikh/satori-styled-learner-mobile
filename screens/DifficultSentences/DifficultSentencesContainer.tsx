@@ -7,9 +7,9 @@ import useData from '../../context/Data/useData';
 import useDifficultSentences from '../../context/DifficultSentences/useDifficultSentencesProvider';
 import WordModalDifficultSentence from '../../components/WordModalDifficultSentence';
 import DifficultSentenceComponent from '../../components/DifficultSentence';
-import DifficultSentenceHeaderSection from './DifficultSentencesHeaderSection';
 import DifficultSentencesTopics from './DifficultSentencesTopics';
 import DifficultSentencesWordNavigator from './DifficultSentencesWordNavigator';
+import DifficultSentencesSegmentHeader from './DifficultSentencesSegmentHeader';
 
 const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
   const [toggleableSentencesState, setToggleableSentencesState] = useState([]);
@@ -238,13 +238,6 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
       updatePromptState={updatePromptState}
       marginBottom={30}>
       <View style={{padding: 10, paddingBottom: 30}}>
-        <DifficultSentenceHeaderSection
-          isShowDueOnly={isShowDueOnly}
-          setIsShowDueOnly={setIsShowDueOnly}
-          toggleableSentencesState={toggleableSentencesState}
-          difficultSentencesState={difficultSentencesState}
-          handleRefreshFunc={handleRefreshFunc}
-        />
         {selectedDueCardState && (
           <WordModalDifficultSentence
             visible={selectedDueCardState}
@@ -253,6 +246,12 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
             deleteWord={() => handleDeleteWord(selectedDueCardState)}
           />
         )}
+        <DifficultSentencesSegmentHeader
+          dueLength={toggleableSentencesState.length}
+          allLength={difficultSentencesState.length}
+          isShowDueOnly={isShowDueOnly}
+          setIsShowDueOnly={setIsShowDueOnly}
+        />
         <ScrollView
           contentInsetAdjustmentBehavior="automatic"
           style={{paddingBottom: 30}}>
