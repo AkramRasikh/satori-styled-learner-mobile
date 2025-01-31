@@ -4,6 +4,7 @@ import {
   IconButton,
   MD2Colors,
   MD3Colors,
+  ProgressBar,
   Text,
 } from 'react-native-paper';
 import DifficultSentenceTextContainer from '../DifficultSentence/DifficultSentenceTextContainer';
@@ -218,6 +219,10 @@ const NewSRSToggles = ({sentence, updateSentenceData, contentIndex}) => {
   );
 };
 
+const ProgressBarComponent = ({progress = 0.5}) => {
+  return <ProgressBar progress={progress} style={{marginVertical: 5}} />;
+};
+
 const TopHeader = ({handleClickDelete, handleNavigateToTopic}) => {
   return (
     <View
@@ -298,12 +303,12 @@ const NewDifficultBase = () => {
         setHighlightedIndices={setHighlightedIndices}
         saveWordFirebase={() => {}}
       />
-
       <NewSRSToggles
         sentence={props}
         updateSentenceData={props.updateSentenceData}
         contentIndex={props.contentIndex}
       />
+      <ProgressBarComponent />
     </View>
   );
 };
