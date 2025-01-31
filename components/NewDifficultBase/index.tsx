@@ -2,7 +2,6 @@ import React, {TouchableOpacity, View} from 'react-native';
 import {
   Button,
   DefaultTheme,
-  Divider,
   IconButton,
   MD2Colors,
   MD3Colors,
@@ -172,6 +171,8 @@ const NewSRSToggles = ({sentence, updateSentenceData, contentIndex}) => {
 
   const handleSRSClick = () => {};
   const audioProgressText = '4.20/30';
+  // mode?: 'text' | 'outlined' | 'contained' | 'elevated' | 'contained-tonal';
+
   return (
     <View
       style={{
@@ -181,31 +182,47 @@ const NewSRSToggles = ({sentence, updateSentenceData, contentIndex}) => {
       }}>
       <View style={{display: 'flex', flexDirection: 'row', gap: 5}}>
         <Button
-          compact
           onPress={handleSRSClick}
-          buttonColor={MD2Colors.deepPurple800}
-          textColor={MD2Colors.white}>
+          compact
+          mode="outlined"
+          buttonColor="transparent"
+          textColor={DefaultTheme.colors.onSurface}
+          labelStyle={{
+            fontSize: 12,
+          }}>
           {againText}
         </Button>
         <Button
-          compact
           onPress={handleSRSClick}
-          buttonColor={MD2Colors.deepPurple800}
-          textColor={MD2Colors.white}>
+          compact
+          mode="outlined"
+          buttonColor="transparent"
+          textColor={DefaultTheme.colors.onSurface}
+          labelStyle={{
+            fontSize: 12,
+          }}>
           {hardText}
         </Button>
         <Button
-          compact
           onPress={handleSRSClick}
-          buttonColor={MD2Colors.deepPurple800}
-          textColor={MD2Colors.white}>
+          compact
+          mode="outlined"
+          buttonColor="transparent"
+          textColor={DefaultTheme.colors.onSurface}
+          labelStyle={{
+            fontSize: 12,
+          }}>
           {goodText}
         </Button>
         <Button
-          compact
           onPress={handleSRSClick}
-          buttonColor={MD2Colors.deepPurple800}
-          textColor={MD2Colors.white}>
+          compact
+          mode="outlined"
+          buttonColor="transparent"
+          textColor={DefaultTheme.colors.onSurface}
+          labelStyle={{
+            fontSize: 12,
+          }}>
           {easyText}
         </Button>
       </View>
