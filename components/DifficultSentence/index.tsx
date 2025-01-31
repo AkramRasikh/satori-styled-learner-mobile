@@ -23,27 +23,6 @@ const DifficultSentenceComponent = ({
   indexNum,
   updatingSentenceState,
 }) => {
-  if (indexNum === 0) {
-    console.log(
-      '## ',
-      toggleableSentencesStateLength,
-      addSnippet,
-      updateSentenceData,
-      removeSnippet,
-      sentenceBeingHighlightedState,
-      setSentenceBeingHighlightedState,
-      navigation,
-      sliceArrState,
-      setSliceArrState,
-      realCapacity,
-      handleSelectWord,
-      handleWordUpdate,
-      deleteWord,
-      sentence,
-      indexNum,
-      updatingSentenceState,
-    );
-  }
   const todayDateObj = new Date();
 
   const isLastEl = toggleableSentencesStateLength === indexNum + 1;
