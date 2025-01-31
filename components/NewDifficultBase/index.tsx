@@ -1,6 +1,8 @@
 import React, {TouchableOpacity, View} from 'react-native';
 import {
   Button,
+  DefaultTheme,
+  Divider,
   IconButton,
   MD2Colors,
   MD3Colors,
@@ -223,6 +225,67 @@ const ProgressBarComponent = ({progress = 0.5}) => {
   return <ProgressBar progress={progress} style={{marginVertical: 5}} />;
 };
 
+const TextActionContainer = () => {
+  return (
+    <View
+      style={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        flexDirection: 'row',
+      }}>
+      <IconButton
+        icon="text-search"
+        mode="outlined"
+        size={15}
+        onPress={() => {}}
+      />
+      <IconButton
+        icon="format-color-highlight"
+        mode="outlined"
+        size={15}
+        onPress={() => {}}
+      />
+      <IconButton
+        icon="google-translate"
+        mode="outlined"
+        size={15}
+        onPress={() => {}}
+      />
+      <IconButton
+        icon="content-copy"
+        mode="outlined"
+        size={15}
+        onPress={() => {}}
+      />
+    </View>
+  );
+};
+const AudioControls = () => {
+  return (
+    <View
+      style={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        flexDirection: 'row',
+      }}>
+      <IconButton icon="rewind" mode="outlined" size={15} onPress={() => {}} />
+      <IconButton icon="play" mode="outlined" size={15} onPress={() => {}} />
+      <IconButton
+        icon="fast-forward"
+        mode="outlined"
+        size={15}
+        onPress={() => {}}
+      />
+      <IconButton
+        icon="content-cut"
+        mode="outlined"
+        size={15}
+        onPress={() => {}}
+      />
+    </View>
+  );
+};
+
 const TopHeader = ({handleClickDelete, handleNavigateToTopic}) => {
   return (
     <View
@@ -309,6 +372,22 @@ const NewDifficultBase = () => {
         contentIndex={props.contentIndex}
       />
       <ProgressBarComponent />
+      <View
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          flexDirection: 'row',
+        }}>
+        <TextActionContainer />
+        <View
+          style={{
+            backgroundColor: DefaultTheme.colors?.backdrop,
+            width: 1,
+            borderRadius: 5,
+          }}
+        />
+        <AudioControls />
+      </View>
     </View>
   );
 };
