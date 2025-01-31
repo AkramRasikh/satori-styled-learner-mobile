@@ -1,4 +1,4 @@
-import React, {TouchableOpacity, View} from 'react-native';
+import React, {TouchableOpacity, Text, View} from 'react-native';
 import {
   Button,
   DefaultTheme,
@@ -6,7 +6,6 @@ import {
   MD2Colors,
   MD3Colors,
   ProgressBar,
-  Text,
 } from 'react-native-paper';
 import DifficultSentenceTextContainer from '../DifficultSentence/DifficultSentenceTextContainer';
 import {useState} from 'react';
@@ -170,7 +169,6 @@ const NewSRSToggles = ({sentence, updateSentenceData, contentIndex}) => {
   const easyText = getTimeDiffSRS({dueTimeStamp: easyDue, timeNow}) as string;
 
   const handleSRSClick = () => {};
-  const audioProgressText = '4.20/30';
   // mode?: 'text' | 'outlined' | 'contained' | 'elevated' | 'contained-tonal';
 
   return (
@@ -179,6 +177,7 @@ const NewSRSToggles = ({sentence, updateSentenceData, contentIndex}) => {
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'space-between',
+        alignSelf: 'center',
       }}>
       <View style={{display: 'flex', flexDirection: 'row', gap: 5}}>
         <Button
@@ -226,20 +225,32 @@ const NewSRSToggles = ({sentence, updateSentenceData, contentIndex}) => {
           {easyText}
         </Button>
       </View>
-      <View
-        style={{
-          alignSelf: 'center',
-
-          alignItems: 'flex-end',
-        }}>
-        <Text>{audioProgressText}</Text>
-      </View>
     </View>
   );
 };
 
 const ProgressBarComponent = ({progress = 0.5}) => {
-  return <ProgressBar progress={progress} style={{marginVertical: 5}} />;
+  const audioProgressText = '4.20/30';
+
+  return (
+    <View
+      style={{
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+      }}>
+      <View
+        style={{
+          width: '75%',
+          alignSelf: 'center',
+        }}>
+        <ProgressBar progress={progress} style={{marginVertical: 5}} />
+      </View>
+      <View>
+        <Text>{audioProgressText}</Text>
+      </View>
+    </View>
+  );
 };
 
 const TextActionContainer = () => {
