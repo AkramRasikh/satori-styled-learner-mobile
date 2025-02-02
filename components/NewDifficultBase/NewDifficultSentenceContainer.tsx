@@ -13,6 +13,8 @@ import {
 } from '.';
 import {DefaultTheme, Button} from 'react-native-paper';
 import DifficultSentenceMappedWords from '../DifficultSentence/DifficultSentenceMappedWords';
+import TextSegmentContainer from '../TextSegmentContainer';
+import {checkOverlap} from '../../utils/check-word-overlap';
 
 const NewDifficultSentenceContainer = ({
   toggleableSentencesStateLength,
@@ -87,9 +89,25 @@ const NewDifficultSentenceContainer = ({
 
   const topic = sentence.topic;
 
-  const safeTextFunc = targetLang => {
-    const textSegments = underlineWordsInSentence(targetLang);
+  const getSafeTextDefault = targetText => {
+    const textSegments = underlineWordsInSentence(targetText);
     return <TextSegment textSegments={textSegments} />;
+  };
+
+  const getSafeText = targetText => {
+    if (!showAllMatchedWordsState) {
+      return getSafeTextDefault(sentence.targetLang);
+    }
+
+    const textSegments = underlineWordsInSentence(targetText);
+    const wordsInOverlapCheck = checkOverlap(matchedWordListState);
+    return (
+      <TextSegmentContainer
+        textSegments={textSegments}
+        wordsInOverlapCheck={wordsInOverlapCheck}
+        matchedWordListState={matchedWordListState}
+      />
+    );
   };
 
   const handleUpdateWordFinal = wordData => {
@@ -132,7 +150,7 @@ const NewDifficultSentenceContainer = ({
           sentenceBeingHighlightedState={sentenceBeingHighlightedState}
           setSentenceBeingHighlightedState={setSentenceBeingHighlightedState}
           sentenceId={sentence.id}
-          safeTextFunc={safeTextFunc}
+          safeTextFunc={getSafeText}
           highlightedIndices={highlightedIndices}
           setHighlightedIndices={setHighlightedIndices}
           saveWordFirebase={saveWordFirebase}
