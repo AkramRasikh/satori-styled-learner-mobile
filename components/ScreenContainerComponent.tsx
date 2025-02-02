@@ -1,6 +1,6 @@
 import React from 'react';
 import {SafeAreaView} from 'react-native';
-import ToastMessage from './ToastMessage';
+import UpdateStatusSnackBar from './UpdateStatusSnackBar';
 
 const ScreenContainerComponent = ({
   updatePromptState,
@@ -14,10 +14,10 @@ const ScreenContainerComponent = ({
         minHeight: '100%',
         marginBottom,
       }}>
-      {updatePromptState ? (
-        <ToastMessage toastText={updatePromptState} />
-      ) : null}
       {children}
+      {updatePromptState && (
+        <UpdateStatusSnackBar updatePromptState={updatePromptState} />
+      )}
     </SafeAreaView>
   );
 };

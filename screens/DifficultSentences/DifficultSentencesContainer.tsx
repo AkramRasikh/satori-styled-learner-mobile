@@ -237,7 +237,7 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
     <ScreenContainerComponent
       updatePromptState={updatePromptState}
       marginBottom={30}>
-      <View style={{padding: 10, paddingBottom: 30}}>
+      <View style={{padding: 10, paddingBottom: 70}}>
         {selectedDueCardState && (
           <WordModalDifficultSentence
             visible={selectedDueCardState}
