@@ -22,7 +22,6 @@ const NewDifficultSentenceContainer = ({
   sliceArrState,
   sentence,
   updatingSentenceState,
-  handleClickDelete,
   navigation,
   realCapacity,
   addSnippet,
@@ -32,6 +31,7 @@ const NewDifficultSentenceContainer = ({
   handleSelectWord,
   handleWordUpdate,
   setSliceArrState,
+  // handleClickDelete,
 }) => {
   const [highlightedIndices, setHighlightedIndices] = useState([]);
   const [matchedWordListState, setMatchedWordListState] = useState([]);
@@ -141,7 +141,6 @@ const NewDifficultSentenceContainer = ({
         <TopHeader
           topic={topic}
           dueColorState={'#FFBF00'}
-          handleClickDelete={handleClickDelete}
           handleNavigateToTopic={handleNavigation}
         />
         <DifficultSentenceTextContainer

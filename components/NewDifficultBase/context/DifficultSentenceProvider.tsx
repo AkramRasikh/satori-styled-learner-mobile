@@ -87,6 +87,20 @@ export const DifficultSentenceProvider = ({
     return {};
   };
 
+  const handleDeleteContent = () => {
+    updateSentenceData({
+      isAdhoc: sentence?.isAdhoc,
+      topicName: sentence.topic,
+      sentenceId: sentence.id,
+      fieldToUpdate: {
+        reviewData: null,
+        nextReview: null,
+        reviewHistory: null,
+      },
+      contentIndex: sentence?.contentIndex,
+    });
+  };
+
   const handleNextReview = async difficulty => {
     const nextScheduledOptions = getNextScheduledOptions({
       card: cardDataRelativeToNow,
@@ -156,6 +170,7 @@ export const DifficultSentenceProvider = ({
         soundDuration,
         soundRef,
         handleCopyText,
+        handleDeleteContent,
       }}>
       {children}
     </DifficultSentenceContext.Provider>

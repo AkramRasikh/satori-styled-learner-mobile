@@ -1,5 +1,7 @@
+import {useState} from 'react';
 import React, {Text, TouchableOpacity, View} from 'react-native';
-import {IconButton, MD2Colors, MD3Colors} from 'react-native-paper';
+import {Button, IconButton, MD2Colors, MD3Colors} from 'react-native-paper';
+import useDifficultSentenceContext from './context/useDifficultSentence';
 
 const DueColorMarker = ({dueColorState}) => (
   <View
@@ -13,44 +15,67 @@ const DueColorMarker = ({dueColorState}) => (
   />
 );
 
-const TopHeader = ({
-  topic,
-  handleClickDelete,
-  handleNavigateToTopic,
-  dueColorState,
-}) => {
+const TopHeader = ({topic, handleNavigateToTopic, dueColorState}) => {
+  const [areYouSureDeleteState, setAreYouSureDeleteState] = useState(false);
+
+  const {handleDeleteContent} = useDifficultSentenceContext();
   return (
-    <View
-      style={{
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-      }}>
+    <View>
       <View
         style={{
           display: 'flex',
           flexDirection: 'row',
-          gap: 5,
-          alignItems: 'center',
+          justifyContent: 'space-between',
         }}>
-        <DueColorMarker dueColorState={dueColorState} />
-        <TouchableOpacity onPress={handleNavigateToTopic}>
-          <Text
-            style={{
-              textDecorationLine: 'underline',
-              fontStyle: 'italic',
-            }}>
-            {topic}
-          </Text>
-        </TouchableOpacity>
+        <View
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            gap: 5,
+            alignItems: 'center',
+          }}>
+          <DueColorMarker dueColorState={dueColorState} />
+          <TouchableOpacity onPress={handleNavigateToTopic}>
+            <Text
+              style={{
+                textDecorationLine: 'underline',
+                fontStyle: 'italic',
+              }}>
+              {topic}
+            </Text>
+          </TouchableOpacity>
+        </View>
+        <IconButton
+          icon="delete"
+          containerColor={MD3Colors.error50}
+          iconColor={MD2Colors.white}
+          size={20}
+          onPress={() => setAreYouSureDeleteState(!areYouSureDeleteState)}
+        />
       </View>
-      <IconButton
-        icon="delete"
-        containerColor={MD3Colors.error50}
-        iconColor={MD2Colors.white}
-        size={20}
-        onPress={handleClickDelete}
-      />
+
+      {areYouSureDeleteState && (
+        <View
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            alignSelf: 'flex-end',
+            gap: 10,
+          }}>
+          <Button
+            mode="elevated"
+            buttonColor={MD3Colors.error50}
+            textColor={MD2Colors.white}
+            onPress={handleDeleteContent}>
+            Delete!
+          </Button>
+          <Button
+            mode="elevated"
+            onPress={() => setAreYouSureDeleteState(false)}>
+            No
+          </Button>
+        </View>
+      )}
     </View>
   );
 };
