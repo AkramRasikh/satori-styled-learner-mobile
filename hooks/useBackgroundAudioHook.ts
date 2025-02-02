@@ -34,20 +34,20 @@ const useBackgroundAudioHook = ({
 
   useEffect(() => {
     async function setupPlayer() {
-      await TrackPlayer.add({
-        id: topicName,
-        title: topicName,
-        url,
-      });
+      if (url) {
+        await TrackPlayer.add({
+          id: topicName,
+          title: topicName,
+          url,
+        });
 
-      trackAddedRef.current = true;
+        trackAddedRef.current = true;
+      }
     }
-
     if (!isSnippet) {
       setupPlayer();
       AppState.addEventListener('change', handleAppStateChange);
     }
-
     return () => {
       TrackPlayer.stop();
       trackAddedRef.current = false;
@@ -56,12 +56,14 @@ const useBackgroundAudioHook = ({
 
   useEffect(() => {
     const addTrack = async () => {
-      await TrackPlayer.reset(); // Reset to update track
-      await TrackPlayer.add({
-        id: topicName,
-        title: topicName,
-        url,
-      });
+      if (url) {
+        await TrackPlayer.reset(); // Reset to update track
+        await TrackPlayer.add({
+          id: topicName,
+          title: topicName,
+          url,
+        });
+      }
     };
     if (topicName && !isSnippet) {
       addTrack();
