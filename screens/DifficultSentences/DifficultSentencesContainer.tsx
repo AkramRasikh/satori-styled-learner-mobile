@@ -10,7 +10,6 @@ import DifficultSentenceComponent from '../../components/DifficultSentence';
 import DifficultSentencesTopics from './DifficultSentencesTopics';
 import DifficultSentencesWordNavigator from './DifficultSentencesWordNavigator';
 import DifficultSentencesSegmentHeader from './DifficultSentencesSegmentHeader';
-import NewDifficultBase from '../../components/NewDifficultBase';
 
 const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
   const [toggleableSentencesState, setToggleableSentencesState] = useState([]);
@@ -267,7 +266,6 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
             handleNavigationToWords={handleNavigationToWords}
             numberOfWords={numberOfWords}
           />
-          <NewDifficultBase />
           <View style={{marginTop: 10}}>
             {slicedRenderedSentenceArr.map((sentence, index) => (
               <DifficultSentenceComponent
