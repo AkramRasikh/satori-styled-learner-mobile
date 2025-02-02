@@ -45,8 +45,6 @@ export const DifficultSentenceProvider = ({
     url: filePath,
   });
 
-  const timeNow = new Date();
-
   const reviewData = sentence?.reviewData;
   const isAdhoc = sentence?.isAdhoc;
 
