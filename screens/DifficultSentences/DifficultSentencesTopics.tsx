@@ -21,6 +21,7 @@ const DifficultSentencesTopics = ({
         const label = `${generalTopic} (${numberOfSentences})`;
         return (
           <FAB
+            key={generalTopic}
             label={label}
             onPress={() => handleShowThisTopicsSentences(generalTopic)}
             customSize={30}
