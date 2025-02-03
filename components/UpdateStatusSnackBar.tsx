@@ -12,7 +12,6 @@ const UpdateStatusSnackBar = ({updatePromptState}) => {
       <Snackbar
         visible={visible}
         onDismiss={onDismissSnackBar}
-        duration={100000}
         action={{
           label: 'Close',
           onPress: () => {
