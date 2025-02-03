@@ -24,7 +24,7 @@ const DifficultSentencesSegmentHeader = ({
         {
           value: false,
           label: allSentencesText,
-          icon: 'check',
+          icon: !isShowDueOnly ? 'check' : '',
           showSelectedCheck: !isShowDueOnly,
         },
       ]}
