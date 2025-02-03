@@ -1,18 +1,24 @@
 import React from 'react';
 import {View, StyleSheet} from 'react-native';
-import {Button, Snackbar} from 'react-native-paper';
+import {Snackbar} from 'react-native-paper';
 
 const UpdateStatusSnackBar = ({updatePromptState}) => {
   const [visible, setVisible] = React.useState(true);
-
-  const onToggleSnackBar = () => setVisible(!visible);
 
   const onDismissSnackBar = () => setVisible(false);
 
   return (
     <View style={styles.container}>
-      <Button onPress={onToggleSnackBar}>{visible ? 'Hide' : 'Show'}</Button>
-      <Snackbar visible={visible} onDismiss={onDismissSnackBar}>
+      <Snackbar
+        visible={visible}
+        onDismiss={onDismissSnackBar}
+        duration={100000}
+        action={{
+          label: 'Close',
+          onPress: () => {
+            setVisible(false);
+          },
+        }}>
         {updatePromptState}
       </Snackbar>
     </View>
@@ -21,9 +27,8 @@ const UpdateStatusSnackBar = ({updatePromptState}) => {
 
 const styles = StyleSheet.create({
   container: {
-    position: 'absolute',
-    bottom: 50,
-    width: '100%',
+    position: 'static',
+    bottom: 40,
   },
 });
 
