@@ -125,7 +125,9 @@ const ThisSnippetContainer = ({
       handleSetEarlierTime={handleSetEarlierTime}
       handleSaveSnippet={handleSaveSnippet}
       handleRemoveSnippet={handleRemoveSnippet}
-      handleRemoveFromTempSnippets={handleRemoveFromTempSnippets}
+      handleRemoveFromTempSnippets={() =>
+        handleRemoveFromTempSnippets(snippet.id)
+      }
       adjustableDuration={isSaved ? snippet.duration : adjustableDuration}
       handleSetDuration={handleSetDuration}
       adjustableStartTime={adjustableStartTime}
