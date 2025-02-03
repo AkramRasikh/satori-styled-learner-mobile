@@ -20,7 +20,7 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
     useState('');
   const [generalTopicsAvailableState, setGeneralTopicsAvailableState] =
     useState(null);
-  const [sliceArrState, setSliceArrState] = useState(20);
+  const [sliceArrState, setSliceArrState] = useState(2);
   const [isShowDueOnly, setIsShowDueOnly] = useState(true);
   const [isMountedState, setIsMountedState] = useState(true);
 

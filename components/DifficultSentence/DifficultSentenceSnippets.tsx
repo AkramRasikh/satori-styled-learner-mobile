@@ -2,7 +2,7 @@ import {useEffect, useState} from 'react';
 import useSoundHook from '../../hooks/useSoundHook';
 import useSnippetControls from '../../hooks/useSnippetControls';
 import useSnippetManageAudioStop from '../../hooks/useSnippetManageAudioStop';
-import MiniSnippetTimeChangeHandlers from '../MiniSnippetTimeChangeHandlers';
+import {SnippetHandlersDifficultSentence} from '../MiniSnippetTimeChangeHandlers';
 
 const hasBeenSnippedFromCollectiveURL = snippet => {
   const snippetURL = snippet.url;
@@ -121,7 +121,7 @@ const ThisSnippetContainer = ({
   });
 
   return (
-    <MiniSnippetTimeChangeHandlers
+    <SnippetHandlersDifficultSentence
       handleSetEarlierTime={handleSetEarlierTime}
       handleSaveSnippet={handleSaveSnippet}
       handleRemoveSnippet={handleRemoveSnippet}
