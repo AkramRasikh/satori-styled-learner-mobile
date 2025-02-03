@@ -11,12 +11,17 @@ import {
   NewSRSToggles,
   TextActionContainer,
 } from '.';
-import {DefaultTheme, Button} from 'react-native-paper';
+import {DefaultTheme, Button, Text} from 'react-native-paper';
 import DifficultSentenceMappedWords from '../DifficultSentence/DifficultSentenceMappedWords';
 import TextSegmentContainer from '../TextSegmentContainer';
 import {checkOverlap} from '../../utils/check-word-overlap';
 import DifficultSentenceSnippets from '../DifficultSentence/DifficultSentenceSnippets';
 import useDifficultSentenceContext from './context/useDifficultSentence';
+import {
+  calculateDueDate,
+  getDueDateText,
+} from '../../utils/get-date-due-status';
+import {isCardDue} from '../../utils/is-card-due';
 
 const NewDifficultSentenceContainer = ({
   toggleableSentencesStateLength,
@@ -102,6 +107,21 @@ const NewDifficultSentenceContainer = ({
 
   const topic = sentence.topic;
 
+  const reviewCardDue = sentence.reviewData?.due;
+
+  const timeNow = new Date();
+
+  const isDueState = reviewCardDue
+    ? isCardDue({cardDate: new Date(reviewCardDue), nowDate: timeNow})
+    : false;
+
+  const {dueColorState, text} = getDueDateText(
+    calculateDueDate({
+      todayDateObj: timeNow,
+      nextReview: sentence.reviewData.due,
+    }),
+  );
+
   const getSafeTextDefault = targetText => {
     const textSegments = underlineWordsInSentence(targetText);
     return <TextSegment textSegments={textSegments} />;
@@ -153,7 +173,7 @@ const NewDifficultSentenceContainer = ({
         }}>
         <TopHeader
           topic={topic}
-          dueColorState={'#FFBF00'}
+          dueColorState={dueColorState}
           handleNavigateToTopic={handleNavigation}
         />
         <DifficultSentenceTextContainer
@@ -167,7 +187,13 @@ const NewDifficultSentenceContainer = ({
           setHighlightedIndices={setHighlightedIndices}
           saveWordFirebase={saveWordFirebase}
         />
-        <NewSRSToggles sentence={sentence} />
+        {isDueState ? (
+          <NewSRSToggles sentence={sentence} />
+        ) : (
+          <View style={{alignSelf: 'center'}}>
+            <Text style={DefaultTheme.fonts.bodyMedium}>{text}</Text>
+          </View>
+        )}
         <NewProgressBarComponent />
         <View
           style={{
