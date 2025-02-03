@@ -15,6 +15,8 @@ import {DefaultTheme, Button} from 'react-native-paper';
 import DifficultSentenceMappedWords from '../DifficultSentence/DifficultSentenceMappedWords';
 import TextSegmentContainer from '../TextSegmentContainer';
 import {checkOverlap} from '../../utils/check-word-overlap';
+import DifficultSentenceSnippets from '../DifficultSentence/DifficultSentenceSnippets';
+import useDifficultSentenceContext from './context/useDifficultSentence';
 
 const NewDifficultSentenceContainer = ({
   toggleableSentencesStateLength,
@@ -43,6 +45,17 @@ const NewDifficultSentenceContainer = ({
   };
   const {pureWords, saveWordFirebase, deleteWord, getThisSentencesWordList} =
     useData();
+
+  const {
+    soundRef,
+    isLoaded,
+    miniSnippets,
+    setMiniSnippets,
+    setCurrentTimeState,
+    currentTimeState,
+    isPlaying,
+    setIsPlaying,
+  } = useDifficultSentenceContext();
 
   const isLastEl = toggleableSentencesStateLength === indexNum + 1;
   const isFirst = 0 === indexNum;
@@ -195,6 +208,21 @@ const NewDifficultSentenceContainer = ({
             );
           })}
       </View>
+      {miniSnippets?.length > 0 && (
+        <DifficultSentenceSnippets
+          isLoaded={isLoaded}
+          soundRef={soundRef}
+          snippetsLocalAndDb={miniSnippets}
+          setCurrentTimeState={setCurrentTimeState}
+          currentTimeState={currentTimeState}
+          isPlaying={isPlaying}
+          setIsPlaying={setIsPlaying}
+          addSnippet={addSnippet}
+          removeSnippet={removeSnippet}
+          setMiniSnippets={setMiniSnippets}
+          url={sentence.url}
+        />
+      )}
       {moreToLoad && (
         <Button
           mode="elevated"

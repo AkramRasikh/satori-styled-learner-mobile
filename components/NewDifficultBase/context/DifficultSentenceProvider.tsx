@@ -1,5 +1,6 @@
 import React, {useEffect, useRef} from 'react';
 import {createContext, PropsWithChildren, useState} from 'react';
+import {useSelector} from 'react-redux';
 import useLanguageSelector from '../../../context/LanguageSelector/useLanguageSelector';
 import {getFirebaseAudioURL} from '../../../hooks/useGetCombinedAudioData';
 import useMP3File from '../../../hooks/useMP3File';
@@ -28,6 +29,8 @@ export const DifficultSentenceProvider = ({
 
   const {languageSelectedState} = useLanguageSelector();
 
+  const targetLanguageSnippetsState = useSelector(state => state.snippets);
+
   const id = sentence.id;
   const topic = sentence.topic;
   const isMediaContent = sentence.isMediaContent;
@@ -44,6 +47,14 @@ export const DifficultSentenceProvider = ({
     soundRef,
     url: filePath,
   });
+
+  useEffect(() => {
+    setMiniSnippets(
+      targetLanguageSnippetsState.filter(
+        snippetData => snippetData.sentenceId === id,
+      ),
+    );
+  }, []);
 
   const reviewData = sentence?.reviewData;
   const isAdhoc = sentence?.isAdhoc;
@@ -171,6 +182,8 @@ export const DifficultSentenceProvider = ({
         soundRef,
         handleCopyText,
         handleDeleteContent,
+        miniSnippets,
+        setMiniSnippets,
       }}>
       {children}
     </DifficultSentenceContext.Provider>
