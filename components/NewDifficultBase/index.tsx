@@ -5,7 +5,6 @@ import {
   IconButton,
   ProgressBar,
 } from 'react-native-paper';
-import {useEffect, useState} from 'react';
 import {
   getCardDataRelativeToNow,
   getDueDate,
@@ -13,7 +12,6 @@ import {
   srsRetentionKeyTypes,
 } from '../../srs-algo';
 import {getTimeDiffSRS} from '../../utils/getTimeDiffSRS';
-import {useSelector} from 'react-redux';
 import useDifficultSentenceContext from './context/useDifficultSentence';
 import useSoundHook from '../../hooks/useSoundHook';
 
@@ -111,14 +109,6 @@ export const NewProgressBarComponent = () => {
     useDifficultSentenceContext();
 
   const progressRate = (isLoaded && currentTimeState / soundDuration) || 0;
-
-  // if (isLoaded) {
-  //   console.log('## NewProgressBarComponent', {
-  //     currentTimeState,
-  //     soundDuration,
-  //     isLoaded,
-  //   });
-  // }
 
   const audioProgressText = `${currentTimeState?.toFixed(
     2,
