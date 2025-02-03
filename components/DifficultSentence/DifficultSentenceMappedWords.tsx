@@ -1,6 +1,7 @@
-import React, {Text, TouchableOpacity, View} from 'react-native';
+import React, {TouchableOpacity, View} from 'react-native';
 import {SRSTogglesQuickComprehensiveDiffSentencesWords} from '../SRSToggles';
 import {getHexCode} from '../../utils/get-hex-code';
+import {DefaultTheme, Text} from 'react-native-paper';
 
 const seperatedWords = word => {
   const surfaceForm = word.surfaceForm;
@@ -26,12 +27,10 @@ const DifficultSentenceMappedWords = ({
     <View
       style={{
         paddingTop: 5,
-        borderTopColor: 'gray',
-        borderTopWidth: 1,
         gap: 5,
       }}>
       <TouchableOpacity onPress={() => handleSelectWord(item)}>
-        <Text>
+        <Text style={DefaultTheme.fonts.bodyLarge}>
           <Text
             style={{
               color: getHexCode(indexNum),
