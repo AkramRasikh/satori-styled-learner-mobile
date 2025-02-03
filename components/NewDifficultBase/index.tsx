@@ -189,28 +189,15 @@ export const TextActionContainer = ({
     </View>
   );
 };
-export const NewAudioControls = ({
-  sentence,
-  addSnippet,
-  removeSnippet,
-  indexNum,
-}) => {
-  const [miniSnippets, setMiniSnippets] = useState([]);
-
-  const {handleLoad, isLoaded, isPlaying, setIsPlaying, soundRef} =
-    useDifficultSentenceContext();
-
-  const targetLanguageSnippetsState = useSelector(state => state.snippets);
-
-  const id = sentence.id;
-
-  useEffect(() => {
-    setMiniSnippets(
-      targetLanguageSnippetsState.filter(
-        snippetData => snippetData.sentenceId === id,
-      ),
-    );
-  }, []);
+export const NewAudioControls = ({sentence}) => {
+  const {
+    handleLoad,
+    isLoaded,
+    isPlaying,
+    setIsPlaying,
+    soundRef,
+    handleSnippet,
+  } = useDifficultSentenceContext();
 
   const {playSound, pauseSound, forwardSound, rewindSound} = useSoundHook({
     soundRef,
@@ -221,6 +208,10 @@ export const NewAudioControls = ({
     startTime: sentence?.isMediaContent ? sentence.time : null,
     isMediaContent: sentence?.isMediaContent,
   });
+  const handleSnippetFunc = () => {
+    handleSnippet();
+    pauseSound();
+  };
 
   const handlePlay = () => {
     if (!isLoaded) {
@@ -233,19 +224,6 @@ export const NewAudioControls = ({
       }
     }
   };
-
-  // const handleSnippet = currentTime => {
-  //   const snippetId = topic + '-' + generateRandomId();
-  //   const itemToSave = {
-  //     id: snippetId,
-  //     sentenceId: id,
-  //     pointInAudio: currentTime,
-  //     isIsolated: true,
-  //     url,
-  //     topicName: topic,
-  //   };
-  //   setMiniSnippets(prev => [...prev, itemToSave]);
-  // };
 
   const playIcon = isLoaded && isPlaying ? 'pause' : 'play';
   return (
@@ -277,7 +255,7 @@ export const NewAudioControls = ({
         icon="content-cut"
         mode="outlined"
         size={15}
-        onPress={() => {}}
+        onPress={handleSnippetFunc}
       />
     </View>
   );

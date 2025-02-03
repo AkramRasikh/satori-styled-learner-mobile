@@ -148,12 +148,12 @@ export const DifficultSentenceProvider = ({
     }
   }, [loadFile, isLoaded, indexNum, audioId, url]);
 
-  const handleSnippet = currentTime => {
+  const handleSnippet = () => {
     const snippetId = topic + '-' + generateRandomId();
     const itemToSave = {
       id: snippetId,
       sentenceId: id,
-      pointInAudio: currentTime,
+      pointInAudio: currentTimeState,
       isIsolated: true,
       url,
       topicName: topic,

@@ -187,12 +187,7 @@ const NewDifficultSentenceContainer = ({
               borderRadius: 5,
             }}
           />
-          <NewAudioControls
-            sentence={sentence}
-            addSnippet={addSnippet}
-            removeSnippet={removeSnippet}
-            indexNum={indexNum}
-          />
+          <NewAudioControls sentence={sentence} />
         </View>
         {showMatchedWordsKey &&
           matchedWordListState.map((item, index) => {
