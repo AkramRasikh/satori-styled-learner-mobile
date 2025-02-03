@@ -1,4 +1,5 @@
 import React, {useEffect, useRef} from 'react';
+import {Animated} from 'react-native';
 import {createContext, PropsWithChildren, useState} from 'react';
 import {useSelector} from 'react-redux';
 import useLanguageSelector from '../../../context/LanguageSelector/useLanguageSelector';
@@ -26,6 +27,40 @@ export const DifficultSentenceProvider = ({
   const [currentTimeState, setCurrentTimeState] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [miniSnippets, setMiniSnippets] = useState([]);
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+  const scaleAnim = useRef(new Animated.Value(0.8)).current;
+
+  useEffect(() => {
+    Animated.parallel([
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 300,
+        useNativeDriver: true,
+      }),
+      Animated.spring(scaleAnim, {
+        toValue: 1,
+        friction: 8,
+        useNativeDriver: true,
+      }),
+    ]).start();
+  }, []);
+
+  const collapseCard = async () => {
+    return new Promise(resolve => {
+      Animated.parallel([
+        Animated.timing(fadeAnim, {
+          toValue: 0,
+          duration: 300,
+          useNativeDriver: true,
+        }),
+        Animated.spring(scaleAnim, {
+          toValue: 0.8,
+          friction: 8,
+          useNativeDriver: true,
+        }),
+      ]).start(() => resolve());
+    });
+  };
 
   const {languageSelectedState} = useLanguageSelector();
 
@@ -98,7 +133,8 @@ export const DifficultSentenceProvider = ({
     return {};
   };
 
-  const handleDeleteContent = () => {
+  const handleDeleteContent = async () => {
+    await collapseCard();
     updateSentenceData({
       isAdhoc: sentence?.isAdhoc,
       topicName: sentence.topic,
@@ -118,6 +154,7 @@ export const DifficultSentenceProvider = ({
       contentType: srsRetentionKeyTypes.sentences,
     });
     const nextReviewData = nextScheduledOptions[difficulty].card;
+    await collapseCard();
     const hasBeenUpdated = await updateSentenceData({
       isAdhoc,
       topicName: sentence.topic,
@@ -184,6 +221,8 @@ export const DifficultSentenceProvider = ({
         handleDeleteContent,
         miniSnippets,
         setMiniSnippets,
+        fadeAnim,
+        scaleAnim,
       }}>
       {children}
     </DifficultSentenceContext.Provider>
