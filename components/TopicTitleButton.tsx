@@ -19,7 +19,7 @@ const TopicTitleButton = ({
     <Button
       onPress={onPress}
       testID={testID}
-      mode="outlined"
+      mode="contained-tonal"
       buttonColor={
         futureReview
           ? MD2Colors.green100
