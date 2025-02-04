@@ -42,6 +42,7 @@ const Topics = ({
     const isYoutube = topicData.isYoutube;
     const isGeneral = topicData.isGeneral;
     const hasAudio = topicData?.hasAudio;
+    const isMediaContent = topicData?.isMediaContent;
     const isSelectedSubsetOfGeneralTopic =
       topicData?.generalTopic === selectedGeneralTopicState;
     const showGeneralTopics = isGeneral && !selectedGeneralTopicState;
@@ -61,6 +62,7 @@ const Topics = ({
           isYoutube={isYoutube}
           isGeneral={isGeneral}
           hasAudio={hasAudio}
+          isNetflix={isMediaContent && !isYoutube}
         />
       );
     }
@@ -99,7 +101,13 @@ const Topics = ({
           onPress={handleShowContent}
         />
         {isContent && (
-          <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
+          <View
+            style={{
+              flexDirection: 'row',
+              flexWrap: 'wrap',
+              gap: 10,
+              paddingTop: 10,
+            }}>
             {standardContent.map(mappedView)}
           </View>
         )}
@@ -111,7 +119,13 @@ const Topics = ({
           onPress={handleShowMedia}
         />
         {isMedia && (
-          <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
+          <View
+            style={{
+              flexDirection: 'row',
+              flexWrap: 'wrap',
+              gap: 10,
+              paddingTop: 10,
+            }}>
             {mediaContent.map(mappedView)}
           </View>
         )}

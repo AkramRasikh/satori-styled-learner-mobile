@@ -1,5 +1,6 @@
 import React from 'react';
-import {Image, Text, TouchableOpacity, View} from 'react-native';
+import {Image} from 'react-native';
+import {Button, MD2Colors} from 'react-native-paper';
 
 const TopicTitleButton = ({
   onPress,
@@ -11,43 +12,49 @@ const TopicTitleButton = ({
   isYoutube,
   hasAudio,
   isGeneral,
-}) => (
-  <View testID={testID}>
-    <TouchableOpacity
+  isNetflix,
+}) => {
+  const freshContent = !futureReview && !isDue;
+  return (
+    <Button
       onPress={onPress}
-      style={{
-        borderWidth: 1,
-        borderColor: '#999999',
-        borderRadius: 20,
-        paddingVertical: 10,
-        paddingHorizontal: 15,
-        margin: 5,
-        backgroundColor: futureReview
-          ? '#ADD8E6'
+      testID={testID}
+      mode="contained-tonal"
+      buttonColor={
+        futureReview
+          ? MD2Colors.green100
           : isDue
-          ? '#C34A2C'
-          : 'transparent',
-      }}>
-      <View
-        style={{
-          display: 'flex',
-          flexDirection: 'row',
-          gap: 5,
-        }}>
-        <Text>
-          {title}
-          {isGeneral ? '' : !hasAudio ? '🔕' : ''}{' '}
-        </Text>
-        {isCore ? <Text> 🧠</Text> : null}
-        {isYoutube ? (
-          <Image
-            source={require('../assets/images/youtube.png')}
-            style={{width: 16, height: 16}}
-          />
-        ) : null}
-      </View>
-    </TouchableOpacity>
-  </View>
-);
+          ? MD2Colors.purple100
+          : 'transparent'
+      }
+      icon={
+        isYoutube
+          ? () => (
+              <Image
+                source={require('../assets/images/youtube.png')}
+                style={{
+                  width: 16,
+                  height: 16,
+                  alignContent: 'center',
+                  alignItems: 'center',
+                  alignSelf: 'center',
+                }}
+              />
+            )
+          : isNetflix
+          ? 'netflix'
+          : ''
+      }
+      style={
+        freshContent && {
+          borderColor: 'black',
+          borderWidth: 1,
+        }
+      }>
+      {isCore ? '🧠' : null}
+      {isGeneral ? '' : !hasAudio ? '🔕' : ''} {title}
+    </Button>
+  );
+};
 
 export default TopicTitleButton;
