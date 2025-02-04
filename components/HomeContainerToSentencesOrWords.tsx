@@ -1,5 +1,6 @@
 import React from 'react';
-import {TouchableOpacity, Text, View} from 'react-native';
+import {View} from 'react-native';
+import {Button} from 'react-native-paper';
 
 const HomeContainerToSentencesOrWords = ({navigation}) => (
   <View
@@ -7,35 +8,17 @@ const HomeContainerToSentencesOrWords = ({navigation}) => (
       display: 'flex',
       flexDirection: 'row',
       justifyContent: 'space-around',
+      gap: 10,
+      paddingBottom: 10,
     }}>
-    <TouchableOpacity
-      style={{
-        flex: 1,
-        borderWidth: 1,
-        borderColor: '#999999',
-        borderRadius: 20,
-        paddingVertical: 10,
-        paddingHorizontal: 15,
-        margin: 5,
-        backgroundColor: 'transparent',
-      }}
+    <Button
+      mode="elevated"
       onPress={() => navigation.navigate('DifficultSentences')}>
-      <Text style={{textAlign: 'center'}}>Sentences 🤓🏋🏽‍♂️</Text>
-    </TouchableOpacity>
-    <TouchableOpacity
-      style={{
-        flex: 1,
-        borderWidth: 1,
-        borderColor: '#999999',
-        borderRadius: 20,
-        paddingVertical: 10,
-        paddingHorizontal: 15,
-        margin: 5,
-        backgroundColor: 'transparent',
-      }}
-      onPress={() => navigation.navigate('WordStudy')}>
-      <Text style={{textAlign: 'center'}}>Words 🤓🏋🏽‍♂️</Text>
-    </TouchableOpacity>
+      Sentences 🤓🏋🏽‍♂️
+    </Button>
+    <Button mode="elevated" onPress={() => navigation.navigate('WordStudy')}>
+      Words 🤓🏋🏽‍♂️
+    </Button>
   </View>
 );
 
