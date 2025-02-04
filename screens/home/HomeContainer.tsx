@@ -1,6 +1,5 @@
 import React, {useState} from 'react';
 import {ScrollView} from 'react-native';
-import MoreTopics from '../../components/MoreTopics';
 import LoadingScreen from '../../components/LoadingScreen';
 import HomeContainerToSentencesOrWords from '../../components/HomeContainerToSentencesOrWords';
 import Topics from '../../components/Topics';
@@ -52,21 +51,16 @@ function Home({
     return <LoadingScreen>Loading data...</LoadingScreen>;
   }
 
-  const showNaviBtn = !(selectedGeneralTopicState || selectedTopic);
-
   return (
     <ScreenContainerComponent>
       <ScrollView
         contentInsetAdjustmentBehavior="automatic"
         style={{padding: 10}}>
-        {selectedTopic || selectedGeneralTopicState === '' ? null : (
-          <MoreTopics handleShowGeneralTopic={handleShowGeneralTopic} />
-        )}
-        {showNaviBtn ? (
-          <HomeContainerToSentencesOrWords navigation={navigation} />
-        ) : null}
+        <HomeContainerToSentencesOrWords navigation={navigation} />
+
         {!selectedTopic && (
           <Topics
+            setSelectedGeneralTopicState={setSelectedGeneralTopicState}
             selectedGeneralTopicState={selectedGeneralTopicState}
             handleShowGeneralTopic={handleShowGeneralTopic}
             handleShowTopic={handleShowTopic}

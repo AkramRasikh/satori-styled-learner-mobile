@@ -8,6 +8,7 @@ const Topics = ({
   selectedGeneralTopicState,
   handleShowGeneralTopic,
   handleShowTopic,
+  setSelectedGeneralTopicState,
 }) => {
   const [showMediaContentState, setShowMediaContentState] = useState('');
   const handleOnPress = title => {
@@ -17,19 +18,26 @@ const Topics = ({
       handleShowTopic(title);
     }
   };
+  const clearAllStates = () => {
+    setSelectedGeneralTopicState('');
+    setShowMediaContentState('');
+    handleShowGeneralTopic('');
+  };
 
   const handleShowMedia = () => {
     if (showMediaContentState === 'media') {
-      setShowMediaContentState('');
+      clearAllStates();
     } else {
+      setSelectedGeneralTopicState('');
       setShowMediaContentState('media');
     }
   };
 
   const handleShowContent = () => {
     if (showMediaContentState === 'content') {
-      setShowMediaContentState('');
+      clearAllStates();
     } else {
+      setSelectedGeneralTopicState('');
       setShowMediaContentState('content');
     }
   };
