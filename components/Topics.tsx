@@ -91,32 +91,30 @@ const Topics = ({
   const isMedia = showMediaContentState === 'media';
 
   return (
-    <View>
-      <View style={{gap: 10}}>
-        <View>
-          <FAB
-            icon={isContent ? 'folder-open' : 'plus'}
-            label={`Content (${contentGeneralTopicCount}/${standardContent.length})`}
-            onPress={handleShowContent}
-          />
-          {isContent && (
-            <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
-              {standardContent.map(mappedView)}
-            </View>
-          )}
-        </View>
-        <View>
-          <FAB
-            icon={isMedia ? 'folder-open' : 'plus'}
-            label={`Media (${mediaGeneralTopicCount}/${mediaContent.length})`}
-            onPress={handleShowMedia}
-          />
-          {isMedia && (
-            <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
-              {mediaContent.map(mappedView)}
-            </View>
-          )}
-        </View>
+    <View style={{gap: 10}}>
+      <View>
+        <FAB
+          icon={isContent ? 'folder-open' : 'plus'}
+          label={`Content (${contentGeneralTopicCount}/${standardContent.length})`}
+          onPress={handleShowContent}
+        />
+        {isContent && (
+          <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
+            {standardContent.map(mappedView)}
+          </View>
+        )}
+      </View>
+      <View>
+        <FAB
+          icon={isMedia ? 'folder-open' : 'plus'}
+          label={`Media (${mediaGeneralTopicCount}/${mediaContent.length})`}
+          onPress={handleShowMedia}
+        />
+        {isMedia && (
+          <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
+            {mediaContent.map(mappedView)}
+          </View>
+        )}
       </View>
     </View>
   );
