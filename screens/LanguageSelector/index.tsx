@@ -1,8 +1,9 @@
 import React from 'react';
-import {Image, Text, TouchableOpacity, View} from 'react-native';
+import {Image, TouchableOpacity, View} from 'react-native';
 import useLanguageSelector from '../../context/LanguageSelector/useLanguageSelector';
 import {LanguageEnum} from '../../context/LanguageSelector/LanguageSelectorProvider';
 import {clearStorage} from '../../helper-functions/local-storage-utils';
+import {Button, DefaultTheme, Text} from 'react-native-paper';
 
 const LanguageSelector = ({navigation}): React.JSX.Element => {
   const {setLanguageSelectedState} = useLanguageSelector();
@@ -11,61 +12,43 @@ const LanguageSelector = ({navigation}): React.JSX.Element => {
     navigation.navigate('Home');
   };
   return (
-    <View>
-      <View
+    <View
+      style={{
+        marginTop: 70,
+      }}>
+      <Text
         style={{
-          marginTop: 70,
+          ...DefaultTheme.fonts.headlineLarge,
           alignSelf: 'center',
-          display: 'flex',
-          flexDirection: 'row',
-          gap: 10,
         }}>
-        <Text
-          style={{
-            fontSize: 30,
-            fontWeight: 'bold',
-            marginBottom: 20,
-          }}>
-          Select Language
-        </Text>
-      </View>
+        Select Language
+      </Text>
       <View
         style={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignSelf: 'center',
           alignItems: 'center',
-          gap: 10,
+          gap: 30,
+          marginTop: 30,
         }}>
-        <View>
-          <TouchableOpacity
-            onPress={() => handleLanguageSelection(LanguageEnum.Chinese)}>
-            <Image
-              style={{height: 100, resizeMode: 'contain'}}
-              source={require(`../../assets/images/chinese-flag.png`)}
-            />
-          </TouchableOpacity>
-        </View>
-        <View>
-          <TouchableOpacity
-            onPress={() => handleLanguageSelection(LanguageEnum.Japanese)}>
-            <Image
-              style={{height: 100, resizeMode: 'contain'}}
-              source={require(`../../assets/images/japanese-flag.png`)}
-            />
-          </TouchableOpacity>
-        </View>
-        <View
-          style={{
-            marginTop: 40,
-            backgroundColor: 'grey',
-            padding: 10,
-            borderRadius: 10,
-          }}>
-          <TouchableOpacity onPress={clearStorage}>
-            <Text>Clear Storage 🗑️</Text>
-          </TouchableOpacity>
-        </View>
+        <TouchableOpacity
+          onPress={() => handleLanguageSelection(LanguageEnum.Chinese)}>
+          <Image
+            style={{height: 100, resizeMode: 'contain'}}
+            source={require(`../../assets/images/chinese-flag.png`)}
+          />
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => handleLanguageSelection(LanguageEnum.Japanese)}>
+          <Image
+            style={{height: 100, resizeMode: 'contain'}}
+            source={require(`../../assets/images/japanese-flag.png`)}
+          />
+        </TouchableOpacity>
+        <Button
+          icon="backup-restore"
+          mode="contained-tonal"
+          onPress={clearStorage}>
+          Clear Storage
+        </Button>
       </View>
     </View>
   );
