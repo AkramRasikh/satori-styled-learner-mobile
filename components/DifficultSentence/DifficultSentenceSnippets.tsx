@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from 'react';
-import useSnippetControls from '../../hooks/useSnippetControls';
 import useSnippetManageAudioStop from '../../hooks/useSnippetManageAudioStop';
 import {SnippetHandlersDifficultSentence} from '../MiniSnippetTimeChangeHandlers';
 import useMainAudioControls from '../../hooks/useMainAudioControls';
+import useNewSnippetControls from '../../hooks/useNewSnippetControls';
 
 const hasBeenSnippedFromCollectiveURL = snippet => {
   const snippetURL = snippet.url;
@@ -85,17 +85,13 @@ const SingleSnippetContainer = ({
     }
   };
 
-  const {handleSetEarlierTime, handleSetDuration} = useSnippetControls({
+  const {handleSetEarlierTime, handleSetDuration} = useNewSnippetControls({
     adjustableStartTime,
     adjustableDuration,
     setAdjustableStartTime,
     setAdjustableDuration,
     snippetEndAtLimit: soundDuration,
     snippetStartAtLimit: 0,
-    deleteSnippet: () => {},
-    addSnippet: () => {},
-    removeSnippet: () => {},
-    snippet,
   });
 
   const {playSound, pauseSound} = useMainAudioControls({
