@@ -10,6 +10,7 @@ import DifficultSentencesTopics from './DifficultSentencesTopics';
 import DifficultSentencesWordNavigator from './DifficultSentencesWordNavigator';
 import DifficultSentencesSegmentHeader from './DifficultSentencesSegmentHeader';
 import DifficultSentenceComponent from '../../components/DifficultSentence';
+import {countArrayOccurrencesToObj} from '../../utils/count-array-occurrences-to-obj';
 
 const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
   const [toggleableSentencesState, setToggleableSentencesState] = useState([]);
@@ -62,25 +63,6 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
     }
   };
 
-  const sortObj = reducedObj => {
-    const keys = Object.keys(reducedObj);
-    keys.sort();
-
-    const sortedObj = {};
-    keys.forEach(key => {
-      sortedObj[key] = reducedObj[key];
-    });
-    return sortedObj;
-  };
-
-  const countOccurrences = arr =>
-    sortObj(
-      arr.reduce((acc, current) => {
-        acc[current] = (acc[current] || 0) + 1;
-        return acc;
-      }, {}),
-    );
-
   const handleRefreshFunc = () => {
     refreshDifficultSentencesInfo();
     setSelectedGeneralTopicState('');
@@ -109,7 +91,7 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
     if (filteredForDueOnly?.length > 0) {
       if (toggleableSentenceTopics.length > 0) {
         setGeneralTopicsAvailableState(
-          countOccurrences(toggleableSentenceTopics),
+          countArrayOccurrencesToObj(toggleableSentenceTopics),
         );
       }
       setToggleableSentencesState(filteredForDueOnly);
@@ -123,7 +105,7 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
       setToggleableSentencesState(difficultSentencesState);
       if (generalTopicsCollectively.length > 0) {
         setGeneralTopicsAvailableState(
-          countOccurrences(generalTopicsCollectively),
+          countArrayOccurrencesToObj(generalTopicsCollectively),
         );
       }
     }
@@ -208,7 +190,7 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
       });
       setToggleableSentencesState(updatedToggleStateWithSelectedTopic);
       setGeneralTopicsAvailableState(
-        countOccurrences(toggleableSentenceTopics),
+        countArrayOccurrencesToObj(toggleableSentenceTopics),
       );
     }
   }, [
