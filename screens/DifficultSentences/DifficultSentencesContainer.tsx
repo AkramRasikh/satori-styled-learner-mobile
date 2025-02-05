@@ -259,7 +259,6 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
                 realCapacity={realCapacity}
                 handleSelectWord={handleSelectWord}
                 handleWordUpdate={handleWordUpdate}
-                deleteWord={deleteWord}
                 sentence={sentence}
                 updatingSentenceState={updatingSentenceState}
                 indexNum={index}

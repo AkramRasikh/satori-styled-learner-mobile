@@ -12,7 +12,6 @@ const DifficultSentenceComponent = ({
   updatingSentenceState,
   realCapacity,
   navigation,
-  deleteWord,
   addSnippet,
   updateSentenceData,
   removeSnippet,
@@ -33,11 +32,9 @@ const DifficultSentenceComponent = ({
         sliceArrState={sliceArrState}
         sentence={sentence}
         updatingSentenceState={updatingSentenceState}
-        handleClickDelete={deleteWord}
         realCapacity={realCapacity}
         navigation={navigation}
         addSnippet={addSnippet}
-        updateSentenceData={updateSentenceData}
         removeSnippet={removeSnippet}
         sentenceBeingHighlightedState={sentenceBeingHighlightedState}
         setSentenceBeingHighlightedState={setSentenceBeingHighlightedState}
