@@ -1,19 +1,9 @@
 import {useState} from 'react';
-import React, {Text, TouchableOpacity, View} from 'react-native';
+import React, {View} from 'react-native';
 import {Button, IconButton, MD2Colors, MD3Colors} from 'react-native-paper';
 import useDifficultSentenceContext from './context/useDifficultSentence';
-
-const DueColorMarker = ({dueColorState}) => (
-  <View
-    style={{
-      backgroundColor: dueColorState,
-      width: 16,
-      height: 16,
-      borderRadius: 10,
-      marginVertical: 'auto',
-    }}
-  />
-);
+import CircleColor from '../CircleColor';
+import AreYouSurePrompt from '../AreYouSurePrompt';
 
 const DifficultSentenceTopHeader = ({
   topic,
@@ -35,19 +25,18 @@ const DifficultSentenceTopHeader = ({
           style={{
             display: 'flex',
             flexDirection: 'row',
-            gap: 5,
             alignItems: 'center',
+            gap: 5,
           }}>
-          <DueColorMarker dueColorState={dueColorState} />
-          <TouchableOpacity onPress={handleNavigateToTopic}>
-            <Text
-              style={{
-                textDecorationLine: 'underline',
-                fontStyle: 'italic',
-              }}>
-              {topic}
-            </Text>
-          </TouchableOpacity>
+          <CircleColor backgroundColor={dueColorState} />
+          <Button
+            onPress={handleNavigateToTopic}
+            labelStyle={{
+              textDecorationLine: 'underline',
+              fontStyle: 'italic',
+            }}>
+            {topic}
+          </Button>
         </View>
         <IconButton
           icon="delete"
@@ -57,28 +46,13 @@ const DifficultSentenceTopHeader = ({
           onPress={() => setAreYouSureDeleteState(!areYouSureDeleteState)}
         />
       </View>
-
       {areYouSureDeleteState && (
-        <View
-          style={{
-            display: 'flex',
-            flexDirection: 'row',
-            alignSelf: 'flex-end',
-            gap: 10,
-          }}>
-          <Button
-            mode="elevated"
-            buttonColor={MD3Colors.error50}
-            textColor={MD2Colors.white}
-            onPress={handleDeleteContent}>
-            Delete!
-          </Button>
-          <Button
-            mode="elevated"
-            onPress={() => setAreYouSureDeleteState(false)}>
-            No
-          </Button>
-        </View>
+        <AreYouSurePrompt
+          yesText="Delete!"
+          yesOnPress={handleDeleteContent}
+          noText="Mo"
+          noOnPress={() => setAreYouSureDeleteState(false)}
+        />
       )}
     </View>
   );
