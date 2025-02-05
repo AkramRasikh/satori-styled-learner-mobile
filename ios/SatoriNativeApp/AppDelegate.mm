@@ -10,7 +10,7 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
   // Set up AVAudioSession for background audio
   NSError *setCategoryError = nil;
-  BOOL success = [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:&setCategoryError];
+  BOOL success = [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:nil];
   if (!success) {
     NSLog(@"Error setting AVAudioSession category: %@", setCategoryError);
   }
