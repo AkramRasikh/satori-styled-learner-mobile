@@ -43,6 +43,8 @@ const DifficultSentenceMidSection = ({
     setCurrentTimeState,
     currentTimeState,
     soundDuration,
+    handleLoad,
+    handleSnippet,
   } = useDifficultSentenceAudio();
 
   return (
@@ -70,7 +72,15 @@ const DifficultSentenceMidSection = ({
             borderRadius: 5,
           }}
         />
-        <DifficultSentenceAudioControls sentence={sentence} />
+        <DifficultSentenceAudioControls
+          sentence={sentence}
+          handleLoad={handleLoad}
+          isLoaded={isLoaded}
+          isPlaying={isPlaying}
+          setIsPlaying={setIsPlaying}
+          soundRef={soundRef}
+          handleSnippet={handleSnippet}
+        />
       </View>
       {miniSnippets?.length > 0 && (
         <DifficultSentenceSnippets

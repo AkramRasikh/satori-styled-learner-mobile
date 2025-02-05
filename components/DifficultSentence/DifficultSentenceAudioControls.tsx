@@ -2,18 +2,16 @@ import React, {View} from 'react-native';
 import {IconButton} from 'react-native-paper';
 
 import useSoundHook from '../../hooks/useSoundHook';
-import useDifficultSentenceAudio from './context/useDifficultSentenceAudio';
 
-const DifficultSentenceAudioControls = ({sentence}) => {
-  const {
-    handleLoad,
-    isLoaded,
-    isPlaying,
-    setIsPlaying,
-    soundRef,
-    handleSnippet,
-  } = useDifficultSentenceAudio();
-
+const DifficultSentenceAudioControls = ({
+  sentence,
+  handleLoad,
+  isLoaded,
+  isPlaying,
+  setIsPlaying,
+  soundRef,
+  handleSnippet,
+}) => {
   const {playSound, pauseSound, forwardSound, rewindSound} = useSoundHook({
     soundRef,
     isPlaying,
@@ -41,6 +39,26 @@ const DifficultSentenceAudioControls = ({sentence}) => {
   };
 
   const playIcon = isLoaded && isPlaying ? 'pause' : 'play';
+
+  const btnArr = [
+    {
+      icon: 'rewind',
+      onPress: rewindSound,
+    },
+    {
+      icon: playIcon,
+      onPress: handlePlay,
+    },
+    {
+      icon: 'fast-forward',
+      onPress: forwardSound,
+    },
+    {
+      icon: 'content-cut',
+      onPress: handleSnippetFunc,
+    },
+  ];
+
   return (
     <View
       style={{
@@ -48,30 +66,17 @@ const DifficultSentenceAudioControls = ({sentence}) => {
         justifyContent: 'space-between',
         flexDirection: 'row',
       }}>
-      <IconButton
-        icon="rewind"
-        mode="outlined"
-        size={15}
-        onPress={rewindSound}
-      />
-      <IconButton
-        icon={playIcon}
-        mode="outlined"
-        size={15}
-        onPress={handlePlay}
-      />
-      <IconButton
-        icon="fast-forward"
-        mode="outlined"
-        size={15}
-        onPress={forwardSound}
-      />
-      <IconButton
-        icon="content-cut"
-        mode="outlined"
-        size={15}
-        onPress={handleSnippetFunc}
-      />
+      {btnArr.map((btn, index) => {
+        return (
+          <IconButton
+            key={index}
+            icon={btn.icon}
+            mode="outlined"
+            size={15}
+            onPress={btn.onPress}
+          />
+        );
+      })}
     </View>
   );
 };
