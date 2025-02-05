@@ -27,13 +27,8 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
 
   const targetLanguageWordsState = useSelector(state => state.words);
   const numberOfWords = targetLanguageWordsState.length;
-  const {
-    updateSentenceData,
-    updatePromptState,
-    deleteWord,
-    updateWordData,
-    updatingSentenceState,
-  } = useData();
+  const {updateSentenceData, updatePromptState, deleteWord, updateWordData} =
+    useData();
 
   const {
     difficultSentencesState,
@@ -241,7 +236,6 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
                 handleSelectWord={handleSelectWord}
                 handleWordUpdate={handleWordUpdate}
                 sentence={sentence}
-                updatingSentenceState={updatingSentenceState}
                 indexNum={index}
               />
             ))}

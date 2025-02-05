@@ -9,7 +9,6 @@ const DifficultSentenceComponent = ({
   setSliceArrState,
   sentence,
   indexNum,
-  updatingSentenceState,
   realCapacity,
   navigation,
   updateSentenceData,
@@ -29,7 +28,6 @@ const DifficultSentenceComponent = ({
         indexNum={indexNum}
         sliceArrState={sliceArrState}
         sentence={sentence}
-        updatingSentenceState={updatingSentenceState}
         realCapacity={realCapacity}
         navigation={navigation}
         sentenceBeingHighlightedState={sentenceBeingHighlightedState}

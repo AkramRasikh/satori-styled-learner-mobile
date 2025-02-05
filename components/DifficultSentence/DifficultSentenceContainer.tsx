@@ -96,7 +96,6 @@ const DifficultSentenceContainer = ({
   indexNum,
   sliceArrState,
   sentence,
-  updatingSentenceState,
   navigation,
   realCapacity,
   sentenceBeingHighlightedState,
@@ -119,6 +118,7 @@ const DifficultSentenceContainer = ({
     addSnippet,
     removeSnippet,
     getThisSentencesWordList,
+    updatingSentenceState,
   } = useData();
 
   const {fadeAnim, scaleAnim} = useDifficultSentenceContext();
