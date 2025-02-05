@@ -1,6 +1,6 @@
 import React, {View} from 'react-native';
 import {useEffect, useState} from 'react';
-import TopHeader from './TopHeader';
+import DifficultSentenceTopHeader from './DifficultSentenceTopHeader';
 import DifficultSentenceTextContainer from './DifficultSentenceTextContainer';
 import useHighlightWordToWordBank from '../../hooks/useHighlightWordToWordBank';
 import useData from '../../context/Data/useData';
@@ -16,12 +16,12 @@ import {
   getDueDateText,
 } from '../../utils/get-date-due-status';
 import {isCardDue} from '../../utils/is-card-due';
-import NewSRSToggles from './NewSRSToggles';
-import NewAudioControls from './NewAudioControls';
-import NewProgressBarComponent from './NewProgressBarComponent';
-import TextActionContainer from './TextActionContainer';
+import DifficultSentenceSRSToggles from './DifficultSentenceSRSToggles';
+import DifficultSentenceAudioControls from './DifficultSentenceAudioControls';
+import DifficultSentenceProgressBar from './DifficultSentenceProgressBar';
+import DifficultSentenceTextAction from './DifficultSentenceTextAction';
 
-const NewDifficultSentenceContainer = ({
+const DifficultSentenceContainer = ({
   toggleableSentencesStateLength,
   indexNum,
   sliceArrState,
@@ -169,7 +169,7 @@ const NewDifficultSentenceContainer = ({
           gap: 5,
           marginBottom: 20,
         }}>
-        <TopHeader
+        <DifficultSentenceTopHeader
           topic={topic}
           dueColorState={dueColorState}
           handleNavigateToTopic={handleNavigation}
@@ -186,20 +186,20 @@ const NewDifficultSentenceContainer = ({
           saveWordFirebase={saveWordFirebase}
         />
         {isDueState ? (
-          <NewSRSToggles sentence={sentence} />
+          <DifficultSentenceSRSToggles sentence={sentence} />
         ) : (
           <View style={{alignSelf: 'center'}}>
             <Text style={DefaultTheme.fonts.bodyMedium}>{text}</Text>
           </View>
         )}
-        <NewProgressBarComponent />
+        <DifficultSentenceProgressBar />
         <View
           style={{
             display: 'flex',
             justifyContent: 'space-between',
             flexDirection: 'row',
           }}>
-          <TextActionContainer
+          <DifficultSentenceTextAction
             handleSettingHighlightmode={handleSettingHighlightmode}
             handleShowAllMatchedWords={handleShowAllMatchedWords}
             isBeingHighlighed={sentenceBeingHighlightedState === sentence.id}
@@ -211,7 +211,7 @@ const NewDifficultSentenceContainer = ({
               borderRadius: 5,
             }}
           />
-          <NewAudioControls sentence={sentence} />
+          <DifficultSentenceAudioControls sentence={sentence} />
         </View>
         {showMatchedWordsKey &&
           matchedWordListState.map((item, index) => {
@@ -256,4 +256,4 @@ const NewDifficultSentenceContainer = ({
   );
 };
 
-export default NewDifficultSentenceContainer;
+export default DifficultSentenceContainer;

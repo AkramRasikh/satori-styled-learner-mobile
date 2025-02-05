@@ -2,7 +2,7 @@ import React, {View} from 'react-native';
 import {DefaultTheme, IconButton} from 'react-native-paper';
 import useDifficultSentenceContext from '../NewDifficultBase/context/useDifficultSentence';
 
-const TextActionContainer = ({
+const DifficultSentenceTextAction = ({
   handleSettingHighlightmode,
   isBeingHighlighed,
   handleShowAllMatchedWords,
@@ -47,4 +47,4 @@ const TextActionContainer = ({
   );
 };
 
-export default TextActionContainer;
+export default DifficultSentenceTextAction;

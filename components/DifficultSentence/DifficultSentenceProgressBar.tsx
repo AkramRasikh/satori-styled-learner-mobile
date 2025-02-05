@@ -2,7 +2,7 @@ import React, {Text, View} from 'react-native';
 import {ProgressBar} from 'react-native-paper';
 import useDifficultSentenceContext from '../NewDifficultBase/context/useDifficultSentence';
 
-const NewProgressBarComponent = () => {
+const DifficultSentenceProgressBar = () => {
   const {currentTimeState, soundDuration, isLoaded} =
     useDifficultSentenceContext();
 
@@ -33,4 +33,4 @@ const NewProgressBarComponent = () => {
   );
 };
 
-export default NewProgressBarComponent;
+export default DifficultSentenceProgressBar;

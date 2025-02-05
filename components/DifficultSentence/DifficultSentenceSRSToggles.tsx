@@ -9,7 +9,7 @@ import {
 import {getTimeDiffSRS} from '../../utils/getTimeDiffSRS';
 import useDifficultSentenceContext from '../NewDifficultBase/context/useDifficultSentence';
 
-const NewSRSToggles = ({sentence}) => {
+const DifficultSentenceSRSToggles = ({sentence}) => {
   const {handleNextReview} = useDifficultSentenceContext();
   const timeNow = new Date();
 
@@ -97,4 +97,4 @@ const NewSRSToggles = ({sentence}) => {
     </View>
   );
 };
-export default NewSRSToggles;
+export default DifficultSentenceSRSToggles;

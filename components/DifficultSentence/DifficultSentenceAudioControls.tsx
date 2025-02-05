@@ -4,7 +4,7 @@ import {IconButton} from 'react-native-paper';
 import useSoundHook from '../../hooks/useSoundHook';
 import useDifficultSentenceContext from '../NewDifficultBase/context/useDifficultSentence';
 
-const NewAudioControls = ({sentence}) => {
+const DifficultSentenceAudioControls = ({sentence}) => {
   const {
     handleLoad,
     isLoaded,
@@ -76,4 +76,4 @@ const NewAudioControls = ({sentence}) => {
   );
 };
 
-export default NewAudioControls;
+export default DifficultSentenceAudioControls;

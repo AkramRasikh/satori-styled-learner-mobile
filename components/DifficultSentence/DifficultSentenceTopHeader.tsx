@@ -15,7 +15,11 @@ const DueColorMarker = ({dueColorState}) => (
   />
 );
 
-const TopHeader = ({topic, handleNavigateToTopic, dueColorState}) => {
+const DifficultSentenceTopHeader = ({
+  topic,
+  handleNavigateToTopic,
+  dueColorState,
+}) => {
   const [areYouSureDeleteState, setAreYouSureDeleteState] = useState(false);
 
   const {handleDeleteContent} = useDifficultSentenceContext();
@@ -80,4 +84,4 @@ const TopHeader = ({topic, handleNavigateToTopic, dueColorState}) => {
   );
 };
 
-export default TopHeader;
+export default DifficultSentenceTopHeader;

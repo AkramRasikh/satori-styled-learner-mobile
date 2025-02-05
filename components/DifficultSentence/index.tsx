@@ -1,7 +1,7 @@
 import React from 'react';
 
 import {DifficultSentenceProvider} from '../NewDifficultBase/context/DifficultSentenceProvider';
-import NewDifficultSentenceContainer from './NewDifficultSentenceContainer';
+import DifficultSentenceContainer from './DifficultSentenceContainer';
 import CollapsibleCard from '../AnimationContainer';
 
 const DifficultSentenceComponent = ({
@@ -28,7 +28,7 @@ const DifficultSentenceComponent = ({
       sentence={sentence}
       indexNum={indexNum}>
       <CollapsibleCard>
-        <NewDifficultSentenceContainer
+        <DifficultSentenceContainer
           setSliceArrState={setSliceArrState}
           toggleableSentencesStateLength={toggleableSentencesStateLength}
           indexNum={indexNum}
