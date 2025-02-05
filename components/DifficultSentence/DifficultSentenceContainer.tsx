@@ -40,7 +40,6 @@ const DifficultSentenceMidSection = ({
     isLoaded,
     miniSnippets,
     setMiniSnippets,
-    setCurrentTimeState,
     currentTimeState,
     soundDuration,
     handleLoad,
@@ -82,19 +81,16 @@ const DifficultSentenceMidSection = ({
           handleSnippet={handleSnippet}
         />
       </View>
-      {miniSnippets?.length > 0 && (
+      {miniSnippets?.length > 0 && isLoaded && (
         <DifficultSentenceSnippets
-          isLoaded={isLoaded}
           soundRef={soundRef}
           snippetsLocalAndDb={miniSnippets}
-          setCurrentTimeState={setCurrentTimeState}
           currentTimeState={currentTimeState}
           isPlaying={isPlaying}
           setIsPlaying={setIsPlaying}
           addSnippet={addSnippet}
           removeSnippet={removeSnippet}
           setMiniSnippets={setMiniSnippets}
-          url={sentence.url}
         />
       )}
     </>

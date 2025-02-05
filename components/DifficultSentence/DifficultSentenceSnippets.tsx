@@ -1,8 +1,8 @@
-import {useEffect, useState} from 'react';
-import useSoundHook from '../../hooks/useSoundHook';
+import React, {useEffect, useState} from 'react';
 import useSnippetControls from '../../hooks/useSnippetControls';
 import useSnippetManageAudioStop from '../../hooks/useSnippetManageAudioStop';
 import {SnippetHandlersDifficultSentence} from '../MiniSnippetTimeChangeHandlers';
+import useMainAudioControls from '../../hooks/useMainAudioControls';
 
 const hasBeenSnippedFromCollectiveURL = snippet => {
   const snippetURL = snippet.url;
@@ -10,10 +10,8 @@ const hasBeenSnippedFromCollectiveURL = snippet => {
 };
 const ThisSnippetContainer = ({
   soundRef,
-  setCurrentTimeState,
   currentTimeState,
   snippet,
-  url,
   masterAudio,
   setMasterAudio,
   index,
@@ -100,15 +98,12 @@ const ThisSnippetContainer = ({
     snippet,
   });
 
-  const {playSound, pauseSound} = useSoundHook({
-    url,
+  const {playSound, pauseSound} = useMainAudioControls({
     soundRef,
     isPlaying,
     setIsPlaying,
-    topicName: snippet.topicName,
     isSnippet: true,
     startTime: isSaved ? getStartTime() : adjustableStartTime,
-    setCurrentTime: setCurrentTimeState,
   });
 
   useSnippetManageAudioStop({
@@ -141,38 +136,31 @@ const ThisSnippetContainer = ({
   );
 };
 const DifficultSentenceSnippets = ({
-  isLoaded,
   soundRef,
   snippetsLocalAndDb,
-  setCurrentTimeState,
   currentTimeState,
   isPlaying,
   setIsPlaying,
   addSnippet,
   removeSnippet,
   setMiniSnippets,
-  url,
 }) => {
-  return isLoaded && snippetsLocalAndDb?.length > 0
-    ? snippetsLocalAndDb?.map((snippetData, index) => {
-        return (
-          <ThisSnippetContainer
-            key={snippetData.id}
-            index={index}
-            soundRef={soundRef}
-            snippet={snippetData}
-            setCurrentTimeState={setCurrentTimeState}
-            currentTimeState={currentTimeState}
-            masterAudio={isPlaying}
-            setMasterAudio={setIsPlaying}
-            addSnippet={addSnippet}
-            removeSnippet={removeSnippet}
-            setMiniSnippets={setMiniSnippets}
-            url={url}
-          />
-        );
-      })
-    : null;
+  return snippetsLocalAndDb.map((snippetData, index) => {
+    return (
+      <ThisSnippetContainer
+        key={snippetData.id}
+        index={index}
+        soundRef={soundRef}
+        snippet={snippetData}
+        currentTimeState={currentTimeState}
+        masterAudio={isPlaying}
+        setMasterAudio={setIsPlaying}
+        addSnippet={addSnippet}
+        removeSnippet={removeSnippet}
+        setMiniSnippets={setMiniSnippets}
+      />
+    );
+  });
 };
 
 export default DifficultSentenceSnippets;

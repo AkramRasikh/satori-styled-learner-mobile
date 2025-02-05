@@ -99,7 +99,6 @@ export const DifficultSentenceAudioProvider = ({
         handleLoad,
         handleSnippet,
         currentTimeState,
-        setCurrentTimeState,
         isPlaying,
         setIsPlaying,
         isLoaded,
