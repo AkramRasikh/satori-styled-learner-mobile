@@ -41,7 +41,6 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
     difficultSentencesState,
     removeDifficultSentenceFromState,
     updateDifficultSentence,
-    refreshDifficultSentencesInfo,
   } = useDifficultSentences();
 
   const handleNavigationToWords = () => {
@@ -61,13 +60,6 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
     if (snippetDataFromAPI) {
       return snippetDataFromAPI;
     }
-  };
-
-  const handleRefreshFunc = () => {
-    refreshDifficultSentencesInfo();
-    setSelectedGeneralTopicState('');
-    showDueInit();
-    setIsMountedState(true);
   };
 
   const isDueCheck = (sentence, todayDateObj) => {
@@ -201,6 +193,7 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
   ]);
 
   useEffect(() => {
+    setIsMountedState(true);
     showDueInit(difficultSentencesState);
   }, []);
 
