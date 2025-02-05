@@ -1,7 +1,8 @@
-import {Text, TouchableOpacity, View} from 'react-native';
+import React, {View} from 'react-native';
 import {useState} from 'react';
 import FutureDateIncrementor from './FutureDateIncrementor';
 import {isSameDay} from '../utils/check-same-date';
+import {Button, DefaultTheme, FAB, Text} from 'react-native-paper';
 
 const getDaysLater = (today, futureDate) => {
   const futureDateObj = new Date(futureDate);
@@ -99,46 +100,35 @@ const ReviewSection = ({
         paddingBottom: 10,
         width: '100%',
       }}>
-      <TouchableOpacity
+      <FAB
         onPress={handleBulkReviewsFunc}
-        style={{
-          padding: 10,
-          backgroundColor: '#FFC5CB',
-          borderRadius: 10,
-          marginVertical: 'auto',
-          alignSelf: 'center',
-        }}>
-        <Text>
-          🕰️{' '}
-          {hasSomeReviewedSentences ? 'Remove all reviews' : 'Bulk add reviews'}
-        </Text>
-      </TouchableOpacity>
+        icon="clock"
+        label={
+          hasSomeReviewedSentences ? 'Remove all reviews' : 'Bulk add reviews'
+        }
+      />
+      <View>
+        <Text style={DefaultTheme.fonts.bodyMedium}>{nextReviewText}</Text>
+      </View>
       <View
         style={{
           flexDirection: 'row',
           flexWrap: 'wrap',
-          alignItems: 'center',
-          justifyContent: 'space-between',
+          justifyContent: 'space-around',
         }}>
-        <Text>{nextReviewText}</Text>
-      </View>
-      <View>
-        <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
-          <TouchableOpacity
-            style={{
-              padding: 10,
-              backgroundColor: 'grey',
-              borderRadius: 10,
-              marginVertical: 'auto',
-            }}
-            onPress={setNextReviewDate}>
-            <Text>{futureStateText}</Text>
-          </TouchableOpacity>
-          <FutureDateIncrementor
-            futureDaysState={futureDaysState}
-            setFutureDaysState={setFutureDaysState}
-          />
-        </View>
+        <Button
+          onPress={setNextReviewDate}
+          mode="outlined"
+          style={{
+            alignContent: 'center',
+            alignSelf: 'center',
+          }}>
+          {futureStateText}
+        </Button>
+        <FutureDateIncrementor
+          futureDaysState={futureDaysState}
+          setFutureDaysState={setFutureDaysState}
+        />
       </View>
     </View>
   );

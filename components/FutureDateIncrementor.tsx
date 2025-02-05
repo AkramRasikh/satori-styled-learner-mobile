@@ -1,4 +1,5 @@
-import {View, Button, StyleSheet} from 'react-native';
+import React, {View, StyleSheet} from 'react-native';
+import {IconButton} from 'react-native-paper';
 
 const FutureDateIncrementor = ({futureDaysState, setFutureDaysState}) => {
   const increment = () => {
@@ -12,19 +13,14 @@ const FutureDateIncrementor = ({futureDaysState, setFutureDaysState}) => {
   };
 
   return (
-    <View>
-      <View style={styles.buttonContainer}>
-        <Button title="(+)" onPress={increment} />
-        <Button title="(-)" onPress={decrement} />
-      </View>
+    <View style={styles.buttonContainer}>
+      <IconButton icon={'plus'} onPress={increment} mode="contained" />
+      <IconButton icon={'minus'} onPress={decrement} mode="contained" />
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  countText: {
-    fontSize: 16,
-  },
   buttonContainer: {
     flexDirection: 'row',
     gap: 10,
