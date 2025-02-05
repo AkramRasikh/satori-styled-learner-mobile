@@ -8,6 +8,26 @@ const DifficultSentenceTextAction = ({
   handleShowAllMatchedWords,
 }) => {
   const {handleCopyText, handleOpenUpGoogle} = useDifficultSentenceContext();
+  const btnArr = [
+    {
+      icon: 'text-search',
+      onPress: handleShowAllMatchedWords,
+    },
+    {
+      icon: isBeingHighlighed ? 'close' : 'format-color-highlight',
+      onPress: handleSettingHighlightmode,
+      containerColor:
+        isBeingHighlighed && DefaultTheme.colors.tertiaryContainer,
+    },
+    {
+      icon: 'google-translate',
+      onPress: handleOpenUpGoogle,
+    },
+    {
+      icon: 'content-copy',
+      onPress: handleCopyText,
+    },
+  ];
 
   return (
     <View
@@ -16,33 +36,18 @@ const DifficultSentenceTextAction = ({
         justifyContent: 'space-between',
         flexDirection: 'row',
       }}>
-      <IconButton
-        icon="text-search"
-        mode="outlined"
-        size={15}
-        onPress={handleShowAllMatchedWords}
-      />
-      <IconButton
-        icon={isBeingHighlighed ? 'close' : 'format-color-highlight'}
-        mode="outlined"
-        containerColor={
-          isBeingHighlighed && DefaultTheme.colors.tertiaryContainer
-        }
-        size={15}
-        onPress={handleSettingHighlightmode}
-      />
-      <IconButton
-        icon="google-translate"
-        mode="outlined"
-        size={15}
-        onPress={handleOpenUpGoogle}
-      />
-      <IconButton
-        icon="content-copy"
-        mode="outlined"
-        size={15}
-        onPress={handleCopyText}
-      />
+      {btnArr.map((btn, index) => {
+        return (
+          <IconButton
+            key={index}
+            icon={btn.icon}
+            mode="outlined"
+            size={15}
+            onPress={btn.onPress}
+            containerColor={btn?.containerColor}
+          />
+        );
+      })}
     </View>
   );
 };
