@@ -259,26 +259,3 @@ const NewDifficultSentenceContainer = ({
 };
 
 export default NewDifficultSentenceContainer;
-
-// {thisSentenceIsLoading && <LoadingWidget />}
-// <DifficultSentenceBody
-//   sentence={sentence}
-//   updateSentenceData={updateSentenceData}
-//   dueStatus={dueStatus}
-//   dueDate={dueDate}
-//   addSnippet={addSnippet}
-//   removeSnippet={removeSnippet}
-//   sentenceBeingHighlightedState={sentenceBeingHighlightedState}
-//   setSentenceBeingHighlightedState={setSentenceBeingHighlightedState}
-//   navigation={navigation}
-//   handleSelectWord={handleSelectWord}
-//   handleWordUpdate={handleWordUpdate}
-//   deleteWord={deleteWord}
-//   indexNum={indexNum}
-// />
-// {moreToLoad && (
-//   <Button
-//     onPress={() => setSliceArrState(prev => prev + 5)}
-//     title="See More"
-//   />
-// )}
