@@ -1,12 +1,12 @@
 import React, {View} from 'react-native';
 
-const CircleColor = ({backgroundColor, size, borderRadius}) => (
+const CircleColor = ({backgroundColor, size = 16, borderRadius = 10}) => (
   <View
     style={{
       backgroundColor: backgroundColor,
-      width: size || 16,
-      height: size || 16,
-      borderRadius: borderRadius || 10,
+      width: size,
+      height: size,
+      borderRadius,
       marginVertical: 'auto',
     }}
   />
