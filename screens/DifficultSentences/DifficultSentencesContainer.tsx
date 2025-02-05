@@ -30,8 +30,6 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
   const {
     updateSentenceData,
     updatePromptState,
-    addSnippet,
-    removeSnippet,
     deleteWord,
     updateWordData,
     updatingSentenceState,
@@ -45,21 +43,6 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
 
   const handleNavigationToWords = () => {
     navigation.navigate('WordStudy');
-  };
-
-  const handleRemoveSnippet = async ({snippetId, sentenceId}) => {
-    const deletedSnippetId = await removeSnippet({
-      snippetId,
-      sentenceId,
-    });
-    return deletedSnippetId;
-  };
-
-  const handleAddSnippet = async snippetData => {
-    const snippetDataFromAPI = await addSnippet(snippetData);
-    if (snippetDataFromAPI) {
-      return snippetDataFromAPI;
-    }
   };
 
   const isDueCheck = (sentence, todayDateObj) => {
@@ -246,9 +229,7 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
               <DifficultSentenceComponent
                 key={sentence.id}
                 toggleableSentencesStateLength={toggleableSentencesStateLength}
-                addSnippet={handleAddSnippet}
                 updateSentenceData={updateSentenceDataScreenLevel}
-                removeSnippet={handleRemoveSnippet}
                 sentenceBeingHighlightedState={sentenceBeingHighlightedState}
                 setSentenceBeingHighlightedState={
                   setSentenceBeingHighlightedState

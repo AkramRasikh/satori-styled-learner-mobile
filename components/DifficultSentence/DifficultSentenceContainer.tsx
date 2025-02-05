@@ -99,14 +99,11 @@ const DifficultSentenceContainer = ({
   updatingSentenceState,
   navigation,
   realCapacity,
-  addSnippet,
-  removeSnippet,
   sentenceBeingHighlightedState,
   setSentenceBeingHighlightedState,
   handleSelectWord,
   handleWordUpdate,
   setSliceArrState,
-  // handleClickDelete,
 }) => {
   const [matchedWordListState, setMatchedWordListState] = useState([]);
   const [showAllMatchedWordsState, setShowAllMatchedWordsState] =
@@ -115,8 +112,14 @@ const DifficultSentenceContainer = ({
   const handleShowAllMatchedWords = () => {
     setShowAllMatchedWordsState(!showAllMatchedWordsState);
   };
-  const {pureWords, saveWordFirebase, deleteWord, getThisSentencesWordList} =
-    useData();
+  const {
+    pureWords,
+    saveWordFirebase,
+    deleteWord,
+    addSnippet,
+    removeSnippet,
+    getThisSentencesWordList,
+  } = useData();
 
   const {fadeAnim, scaleAnim} = useDifficultSentenceContext();
 
