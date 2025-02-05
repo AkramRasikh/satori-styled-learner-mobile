@@ -8,7 +8,7 @@ const hasBeenSnippedFromCollectiveURL = snippet => {
   const snippetURL = snippet.url;
   return snippetURL.includes(snippet.topicName);
 };
-const SingleSnippetContainer = ({
+const DifficultSentenceSnippet = ({
   soundRef,
   currentTimeState,
   snippet,
@@ -131,32 +131,5 @@ const SingleSnippetContainer = ({
     />
   );
 };
-const DifficultSentenceSnippets = ({
-  soundRef,
-  snippetsLocalAndDb,
-  currentTimeState,
-  isPlaying,
-  setIsPlaying,
-  addSnippet,
-  removeSnippet,
-  setMiniSnippets,
-}) => {
-  return snippetsLocalAndDb.map((snippetData, index) => {
-    return (
-      <SingleSnippetContainer
-        key={snippetData.id}
-        index={index}
-        soundRef={soundRef}
-        snippet={snippetData}
-        currentTimeState={currentTimeState}
-        masterAudio={isPlaying}
-        setMasterAudio={setIsPlaying}
-        addSnippet={addSnippet}
-        removeSnippet={removeSnippet}
-        setMiniSnippets={setMiniSnippets}
-      />
-    );
-  });
-};
 
-export default DifficultSentenceSnippets;
+export default DifficultSentenceSnippet;

@@ -9,7 +9,6 @@ import {DefaultTheme, Button, Text} from 'react-native-paper';
 import DifficultSentenceMappedWords from './DifficultSentenceMappedWords';
 import TextSegmentContainer from '../TextSegmentContainer';
 import {checkOverlap} from '../../utils/check-word-overlap';
-import DifficultSentenceSnippets from './DifficultSentenceSnippets';
 
 import {
   calculateDueDate,
@@ -24,6 +23,7 @@ import useDifficultSentenceAudio from './context/useDifficultSentenceAudio';
 import {DifficultSentenceAudioProvider} from './context/DifficultSentenceAudioProvider';
 import AnimationContainer from '../AnimationContainer';
 import useDifficultSentenceContext from './context/useDifficultSentence';
+import DifficultSentenceSnippet from './DifficultSentenceSnippet';
 
 const DifficultSentenceMidSection = ({
   handleSettingHighlightmode,
@@ -45,6 +45,8 @@ const DifficultSentenceMidSection = ({
     handleLoad,
     handleSnippet,
   } = useDifficultSentenceAudio();
+
+  const hasSnippets = isLoaded && miniSnippets.length > 0;
 
   return (
     <>
@@ -81,18 +83,23 @@ const DifficultSentenceMidSection = ({
           handleSnippet={handleSnippet}
         />
       </View>
-      {miniSnippets?.length > 0 && isLoaded && (
-        <DifficultSentenceSnippets
-          soundRef={soundRef}
-          snippetsLocalAndDb={miniSnippets}
-          currentTimeState={currentTimeState}
-          isPlaying={isPlaying}
-          setIsPlaying={setIsPlaying}
-          addSnippet={addSnippet}
-          removeSnippet={removeSnippet}
-          setMiniSnippets={setMiniSnippets}
-        />
-      )}
+      {hasSnippets &&
+        miniSnippets.map((snippetData, index) => {
+          return (
+            <DifficultSentenceSnippet
+              key={snippetData.id}
+              index={index}
+              soundRef={soundRef}
+              snippet={snippetData}
+              currentTimeState={currentTimeState}
+              masterAudio={isPlaying}
+              setMasterAudio={setIsPlaying}
+              addSnippet={addSnippet}
+              removeSnippet={removeSnippet}
+              setMiniSnippets={setMiniSnippets}
+            />
+          );
+        })}
     </>
   );
 };
