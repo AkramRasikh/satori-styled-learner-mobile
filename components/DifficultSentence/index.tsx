@@ -20,8 +20,7 @@ const DifficultSentenceComponent = ({
   return (
     <DifficultSentenceProvider
       updateSentenceData={updateSentenceData}
-      sentence={sentence}
-      indexNum={indexNum}>
+      sentence={sentence}>
       <DifficultSentenceContainer
         setSliceArrState={setSliceArrState}
         toggleableSentencesStateLength={toggleableSentencesStateLength}

@@ -1,10 +1,6 @@
 import React, {useEffect, useRef} from 'react';
 import {Animated} from 'react-native';
-import {createContext, PropsWithChildren, useState} from 'react';
-import useLanguageSelector from '../../../context/LanguageSelector/useLanguageSelector';
-import {getFirebaseAudioURL} from '../../../hooks/useGetCombinedAudioData';
-import useMP3File from '../../../hooks/useMP3File';
-import useLoadAudioInstance from '../../../hooks/useLoadAudioInstance';
+import {createContext, PropsWithChildren} from 'react';
 import {
   getCardDataRelativeToNow,
   getDueDate,
@@ -19,11 +15,8 @@ export const DifficultSentenceContext = createContext(null);
 export const DifficultSentenceProvider = ({
   updateSentenceData,
   sentence,
-  indexNum,
   children,
 }: PropsWithChildren<{}>) => {
-  const [currentTimeState, setCurrentTimeState] = useState(0);
-  const [isPlaying, setIsPlaying] = useState(false);
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const scaleAnim = useRef(new Animated.Value(0.8)).current;
 
@@ -59,25 +52,7 @@ export const DifficultSentenceProvider = ({
     });
   };
 
-  const {languageSelectedState} = useLanguageSelector();
   const {openGoogleTranslateApp} = useOpenGoogleTranslate();
-
-  const id = sentence.id;
-  const topic = sentence.topic;
-  const isMediaContent = sentence.isMediaContent;
-
-  const audioId = isMediaContent ? topic : id;
-  const soundRef = useRef();
-
-  const soundDuration = soundRef?.current?._duration || 0;
-
-  const url = getFirebaseAudioURL(audioId, languageSelectedState);
-
-  const {loadFile, filePath} = useMP3File(audioId);
-  const {triggerLoadURL, isLoaded} = useLoadAudioInstance({
-    soundRef,
-    url: filePath,
-  });
 
   const reviewData = sentence?.reviewData;
   const isAdhoc = sentence?.isAdhoc;
@@ -95,21 +70,6 @@ export const DifficultSentenceProvider = ({
     nextReview,
     reviewHistory,
   });
-
-  useEffect(() => {
-    const getCurrentTimeFunc = () => {
-      soundRef.current.getCurrentTime(currentTime => {
-        setCurrentTimeState(currentTime);
-      });
-    };
-    const interval = setInterval(() => {
-      if (soundRef.current?.isPlaying()) {
-        getCurrentTimeFunc();
-      }
-    }, 100);
-
-    return () => clearInterval(interval);
-  }, [soundRef, setCurrentTimeState]);
 
   const getShouldRemoveLegacyFields = () => {
     if (hasLegacyReviewSystem) {
@@ -159,23 +119,6 @@ export const DifficultSentenceProvider = ({
     });
   };
 
-  const handleLoad = () => {
-    loadFile(audioId, url);
-  };
-
-  useEffect(() => {
-    if (filePath && !isLoaded) {
-      triggerLoadURL();
-    }
-  }, [filePath, triggerLoadURL, isLoaded]);
-
-  useEffect(() => {
-    const isFirst = indexNum === 0;
-    if (!isLoaded && isFirst) {
-      loadFile(audioId, url);
-    }
-  }, [loadFile, isLoaded, indexNum, audioId, url]);
-
   const handleCopyText = () => {
     Clipboard.setString(sentence.targetLang);
   };
@@ -183,15 +126,7 @@ export const DifficultSentenceProvider = ({
   return (
     <DifficultSentenceContext.Provider
       value={{
-        handleLoad,
         handleNextReview,
-        currentTimeState,
-        setCurrentTimeState,
-        isPlaying,
-        setIsPlaying,
-        isLoaded,
-        soundDuration,
-        soundRef,
         handleCopyText,
         handleDeleteContent,
         fadeAnim,
