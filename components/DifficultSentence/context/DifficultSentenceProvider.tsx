@@ -1,12 +1,10 @@
 import React, {useEffect, useRef} from 'react';
 import {Animated} from 'react-native';
 import {createContext, PropsWithChildren, useState} from 'react';
-import {useSelector} from 'react-redux';
 import useLanguageSelector from '../../../context/LanguageSelector/useLanguageSelector';
 import {getFirebaseAudioURL} from '../../../hooks/useGetCombinedAudioData';
 import useMP3File from '../../../hooks/useMP3File';
 import useLoadAudioInstance from '../../../hooks/useLoadAudioInstance';
-import {generateRandomId} from '../../../utils/generate-random-id';
 import {
   getCardDataRelativeToNow,
   getDueDate,
@@ -27,7 +25,6 @@ export const DifficultSentenceProvider = ({
   const [updatingSentenceState, setUpdatingSentenceState] = useState('');
   const [currentTimeState, setCurrentTimeState] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [miniSnippets, setMiniSnippets] = useState([]);
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const scaleAnim = useRef(new Animated.Value(0.8)).current;
 
@@ -66,8 +63,6 @@ export const DifficultSentenceProvider = ({
   const {languageSelectedState} = useLanguageSelector();
   const {openGoogleTranslateApp} = useOpenGoogleTranslate();
 
-  const targetLanguageSnippetsState = useSelector(state => state.snippets);
-
   const id = sentence.id;
   const topic = sentence.topic;
   const isMediaContent = sentence.isMediaContent;
@@ -84,14 +79,6 @@ export const DifficultSentenceProvider = ({
     soundRef,
     url: filePath,
   });
-
-  useEffect(() => {
-    setMiniSnippets(
-      targetLanguageSnippetsState.filter(
-        snippetData => snippetData.sentenceId === id,
-      ),
-    );
-  }, []);
 
   const reviewData = sentence?.reviewData;
   const isAdhoc = sentence?.isAdhoc;
@@ -190,19 +177,6 @@ export const DifficultSentenceProvider = ({
     }
   }, [loadFile, isLoaded, indexNum, audioId, url]);
 
-  const handleSnippet = () => {
-    const snippetId = topic + '-' + generateRandomId();
-    const itemToSave = {
-      id: snippetId,
-      sentenceId: id,
-      pointInAudio: currentTimeState,
-      isIsolated: true,
-      url,
-      topicName: topic,
-    };
-    setMiniSnippets(prev => [...prev, itemToSave]);
-  };
-
   const handleCopyText = () => {
     Clipboard.setString(sentence.targetLang);
   };
@@ -213,7 +187,6 @@ export const DifficultSentenceProvider = ({
         updatingSentenceState,
         setUpdatingSentenceState,
         handleLoad,
-        handleSnippet,
         handleNextReview,
         currentTimeState,
         setCurrentTimeState,
@@ -224,8 +197,6 @@ export const DifficultSentenceProvider = ({
         soundRef,
         handleCopyText,
         handleDeleteContent,
-        miniSnippets,
-        setMiniSnippets,
         fadeAnim,
         scaleAnim,
         handleOpenUpGoogle,
