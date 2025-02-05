@@ -211,19 +211,6 @@ const DifficultSentenceContainer = ({
           />
           <DifficultSentenceAudioControls sentence={sentence} />
         </View>
-        {showMatchedWordsKey &&
-          matchedWordListState.map((item, index) => {
-            return (
-              <DifficultSentenceMappedWords
-                key={index}
-                item={item}
-                handleSelectWord={handleSelectWord}
-                deleteWord={deleteWord}
-                handleUpdateWordFinal={handleUpdateWordFinal}
-                indexNum={index}
-              />
-            );
-          })}
       </View>
       {miniSnippets?.length > 0 && (
         <DifficultSentenceSnippets
@@ -240,6 +227,19 @@ const DifficultSentenceContainer = ({
           url={sentence.url}
         />
       )}
+      {showMatchedWordsKey &&
+        matchedWordListState.map((item, index) => {
+          return (
+            <DifficultSentenceMappedWords
+              key={index}
+              item={item}
+              handleSelectWord={handleSelectWord}
+              deleteWord={deleteWord}
+              handleUpdateWordFinal={handleUpdateWordFinal}
+              indexNum={index}
+            />
+          );
+        })}
       {moreToLoad && (
         <Button
           mode="elevated"
