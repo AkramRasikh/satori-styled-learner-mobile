@@ -22,6 +22,8 @@ import DifficultSentenceProgressBar from './DifficultSentenceProgressBar';
 import DifficultSentenceTextAction from './DifficultSentenceTextAction';
 import useDifficultSentenceAudio from './context/useDifficultSentenceAudio';
 import {DifficultSentenceAudioProvider} from './context/DifficultSentenceAudioProvider';
+import AnimationContainer from '../AnimationContainer';
+import useDifficultSentenceContext from './context/useDifficultSentence';
 
 const DifficultSentenceMidSection = ({
   handleSettingHighlightmode,
@@ -115,6 +117,8 @@ const DifficultSentenceContainer = ({
   };
   const {pureWords, saveWordFirebase, deleteWord, getThisSentencesWordList} =
     useData();
+
+  const {fadeAnim, scaleAnim} = useDifficultSentenceContext();
 
   const isLastEl = toggleableSentencesStateLength === indexNum + 1;
   const isFirst = 0 === indexNum;
@@ -212,71 +216,73 @@ const DifficultSentenceContainer = ({
   };
 
   return (
-    <View
-      style={{
-        paddingBottom: isLastEl ? 100 : 0,
-        paddingTop: !isFirst ? 70 : 0,
-        opacity: thisSentenceIsLoading ? 0.5 : 1,
-        display: 'flex',
-        flexDirection: 'column',
-        gap: 10,
-      }}>
-      <DifficultSentenceTopHeader
-        topic={topic}
-        dueColorState={dueColorState}
-        handleNavigateToTopic={handleNavigation}
-      />
-      <DifficultSentenceTextContainer
-        targetLang={sentence.targetLang}
-        baseLang={sentence.baseLang}
-        sentenceBeingHighlightedState={sentenceBeingHighlightedState}
-        setSentenceBeingHighlightedState={setSentenceBeingHighlightedState}
-        sentenceId={sentence.id}
-        safeTextFunc={getSafeText}
-        saveWordFirebase={saveWordFirebase}
-      />
-      {isDueState ? (
-        <DifficultSentenceSRSToggles sentence={sentence} />
-      ) : (
-        <View style={{alignSelf: 'center'}}>
-          <Text style={DefaultTheme.fonts.bodyMedium}>{text}</Text>
-        </View>
-      )}
-
-      <DifficultSentenceAudioProvider sentence={sentence} indexNum={indexNum}>
-        <DifficultSentenceMidSection
-          handleSettingHighlightmode={handleSettingHighlightmode}
-          handleShowAllMatchedWords={handleShowAllMatchedWords}
-          sentenceBeingHighlightedState={sentenceBeingHighlightedState}
-          sentence={sentence}
-          addSnippet={addSnippet}
-          removeSnippet={removeSnippet}
+    <AnimationContainer fadeAnim={fadeAnim} scaleAnim={scaleAnim}>
+      <View
+        style={{
+          paddingBottom: isLastEl ? 100 : 0,
+          paddingTop: !isFirst ? 70 : 0,
+          opacity: thisSentenceIsLoading ? 0.5 : 1,
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 10,
+        }}>
+        <DifficultSentenceTopHeader
+          topic={topic}
+          dueColorState={dueColorState}
+          handleNavigateToTopic={handleNavigation}
         />
-      </DifficultSentenceAudioProvider>
-      {showMatchedWordsKey &&
-        matchedWordListState.map((item, index) => {
-          return (
-            <DifficultSentenceMappedWords
-              key={index}
-              item={item}
-              handleSelectWord={handleSelectWord}
-              deleteWord={deleteWord}
-              handleUpdateWordFinal={handleUpdateWordFinal}
-              indexNum={index}
-            />
-          );
-        })}
-      {moreToLoad && (
-        <Button
-          mode="elevated"
-          onPress={() => setSliceArrState(prev => prev + 5)}
-          style={{
-            alignSelf: 'center',
-          }}>
-          Load more
-        </Button>
-      )}
-    </View>
+        <DifficultSentenceTextContainer
+          targetLang={sentence.targetLang}
+          baseLang={sentence.baseLang}
+          sentenceBeingHighlightedState={sentenceBeingHighlightedState}
+          setSentenceBeingHighlightedState={setSentenceBeingHighlightedState}
+          sentenceId={sentence.id}
+          safeTextFunc={getSafeText}
+          saveWordFirebase={saveWordFirebase}
+        />
+        {isDueState ? (
+          <DifficultSentenceSRSToggles sentence={sentence} />
+        ) : (
+          <View style={{alignSelf: 'center'}}>
+            <Text style={DefaultTheme.fonts.bodyMedium}>{text}</Text>
+          </View>
+        )}
+
+        <DifficultSentenceAudioProvider sentence={sentence} indexNum={indexNum}>
+          <DifficultSentenceMidSection
+            handleSettingHighlightmode={handleSettingHighlightmode}
+            handleShowAllMatchedWords={handleShowAllMatchedWords}
+            sentenceBeingHighlightedState={sentenceBeingHighlightedState}
+            sentence={sentence}
+            addSnippet={addSnippet}
+            removeSnippet={removeSnippet}
+          />
+        </DifficultSentenceAudioProvider>
+        {showMatchedWordsKey &&
+          matchedWordListState.map((item, index) => {
+            return (
+              <DifficultSentenceMappedWords
+                key={index}
+                item={item}
+                handleSelectWord={handleSelectWord}
+                deleteWord={deleteWord}
+                handleUpdateWordFinal={handleUpdateWordFinal}
+                indexNum={index}
+              />
+            );
+          })}
+        {moreToLoad && (
+          <Button
+            mode="elevated"
+            onPress={() => setSliceArrState(prev => prev + 5)}
+            style={{
+              alignSelf: 'center',
+            }}>
+            Load more
+          </Button>
+        )}
+      </View>
+    </AnimationContainer>
   );
 };
 
