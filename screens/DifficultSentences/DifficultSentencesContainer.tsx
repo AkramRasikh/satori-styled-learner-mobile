@@ -99,7 +99,7 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
     setSelectedDueCardState(null);
   };
 
-  const updateSentenceDataScreenLevel = async ({
+  const updateSentenceDataScreenLevel = ({
     isAdhoc,
     topicName,
     sentenceId,
@@ -115,7 +115,7 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
       updateDifficultSentence({sentenceId, updateDataRes: fieldToUpdate});
     }
 
-    await updateSentenceData({
+    updateSentenceData({
       isAdhoc,
       topicName,
       sentenceId,
