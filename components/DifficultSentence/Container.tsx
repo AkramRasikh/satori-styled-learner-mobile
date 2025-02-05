@@ -1,6 +1,8 @@
 import React, {Text, View} from 'react-native';
 import {DefaultTheme, IconButton, ProgressBar} from 'react-native-paper';
-import useDifficultSentenceContext from './context/useDifficultSentence';
+
+import useSoundHook from '../../hooks/useSoundHook';
+import useDifficultSentenceContext from '../NewDifficultBase/context/useDifficultSentence';
 
 export const NewProgressBarComponent = () => {
   const {currentTimeState, soundDuration, isLoaded} =

@@ -1,7 +1,7 @@
 import React from 'react';
 
 import {DifficultSentenceProvider} from '../NewDifficultBase/context/DifficultSentenceProvider';
-import NewDifficultSentenceContainer from '../NewDifficultBase/NewDifficultSentenceContainer';
+import NewDifficultSentenceContainer from './NewDifficultSentenceContainer';
 import CollapsibleCard from '../AnimationContainer';
 
 const DifficultSentenceComponent = ({

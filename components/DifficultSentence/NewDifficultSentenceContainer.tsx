@@ -1,27 +1,27 @@
 import React, {View} from 'react-native';
 import {useEffect, useState} from 'react';
 import TopHeader from './TopHeader';
-import DifficultSentenceTextContainer from '../DifficultSentence/DifficultSentenceTextContainer';
+import DifficultSentenceTextContainer from './DifficultSentenceTextContainer';
 import useHighlightWordToWordBank from '../../hooks/useHighlightWordToWordBank';
 import useData from '../../context/Data/useData';
 import TextSegment from '../TextSegment';
 import {
-  NewAudioControls,
   NewProgressBarComponent,
-  NewSRSToggles,
   TextActionContainer,
-} from '.';
+} from '../NewDifficultBase';
 import {DefaultTheme, Button, Text} from 'react-native-paper';
-import DifficultSentenceMappedWords from '../DifficultSentence/DifficultSentenceMappedWords';
+import DifficultSentenceMappedWords from './DifficultSentenceMappedWords';
 import TextSegmentContainer from '../TextSegmentContainer';
 import {checkOverlap} from '../../utils/check-word-overlap';
-import DifficultSentenceSnippets from '../DifficultSentence/DifficultSentenceSnippets';
-import useDifficultSentenceContext from './context/useDifficultSentence';
+import DifficultSentenceSnippets from './DifficultSentenceSnippets';
+import useDifficultSentenceContext from '../NewDifficultBase/context/useDifficultSentence';
 import {
   calculateDueDate,
   getDueDateText,
 } from '../../utils/get-date-due-status';
 import {isCardDue} from '../../utils/is-card-due';
+import NewSRSToggles from './NewSRSToggles';
+import NewAudioControls from './NewAudioControls';
 
 const NewDifficultSentenceContainer = ({
   toggleableSentencesStateLength,
