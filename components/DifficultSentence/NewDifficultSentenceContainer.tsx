@@ -5,10 +5,6 @@ import DifficultSentenceTextContainer from './DifficultSentenceTextContainer';
 import useHighlightWordToWordBank from '../../hooks/useHighlightWordToWordBank';
 import useData from '../../context/Data/useData';
 import TextSegment from '../TextSegment';
-import {
-  NewProgressBarComponent,
-  TextActionContainer,
-} from '../NewDifficultBase';
 import {DefaultTheme, Button, Text} from 'react-native-paper';
 import DifficultSentenceMappedWords from './DifficultSentenceMappedWords';
 import TextSegmentContainer from '../TextSegmentContainer';
@@ -22,6 +18,8 @@ import {
 import {isCardDue} from '../../utils/is-card-due';
 import NewSRSToggles from './NewSRSToggles';
 import NewAudioControls from './NewAudioControls';
+import NewProgressBarComponent from './NewProgressBarComponent';
+import TextActionContainer from './TextActionContainer';
 
 const NewDifficultSentenceContainer = ({
   toggleableSentencesStateLength,
