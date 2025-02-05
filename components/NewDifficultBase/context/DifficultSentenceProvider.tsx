@@ -14,6 +14,7 @@ import {
   srsRetentionKeyTypes,
 } from '../../../srs-algo';
 import Clipboard from '@react-native-clipboard/clipboard';
+import useOpenGoogleTranslate from '../../useOpenGoogleTranslate';
 
 export const DifficultSentenceContext = createContext(null);
 
@@ -63,6 +64,7 @@ export const DifficultSentenceProvider = ({
   };
 
   const {languageSelectedState} = useLanguageSelector();
+  const {openGoogleTranslateApp} = useOpenGoogleTranslate();
 
   const targetLanguageSnippetsState = useSelector(state => state.snippets);
 
@@ -148,6 +150,10 @@ export const DifficultSentenceProvider = ({
     });
   };
 
+  const handleOpenUpGoogle = () => {
+    openGoogleTranslateApp(sentence.targetLang);
+  };
+
   const handleNextReview = async difficulty => {
     const nextScheduledOptions = getNextScheduledOptions({
       card: cardDataRelativeToNow,
@@ -223,6 +229,7 @@ export const DifficultSentenceProvider = ({
         setMiniSnippets,
         fadeAnim,
         scaleAnim,
+        handleOpenUpGoogle,
       }}>
       {children}
     </DifficultSentenceContext.Provider>

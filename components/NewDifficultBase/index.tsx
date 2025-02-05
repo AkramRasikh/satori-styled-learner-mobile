@@ -140,7 +140,7 @@ export const TextActionContainer = ({
   isBeingHighlighed,
   handleShowAllMatchedWords,
 }) => {
-  const {handleCopyText} = useDifficultSentenceContext();
+  const {handleCopyText, handleOpenUpGoogle} = useDifficultSentenceContext();
 
   return (
     <View
@@ -168,7 +168,7 @@ export const TextActionContainer = ({
         icon="google-translate"
         mode="outlined"
         size={15}
-        onPress={() => {}}
+        onPress={handleOpenUpGoogle}
       />
       <IconButton
         icon="content-copy"
