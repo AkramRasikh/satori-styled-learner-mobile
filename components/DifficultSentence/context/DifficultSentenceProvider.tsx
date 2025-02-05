@@ -26,21 +26,6 @@ export const DifficultSentenceProvider = ({
     scaleAnim,
   });
 
-  useEffect(() => {
-    Animated.parallel([
-      Animated.timing(fadeAnim, {
-        toValue: 1,
-        duration: 300,
-        useNativeDriver: true,
-      }),
-      Animated.spring(scaleAnim, {
-        toValue: 1,
-        friction: 8,
-        useNativeDriver: true,
-      }),
-    ]).start();
-  }, []);
-
   const {openGoogleTranslateApp} = useOpenGoogleTranslate();
 
   const reviewData = sentence?.reviewData;
