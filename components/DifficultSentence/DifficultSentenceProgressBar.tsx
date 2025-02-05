@@ -1,10 +1,10 @@
 import React, {Text, View} from 'react-native';
 import {ProgressBar} from 'react-native-paper';
-import useDifficultSentenceContext from './context/useDifficultSentence';
+import useDifficultSentenceAudio from './context/useDifficultSentenceAudio';
 
 const DifficultSentenceProgressBar = () => {
   const {currentTimeState, soundDuration, isLoaded} =
-    useDifficultSentenceContext();
+    useDifficultSentenceAudio();
 
   const progressRate = (isLoaded && currentTimeState / soundDuration) || 0;
 

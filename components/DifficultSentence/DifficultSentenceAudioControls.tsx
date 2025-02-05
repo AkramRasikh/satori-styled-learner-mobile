@@ -2,7 +2,7 @@ import React, {View} from 'react-native';
 import {IconButton} from 'react-native-paper';
 
 import useSoundHook from '../../hooks/useSoundHook';
-import useDifficultSentenceContext from './context/useDifficultSentence';
+import useDifficultSentenceAudio from './context/useDifficultSentenceAudio';
 
 const DifficultSentenceAudioControls = ({sentence}) => {
   const {
@@ -12,7 +12,7 @@ const DifficultSentenceAudioControls = ({sentence}) => {
     setIsPlaying,
     soundRef,
     handleSnippet,
-  } = useDifficultSentenceContext();
+  } = useDifficultSentenceAudio();
 
   const {playSound, pauseSound, forwardSound, rewindSound} = useSoundHook({
     soundRef,

@@ -20,7 +20,7 @@ import DifficultSentenceSRSToggles from './DifficultSentenceSRSToggles';
 import DifficultSentenceAudioControls from './DifficultSentenceAudioControls';
 import DifficultSentenceProgressBar from './DifficultSentenceProgressBar';
 import DifficultSentenceTextAction from './DifficultSentenceTextAction';
-import useDifficultSentenceContext from './context/useDifficultSentence';
+import useDifficultSentenceAudio from './context/useDifficultSentenceAudio';
 
 const DifficultSentenceContainer = ({
   toggleableSentencesStateLength,
@@ -50,15 +50,15 @@ const DifficultSentenceContainer = ({
     useData();
 
   const {
+    isPlaying,
+    setIsPlaying,
     soundRef,
     isLoaded,
     miniSnippets,
     setMiniSnippets,
     setCurrentTimeState,
     currentTimeState,
-    isPlaying,
-    setIsPlaying,
-  } = useDifficultSentenceContext();
+  } = useDifficultSentenceAudio();
 
   const isLastEl = toggleableSentencesStateLength === indexNum + 1;
   const isFirst = 0 === indexNum;
