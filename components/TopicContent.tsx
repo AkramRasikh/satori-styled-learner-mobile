@@ -453,6 +453,8 @@ const TopicContent = ({
       <TopicContentLoader
         audioLoadingProgress={audioLoadingProgress}
         topicDataLengths={content.length}
+        topicName={topicName}
+        isMediaContent={isMediaContent}
       />
     );
   }
