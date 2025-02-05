@@ -1,7 +1,7 @@
 import React, {View} from 'react-native';
 import {IconButton} from 'react-native-paper';
 
-import useSoundHook from '../../hooks/useSoundHook';
+import useMainAudioControls from '../../hooks/useMainAudioControls';
 
 const DifficultSentenceAudioControls = ({
   sentence,
@@ -12,15 +12,16 @@ const DifficultSentenceAudioControls = ({
   soundRef,
   handleSnippet,
 }) => {
-  const {playSound, pauseSound, forwardSound, rewindSound} = useSoundHook({
-    soundRef,
-    isPlaying,
-    setIsPlaying,
-    topicName: sentence.topic,
-    rewindForwardInterval: 2,
-    startTime: sentence?.isMediaContent ? sentence.time : null,
-    isMediaContent: sentence?.isMediaContent,
-  });
+  const {playSound, pauseSound, forwardSound, rewindSound} =
+    useMainAudioControls({
+      soundRef,
+      isPlaying,
+      setIsPlaying,
+      startTime: sentence?.isMediaContent ? sentence.time : null,
+      rewindForwardInterval: 2,
+      isMediaContent: sentence?.isMediaContent,
+    });
+
   const handleSnippetFunc = () => {
     handleSnippet();
     pauseSound();
@@ -38,15 +39,13 @@ const DifficultSentenceAudioControls = ({
     }
   };
 
-  const playIcon = isLoaded && isPlaying ? 'pause' : 'play';
-
   const btnArr = [
     {
       icon: 'rewind',
       onPress: rewindSound,
     },
     {
-      icon: playIcon,
+      icon: isLoaded && isPlaying ? 'pause' : 'play',
       onPress: handlePlay,
     },
     {
