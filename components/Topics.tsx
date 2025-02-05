@@ -18,15 +18,19 @@ const Topics = ({
       handleShowTopic(title);
     }
   };
-  const clearAllStates = () => {
-    setSelectedGeneralTopicState('');
-    setShowMediaContentState('');
-    handleShowGeneralTopic('');
+  const resetState = () => {
+    if (selectedGeneralTopicState) {
+      setSelectedGeneralTopicState('');
+    } else {
+      setSelectedGeneralTopicState('');
+      setShowMediaContentState('');
+      handleShowGeneralTopic('');
+    }
   };
 
   const handleShowMedia = () => {
     if (showMediaContentState === 'media') {
-      clearAllStates();
+      resetState();
     } else {
       setSelectedGeneralTopicState('');
       setShowMediaContentState('media');
@@ -35,7 +39,7 @@ const Topics = ({
 
   const handleShowContent = () => {
     if (showMediaContentState === 'content') {
-      clearAllStates();
+      resetState();
     } else {
       setSelectedGeneralTopicState('');
       setShowMediaContentState('content');
