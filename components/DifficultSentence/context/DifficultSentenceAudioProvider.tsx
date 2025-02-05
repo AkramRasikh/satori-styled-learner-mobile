@@ -17,7 +17,7 @@ export const DifficultSentenceAudioProvider = ({
   const [currentTimeState, setCurrentTimeState] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [miniSnippets, setMiniSnippets] = useState([]);
-
+  const [isTriggered, setIsTriggered] = useState(false);
   const {languageSelectedState} = useLanguageSelector();
 
   const targetLanguageSnippetsState = useSelector(state => state.snippets);
@@ -74,10 +74,11 @@ export const DifficultSentenceAudioProvider = ({
 
   useEffect(() => {
     const isFirst = indexNum === 0;
-    if (!isLoaded && isFirst) {
+    if (!isLoaded && isFirst && !isTriggered) {
+      setIsTriggered(true);
       loadFile(audioId, url);
     }
-  }, [loadFile, isLoaded, indexNum, audioId, url]);
+  }, [loadFile, isLoaded, indexNum, audioId, url, isTriggered]);
 
   const handleSnippet = () => {
     const snippetId = topic + '-' + generateRandomId();

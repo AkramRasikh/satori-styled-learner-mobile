@@ -21,6 +21,73 @@ import DifficultSentenceAudioControls from './DifficultSentenceAudioControls';
 import DifficultSentenceProgressBar from './DifficultSentenceProgressBar';
 import DifficultSentenceTextAction from './DifficultSentenceTextAction';
 import useDifficultSentenceAudio from './context/useDifficultSentenceAudio';
+import {DifficultSentenceAudioProvider} from './context/DifficultSentenceAudioProvider';
+
+const DifficultSentenceMidSection = ({
+  handleSettingHighlightmode,
+  handleShowAllMatchedWords,
+  sentenceBeingHighlightedState,
+  sentence,
+  addSnippet,
+  removeSnippet,
+}) => {
+  const {
+    isPlaying,
+    setIsPlaying,
+    soundRef,
+    isLoaded,
+    miniSnippets,
+    setMiniSnippets,
+    setCurrentTimeState,
+    currentTimeState,
+    soundDuration,
+  } = useDifficultSentenceAudio();
+
+  return (
+    <>
+      <DifficultSentenceProgressBar
+        currentTimeState={currentTimeState}
+        soundDuration={soundDuration}
+        isLoaded={isLoaded}
+      />
+      <View
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          flexDirection: 'row',
+        }}>
+        <DifficultSentenceTextAction
+          handleSettingHighlightmode={handleSettingHighlightmode}
+          handleShowAllMatchedWords={handleShowAllMatchedWords}
+          isBeingHighlighed={sentenceBeingHighlightedState === sentence.id}
+        />
+        <View
+          style={{
+            backgroundColor: DefaultTheme.colors?.backdrop,
+            width: 1,
+            borderRadius: 5,
+          }}
+        />
+        <DifficultSentenceAudioControls sentence={sentence} />
+      </View>
+      {miniSnippets?.length > 0 && (
+        <DifficultSentenceSnippets
+          isLoaded={isLoaded}
+          soundRef={soundRef}
+          snippetsLocalAndDb={miniSnippets}
+          setCurrentTimeState={setCurrentTimeState}
+          currentTimeState={currentTimeState}
+          isPlaying={isPlaying}
+          setIsPlaying={setIsPlaying}
+          addSnippet={addSnippet}
+          removeSnippet={removeSnippet}
+          setMiniSnippets={setMiniSnippets}
+          url={sentence.url}
+        />
+      )}
+    </>
+  );
+};
 
 const DifficultSentenceContainer = ({
   toggleableSentencesStateLength,
@@ -48,17 +115,6 @@ const DifficultSentenceContainer = ({
   };
   const {pureWords, saveWordFirebase, deleteWord, getThisSentencesWordList} =
     useData();
-
-  const {
-    isPlaying,
-    setIsPlaying,
-    soundRef,
-    isLoaded,
-    miniSnippets,
-    setMiniSnippets,
-    setCurrentTimeState,
-    currentTimeState,
-  } = useDifficultSentenceAudio();
 
   const isLastEl = toggleableSentencesStateLength === indexNum + 1;
   const isFirst = 0 === indexNum;
@@ -161,72 +217,42 @@ const DifficultSentenceContainer = ({
         paddingBottom: isLastEl ? 100 : 0,
         paddingTop: !isFirst ? 70 : 0,
         opacity: thisSentenceIsLoading ? 0.5 : 1,
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 10,
       }}>
-      <View
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          gap: 5,
-          marginBottom: 20,
-        }}>
-        <DifficultSentenceTopHeader
-          topic={topic}
-          dueColorState={dueColorState}
-          handleNavigateToTopic={handleNavigation}
-        />
-        <DifficultSentenceTextContainer
-          targetLang={sentence.targetLang}
-          baseLang={sentence.baseLang}
-          sentenceBeingHighlightedState={sentenceBeingHighlightedState}
-          setSentenceBeingHighlightedState={setSentenceBeingHighlightedState}
-          sentenceId={sentence.id}
-          safeTextFunc={getSafeText}
-          saveWordFirebase={saveWordFirebase}
-        />
-        {isDueState ? (
-          <DifficultSentenceSRSToggles sentence={sentence} />
-        ) : (
-          <View style={{alignSelf: 'center'}}>
-            <Text style={DefaultTheme.fonts.bodyMedium}>{text}</Text>
-          </View>
-        )}
-        <DifficultSentenceProgressBar />
-        <View
-          style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            flexDirection: 'row',
-          }}>
-          <DifficultSentenceTextAction
-            handleSettingHighlightmode={handleSettingHighlightmode}
-            handleShowAllMatchedWords={handleShowAllMatchedWords}
-            isBeingHighlighed={sentenceBeingHighlightedState === sentence.id}
-          />
-          <View
-            style={{
-              backgroundColor: DefaultTheme.colors?.backdrop,
-              width: 1,
-              borderRadius: 5,
-            }}
-          />
-          <DifficultSentenceAudioControls sentence={sentence} />
+      <DifficultSentenceTopHeader
+        topic={topic}
+        dueColorState={dueColorState}
+        handleNavigateToTopic={handleNavigation}
+      />
+      <DifficultSentenceTextContainer
+        targetLang={sentence.targetLang}
+        baseLang={sentence.baseLang}
+        sentenceBeingHighlightedState={sentenceBeingHighlightedState}
+        setSentenceBeingHighlightedState={setSentenceBeingHighlightedState}
+        sentenceId={sentence.id}
+        safeTextFunc={getSafeText}
+        saveWordFirebase={saveWordFirebase}
+      />
+      {isDueState ? (
+        <DifficultSentenceSRSToggles sentence={sentence} />
+      ) : (
+        <View style={{alignSelf: 'center'}}>
+          <Text style={DefaultTheme.fonts.bodyMedium}>{text}</Text>
         </View>
-      </View>
-      {miniSnippets?.length > 0 && (
-        <DifficultSentenceSnippets
-          isLoaded={isLoaded}
-          soundRef={soundRef}
-          snippetsLocalAndDb={miniSnippets}
-          setCurrentTimeState={setCurrentTimeState}
-          currentTimeState={currentTimeState}
-          isPlaying={isPlaying}
-          setIsPlaying={setIsPlaying}
+      )}
+
+      <DifficultSentenceAudioProvider sentence={sentence} indexNum={indexNum}>
+        <DifficultSentenceMidSection
+          handleSettingHighlightmode={handleSettingHighlightmode}
+          handleShowAllMatchedWords={handleShowAllMatchedWords}
+          sentenceBeingHighlightedState={sentenceBeingHighlightedState}
+          sentence={sentence}
           addSnippet={addSnippet}
           removeSnippet={removeSnippet}
-          setMiniSnippets={setMiniSnippets}
-          url={sentence.url}
         />
-      )}
+      </DifficultSentenceAudioProvider>
       {showMatchedWordsKey &&
         matchedWordListState.map((item, index) => {
           return (
