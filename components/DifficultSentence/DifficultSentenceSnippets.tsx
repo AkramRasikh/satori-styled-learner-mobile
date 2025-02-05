@@ -8,7 +8,7 @@ const hasBeenSnippedFromCollectiveURL = snippet => {
   const snippetURL = snippet.url;
   return snippetURL.includes(snippet.topicName);
 };
-const ThisSnippetContainer = ({
+const SingleSnippetContainer = ({
   soundRef,
   currentTimeState,
   snippet,
@@ -147,7 +147,7 @@ const DifficultSentenceSnippets = ({
 }) => {
   return snippetsLocalAndDb.map((snippetData, index) => {
     return (
-      <ThisSnippetContainer
+      <SingleSnippetContainer
         key={snippetData.id}
         index={index}
         soundRef={soundRef}
