@@ -189,12 +189,12 @@ const DifficultSentenceContainer = ({
     }),
   );
 
-  const getSafeTextDefault = targetText => {
+  const getSafeTextDefault = (targetText: string) => {
     const textSegments = underlineWordsInSentence(targetText);
     return <TextSegment textSegments={textSegments} />;
   };
 
-  const getSafeText = targetText => {
+  const getSafeText = (targetText: string) => {
     if (!showAllMatchedWordsState) {
       return getSafeTextDefault(sentence.targetLang);
     }
