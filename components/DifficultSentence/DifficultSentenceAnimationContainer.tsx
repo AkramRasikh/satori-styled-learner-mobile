@@ -1,6 +1,6 @@
 import React from 'react';
 import {Animated} from 'react-native';
-import useDifficultSentenceContext from './NewDifficultBase/context/useDifficultSentence';
+import useDifficultSentenceContext from './context/useDifficultSentence';
 
 const CollapsibleCard = ({children}) => {
   const {fadeAnim, scaleAnim} = useDifficultSentenceContext();

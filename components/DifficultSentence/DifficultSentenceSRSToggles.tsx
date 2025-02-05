@@ -7,7 +7,7 @@ import {
   srsRetentionKeyTypes,
 } from '../../srs-algo';
 import {getTimeDiffSRS} from '../../utils/getTimeDiffSRS';
-import useDifficultSentenceContext from '../NewDifficultBase/context/useDifficultSentence';
+import useDifficultSentenceContext from './context/useDifficultSentence';
 
 const DifficultSentenceSRSToggles = ({sentence}) => {
   const {handleNextReview} = useDifficultSentenceContext();

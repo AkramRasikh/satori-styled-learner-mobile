@@ -10,7 +10,7 @@ import DifficultSentenceMappedWords from './DifficultSentenceMappedWords';
 import TextSegmentContainer from '../TextSegmentContainer';
 import {checkOverlap} from '../../utils/check-word-overlap';
 import DifficultSentenceSnippets from './DifficultSentenceSnippets';
-import useDifficultSentenceContext from '../NewDifficultBase/context/useDifficultSentence';
+
 import {
   calculateDueDate,
   getDueDateText,
@@ -20,6 +20,7 @@ import DifficultSentenceSRSToggles from './DifficultSentenceSRSToggles';
 import DifficultSentenceAudioControls from './DifficultSentenceAudioControls';
 import DifficultSentenceProgressBar from './DifficultSentenceProgressBar';
 import DifficultSentenceTextAction from './DifficultSentenceTextAction';
+import useDifficultSentenceContext from './context/useDifficultSentence';
 
 const DifficultSentenceContainer = ({
   toggleableSentencesStateLength,

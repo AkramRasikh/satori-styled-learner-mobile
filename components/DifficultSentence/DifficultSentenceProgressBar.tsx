@@ -1,6 +1,6 @@
 import React, {Text, View} from 'react-native';
 import {ProgressBar} from 'react-native-paper';
-import useDifficultSentenceContext from '../NewDifficultBase/context/useDifficultSentence';
+import useDifficultSentenceContext from './context/useDifficultSentence';
 
 const DifficultSentenceProgressBar = () => {
   const {currentTimeState, soundDuration, isLoaded} =

@@ -6,10 +6,10 @@ import ScreenContainerComponent from '../../components/ScreenContainerComponent'
 import useData from '../../context/Data/useData';
 import useDifficultSentences from '../../context/DifficultSentences/useDifficultSentencesProvider';
 import WordModalDifficultSentence from '../../components/WordModalDifficultSentence';
-import DifficultSentenceComponent from '../../components/DifficultSentence';
 import DifficultSentencesTopics from './DifficultSentencesTopics';
 import DifficultSentencesWordNavigator from './DifficultSentencesWordNavigator';
 import DifficultSentencesSegmentHeader from './DifficultSentencesSegmentHeader';
+import DifficultSentenceComponent from '../../components/DifficultSentence';
 
 const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
   const [toggleableSentencesState, setToggleableSentencesState] = useState([]);

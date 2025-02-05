@@ -1,6 +1,6 @@
 import React, {View} from 'react-native';
 import {DefaultTheme, IconButton} from 'react-native-paper';
-import useDifficultSentenceContext from '../NewDifficultBase/context/useDifficultSentence';
+import useDifficultSentenceContext from './context/useDifficultSentence';
 
 const DifficultSentenceTextAction = ({
   handleSettingHighlightmode,

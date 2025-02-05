@@ -2,7 +2,7 @@ import React, {View} from 'react-native';
 import {IconButton} from 'react-native-paper';
 
 import useSoundHook from '../../hooks/useSoundHook';
-import useDifficultSentenceContext from '../NewDifficultBase/context/useDifficultSentence';
+import useDifficultSentenceContext from './context/useDifficultSentence';
 
 const DifficultSentenceAudioControls = ({sentence}) => {
   const {

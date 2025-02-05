@@ -1,7 +1,7 @@
 import {useState} from 'react';
 import React, {Text, TouchableOpacity, View} from 'react-native';
 import {Button, IconButton, MD2Colors, MD3Colors} from 'react-native-paper';
-import useDifficultSentenceContext from '../NewDifficultBase/context/useDifficultSentence';
+import useDifficultSentenceContext from './context/useDifficultSentence';
 
 const DueColorMarker = ({dueColorState}) => (
   <View

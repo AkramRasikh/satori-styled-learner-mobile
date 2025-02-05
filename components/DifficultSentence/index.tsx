@@ -1,8 +1,8 @@
 import React from 'react';
 
-import {DifficultSentenceProvider} from '../NewDifficultBase/context/DifficultSentenceProvider';
+import {DifficultSentenceProvider} from './context/DifficultSentenceProvider';
+import CollapsibleCard from './DifficultSentenceAnimationContainer';
 import DifficultSentenceContainer from './DifficultSentenceContainer';
-import CollapsibleCard from '../AnimationContainer';
 
 const DifficultSentenceComponent = ({
   toggleableSentencesStateLength,
