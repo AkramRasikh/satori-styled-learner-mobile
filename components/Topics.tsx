@@ -52,6 +52,7 @@ const TopicSectionContainer = ({
         icon={condition ? 'folder-open' : 'plus'}
         label={label}
         onPress={onPress}
+        variant="surface"
       />
       {condition && (
         <View
@@ -132,11 +133,16 @@ const Topics = ({
 
   const isContent = showMediaContentState === 'content';
   const isMedia = showMediaContentState === 'media';
+  const selectedContentLabel = isContent ? ` ${selectedGeneralTopicState}` : '';
+  const selectedMediaLabel = isMedia ? ` ${selectedGeneralTopicState}` : '';
+
+  const contentLabel = `Content (${contentGeneralTopicCount}/${standardContent.length})${selectedContentLabel}`;
+  const mediaLabel = `Media (${mediaGeneralTopicCount}/${mediaContent.length})${selectedMediaLabel}`;
 
   return (
     <View style={{gap: 10}}>
       <TopicSectionContainer
-        label={`Content (${contentGeneralTopicCount}/${standardContent.length})`}
+        label={contentLabel}
         onPress={handleShowContent}
         topicArr={standardContent}
         handleOnPress={handleOnPress}
@@ -144,7 +150,7 @@ const Topics = ({
         condition={isContent}
       />
       <TopicSectionContainer
-        label={`Media (${mediaGeneralTopicCount}/${mediaContent.length})`}
+        label={mediaLabel}
         onPress={handleShowMedia}
         topicArr={mediaContent}
         handleOnPress={handleOnPress}
