@@ -161,7 +161,7 @@ export const DifficultSentenceProvider = ({
     });
     const nextReviewData = nextScheduledOptions[difficulty].card;
     await collapseCard();
-    const hasBeenUpdated = await updateSentenceData({
+    await updateSentenceData({
       isAdhoc,
       topicName: sentence.topic,
       sentenceId: sentence.id,
@@ -171,7 +171,6 @@ export const DifficultSentenceProvider = ({
       },
       contentIndex: sentence.contentIndex,
     });
-    console.log('## handleNextReview', {hasBeenUpdated});
   };
 
   const handleLoad = () => {
