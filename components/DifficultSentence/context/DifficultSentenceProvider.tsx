@@ -22,7 +22,6 @@ export const DifficultSentenceProvider = ({
   indexNum,
   children,
 }: PropsWithChildren<{}>) => {
-  const [updatingSentenceState, setUpdatingSentenceState] = useState('');
   const [currentTimeState, setCurrentTimeState] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const fadeAnim = useRef(new Animated.Value(0)).current;
@@ -184,8 +183,6 @@ export const DifficultSentenceProvider = ({
   return (
     <DifficultSentenceContext.Provider
       value={{
-        updatingSentenceState,
-        setUpdatingSentenceState,
         handleLoad,
         handleNextReview,
         currentTimeState,
