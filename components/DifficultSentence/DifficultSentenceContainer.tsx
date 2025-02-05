@@ -39,7 +39,6 @@ const DifficultSentenceContainer = ({
   setSliceArrState,
   // handleClickDelete,
 }) => {
-  const [highlightedIndices, setHighlightedIndices] = useState([]);
   const [matchedWordListState, setMatchedWordListState] = useState([]);
   const [showAllMatchedWordsState, setShowAllMatchedWordsState] =
     useState(false);
@@ -182,8 +181,6 @@ const DifficultSentenceContainer = ({
           setSentenceBeingHighlightedState={setSentenceBeingHighlightedState}
           sentenceId={sentence.id}
           safeTextFunc={getSafeText}
-          highlightedIndices={highlightedIndices}
-          setHighlightedIndices={setHighlightedIndices}
           saveWordFirebase={saveWordFirebase}
         />
         {isDueState ? (

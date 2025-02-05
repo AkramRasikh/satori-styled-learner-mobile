@@ -9,10 +9,10 @@ const DifficultSentenceTextContainer = ({
   setSentenceBeingHighlightedState,
   sentenceId,
   safeTextFunc,
-  highlightedIndices,
-  setHighlightedIndices,
   saveWordFirebase,
 }) => {
+  const [highlightedIndices, setHighlightedIndices] = useState([]);
+
   const [containerWidth, setContainerWidth] = useState(0);
 
   const highlightMode = sentenceId === sentenceBeingHighlightedState;
