@@ -9,6 +9,7 @@ import {
 } from '../../../srs-algo';
 import Clipboard from '@react-native-clipboard/clipboard';
 import useOpenGoogleTranslate from '../../useOpenGoogleTranslate';
+import useAnimation from '../../../utils/useAnimation';
 
 export const DifficultSentenceContext = createContext(null);
 
@@ -19,6 +20,11 @@ export const DifficultSentenceProvider = ({
 }: PropsWithChildren<{}>) => {
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const scaleAnim = useRef(new Animated.Value(0.8)).current;
+
+  const {collapseAnimation} = useAnimation({
+    fadeAnim,
+    scaleAnim,
+  });
 
   useEffect(() => {
     Animated.parallel([
@@ -34,23 +40,6 @@ export const DifficultSentenceProvider = ({
       }),
     ]).start();
   }, []);
-
-  const collapseCard = async () => {
-    return new Promise(resolve => {
-      Animated.parallel([
-        Animated.timing(fadeAnim, {
-          toValue: 0,
-          duration: 150,
-          useNativeDriver: true,
-        }),
-        Animated.spring(scaleAnim, {
-          toValue: 0.8,
-          friction: 8,
-          useNativeDriver: true,
-        }),
-      ]).start(() => resolve());
-    });
-  };
 
   const {openGoogleTranslateApp} = useOpenGoogleTranslate();
 
@@ -82,7 +71,7 @@ export const DifficultSentenceProvider = ({
   };
 
   const handleDeleteContent = async () => {
-    await collapseCard();
+    await collapseAnimation();
     updateSentenceData({
       isAdhoc: sentence?.isAdhoc,
       topicName: sentence.topic,
@@ -106,7 +95,7 @@ export const DifficultSentenceProvider = ({
       contentType: srsRetentionKeyTypes.sentences,
     });
     const nextReviewData = nextScheduledOptions[difficulty].card;
-    await collapseCard();
+    await collapseAnimation();
     await updateSentenceData({
       isAdhoc,
       topicName: sentence.topic,
