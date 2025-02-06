@@ -23,8 +23,6 @@ const TopicContentAudioSection = ({
   return (
     <View
       style={{
-        display: 'flex',
-        flexDirection: 'column',
         padding: 10,
         gap: 10,
       }}>
