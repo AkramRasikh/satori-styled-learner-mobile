@@ -1,4 +1,4 @@
-import {Button, Text, TouchableOpacity, View} from 'react-native';
+import React, {Text, TouchableOpacity, View} from 'react-native';
 import {
   getEmptyCard,
   getNextScheduledOptions,
@@ -8,6 +8,8 @@ import {useState} from 'react';
 import {getTimeDiffSRS} from '../utils/getTimeDiffSRS';
 import useWordData from '../context/WordData/useWordData';
 import {QuickAreYouSureSection} from './AreYouSureSection';
+import {Button} from 'react-native-paper';
+import SRSTogglesScaled from './SRSTogglesScaled';
 
 const SRSToggles = ({
   reviewData,
@@ -221,48 +223,13 @@ export const SRSTogglesQuickComprehensive = ({
               </Text>
             </View>
           ) : (
-            <>
-              <TouchableOpacity
-                style={{
-                  alignSelf: 'center',
-                  backgroundColor: '#6082B6',
-                  padding: 5,
-                  borderRadius: 10,
-                }}
-                onPress={() => handleNextReview('1')}>
-                <Text>{againText}</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={{
-                  alignSelf: 'center',
-                  backgroundColor: '#6082B6',
-                  padding: 5,
-                  borderRadius: 10,
-                }}
-                onPress={() => handleNextReview('2')}>
-                <Text>{hardText}</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={{
-                  alignSelf: 'center',
-                  backgroundColor: '#6082B6',
-                  padding: 5,
-                  borderRadius: 10,
-                }}
-                onPress={() => handleNextReview('3')}>
-                <Text>{goodText}</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={{
-                  alignSelf: 'center',
-                  backgroundColor: '#6082B6',
-                  padding: 5,
-                  borderRadius: 10,
-                }}
-                onPress={() => handleNextReview('4')}>
-                <Text>{easyText}</Text>
-              </TouchableOpacity>
-            </>
+            <SRSTogglesScaled
+              handleNextReview={handleNextReview}
+              againText={againText}
+              hardText={hardText}
+              goodText={goodText}
+              easyText={easyText}
+            />
           )}
           <TouchableOpacity
             style={{

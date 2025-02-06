@@ -1,5 +1,4 @@
 import React, {View} from 'react-native';
-import {Button, DefaultTheme} from 'react-native-paper';
 import {
   getCardDataRelativeToNow,
   getDueDate,
@@ -8,6 +7,7 @@ import {
 } from '../../srs-algo';
 import {getTimeDiffSRS} from '../../utils/getTimeDiffSRS';
 import useDifficultSentenceContext from './context/useDifficultSentence';
+import SRSTogglesScaled from '../SRSTogglesScaled';
 
 const DifficultSentenceSRSToggles = ({sentence}) => {
   const {handleNextReview} = useDifficultSentenceContext();
@@ -43,57 +43,15 @@ const DifficultSentenceSRSToggles = ({sentence}) => {
   return (
     <View
       style={{
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'space-between',
         alignSelf: 'center',
       }}>
-      <View style={{display: 'flex', flexDirection: 'row', gap: 5}}>
-        <Button
-          onPress={() => handleNextReview('1')}
-          compact
-          mode="outlined"
-          buttonColor="transparent"
-          textColor={DefaultTheme.colors.onSurface}
-          labelStyle={{
-            fontSize: 12,
-          }}>
-          {againText}
-        </Button>
-        <Button
-          onPress={() => handleNextReview('2')}
-          compact
-          mode="outlined"
-          buttonColor="transparent"
-          textColor={DefaultTheme.colors.onSurface}
-          labelStyle={{
-            fontSize: 12,
-          }}>
-          {hardText}
-        </Button>
-        <Button
-          onPress={() => handleNextReview('3')}
-          compact
-          mode="outlined"
-          buttonColor="transparent"
-          textColor={DefaultTheme.colors.onSurface}
-          labelStyle={{
-            fontSize: 12,
-          }}>
-          {goodText}
-        </Button>
-        <Button
-          onPress={() => handleNextReview('4')}
-          compact
-          mode="outlined"
-          buttonColor="transparent"
-          textColor={DefaultTheme.colors.onSurface}
-          labelStyle={{
-            fontSize: 12,
-          }}>
-          {easyText}
-        </Button>
-      </View>
+      <SRSTogglesScaled
+        handleNextReview={handleNextReview}
+        againText={againText}
+        hardText={hardText}
+        goodText={goodText}
+        easyText={easyText}
+      />
     </View>
   );
 };
