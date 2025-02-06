@@ -15,24 +15,6 @@ import {
 import useAnimation from '../hooks/useAnimation';
 import AnimationContainer from './AnimationContainer';
 
-export const FlashCardsSectionContainer = ({
-  handleDeleteWordFlashCard,
-  dueCardsState,
-  handleExpandWordArray,
-  sliceArrState,
-  realCapacity,
-}) => {
-  return (
-    <FlashcardsWordsSection
-      dueCardsState={dueCardsState}
-      handleDeleteWord={handleDeleteWordFlashCard}
-      handleExpandWordArray={handleExpandWordArray}
-      sliceArrState={sliceArrState}
-      realCapacity={realCapacity}
-    />
-  );
-};
-
 const Container = ({
   wordData,
   index,

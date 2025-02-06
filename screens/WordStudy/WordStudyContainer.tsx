@@ -4,7 +4,7 @@ import {ScrollView} from 'react-native';
 import useFormatWordsToStudy from '../../hooks/useFormatWordsToStudy';
 import {makeArrayUnique} from '../../hooks/useHighlightWordToWordBank';
 import SelectedCategoriesWordsSection from '../../components/SelectedCategoriesSection';
-import {FlashCardsSectionContainer} from '../../components/FlashcardsWordsSection';
+import FlashcardsWordsSection from '../../components/FlashcardsWordsSection';
 import useWordData from '../../context/WordData/useWordData';
 import ScreenContainerComponent from '../../components/ScreenContainerComponent';
 import WordStudyHeader from './WordStudyHeader';
@@ -115,8 +115,6 @@ function WordStudyContainer(): React.JSX.Element {
 
   const realCapacity = dueCardsState.length;
 
-  const slicedDueState = dueCardsState.slice(0, sliceArrState); // is there an issue with this?
-
   return (
     <ScreenContainerComponent updatePromptState={updatePromptState}>
       <ScrollView
@@ -140,12 +138,12 @@ function WordStudyContainer(): React.JSX.Element {
             handleShowThisCategoriesWords={handleShowThisCategoriesWords}
           />
         )}
-        <FlashCardsSectionContainer
-          handleDeleteWordFlashCard={handleDeleteWordFlashCard}
-          dueCardsState={slicedDueState}
+        <FlashcardsWordsSection
+          dueCardsState={dueCardsState}
+          handleDeleteWord={handleDeleteWordFlashCard}
           handleExpandWordArray={handleExpandWordArray}
-          realCapacity={realCapacity}
           sliceArrState={sliceArrState}
+          realCapacity={realCapacity}
         />
       </ScrollView>
     </ScreenContainerComponent>
