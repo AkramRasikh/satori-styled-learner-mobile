@@ -1,5 +1,10 @@
 import React, {View} from 'react-native';
-import {Button, MD3Colors, ProgressBar} from 'react-native-paper';
+import {
+  IconButton,
+  MD2Colors,
+  MD3Colors,
+  ProgressBar,
+} from 'react-native-paper';
 
 const TopicContentAudioSection = ({
   isPlaying,
@@ -11,7 +16,6 @@ const TopicContentAudioSection = ({
   currentTimeState,
   soundDuration,
   setShowReviewSectionState,
-  jumpAudioValue = 5,
 }) => {
   const progress =
     soundDuration && currentTimeState ? currentTimeState / soundDuration : 0;
@@ -41,30 +45,28 @@ const TopicContentAudioSection = ({
           flexDirection: 'row',
           justifyContent: 'space-between',
         }}>
-        <Button
+        <IconButton
           mode="contained"
           onPress={() => setShowReviewSectionState(prev => !prev)}
-          buttonColor="grey">
-          🕰️
-        </Button>
-        <Button mode="contained" onPress={getTimeStamp} buttonColor="grey">
-          ✂️
-        </Button>
-        <Button mode="contained" onPress={rewindSound} buttonColor="grey">
-          -{jumpAudioValue}
-        </Button>
-        <Button mode="contained" onPress={forwardSound} buttonColor="grey">
-          +{jumpAudioValue}
-        </Button>
-        {isPlaying ? (
-          <Button mode="contained" onPress={pauseSound} buttonColor={'green'}>
-            ⏸️
-          </Button>
-        ) : (
-          <Button mode="contained" onPress={playSound} buttonColor={'red'}>
-            ▶️
-          </Button>
-        )}
+          icon="clock"
+        />
+        <IconButton
+          mode="contained"
+          onPress={getTimeStamp}
+          icon="content-cut"
+        />
+        <IconButton mode="contained" onPress={rewindSound} icon="rewind" />
+        <IconButton
+          mode="contained"
+          onPress={forwardSound}
+          icon="fast-forward"
+        />
+        <IconButton
+          mode="contained"
+          onPress={isPlaying ? pauseSound : playSound}
+          icon={isPlaying ? 'pause' : 'play'}
+          containerColor={isPlaying ? MD2Colors.green300 : MD2Colors.grey300}
+        />
       </View>
     </View>
   );
