@@ -1,5 +1,5 @@
-import React, {useState} from 'react';
-import {Dimensions, Text, TouchableOpacity, View} from 'react-native';
+import React, {useRef, useState} from 'react';
+import {Animated, Dimensions, Text, TouchableOpacity, View} from 'react-native';
 import AnimatedWordModal from './WordModal';
 import {SRSTogglesQuickComprehensive} from './SRSToggles';
 import {
@@ -11,6 +11,8 @@ import {
   MD2Colors,
   MD3Colors,
 } from 'react-native-paper';
+import useAnimation from '../hooks/useAnimation';
+import AnimationContainer from './AnimationContainer';
 
 export const FlashCardsSectionContainer = ({
   handleDeleteWordFlashCard,
@@ -27,6 +29,125 @@ export const FlashCardsSectionContainer = ({
       sliceArrState={sliceArrState}
       realCapacity={realCapacity}
     />
+  );
+};
+
+const Container = ({
+  wordData,
+  index,
+  selectedDueCardState,
+  realCapacity,
+  sliceArrState,
+  setSelectedDueCardState,
+  width,
+  handleDeleteWord,
+  handleCloseModal,
+  handleExpandWordArray,
+}) => {
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+  const scaleAnim = useRef(new Animated.Value(0.8)).current;
+
+  const {collapseAnimation} = useAnimation({
+    fadeAnim,
+    scaleAnim,
+  });
+
+  const listTextNumber = index + 1 + ') ';
+  const wordId = wordData.id;
+  const isSelectedWord = selectedDueCardState?.id === wordId;
+  const baseForm = wordData.baseForm;
+  const isLastInTotalOrder = realCapacity === index + 1;
+  const isCardDue = wordData?.isCardDue;
+  const cardReviewButNotDue = !isCardDue && wordData?.reviewData?.due;
+  const freshCard = !cardReviewButNotDue && !isCardDue;
+
+  const moreToLoad = sliceArrState === index + 1 && !isLastInTotalOrder;
+
+  const wordListText = listTextNumber + baseForm;
+
+  const handleDeleteWordWithAnimation = async () => {
+    await collapseAnimation();
+    handleDeleteWord(wordData);
+  };
+  return (
+    <AnimationContainer fadeAnim={fadeAnim} scaleAnim={scaleAnim}>
+      <View>
+        <Card
+          style={{
+            padding: 5,
+            width: isSelectedWord ? width * 0.9 : 'auto',
+            backgroundColor: cardReviewButNotDue
+              ? MD2Colors.blue100
+              : isCardDue && MD2Colors.red100,
+          }}>
+          <TouchableOpacity
+            onPress={() => setSelectedDueCardState(wordData)}
+            style={{
+              alignSelf: 'flex-start',
+              marginVertical: 5,
+              width: '100%',
+              justifyContent: 'space-between',
+              display: 'flex',
+              flexDirection: 'row',
+              alignItems: 'center',
+            }}>
+            <Text
+              style={{
+                fontSize: 24,
+                flexWrap: 'wrap',
+              }}>
+              {wordListText}
+              {
+                <Icon
+                  source={freshCard ? 'new-box' : ''}
+                  size={24}
+                  color={MD2Colors.green500}
+                />
+              }
+            </Text>
+            {isSelectedWord && (
+              <IconButton
+                icon="close"
+                onPress={handleCloseModal}
+                mode="outlined"
+                iconColor={'white'}
+                containerColor={MD3Colors.error50}
+              />
+            )}
+          </TouchableOpacity>
+          <Divider bold />
+          {!isSelectedWord && (
+            <SRSTogglesQuickComprehensive
+              reviewData={wordData.reviewData}
+              id={wordId}
+              baseForm={baseForm}
+              deleteWord={handleDeleteWordWithAnimation}
+            />
+          )}
+          {isSelectedWord && (
+            <AnimatedWordModal
+              visible={wordData}
+              onClose={handleCloseModal}
+              deleteWord={handleDeleteWordWithAnimation}
+            />
+          )}
+        </Card>
+      </View>
+      {moreToLoad && (
+        <View
+          style={{
+            width: '100%',
+            paddingBottom: 30,
+          }}>
+          <Button
+            onPress={handleExpandWordArray}
+            icon="refresh"
+            mode="outlined">
+            See More
+          </Button>
+        </View>
+      )}
+    </AnimationContainer>
   );
 };
 
@@ -52,100 +173,21 @@ const FlashcardsWordsSection = ({
         flexWrap: 'wrap',
         gap: 5,
       }}>
-      {dueCardsState?.map((wordData, index) => {
-        const listTextNumber = index + 1 + ') ';
-        const wordId = wordData.id;
-        const isSelectedWord = selectedDueCardState?.id === wordId;
-        const baseForm = wordData.baseForm;
-        const isLastInTotalOrder = realCapacity === index + 1;
-        const isCardDue = wordData?.isCardDue;
-        const cardReviewButNotDue = !isCardDue && wordData?.reviewData?.due;
-        const freshCard = !cardReviewButNotDue && !isCardDue;
-
-        const moreToLoad = sliceArrState === index + 1 && !isLastInTotalOrder;
-
-        const wordListText = listTextNumber + baseForm;
-        return (
-          <React.Fragment key={wordId}>
-            <View>
-              <Card
-                style={{
-                  padding: 5,
-                  width: isSelectedWord ? width * 0.9 : 'auto',
-                  backgroundColor: cardReviewButNotDue
-                    ? MD2Colors.blue100
-                    : isCardDue && MD2Colors.red100,
-                }}>
-                <TouchableOpacity
-                  onPress={() => setSelectedDueCardState(wordData)}
-                  style={{
-                    alignSelf: 'flex-start',
-                    marginVertical: 5,
-                    width: '100%',
-                    justifyContent: 'space-between',
-                    display: 'flex',
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                  }}>
-                  <Text
-                    style={{
-                      fontSize: 24,
-                      flexWrap: 'wrap',
-                    }}>
-                    {wordListText}
-                    {
-                      <Icon
-                        source={freshCard ? 'new-box' : ''}
-                        size={24}
-                        color={MD2Colors.green500}
-                      />
-                    }
-                  </Text>
-                  {isSelectedWord && (
-                    <IconButton
-                      icon="close"
-                      onPress={handleCloseModal}
-                      mode="outlined"
-                      iconColor={'white'}
-                      containerColor={MD3Colors.error50}
-                    />
-                  )}
-                </TouchableOpacity>
-                <Divider bold />
-                {!isSelectedWord && (
-                  <SRSTogglesQuickComprehensive
-                    reviewData={wordData.reviewData}
-                    id={wordId}
-                    baseForm={baseForm}
-                    deleteWord={() => handleDeleteWord(wordData)}
-                  />
-                )}
-                {isSelectedWord && (
-                  <AnimatedWordModal
-                    visible={wordData}
-                    onClose={handleCloseModal}
-                    deleteWord={() => handleDeleteWord(wordData)}
-                  />
-                )}
-              </Card>
-            </View>
-            {moreToLoad && (
-              <View
-                style={{
-                  width: '100%',
-                  paddingBottom: 30,
-                }}>
-                <Button
-                  onPress={handleExpandWordArray}
-                  icon="refresh"
-                  mode="outlined">
-                  See More
-                </Button>
-              </View>
-            )}
-          </React.Fragment>
-        );
-      })}
+      {dueCardsState?.map((wordData, index) => (
+        <Container
+          key={wordData.id}
+          wordData={wordData}
+          index={index}
+          selectedDueCardState={selectedDueCardState}
+          realCapacity={realCapacity}
+          sliceArrState={sliceArrState}
+          setSelectedDueCardState={setSelectedDueCardState}
+          width={width}
+          handleDeleteWord={handleDeleteWord}
+          handleCloseModal={handleCloseModal}
+          handleExpandWordArray={handleExpandWordArray}
+        />
+      ))}
     </View>
   );
 };
