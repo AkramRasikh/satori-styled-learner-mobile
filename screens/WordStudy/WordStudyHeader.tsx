@@ -27,6 +27,21 @@ const WordStudyHeader = ({
 
   const numOfCategories = wordCategories.length;
 
+  const pillBtnArr = [
+    {
+      value: true,
+      label: `Due only (${realCapacity})`,
+      icon: 'check',
+      showSelectedCheck: showDueCardsState,
+    },
+    {
+      value: false,
+      label: `All (${fullCapacity})`,
+      icon: !showDueCardsState ? 'check' : '',
+      showSelectedCheck: !showDueCardsState,
+    },
+  ];
+
   return (
     <View
       style={{
@@ -34,10 +49,9 @@ const WordStudyHeader = ({
         paddingBottom: 10,
       }}>
       <PillButton
-        isShowDueOnly={showDueCardsState}
-        isDueLabel={`Due only (${realCapacity})`}
-        setIsShowDueOnly={setShowDueCardsState}
-        isNotDueLabel={`All (${fullCapacity})`}
+        btnsArr={pillBtnArr}
+        value={showDueCardsState}
+        onValueChange={setShowDueCardsState}
       />
       <View
         style={{
