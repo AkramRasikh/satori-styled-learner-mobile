@@ -9,7 +9,7 @@ import DeleteWordSection from './DeleteWordSection';
 import useWordData from '../context/WordData/useWordData';
 import useLanguageSelector from '../context/LanguageSelector/useLanguageSelector';
 import SoundWidget from './SoundWidget';
-import {DefaultTheme, Text} from 'react-native-paper';
+import {Button, DefaultTheme, Text} from 'react-native-paper';
 
 const WordStudyAudio = ({sentenceData, isMediaContent}) => {
   const [isPlaying, setIsPlaying] = useState(false);
@@ -56,11 +56,14 @@ const WordStudyAudio = ({sentenceData, isMediaContent}) => {
       isMediaContent={isMediaContent}
     />
   ) : (
-    <View>
-      <TouchableOpacity onPress={handleLoad}>
-        <Text>Load URL</Text>
-      </TouchableOpacity>
-    </View>
+    <Button
+      onPress={handleLoad}
+      mode="outlined"
+      style={{
+        marginBottom: 10,
+      }}>
+      Load URL
+    </Button>
   );
 };
 
