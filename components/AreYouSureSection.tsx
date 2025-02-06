@@ -14,34 +14,3 @@ export const QuickAreYouSureSection = ({handleClose, handleYesSure}) => (
     <Button title="Yes" onPress={handleYesSure} color="red" />
   </View>
 );
-const AreYouSureSection = ({handleClose, handleYesSure}) => (
-  <View
-    style={{
-      paddingVertical: 10,
-      display: 'flex',
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      borderTopWidth: 1,
-    }}>
-    <TouchableOpacity
-      style={{
-        padding: 10,
-        borderRadius: 5,
-        backgroundColor: 'grey',
-      }}
-      onPress={handleClose}>
-      <Text>No</Text>
-    </TouchableOpacity>
-    <TouchableOpacity
-      style={{
-        padding: 10,
-        borderRadius: 5,
-        backgroundColor: 'red',
-      }}
-      onPress={handleYesSure}>
-      <Text>Yes</Text>
-    </TouchableOpacity>
-  </View>
-);
-
-export default AreYouSureSection;
