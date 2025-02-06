@@ -1,5 +1,6 @@
-import {Text, TouchableOpacity, View} from 'react-native';
+import React, {Text, TouchableOpacity, View} from 'react-native';
 import useOpenGoogleTranslate from './useOpenGoogleTranslate';
+import {Icon, MD2Colors} from 'react-native-paper';
 
 const SatoriLineControls = ({
   handlePlayThisLine,
@@ -72,7 +73,11 @@ const SatoriLineControls = ({
         )}
       </View>
       <TouchableOpacity onPress={handlePlayThisLine}>
-        {isPlaying && focusThisSentence ? <Text>⏸️</Text> : <Text>▶️</Text>}
+        <Icon
+          source={isPlaying && focusThisSentence ? 'pause' : 'play'}
+          size={18}
+          color={isPlaying && focusThisSentence && MD2Colors.green300}
+        />
       </TouchableOpacity>
     </View>
   );
