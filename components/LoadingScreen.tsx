@@ -1,5 +1,6 @@
 import React from 'react';
 import {Text, View} from 'react-native';
+import {ActivityIndicator, DefaultTheme, MD2Colors} from 'react-native-paper';
 
 const LoadingScreen = ({children}): React.JSX.Element => {
   return (
@@ -9,7 +10,12 @@ const LoadingScreen = ({children}): React.JSX.Element => {
         justifyContent: 'center',
         alignItems: 'center',
       }}>
-      <Text style={{fontStyle: 'italic', fontSize: 30, fontWeight: 'bold'}}>
+      <ActivityIndicator
+        animating={true}
+        color={MD2Colors.amber600}
+        size={'large'}
+      />
+      <Text style={{...DefaultTheme.fonts.headlineLarge, fontStyle: 'italic'}}>
         {children}
       </Text>
     </View>
