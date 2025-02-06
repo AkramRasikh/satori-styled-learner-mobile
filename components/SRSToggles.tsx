@@ -8,8 +8,9 @@ import {useState} from 'react';
 import {getTimeDiffSRS} from '../utils/getTimeDiffSRS';
 import useWordData from '../context/WordData/useWordData';
 import {QuickAreYouSureSection} from './AreYouSureSection';
-import {Button} from 'react-native-paper';
+import {Button, IconButton, MD2Colors, MD3Colors} from 'react-native-paper';
 import SRSTogglesScaled from './SRSTogglesScaled';
+import AreYouSurePrompt from './AreYouSurePrompt';
 
 const SRSToggles = ({
   reviewData,
@@ -212,6 +213,7 @@ export const SRSTogglesQuickComprehensive = ({
             gap: 10,
             justifyContent: 'space-between',
             marginVertical: 5,
+            alignItems: 'center',
           }}>
           {hasDueDateInFuture ? (
             <View
@@ -231,24 +233,23 @@ export const SRSTogglesQuickComprehensive = ({
               easyText={easyText}
             />
           )}
-          <TouchableOpacity
-            style={{
-              alignSelf: 'center',
-              backgroundColor: 'darkred',
-              padding: 5,
-              borderRadius: 10,
-            }}
+          <IconButton
+            icon="delete"
+            containerColor={MD3Colors.error50}
+            iconColor={MD2Colors.white}
+            size={20}
             onPress={() =>
               setShowAreYouSureSectionState(!showAreYouSureSectionState)
-            }>
-            <Text>🗑️</Text>
-          </TouchableOpacity>
+            }
+          />
         </View>
       </View>
       {showAreYouSureSectionState && (
-        <QuickAreYouSureSection
-          handleClose={() => setShowAreYouSureSectionState(false)}
-          handleYesSure={handleYesSure}
+        <AreYouSurePrompt
+          yesText="Delete!"
+          yesOnPress={handleYesSure}
+          noText="No"
+          noOnPress={() => setShowAreYouSureSectionState(false)}
         />
       )}
     </View>

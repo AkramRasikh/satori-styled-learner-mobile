@@ -50,7 +50,7 @@ const DifficultSentenceTopHeader = ({
         <AreYouSurePrompt
           yesText="Delete!"
           yesOnPress={handleDeleteContent}
-          noText="Mo"
+          noText="No"
           noOnPress={() => setAreYouSureDeleteState(false)}
         />
       )}
