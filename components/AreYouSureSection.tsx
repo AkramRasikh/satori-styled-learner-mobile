@@ -1,4 +1,4 @@
-import {Button, Text, TouchableOpacity, View} from 'react-native';
+import React, {Button, Text, View} from 'react-native';
 
 export const QuickAreYouSureSection = ({handleClose, handleYesSure}) => (
   <View
