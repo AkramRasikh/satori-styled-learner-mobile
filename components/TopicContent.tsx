@@ -498,7 +498,6 @@ const TopicContent = ({
                 isPlaying={isVideoPlaying}
                 playSound={playVideo}
                 seekHandler={seekHandler}
-                jumpAudioValue={jumpAudioValue}
                 progress={progress}
                 setShowReviewSectionState={setShowReviewSectionState}
               />
