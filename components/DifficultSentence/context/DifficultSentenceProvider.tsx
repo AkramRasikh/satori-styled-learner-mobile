@@ -1,4 +1,4 @@
-import React, {useEffect, useRef} from 'react';
+import React, {useRef} from 'react';
 import {Animated} from 'react-native';
 import {createContext, PropsWithChildren} from 'react';
 import {
@@ -9,7 +9,7 @@ import {
 } from '../../../srs-algo';
 import Clipboard from '@react-native-clipboard/clipboard';
 import useOpenGoogleTranslate from '../../useOpenGoogleTranslate';
-import useAnimation from '../../../utils/useAnimation';
+import useAnimation from '../../../hooks/useAnimation';
 
 export const DifficultSentenceContext = createContext(null);
 
