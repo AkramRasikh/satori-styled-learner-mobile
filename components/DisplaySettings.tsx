@@ -1,4 +1,4 @@
-import React, {Text, TouchableOpacity, View} from 'react-native';
+import React, {Text, View} from 'react-native';
 import SwitchButton from './SwitchButton';
 
 const SettingBlock = ({func, bool, text}) => {
