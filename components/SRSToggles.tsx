@@ -325,17 +325,14 @@ export const DifficultSentencesSRSToggles = ({
   const [nextReviewDateState, setNextReviewDateState] = useState('');
   const timeNow = new Date();
   const hasDueDate = reviewData?.due ? new Date(reviewData?.due) : null; // check if due yet
+  const hasDueDateInFuture = new Date(hasDueDate) > timeNow;
 
-  const cardDataRelativeToNow = hasDueDate ? reviewData : getEmptyCard();
-
-  const nextScheduledOptions = getNextScheduledOptions({
-    card: cardDataRelativeToNow,
-    contentType: srsRetentionKeyTypes.vocab,
-  });
-  const againDue = nextScheduledOptions['1'].card.due;
-  const hardDue = nextScheduledOptions['2'].card.due;
-  const goodDue = nextScheduledOptions['3'].card.due;
-  const easyDue = nextScheduledOptions['4'].card.due;
+  const {nextScheduledOptions, againText, hardText, goodText, easyText} =
+    srsCalculationAndText({
+      reviewData,
+      contentType: srsRetentionKeyTypes.vocab,
+      timeNow,
+    });
 
   const handleNextReview = async difficulty => {
     const nextReviewData = nextScheduledOptions[difficulty].card;
@@ -350,12 +347,6 @@ export const DifficultSentencesSRSToggles = ({
       console.log('## handleNextReview', {error});
     }
   };
-
-  const hasDueDateInFuture = new Date(hasDueDate) > timeNow;
-  const againText = getTimeDiffSRS({dueTimeStamp: againDue, timeNow}) as string;
-  const hardText = getTimeDiffSRS({dueTimeStamp: hardDue, timeNow}) as string;
-  const goodText = getTimeDiffSRS({dueTimeStamp: goodDue, timeNow}) as string;
-  const easyText = getTimeDiffSRS({dueTimeStamp: easyDue, timeNow}) as string;
 
   return (
     <View>
