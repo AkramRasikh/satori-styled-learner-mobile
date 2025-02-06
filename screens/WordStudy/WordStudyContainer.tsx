@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {useSelector} from 'react-redux';
-import {ScrollView} from 'react-native';
+import {ScrollView, View} from 'react-native';
 import useFormatWordsToStudy from '../../hooks/useFormatWordsToStudy';
 import {makeArrayUnique} from '../../hooks/useHighlightWordToWordBank';
 import SelectedCategoriesWordsSection from '../../components/SelectedCategoriesSection';
@@ -138,13 +138,21 @@ function WordStudyContainer(): React.JSX.Element {
             handleShowThisCategoriesWords={handleShowThisCategoriesWords}
           />
         )}
-        <FlashcardsWordsSection
-          dueCardsState={dueCardsState}
-          handleDeleteWord={handleDeleteWordFlashCard}
-          handleExpandWordArray={handleExpandWordArray}
-          sliceArrState={sliceArrState}
-          realCapacity={realCapacity}
-        />
+        <View
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            flexWrap: 'wrap',
+            gap: 5,
+          }}>
+          <FlashcardsWordsSection
+            dueCardsState={dueCardsState}
+            handleDeleteWord={handleDeleteWordFlashCard}
+            handleExpandWordArray={handleExpandWordArray}
+            sliceArrState={sliceArrState}
+            realCapacity={realCapacity}
+          />
+        </View>
       </ScrollView>
     </ScreenContainerComponent>
   );

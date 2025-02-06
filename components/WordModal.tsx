@@ -1,69 +1,11 @@
-import React, {useState, useEffect, useRef} from 'react';
-import {View, StyleSheet, TouchableOpacity, Animated} from 'react-native';
-import {getFirebaseAudioURL} from '../hooks/useGetCombinedAudioData';
-import useMP3File from '../hooks/useMP3File';
-import useLoadAudioInstance from '../hooks/useLoadAudioInstance';
+import React from 'react';
+import {View, StyleSheet, TouchableOpacity} from 'react-native';
 import useHighlightWordToWordBank from '../hooks/useHighlightWordToWordBank';
 import SRSToggles from './SRSToggles';
 import DeleteWordSection from './DeleteWordSection';
-import useLanguageSelector from '../context/LanguageSelector/useLanguageSelector';
-import SoundWidget from './SoundWidget';
-import {Button, DefaultTheme, Text} from 'react-native-paper';
 
-const WordStudyAudio = ({sentenceData, isMediaContent}) => {
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [currentTimeState, setCurrentTimeState] = useState(0);
-  const {languageSelectedState} = useLanguageSelector();
-
-  const soundRef = useRef();
-
-  const id = sentenceData.id;
-  const topic = sentenceData.topic;
-  const title = sentenceData.fullTitle;
-  const audioId = isMediaContent ? title : id;
-
-  const url = getFirebaseAudioURL(audioId, languageSelectedState);
-
-  const {loadFile, filePath} = useMP3File(audioId);
-
-  const {triggerLoadURL, isLoaded} = useLoadAudioInstance({
-    soundRef,
-    url: filePath,
-  });
-
-  useEffect(() => {
-    if (filePath) {
-      triggerLoadURL();
-    }
-  }, [filePath]);
-
-  const handleLoad = () => {
-    loadFile(audioId, url);
-  };
-
-  return isLoaded ? (
-    <SoundWidget
-      soundRef={soundRef}
-      url={url}
-      topicName={topic}
-      sentence={sentenceData}
-      isPlaying={isPlaying}
-      setIsPlaying={setIsPlaying}
-      currentTimeState={currentTimeState}
-      setCurrentTimeState={setCurrentTimeState}
-      isMediaContent={isMediaContent}
-    />
-  ) : (
-    <Button
-      onPress={handleLoad}
-      mode="outlined"
-      style={{
-        marginBottom: 10,
-      }}>
-      Load URL
-    </Button>
-  );
-};
+import {DefaultTheme, Text} from 'react-native-paper';
+import FlashCardAudio from './FlashCard/FlashCardAudio';
 
 const AnimatedWordModal = ({
   visible,
@@ -71,9 +13,6 @@ const AnimatedWordModal = ({
   deleteWord,
   collapseAnimation,
 }) => {
-  const fadeAnim = useRef(new Animated.Value(0)).current;
-  const scaleAnim = useRef(new Animated.Value(0.8)).current;
-
   const id = visible.id;
   const baseForm = visible.baseForm;
   const surfaceForm = visible.surfaceForm;
@@ -86,36 +25,6 @@ const AnimatedWordModal = ({
   const {underlineWordsInSentence} = useHighlightWordToWordBank({
     pureWordsUnique: [baseForm, surfaceForm],
   });
-
-  useEffect(() => {
-    Animated.parallel([
-      Animated.timing(fadeAnim, {
-        toValue: 1,
-        duration: 300,
-        useNativeDriver: true,
-      }),
-      Animated.spring(scaleAnim, {
-        toValue: 1,
-        friction: 8,
-        useNativeDriver: true,
-      }),
-    ]).start();
-
-    return () => {
-      Animated.parallel([
-        Animated.timing(fadeAnim, {
-          toValue: 0,
-          duration: 300,
-          useNativeDriver: true,
-        }),
-        Animated.spring(scaleAnim, {
-          toValue: 0.8,
-          friction: 8,
-          useNativeDriver: true,
-        }),
-      ]);
-    };
-  }, []);
 
   const getSafeText = targetText => {
     const textSegments = underlineWordsInSentence(targetText);
@@ -135,11 +44,7 @@ const AnimatedWordModal = ({
         onPress={onClose}
         activeOpacity={1}
       />
-      <Animated.View
-        style={[
-          styles.modalContainer,
-          {opacity: fadeAnim, transform: [{scale: scaleAnim}]},
-        ]}>
+      <View style={[styles.modalContainer]}>
         <Text style={styles.modalContent}>Surface Form: {surfaceForm}</Text>
         <Text style={styles.modalContent}>Definition: {definition}</Text>
         <Text style={styles.modalContent}>Phonetic: {phonetic}</Text>
@@ -160,7 +65,7 @@ const AnimatedWordModal = ({
                 <Text style={styles.modalContent}>
                   {getSafeText(targetLang)}
                 </Text>
-                <WordStudyAudio
+                <FlashCardAudio
                   sentenceData={exampleSentence}
                   isMediaContent={isMediaContent}
                 />
@@ -176,7 +81,7 @@ const AnimatedWordModal = ({
           onCloseModal={onClose}
           collapseAnimation={collapseAnimation}
         />
-      </Animated.View>
+      </View>
     </View>
   );
 };
