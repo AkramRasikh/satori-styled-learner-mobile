@@ -1,13 +1,11 @@
 import React, {Text, View} from 'react-native';
 import SwitchButton from './SwitchButton';
+import {DefaultTheme} from 'react-native-paper';
 
 const SettingBlock = ({func, bool, text}) => {
   return (
     <View>
-      <Text
-        style={{
-          alignSelf: 'center',
-        }}>
+      <Text style={{...DefaultTheme.fonts.labelMedium, alignSelf: 'center'}}>
         {text}
       </Text>
       <SwitchButton isOn={bool} setIsOn={func} />
