@@ -1,20 +1,16 @@
-import {View} from 'react-native';
-import {useEffect} from 'react';
+import React, {useEffect} from 'react';
 import useSoundHook from '../hooks/useSoundHook';
-import SoundSmallSize from './SoundSmallSize';
-import ProgressBarComponent from './Progress';
+import AudioToggles from './AudioToggles';
 
 const SoundWidget = ({
   soundRef,
   url,
   topicName,
-  handleSnippet,
   sentence,
   isPlaying,
   setIsPlaying,
   currentTimeState,
   setCurrentTimeState,
-  noSnips,
   isMediaContent,
 }) => {
   const jumpAudioValue = 2;
@@ -35,11 +31,6 @@ const SoundWidget = ({
     return () => clearInterval(interval);
   }, [soundRef, setCurrentTimeState]);
 
-  const handleSnippetFunc = () => {
-    handleSnippet(currentTimeState);
-    pauseSound();
-  };
-
   const {playSound, pauseSound, forwardSound, rewindSound} = useSoundHook({
     url,
     soundRef,
@@ -51,27 +42,30 @@ const SoundWidget = ({
     isMediaContent,
   });
 
+  const handleForward = (isForward: boolean) => {
+    if (isForward) {
+      forwardSound();
+    } else {
+      rewindSound();
+    }
+  };
+
+  const handlePlay = () => {
+    if (isPlaying) {
+      pauseSound();
+    } else {
+      playSound();
+    }
+  };
+  const progress = currentTimeState / soundDuration;
+
   return (
-    <View>
-      <ProgressBarComponent
-        endTime={soundDuration.toFixed(2)}
-        progress={currentTimeState / soundDuration}
-        time={currentTimeState.toFixed(2)}
-        noMargin
-        noPadding
-      />
-      <SoundSmallSize
-        soundRef={soundRef}
-        isPlaying={isPlaying}
-        playSound={playSound}
-        pauseSound={pauseSound}
-        rewindSound={() => rewindSound(jumpAudioValue)}
-        forwardSound={() => forwardSound(jumpAudioValue)}
-        jumpAudioValue={jumpAudioValue}
-        handleSnippet={handleSnippetFunc}
-        noSnips={noSnips}
-      />
-    </View>
+    <AudioToggles
+      isPlaying={isPlaying}
+      playSound={handlePlay}
+      progress={progress}
+      seekHandler={handleForward}
+    />
   );
 };
 

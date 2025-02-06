@@ -6,7 +6,6 @@ import useLoadAudioInstance from '../hooks/useLoadAudioInstance';
 import useHighlightWordToWordBank from '../hooks/useHighlightWordToWordBank';
 import SRSToggles from './SRSToggles';
 import DeleteWordSection from './DeleteWordSection';
-import useWordData from '../context/WordData/useWordData';
 import useLanguageSelector from '../context/LanguageSelector/useLanguageSelector';
 import SoundWidget from './SoundWidget';
 import {Button, DefaultTheme, Text} from 'react-native-paper';
@@ -52,7 +51,6 @@ const WordStudyAudio = ({sentenceData, isMediaContent}) => {
       setIsPlaying={setIsPlaying}
       currentTimeState={currentTimeState}
       setCurrentTimeState={setCurrentTimeState}
-      noSnips
       isMediaContent={isMediaContent}
     />
   ) : (
