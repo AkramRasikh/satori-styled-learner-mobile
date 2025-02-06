@@ -26,14 +26,12 @@ const TopicContentAudioSection = ({
         padding: 10,
         gap: 10,
       }}>
-      <View>
-        <View
-          style={{
-            flex: 2,
-            marginVertical: 'auto',
-          }}>
-          <ProgressBar progress={progress} color={MD3Colors.error50} />
-        </View>
+      <View
+        style={{
+          flex: 2,
+          marginVertical: 'auto',
+        }}>
+        <ProgressBar progress={progress} color={MD3Colors.error50} />
       </View>
 
       <View
