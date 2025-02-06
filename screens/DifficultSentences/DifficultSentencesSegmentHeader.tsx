@@ -1,5 +1,5 @@
 import React from 'react-native';
-import {SegmentedButtons} from 'react-native-paper';
+import PillButton from '../../components/PillButton';
 
 const DifficultSentencesSegmentHeader = ({
   dueLength,
@@ -10,24 +10,25 @@ const DifficultSentencesSegmentHeader = ({
   const dueText = isShowDueOnly ? `Due (${dueLength})` : 'Due';
   const allSentencesText = `All (${allLength})`;
 
+  const buttons = [
+    {
+      value: true,
+      label: dueText,
+      icon: 'check',
+      showSelectedCheck: isShowDueOnly,
+    },
+    {
+      value: false,
+      label: allSentencesText,
+      icon: !isShowDueOnly ? 'check' : '',
+      showSelectedCheck: !isShowDueOnly,
+    },
+  ];
   return (
-    <SegmentedButtons
+    <PillButton
       value={isShowDueOnly}
       onValueChange={setIsShowDueOnly}
-      buttons={[
-        {
-          value: true,
-          label: dueText,
-          icon: 'check',
-          showSelectedCheck: isShowDueOnly,
-        },
-        {
-          value: false,
-          label: allSentencesText,
-          icon: !isShowDueOnly ? 'check' : '',
-          showSelectedCheck: !isShowDueOnly,
-        },
-      ]}
+      buttons={buttons}
     />
   );
 };
