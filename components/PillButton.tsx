@@ -1,7 +1,13 @@
 import React from 'react';
 import {SegmentedButtons} from 'react-native-paper';
 
-const PillButton = ({isShowDueOnly, setIsShowDueOnly}) => {
+// scale to options a/b/c
+const PillButton = ({
+  isShowDueOnly,
+  setIsShowDueOnly,
+  isDueLabel,
+  isNotDueLabel,
+}) => {
   return (
     <SegmentedButtons
       value={isShowDueOnly}
@@ -9,13 +15,13 @@ const PillButton = ({isShowDueOnly, setIsShowDueOnly}) => {
       buttons={[
         {
           value: true,
-          label: 'Due only',
+          label: isDueLabel,
           icon: 'check',
           showSelectedCheck: isShowDueOnly,
         },
         {
           value: false,
-          label: 'All',
+          label: isNotDueLabel,
           icon: !isShowDueOnly ? 'check' : '',
           showSelectedCheck: !isShowDueOnly,
         },

@@ -28,66 +28,50 @@ const WordStudyHeader = ({
   const numOfCategories = wordCategories.length;
 
   return (
-    <>
+    <View
+      style={{
+        flexWrap: 'wrap',
+        paddingBottom: 10,
+      }}>
+      <PillButton
+        isShowDueOnly={showDueCardsState}
+        isDueLabel={`Due only (${realCapacity})`}
+        setIsShowDueOnly={setShowDueCardsState}
+        isNotDueLabel={`All (${fullCapacity})`}
+      />
       <View
         style={{
-          flexWrap: 'wrap',
-          paddingBottom: 10,
+          margin: 5,
         }}>
-        <PillButton
-          isShowDueOnly={showDueCardsState}
-          setIsShowDueOnly={setShowDueCardsState}
-        />
-        <View
-          style={{
-            margin: 5,
-          }}>
-          {!selectedTopic ? (
-            <Button
-              onPress={() => setShowCategories(!showCategories)}
-              mode="outlined"
-              icon={
-                showCategories
-                  ? () => (
-                      <Icon
-                        source="filter-variant-remove"
-                        color={MD3Colors.error50}
-                      />
-                    )
-                  : ''
-              }>
-              <Text>Categories ({numOfCategories})</Text>
-            </Button>
-          ) : (
-            <Button
-              onPress={handleRemoveSelectedTopic}
-              mode="outlined"
-              icon={() => (
-                <Icon
-                  source="filter-variant-remove"
-                  color={MD3Colors.error50}
-                />
-              )}
-              buttonColor="yellow">
-              <Text> {selectedTopic}</Text>
-            </Button>
-          )}
-        </View>
+        {!selectedTopic ? (
+          <Button
+            onPress={() => setShowCategories(!showCategories)}
+            mode="outlined"
+            icon={
+              showCategories
+                ? () => (
+                    <Icon
+                      source="filter-variant-remove"
+                      color={MD3Colors.error50}
+                    />
+                  )
+                : ''
+            }>
+            <Text>Categories ({numOfCategories})</Text>
+          </Button>
+        ) : (
+          <Button
+            onPress={handleRemoveSelectedTopic}
+            mode="outlined"
+            icon={() => (
+              <Icon source="filter-variant-remove" color={MD3Colors.error50} />
+            )}
+            buttonColor="yellow">
+            <Text> {selectedTopic}</Text>
+          </Button>
+        )}
       </View>
-      <View
-        style={{
-          display: 'flex',
-          flexDirection: 'row',
-          flexWrap: 'wrap',
-          justifyContent: 'space-around',
-          alignItems: 'center',
-          paddingBottom: 10,
-        }}>
-        <Text>
-          {realCapacity}/{fullCapacity}
-        </Text>
-      </View>
-    </>
+    </View>
   );
 };
 export default WordStudyHeader;
