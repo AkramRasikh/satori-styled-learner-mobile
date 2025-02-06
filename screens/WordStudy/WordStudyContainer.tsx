@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {useSelector} from 'react-redux';
-import {ScrollView, Text, TouchableOpacity, View} from 'react-native';
+import {ScrollView, Text, View} from 'react-native';
 import useFormatWordsToStudy from '../../hooks/useFormatWordsToStudy';
 import {makeArrayUnique} from '../../hooks/useHighlightWordToWordBank';
 import SelectedCategoriesWordsSection from '../../components/SelectedCategoriesSection';
@@ -8,6 +8,7 @@ import {FlashCardsSectionContainer} from '../../components/FlashcardsWordsSectio
 import useWordData from '../../context/WordData/useWordData';
 import ScreenContainerComponent from '../../components/ScreenContainerComponent';
 import PillButton from '../../components/PillButton';
+import {Button, Icon, MD3Colors} from 'react-native-paper';
 
 function WordStudyContainer(): React.JSX.Element {
   const [tagsState, setTagsState] = useState<string[]>([]);
@@ -143,33 +144,41 @@ function WordStudyContainer(): React.JSX.Element {
             isShowDueOnly={showDueCardsState}
             setIsShowDueOnly={setShowDueCardsState}
           />
-          {!selectedTopic ? (
-            <TouchableOpacity
-              style={{
-                backgroundColor: 'grey',
-                margin: 5,
-                padding: 5,
-                borderRadius: 5,
-              }}
-              onPress={() => setShowCategories(!showCategories)}>
-              <Text>Categories ({numOfCategories})</Text>
-            </TouchableOpacity>
-          ) : (
-            <TouchableOpacity
-              style={{
-                display: 'flex',
-                flexDirection: 'row',
-                flexWrap: 'wrap',
-                backgroundColor: 'yellow',
-                alignSelf: 'center',
-                padding: 5,
-                marginBottom: 5,
-                borderRadius: 5,
-              }}
-              onPress={handleRemoveSelectedTopic}>
-              <Text>{selectedTopic} ❌</Text>
-            </TouchableOpacity>
-          )}
+          <View
+            style={{
+              margin: 5,
+            }}>
+            {!selectedTopic ? (
+              <Button
+                onPress={() => setShowCategories(!showCategories)}
+                mode="outlined"
+                icon={
+                  showCategories
+                    ? () => (
+                        <Icon
+                          source="filter-variant-remove"
+                          color={MD3Colors.error50}
+                        />
+                      )
+                    : ''
+                }>
+                <Text>Categories ({numOfCategories})</Text>
+              </Button>
+            ) : (
+              <Button
+                onPress={handleRemoveSelectedTopic}
+                mode="outlined"
+                icon={() => (
+                  <Icon
+                    source="filter-variant-remove"
+                    color={MD3Colors.error50}
+                  />
+                )}
+                buttonColor="yellow">
+                <Text> {selectedTopic}</Text>
+              </Button>
+            )}
+          </View>
         </View>
         <View
           style={{
