@@ -8,19 +8,19 @@ import {DefaultTheme, Text} from 'react-native-paper';
 import FlashCardAudio from './FlashCard/FlashCardAudio';
 
 const AnimatedWordModal = ({
-  visible,
+  wordData,
   onClose,
   deleteWord,
   collapseAnimation,
 }) => {
-  const id = visible.id;
-  const baseForm = visible.baseForm;
-  const surfaceForm = visible.surfaceForm;
-  const transliteration = visible.transliteration;
-  const definition = visible.definition;
-  const phonetic = visible.phonetic || transliteration;
-  const sentenceExamples = visible?.contextData;
-  const reviewData = visible?.reviewData;
+  const id = wordData.id;
+  const baseForm = wordData.baseForm;
+  const surfaceForm = wordData.surfaceForm;
+  const transliteration = wordData.transliteration;
+  const definition = wordData.definition;
+  const phonetic = wordData.phonetic || transliteration;
+  const sentenceExamples = wordData?.contextData;
+  const reviewData = wordData?.reviewData;
 
   const {underlineWordsInSentence} = useHighlightWordToWordBank({
     pureWordsUnique: [baseForm, surfaceForm],

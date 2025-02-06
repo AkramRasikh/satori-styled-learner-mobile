@@ -90,7 +90,7 @@ const FlashCard = ({
             )}
             {isSelectedWord && (
               <AnimatedWordModal
-                visible={wordData}
+                wordData={wordData}
                 onClose={handleCloseModal}
                 deleteWord={handleDeleteWordWithAnimation}
                 collapseAnimation={collapseAnimationWithState}
