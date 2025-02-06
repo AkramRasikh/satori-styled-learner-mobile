@@ -2,12 +2,12 @@ import React from 'react';
 import {SegmentedButtons} from 'react-native-paper';
 
 // scale to options a/b/c
-const PillButton = ({btnsArr, value, onValueChange}) => {
+const PillButton = ({buttons, value, onValueChange}) => {
   return (
     <SegmentedButtons
       value={value}
       onValueChange={onValueChange}
-      buttons={btnsArr}
+      buttons={buttons}
     />
   );
 };

@@ -49,7 +49,7 @@ const WordStudyHeader = ({
         paddingBottom: 10,
       }}>
       <PillButton
-        btnsArr={pillBtnArr}
+        buttons={pillBtnArr}
         value={showDueCardsState}
         onValueChange={setShowDueCardsState}
       />
