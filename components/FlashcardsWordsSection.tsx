@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {Dimensions, Text, TouchableOpacity, View} from 'react-native';
 import AnimatedWordModal from './WordModal';
 import {SRSTogglesQuickComprehensive} from './SRSToggles';
-import {Button, Divider, Icon, MD2Colors} from 'react-native-paper';
+import {Button, Card, Divider, Icon, MD2Colors} from 'react-native-paper';
 
 export const FlashCardsSectionContainer = ({
   handleDeleteWordFlashCard,
@@ -60,12 +60,9 @@ const FlashcardsWordsSection = ({
         return (
           <React.Fragment key={wordId}>
             <View>
-              <View
+              <Card
                 style={{
-                  borderBlockColor: 'black',
-                  borderWidth: 1,
                   padding: 5,
-                  borderRadius: 5,
                   width: isSelectedWord ? width * 0.9 : 'auto',
                   backgroundColor: cardReviewButNotDue
                     ? MD2Colors.blue100
@@ -109,7 +106,7 @@ const FlashcardsWordsSection = ({
                     deleteWord={() => handleDeleteWord(wordData)}
                   />
                 )}
-              </View>
+              </Card>
             </View>
             {moreToLoad && (
               <View
