@@ -1,66 +1,63 @@
 import React from 'react';
 import {View} from 'react-native';
-import {Button, ProgressBar, MD3Colors} from 'react-native-paper';
+import {
+  ProgressBar,
+  MD3Colors,
+  IconButton,
+  MD2Colors,
+} from 'react-native-paper';
 
 const AudioToggles = ({
   isPlaying,
   playSound,
   seekHandler,
-  jumpAudioValue,
   progress,
-  // seekToTimestamp,
-  // getTimeStamp,
   setShowReviewSectionState,
-}) => {
-  return (
+}) => (
+  <View
+    style={{
+      display: 'flex',
+      flexDirection: 'row',
+      gap: 10,
+    }}>
     <View
       style={{
+        flex: 2,
+        marginVertical: 'auto',
+      }}>
+      <ProgressBar progress={progress} color={MD3Colors.error50} />
+    </View>
+    <View
+      style={{
+        gap: 5,
         display: 'flex',
         flexDirection: 'row',
-        gap: 10,
       }}>
-      <View
-        style={{
-          flex: 2,
-          marginVertical: 'auto',
-        }}>
-        <ProgressBar progress={progress} color={MD3Colors.error50} />
-      </View>
-      <View
-        style={{
-          gap: 5,
-          display: 'flex',
-          flexDirection: 'row',
-        }}>
-        {setShowReviewSectionState && (
-          <Button
-            mode="contained"
-            buttonColor="grey"
-            onPress={() => setShowReviewSectionState?.(prev => !prev)}>
-            🕰️
-          </Button>
-        )}
-        <Button
+      {setShowReviewSectionState && (
+        <IconButton
           mode="contained"
-          onPress={() => seekHandler(false)}
-          buttonColor="grey">
-          -{jumpAudioValue}
-        </Button>
-        <Button
-          mode="contained"
-          onPress={() => seekHandler(true)}
-          buttonColor="grey">
-          +{jumpAudioValue}
-        </Button>
-        <Button
-          mode="contained"
-          onPress={playSound}
-          buttonColor={isPlaying ? 'green' : 'red'}>
-          {isPlaying ? '⏸️' : '▶️'}
-        </Button>
-      </View>
+          onPress={() => setShowReviewSectionState(prev => !prev)}
+          icon="clock"
+        />
+      )}
+      <IconButton
+        mode="contained"
+        onPress={() => seekHandler(false)}
+        icon="rewind"
+      />
+      <IconButton
+        mode="contained"
+        onPress={() => seekHandler(true)}
+        icon="fast-forward"
+      />
+      <IconButton
+        mode="contained"
+        onPress={playSound}
+        icon={isPlaying ? 'pause' : 'play'}
+        containerColor={isPlaying ? MD2Colors.green300 : MD2Colors.grey300}
+      />
     </View>
-  );
-};
+  </View>
+);
 
 export default AudioToggles;

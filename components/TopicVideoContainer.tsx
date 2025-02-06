@@ -51,7 +51,6 @@ const TopicVideoContainer = ({videoUrl}) => {
         isPlaying={isVideoPlaying}
         playSound={playVideo}
         seekHandler={seekHandler}
-        jumpAudioValue={jumpAudioValue}
         progress={progress}
       />
     </View>
