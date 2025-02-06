@@ -1,14 +1,13 @@
 import React, {useEffect, useState} from 'react';
 import {useSelector} from 'react-redux';
-import {ScrollView, Text, View} from 'react-native';
+import {ScrollView} from 'react-native';
 import useFormatWordsToStudy from '../../hooks/useFormatWordsToStudy';
 import {makeArrayUnique} from '../../hooks/useHighlightWordToWordBank';
 import SelectedCategoriesWordsSection from '../../components/SelectedCategoriesSection';
 import {FlashCardsSectionContainer} from '../../components/FlashcardsWordsSection';
 import useWordData from '../../context/WordData/useWordData';
 import ScreenContainerComponent from '../../components/ScreenContainerComponent';
-import PillButton from '../../components/PillButton';
-import {Button, Icon, MD3Colors} from 'react-native-paper';
+import WordStudyHeader from './WordStudyHeader';
 
 function WordStudyContainer(): React.JSX.Element {
   const [tagsState, setTagsState] = useState<string[]>([]);
@@ -82,11 +81,6 @@ function WordStudyContainer(): React.JSX.Element {
     );
   };
 
-  const handleRemoveSelectedTopic = () => {
-    setSelectedTopic('');
-    setDueCardsState(wordStudyState);
-  };
-
   useEffect(() => {
     setIsMountedState(true);
   }, []);
@@ -120,9 +114,6 @@ function WordStudyContainer(): React.JSX.Element {
   ]);
 
   const realCapacity = dueCardsState.length;
-  const fullCapacity = targetLanguageWordsState.length;
-
-  const numOfCategories = wordCategories.length;
 
   const slicedDueState = dueCardsState.slice(0, sliceArrState); // is there an issue with this?
 
@@ -131,68 +122,18 @@ function WordStudyContainer(): React.JSX.Element {
       <ScrollView
         contentInsetAdjustmentBehavior="automatic"
         style={{padding: 10}}>
-        <View
-          style={{
-            display: 'flex',
-            flexDirection: 'row',
-            flexWrap: 'wrap',
-            justifyContent: 'space-around',
-            alignItems: 'center',
-            paddingBottom: 10,
-          }}>
-          <PillButton
-            isShowDueOnly={showDueCardsState}
-            setIsShowDueOnly={setShowDueCardsState}
-          />
-          <View
-            style={{
-              margin: 5,
-            }}>
-            {!selectedTopic ? (
-              <Button
-                onPress={() => setShowCategories(!showCategories)}
-                mode="outlined"
-                icon={
-                  showCategories
-                    ? () => (
-                        <Icon
-                          source="filter-variant-remove"
-                          color={MD3Colors.error50}
-                        />
-                      )
-                    : ''
-                }>
-                <Text>Categories ({numOfCategories})</Text>
-              </Button>
-            ) : (
-              <Button
-                onPress={handleRemoveSelectedTopic}
-                mode="outlined"
-                icon={() => (
-                  <Icon
-                    source="filter-variant-remove"
-                    color={MD3Colors.error50}
-                  />
-                )}
-                buttonColor="yellow">
-                <Text> {selectedTopic}</Text>
-              </Button>
-            )}
-          </View>
-        </View>
-        <View
-          style={{
-            display: 'flex',
-            flexDirection: 'row',
-            flexWrap: 'wrap',
-            justifyContent: 'space-around',
-            alignItems: 'center',
-            paddingBottom: 10,
-          }}>
-          <Text>
-            {realCapacity}/{fullCapacity}
-          </Text>
-        </View>
+        <WordStudyHeader
+          setShowDueCardsState={setShowDueCardsState}
+          setShowCategories={setShowCategories}
+          showDueCardsState={showDueCardsState}
+          selectedTopic={selectedTopic}
+          showCategories={showCategories}
+          setSelectedTopic={setSelectedTopic}
+          setDueCardsState={setDueCardsState}
+          wordStudyState={wordStudyState}
+          wordCategories={wordCategories}
+          realCapacity={realCapacity}
+        />
         {showCategories && !selectedTopic && (
           <SelectedCategoriesWordsSection
             wordCategories={wordCategories}
