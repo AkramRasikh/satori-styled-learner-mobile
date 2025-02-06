@@ -153,6 +153,7 @@ export const SRSTogglesQuickComprehensive = ({
   reviewData,
   baseForm,
   deleteWord,
+  collapseAnimation,
 }) => {
   const [showAreYouSureSectionState, setShowAreYouSureSectionState] =
     useState(false);
@@ -176,7 +177,8 @@ export const SRSTogglesQuickComprehensive = ({
     setShowAreYouSureSectionState(false);
   };
 
-  const handleNextReview = difficulty => {
+  const handleNextReview = async difficulty => {
+    await collapseAnimation?.();
     const nextReviewData = nextScheduledOptions[difficulty].card;
     updateWordData({
       wordId: id,

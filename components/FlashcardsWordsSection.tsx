@@ -122,6 +122,7 @@ const Container = ({
               id={wordId}
               baseForm={baseForm}
               deleteWord={handleDeleteWordWithAnimation}
+              collapseAnimation={collapseAnimation}
             />
           )}
           {isSelectedWord && (
