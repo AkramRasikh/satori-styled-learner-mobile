@@ -18,7 +18,13 @@ import SRSTogglesScaled from './SRSTogglesScaled';
 import AreYouSurePrompt from './AreYouSurePrompt';
 import {srsCalculationAndText} from '../utils/srs/srs-calculation-and-text';
 
-const SRSToggles = ({id, reviewData, baseForm, onCloseModal}) => {
+const SRSToggles = ({
+  id,
+  reviewData,
+  baseForm,
+  onCloseModal,
+  collapseAnimation,
+}) => {
   const [nextReviewDateState, setNextReviewDateState] = useState('');
   const timeNow = new Date();
   const hasDueDate = reviewData?.due ? new Date(reviewData?.due) : null; // check if due yet
@@ -33,25 +39,22 @@ const SRSToggles = ({id, reviewData, baseForm, onCloseModal}) => {
 
   const {updateWordData} = useWordData();
 
-  const handleNextReview = difficulty => {
+  const handleNextReview = async difficulty => {
     const nextReviewData = nextScheduledOptions[difficulty].card;
-    try {
-      updateWordData({
-        wordId: id,
-        wordBaseForm: baseForm,
-        fieldToUpdate: {
-          reviewData: {
-            ...nextReviewData,
-            due: nextReviewData.due.toISOString(),
-            last_review: nextReviewData.last_review.toISOString(),
-          },
+    await collapseAnimation?.();
+    updateWordData({
+      wordId: id,
+      wordBaseForm: baseForm,
+      fieldToUpdate: {
+        reviewData: {
+          ...nextReviewData,
+          due: nextReviewData.due.toISOString(),
+          last_review: nextReviewData.last_review.toISOString(),
         },
-      });
-      setNextReviewDateState(nextReviewData.due);
-      onCloseModal?.();
-    } catch (error) {
-      console.log('## handleNextReview', {error});
-    }
+      },
+    });
+    setNextReviewDateState(nextReviewData.due);
+    onCloseModal?.();
   };
 
   return (

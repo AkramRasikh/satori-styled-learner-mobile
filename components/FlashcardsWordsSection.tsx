@@ -130,6 +130,7 @@ const Container = ({
               visible={wordData}
               onClose={handleCloseModal}
               deleteWord={handleDeleteWordWithAnimation}
+              collapseAnimation={collapseAnimation}
             />
           )}
         </Card>
