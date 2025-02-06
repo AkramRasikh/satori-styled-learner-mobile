@@ -21,23 +21,11 @@ export const WordDataProvider = ({children}: PropsWithChildren<{}>) => {
 
   const targetLanguageWordsState = useSelector(state => state.words);
 
-  const updateWordData = async ({
-    wordId,
-    wordBaseForm,
-    fieldToUpdate,
-    isSnooze,
-  }) => {
+  const updateWordData = async ({wordId, wordBaseForm, fieldToUpdate}) => {
     try {
       const targetLanguageWordsStateUpdated = targetLanguageWordsState.map(
         item => {
           const thisWordId = item.id === wordId;
-          if (thisWordId && isSnooze) {
-            return {
-              ...item,
-              ...fieldToUpdate,
-              reviewData: null,
-            };
-          }
           if (thisWordId) {
             return {
               ...item,
@@ -53,13 +41,6 @@ export const WordDataProvider = ({children}: PropsWithChildren<{}>) => {
       if (dueCardsState?.length > 0) {
         const wordStudyStateUpdated = wordStudyState.map(item => {
           const thisWordId = item.id === wordId;
-          if (thisWordId && isSnooze) {
-            return {
-              ...item,
-              ...fieldToUpdate,
-              reviewData: null,
-            };
-          }
           if (thisWordId) {
             return {
               ...item,
