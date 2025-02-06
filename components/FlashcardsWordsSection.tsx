@@ -154,21 +154,22 @@ const Container = ({
             )}
           </Card>
         </View>
-        {moreToLoad && (
-          <View
-            style={{
-              width: '100%',
-              paddingBottom: 30,
-            }}>
-            <Button
-              onPress={handleExpandWordArray}
-              icon="refresh"
-              mode="outlined">
-              See More
-            </Button>
-          </View>
-        )}
       </AnimationContainer>
+      {moreToLoad && (
+        <View
+          style={{
+            width: '100%',
+            paddingBottom: 30,
+            marginTop: 10,
+          }}>
+          <Button
+            onPress={handleExpandWordArray}
+            icon="refresh"
+            mode="outlined">
+            See More
+          </Button>
+        </View>
+      )}
     </>
   );
 };
