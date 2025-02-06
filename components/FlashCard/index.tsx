@@ -1,12 +1,12 @@
 import React, {useRef, useState} from 'react';
 import {Animated, Dimensions, View} from 'react-native';
 import {Button, Card, Divider, MD2Colors} from 'react-native-paper';
-import {SRSTogglesQuickComprehensive} from '../SRSToggles';
 import AnimatedWordModal from '../WordModal';
 import AnimationContainer from '../AnimationContainer';
 import useAnimation from '../../hooks/useAnimation';
 import FlashCardLoadingSpinner from './FlashCardLoadingSpinner';
 import FlashCardTopSection from './FlashCardTopSection';
+import FlashCardSRSToggles from './FlashCardSRSToggles';
 
 const FlashCard = ({
   wordData,
@@ -80,7 +80,7 @@ const FlashCard = ({
             />
             <Divider bold />
             {!isSelectedWord && (
-              <SRSTogglesQuickComprehensive
+              <FlashCardSRSToggles
                 reviewData={wordData.reviewData}
                 id={wordId}
                 baseForm={baseForm}
