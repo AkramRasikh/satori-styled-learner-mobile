@@ -3,7 +3,7 @@ import {View} from 'react-native';
 import AreYouSureSection from './AreYouSureSection';
 import {Button, MD3Colors} from 'react-native-paper';
 
-const DeleteWordSection = ({deleteContent, handleSnooze}) => {
+const DeleteWordSection = ({deleteContent}) => {
   const [openAreYouSureState, setOpenAreYouSureState] = useState(false);
   return (
     <View
@@ -20,7 +20,6 @@ const DeleteWordSection = ({deleteContent, handleSnooze}) => {
       {openAreYouSureState && (
         <AreYouSureSection
           handleClose={() => setOpenAreYouSureState(false)}
-          handleSnooze={handleSnooze}
           handleYesSure={deleteContent}
         />
       )}

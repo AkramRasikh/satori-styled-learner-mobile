@@ -14,7 +14,7 @@ export const QuickAreYouSureSection = ({handleClose, handleYesSure}) => (
     <Button title="Yes" onPress={handleYesSure} color="red" />
   </View>
 );
-const AreYouSureSection = ({handleSnooze, handleClose, handleYesSure}) => (
+const AreYouSureSection = ({handleClose, handleYesSure}) => (
   <View
     style={{
       paddingVertical: 10,
@@ -32,17 +32,6 @@ const AreYouSureSection = ({handleSnooze, handleClose, handleYesSure}) => (
       onPress={handleClose}>
       <Text>No</Text>
     </TouchableOpacity>
-    {handleSnooze && (
-      <TouchableOpacity
-        style={{
-          padding: 10,
-          borderRadius: 5,
-          backgroundColor: 'gold',
-        }}
-        onPress={handleSnooze}>
-        <Text>Snooze</Text>
-      </TouchableOpacity>
-    )}
     <TouchableOpacity
       style={{
         padding: 10,

@@ -84,21 +84,6 @@ const AnimatedWordModal = ({visible, onClose, deleteWord}) => {
     pureWordsUnique: [baseForm, surfaceForm],
   });
 
-  const {updateWordData} = useWordData();
-
-  const handleSnooze = async () => {
-    try {
-      await updateWordData({
-        wordId: id,
-        wordBaseForm: baseForm,
-        fieldToUpdate: {reviewData: null},
-        isSnooze: true,
-      });
-    } catch (error) {
-      console.log('## handleSnooze', {error});
-    }
-  };
-
   useEffect(() => {
     Animated.parallel([
       Animated.timing(fadeAnim, {
@@ -180,10 +165,7 @@ const AnimatedWordModal = ({visible, onClose, deleteWord}) => {
             );
           })}
         </View>
-        <DeleteWordSection
-          deleteContent={deleteWord}
-          handleSnooze={handleSnooze}
-        />
+        <DeleteWordSection deleteContent={deleteWord} />
         <SRSToggles
           reviewData={reviewData}
           id={id}
