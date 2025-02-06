@@ -2,7 +2,15 @@ import React, {useState} from 'react';
 import {Dimensions, Text, TouchableOpacity, View} from 'react-native';
 import AnimatedWordModal from './WordModal';
 import {SRSTogglesQuickComprehensive} from './SRSToggles';
-import {Button, Card, Divider, Icon, MD2Colors} from 'react-native-paper';
+import {
+  Button,
+  Card,
+  Divider,
+  Icon,
+  IconButton,
+  MD2Colors,
+  MD3Colors,
+} from 'react-native-paper';
 
 export const FlashCardsSectionContainer = ({
   handleDeleteWordFlashCard,
@@ -74,6 +82,10 @@ const FlashcardsWordsSection = ({
                     alignSelf: 'flex-start',
                     marginVertical: 5,
                     width: '100%',
+                    justifyContent: 'space-between',
+                    display: 'flex',
+                    flexDirection: 'row',
+                    alignItems: 'center',
                   }}>
                   <Text
                     style={{
@@ -89,6 +101,15 @@ const FlashcardsWordsSection = ({
                       />
                     }
                   </Text>
+                  {isSelectedWord && (
+                    <IconButton
+                      icon="close"
+                      onPress={handleCloseModal}
+                      mode="outlined"
+                      iconColor={'white'}
+                      containerColor={MD3Colors.error50}
+                    />
+                  )}
                 </TouchableOpacity>
                 <Divider bold />
                 {!isSelectedWord && (

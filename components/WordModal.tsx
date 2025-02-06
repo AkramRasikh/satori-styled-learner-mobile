@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useRef} from 'react';
-import {View, Text, StyleSheet, TouchableOpacity, Animated} from 'react-native';
+import {View, StyleSheet, TouchableOpacity, Animated} from 'react-native';
 import {getFirebaseAudioURL} from '../hooks/useGetCombinedAudioData';
 import useMP3File from '../hooks/useMP3File';
 import useLoadAudioInstance from '../hooks/useLoadAudioInstance';
@@ -9,6 +9,7 @@ import DeleteWordSection from './DeleteWordSection';
 import useWordData from '../context/WordData/useWordData';
 import useLanguageSelector from '../context/LanguageSelector/useLanguageSelector';
 import SoundWidget from './SoundWidget';
+import {DefaultTheme, Text} from 'react-native-paper';
 
 const WordStudyAudio = ({sentenceData, isMediaContent}) => {
   const [isPlaying, setIsPlaying] = useState(false);
@@ -148,18 +149,6 @@ const AnimatedWordModal = ({visible, onClose, deleteWord}) => {
           styles.modalContainer,
           {opacity: fadeAnim, transform: [{scale: scaleAnim}]},
         ]}>
-        <View
-          style={{
-            display: 'flex',
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            marginBottom: 10,
-          }}>
-          <Text style={styles.modalTitle}>{baseForm}</Text>
-          <TouchableOpacity style={styles.closeButton} onPress={onClose}>
-            <Text style={styles.closeButtonText}>Close</Text>
-          </TouchableOpacity>
-        </View>
         <Text style={styles.modalContent}>Surface Form: {surfaceForm}</Text>
         <Text style={styles.modalContent}>Definition: {definition}</Text>
         <Text style={styles.modalContent}>Phonetic: {phonetic}</Text>
@@ -217,8 +206,7 @@ const styles = StyleSheet.create({
     right: 0,
   },
   modalContainer: {
-    backgroundColor: 'white',
-    padding: 20,
+    padding: 10,
     borderRadius: 10,
     shadowOpacity: 0.25,
     shadowRadius: 4,
@@ -231,8 +219,8 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   modalContent: {
-    fontSize: 16,
-    marginBottom: 20,
+    ...DefaultTheme.fonts.bodyLarge,
+    marginBottom: 10,
   },
   closeButton: {
     padding: 5,
