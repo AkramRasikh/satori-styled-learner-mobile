@@ -7,14 +7,13 @@ import {
 import {useState} from 'react';
 import {getTimeDiffSRS} from '../utils/getTimeDiffSRS';
 import useWordData from '../context/WordData/useWordData';
-import {QuickAreYouSureSection} from './AreYouSureSection';
 import {Button, IconButton, MD2Colors, MD3Colors} from 'react-native-paper';
 import SRSTogglesScaled from './SRSTogglesScaled';
 import AreYouSurePrompt from './AreYouSurePrompt';
 
 const SRSToggles = ({
-  reviewData,
   id,
+  reviewData,
   baseForm,
   limitedOptionsMode,
   onCloseModal,
@@ -321,7 +320,7 @@ export const SRSTogglesQuickComprehensiveDiffSentencesWords = ({
   const easyText = getTimeDiffSRS({dueTimeStamp: easyDue, timeNow}) as string;
 
   return (
-    <View>
+    <>
       <View
         style={{
           gap: 10,
@@ -330,16 +329,7 @@ export const SRSTogglesQuickComprehensiveDiffSentencesWords = ({
           alignSelf: 'flex-end',
           marginVertical: 5,
         }}>
-        {hasDueDateInFuture ? (
-          <View
-            style={{
-              alignSelf: 'center',
-            }}>
-            <Text>
-              Due in {getTimeDiffSRS({dueTimeStamp: hasDueDate, timeNow})}
-            </Text>
-          </View>
-        ) : (
+        {!hasDueDateInFuture && (
           <>
             <GenericButton
               clearBtns={clearBtns}
@@ -367,12 +357,14 @@ export const SRSTogglesQuickComprehensiveDiffSentencesWords = ({
         </TouchableOpacity>
       </View>
       {showAreYouSureSectionState && (
-        <QuickAreYouSureSection
-          handleClose={() => setShowAreYouSureSectionState(false)}
-          handleYesSure={handleYesSure}
+        <AreYouSurePrompt
+          yesText={'Delete!'}
+          yesOnPress={handleYesSure}
+          noText={'No'}
+          noOnPress={() => setShowAreYouSureSectionState(false)}
         />
       )}
-    </View>
+    </>
   );
 };
 
