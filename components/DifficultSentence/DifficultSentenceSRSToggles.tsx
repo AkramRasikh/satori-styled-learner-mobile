@@ -1,44 +1,18 @@
 import React, {View} from 'react-native';
-import {
-  getCardDataRelativeToNow,
-  getDueDate,
-  getNextScheduledOptions,
-  srsRetentionKeyTypes,
-} from '../../srs-algo';
-import {getTimeDiffSRS} from '../../utils/getTimeDiffSRS';
+import {srsRetentionKeyTypes} from '../../srs-algo';
 import useDifficultSentenceContext from './context/useDifficultSentence';
 import SRSTogglesScaled from '../SRSTogglesScaled';
+import {srsCalculationAndText} from '../../utils/srs/srs-calculation-and-text';
 
-const DifficultSentenceSRSToggles = ({sentence}) => {
+const DifficultSentenceSRSToggles = ({reviewData}) => {
   const {handleNextReview} = useDifficultSentenceContext();
   const timeNow = new Date();
 
-  const reviewData = sentence?.reviewData;
-  const hasDueDate = getDueDate(reviewData);
-
-  const nextReview = sentence?.nextReview;
-  const reviewHistory = sentence?.reviewHistory;
-
-  const cardDataRelativeToNow = getCardDataRelativeToNow({
-    hasDueDate,
+  const {againText, hardText, goodText, easyText} = srsCalculationAndText({
     reviewData,
-    nextReview,
-    reviewHistory,
-  });
-
-  const nextScheduledOptions = getNextScheduledOptions({
-    card: cardDataRelativeToNow,
     contentType: srsRetentionKeyTypes.sentences,
+    timeNow,
   });
-  const againDue = nextScheduledOptions['1'].card.due;
-  const hardDue = nextScheduledOptions['2'].card.due;
-  const goodDue = nextScheduledOptions['3'].card.due;
-  const easyDue = nextScheduledOptions['4'].card.due;
-
-  const againText = getTimeDiffSRS({dueTimeStamp: againDue, timeNow}) as string;
-  const hardText = getTimeDiffSRS({dueTimeStamp: hardDue, timeNow}) as string;
-  const goodText = getTimeDiffSRS({dueTimeStamp: goodDue, timeNow}) as string;
-  const easyText = getTimeDiffSRS({dueTimeStamp: easyDue, timeNow}) as string;
 
   return (
     <View
