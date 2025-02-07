@@ -2,11 +2,11 @@ import React, {useState, useEffect, useRef} from 'react';
 import {
   Modal,
   View,
-  Text,
   StyleSheet,
   TouchableOpacity,
   Animated,
 } from 'react-native';
+import {FAB} from 'react-native-paper';
 
 const AnimatedModal = ({visible, onClose, children}) => {
   const [showModal, setShowModal] = useState(visible);
@@ -62,9 +62,12 @@ const AnimatedModal = ({visible, onClose, children}) => {
             {opacity: fadeAnim, transform: [{scale: scaleAnim}]},
           ]}>
           {children}
-          <TouchableOpacity style={styles.closeButton} onPress={onClose}>
-            <Text style={styles.closeButtonText}>Close</Text>
-          </TouchableOpacity>
+          <FAB
+            label="Close"
+            onPress={onClose}
+            icon="close"
+            variant="tertiary"
+          />
         </Animated.View>
       </View>
     </Modal>
