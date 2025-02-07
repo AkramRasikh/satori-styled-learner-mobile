@@ -6,14 +6,7 @@ import {DefaultTheme, Text} from 'react-native-paper';
 import FlashCardAudio from '../FlashCard/FlashCardAudio';
 import {SoundProvider} from '../WordSoundComponent/context/SoundProvider';
 
-const FlashCardModal = ({wordData, onClose}) => {
-  const baseForm = wordData.baseForm;
-  const surfaceForm = wordData.surfaceForm;
-  const transliteration = wordData.transliteration;
-  const definition = wordData.definition;
-  const phonetic = wordData.phonetic || transliteration;
-  const sentenceExamples = wordData?.contextData;
-
+const ExampleSentences = ({sentenceExamples, baseForm, surfaceForm}) => {
   const {underlineWordsInSentence} = useHighlightWordToWordBank({
     pureWordsUnique: [baseForm, surfaceForm],
   });
@@ -28,6 +21,62 @@ const FlashCardModal = ({wordData, onClose}) => {
       );
     });
   };
+  return (
+    <View>
+      {sentenceExamples?.map((exampleSentence, index) => {
+        const exampleNumber = index + 1 + ') ';
+        const baseLang = exampleSentence.baseLang;
+        const targetLang = exampleSentence.targetLang;
+        return (
+          <View key={index}>
+            <Text style={styles.modalContent}>
+              {exampleNumber} {baseLang}
+            </Text>
+            <Text style={styles.modalContent}>{getSafeText(targetLang)}</Text>
+            <SoundProvider sentenceData={exampleSentence}>
+              <FlashCardAudio />
+            </SoundProvider>
+          </View>
+        );
+      })}
+    </View>
+  );
+};
+
+export const FlashCardContent = ({
+  baseForm,
+  surfaceForm,
+  definition,
+  phonetic,
+  transliteration,
+  sentenceExamples,
+}) => {
+  return (
+    <View style={[styles.modalContainer]}>
+      <Text style={styles.modalContent}>Surface Form: {surfaceForm}</Text>
+      <Text style={styles.modalContent}>Definition: {definition}</Text>
+      <Text style={styles.modalContent}>Phonetic: {phonetic}</Text>
+      <Text style={styles.modalContent}>
+        Transliteration: {transliteration}
+      </Text>
+      {sentenceExamples?.length > 0 && (
+        <ExampleSentences
+          sentenceExamples={sentenceExamples}
+          baseForm={baseForm}
+          surfaceForm={surfaceForm}
+        />
+      )}
+    </View>
+  );
+};
+
+const FlashCardModal = ({wordData, onClose}) => {
+  const baseForm = wordData.baseForm;
+  const surfaceForm = wordData.surfaceForm;
+  const transliteration = wordData.transliteration;
+  const definition = wordData.definition;
+  const phonetic = wordData.phonetic || transliteration;
+  const sentenceExamples = wordData?.contextData;
 
   return (
     <View style={styles.overlay}>
@@ -36,34 +85,14 @@ const FlashCardModal = ({wordData, onClose}) => {
         onPress={onClose}
         activeOpacity={1}
       />
-      <View style={[styles.modalContainer]}>
-        <Text style={styles.modalContent}>Surface Form: {surfaceForm}</Text>
-        <Text style={styles.modalContent}>Definition: {definition}</Text>
-        <Text style={styles.modalContent}>Phonetic: {phonetic}</Text>
-        <Text style={styles.modalContent}>
-          Transliteration: {transliteration}
-        </Text>
-        <View>
-          {sentenceExamples?.map((exampleSentence, index) => {
-            const exampleNumber = index + 1 + ') ';
-            const baseLang = exampleSentence.baseLang;
-            const targetLang = exampleSentence.targetLang;
-            return (
-              <View key={index}>
-                <Text style={styles.modalContent}>
-                  {exampleNumber} {baseLang}
-                </Text>
-                <Text style={styles.modalContent}>
-                  {getSafeText(targetLang)}
-                </Text>
-                <SoundProvider sentenceData={exampleSentence}>
-                  <FlashCardAudio />
-                </SoundProvider>
-              </View>
-            );
-          })}
-        </View>
-      </View>
+      <FlashCardContent
+        baseForm={baseForm}
+        surfaceForm={surfaceForm}
+        definition={definition}
+        phonetic={phonetic}
+        transliteration={transliteration}
+        sentenceExamples={sentenceExamples}
+      />
     </View>
   );
 };
