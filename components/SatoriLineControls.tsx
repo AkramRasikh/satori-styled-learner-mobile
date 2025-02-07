@@ -1,6 +1,6 @@
 import React, {Text, TouchableOpacity, View} from 'react-native';
 import useOpenGoogleTranslate from './useOpenGoogleTranslate';
-import {Icon, MD2Colors} from 'react-native-paper';
+import {Icon, MD2Colors, MD3Colors} from 'react-native-paper';
 
 const SatoriLineControls = ({
   handlePlayThisLine,
@@ -43,32 +43,32 @@ const SatoriLineControls = ({
           <Text>🇬🇧</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={copySentence}>
-          <Text>📋</Text>
+          <Icon source="content-copy" size={18} />
         </TouchableOpacity>
         <TouchableOpacity onPress={openReviewPortal}>
-          <Text>😓</Text>
+          <Icon source="calendar-clock" size={18} />
         </TouchableOpacity>
         <TouchableOpacity onPress={handleOpenGoogle}>
-          <Text>📚</Text>
+          <Icon source="google-translate" size={18} color={MD2Colors.blue600} />
         </TouchableOpacity>
         {topicSentence.notes ? (
           <TouchableOpacity onPress={() => setShowNotes(!showNotes)}>
-            <Text>☝🏽</Text>
+            <Icon source="notebook" size={18} />
           </TouchableOpacity>
         ) : null}
         {hasWordHint ? (
           <TouchableOpacity
             onPress={() => setShowWordHintState(!showWordHintState)}>
-            <Text>🔍</Text>
+            <Icon source="magnify" size={18} />
           </TouchableOpacity>
         ) : null}
         {highlightMode ? (
           <TouchableOpacity onPress={() => setHighlightMode(false)}>
-            <Text>❌</Text>
+            <Icon source="close" size={18} color={MD3Colors.error50} />
           </TouchableOpacity>
         ) : (
           <TouchableOpacity onPress={() => setHighlightMode(true)}>
-            <Text>🖌️</Text>
+            <Icon source="format-color-highlight" size={18} />
           </TouchableOpacity>
         )}
       </View>
