@@ -57,41 +57,48 @@ const FlashCard = ({
 
   return (
     <>
-      {isCollapsingState && <FlashCardLoadingSpinner />}
-      <FlashCardBodyContainer
-        fadeAnim={fadeAnim}
-        scaleAnim={scaleAnim}
-        isCardDue={isCardDue}
-        isSelectedWord={isSelectedWord}
-        cardReviewButNotDue={cardReviewButNotDue}>
-        <FlashCardTopSection
-          setSelectedDueCardState={setSelectedDueCardState}
-          wordData={wordData}
-          wordListText={wordListText}
-          freshCard={freshCard}
-          isSelectedWord={isSelectedWord}
-          handleCloseModal={handleCloseModal}
-        />
-        <Divider bold />
-        {isSelectedWord ? (
-          <FlashCardModal
-            wordData={wordData}
-            onClose={handleCloseModal}
-            deleteWord={handleDeleteWordWithAnimation}
-            collapseAnimation={collapseAnimationWithState}
-          />
-        ) : (
-          <FlashCardSRSToggles
-            reviewData={wordData.reviewData}
-            id={wordId}
-            baseForm={baseForm}
-            deleteWord={handleDeleteWordWithAnimation}
-            collapseAnimation={collapseAnimationWithState}
-          />
-        )}
-      </FlashCardBodyContainer>
-      {moreToLoad && (
-        <FlashCardLoadMoreBtn handleExpandWordArray={handleExpandWordArray} />
+      {isCollapsingState ? (
+        <FlashCardLoadingSpinner />
+      ) : (
+        <>
+          <FlashCardBodyContainer
+            fadeAnim={fadeAnim}
+            scaleAnim={scaleAnim}
+            isCardDue={isCardDue}
+            isSelectedWord={isSelectedWord}
+            cardReviewButNotDue={cardReviewButNotDue}>
+            <FlashCardTopSection
+              setSelectedDueCardState={setSelectedDueCardState}
+              wordData={wordData}
+              wordListText={wordListText}
+              freshCard={freshCard}
+              isSelectedWord={isSelectedWord}
+              handleCloseModal={handleCloseModal}
+            />
+            <Divider bold />
+            {isSelectedWord ? (
+              <FlashCardModal
+                wordData={wordData}
+                onClose={handleCloseModal}
+                deleteWord={handleDeleteWordWithAnimation}
+                collapseAnimation={collapseAnimationWithState}
+              />
+            ) : (
+              <FlashCardSRSToggles
+                reviewData={wordData.reviewData}
+                id={wordId}
+                baseForm={baseForm}
+                deleteWord={handleDeleteWordWithAnimation}
+                collapseAnimation={collapseAnimationWithState}
+              />
+            )}
+          </FlashCardBodyContainer>
+          {moreToLoad && (
+            <FlashCardLoadMoreBtn
+              handleExpandWordArray={handleExpandWordArray}
+            />
+          )}
+        </>
       )}
     </>
   );

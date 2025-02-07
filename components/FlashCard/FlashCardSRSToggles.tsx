@@ -37,7 +37,8 @@ const FlashCardSRSToggles = ({
   };
 
   const handleNextReview = async difficulty => {
-    await collapseAnimation?.();
+    collapseAnimation?.();
+    await new Promise(resolve => setTimeout(resolve, 0));
     const nextReviewData = nextScheduledOptions[difficulty].card;
     updateWordData({
       wordId: id,
