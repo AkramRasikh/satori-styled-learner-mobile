@@ -59,45 +59,38 @@ const FlashCardSRSToggles = ({
         style={{
           display: 'flex',
           flexDirection: 'row',
-          justifyContent: 'space-between',
+          gap: 10,
+          marginVertical: 5,
+          alignItems: 'center',
+          alignSelf: 'center',
         }}>
-        <View
-          style={{
-            display: 'flex',
-            flexDirection: 'row',
-            gap: 10,
-            justifyContent: 'space-between',
-            marginVertical: 5,
-            alignItems: 'center',
-          }}>
-          {hasDueDateInFuture ? (
-            <View
-              style={{
-                alignSelf: 'center',
-              }}>
-              <Text>
-                Due in {getTimeDiffSRS({dueTimeStamp: hasDueDate, timeNow})}
-              </Text>
-            </View>
-          ) : (
-            <SRSTogglesScaled
-              handleNextReview={handleNextReview}
-              againText={againText}
-              hardText={hardText}
-              goodText={goodText}
-              easyText={easyText}
-            />
-          )}
-          <IconButton
-            icon="delete"
-            containerColor={MD3Colors.error50}
-            iconColor={MD2Colors.white}
-            size={20}
-            onPress={() =>
-              setShowAreYouSureSectionState(!showAreYouSureSectionState)
-            }
+        {hasDueDateInFuture ? (
+          <View
+            style={{
+              alignSelf: 'center',
+            }}>
+            <Text>
+              Due in {getTimeDiffSRS({dueTimeStamp: hasDueDate, timeNow})}
+            </Text>
+          </View>
+        ) : (
+          <SRSTogglesScaled
+            handleNextReview={handleNextReview}
+            againText={againText}
+            hardText={hardText}
+            goodText={goodText}
+            easyText={easyText}
           />
-        </View>
+        )}
+        <IconButton
+          icon="delete"
+          containerColor={MD3Colors.error50}
+          iconColor={MD2Colors.white}
+          size={20}
+          onPress={() =>
+            setShowAreYouSureSectionState(!showAreYouSureSectionState)
+          }
+        />
       </View>
       {showAreYouSureSectionState && (
         <AreYouSurePrompt

@@ -1,22 +1,18 @@
 import React from 'react';
 import {View, StyleSheet, TouchableOpacity} from 'react-native';
 import useHighlightWordToWordBank from '../../hooks/useHighlightWordToWordBank';
-import SRSToggles from '../SRSToggles';
-import DeleteWordSection from '../DeleteWordSection';
 
 import {DefaultTheme, Text} from 'react-native-paper';
 import FlashCardAudio from '../FlashCard/FlashCardAudio';
 import {SoundProvider} from '../WordSoundComponent/context/SoundProvider';
 
-const FlashCardModal = ({wordData, onClose, deleteWord, collapseAnimation}) => {
-  const id = wordData.id;
+const FlashCardModal = ({wordData, onClose}) => {
   const baseForm = wordData.baseForm;
   const surfaceForm = wordData.surfaceForm;
   const transliteration = wordData.transliteration;
   const definition = wordData.definition;
   const phonetic = wordData.phonetic || transliteration;
   const sentenceExamples = wordData?.contextData;
-  const reviewData = wordData?.reviewData;
 
   const {underlineWordsInSentence} = useHighlightWordToWordBank({
     pureWordsUnique: [baseForm, surfaceForm],
@@ -67,14 +63,6 @@ const FlashCardModal = ({wordData, onClose, deleteWord, collapseAnimation}) => {
             );
           })}
         </View>
-        <DeleteWordSection deleteContent={deleteWord} />
-        <SRSToggles
-          reviewData={reviewData}
-          id={id}
-          baseForm={baseForm}
-          onCloseModal={onClose}
-          collapseAnimation={collapseAnimation}
-        />
       </View>
     </View>
   );

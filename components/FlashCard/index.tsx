@@ -1,4 +1,4 @@
-import React, {MutableRefObject, useRef, useState} from 'react';
+import React, {useRef, useState} from 'react';
 import {Animated} from 'react-native';
 import {Divider} from 'react-native-paper';
 import useAnimation from '../../hooks/useAnimation';
@@ -15,8 +15,6 @@ const NestedFlashCard = ({
   scaleAnimNestedModal,
   wordData,
   handleCloseModal,
-  handleDeleteWordWithAnimation,
-  collapseAnimationWithState,
 }) => {
   const fadeAnim = fadeAnimNestedModal || useRef(new Animated.Value(0)).current;
   const scaleAnim =
@@ -28,12 +26,7 @@ const NestedFlashCard = ({
 
   return (
     <AnimationContainer fadeAnim={fadeAnim} scaleAnim={scaleAnim}>
-      <FlashCardModal
-        wordData={wordData}
-        onClose={handleCloseModal}
-        deleteWord={handleDeleteWordWithAnimation}
-        collapseAnimation={collapseAnimationWithState}
-      />
+      <FlashCardModal wordData={wordData} onClose={handleCloseModal} />
     </AnimationContainer>
   );
 };
@@ -128,24 +121,21 @@ const FlashCard = ({
               handleCloseModal={handleCloseModal}
             />
             <Divider bold />
-            {isSelectedWord ? (
+            {isSelectedWord && (
               <NestedFlashCard
                 fadeAnimNestedModal={fadeAnimNestedModal}
                 scaleAnimNestedModal={scaleAnimNestedModal}
                 wordData={wordData}
                 handleCloseModal={handleCloseModal}
-                handleDeleteWordWithAnimation={handleDeleteWordWithAnimation}
-                collapseAnimationWithState={collapseAnimationWithState}
-              />
-            ) : (
-              <FlashCardSRSToggles
-                reviewData={wordData.reviewData}
-                id={wordId}
-                baseForm={baseForm}
-                deleteWord={handleDeleteWordWithAnimation}
-                collapseAnimation={collapseAnimationWithState}
               />
             )}
+            <FlashCardSRSToggles
+              reviewData={wordData.reviewData}
+              id={wordId}
+              baseForm={baseForm}
+              deleteWord={handleDeleteWordWithAnimation}
+              collapseAnimation={collapseAnimationWithState}
+            />
           </FlashCardBodyContainer>
           {moreToLoad && (
             <FlashCardLoadMoreBtn
