@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
-import {Text, View} from 'react-native';
+import {TouchableOpacity, View} from 'react-native';
 import HighlightTextZone from '../HighlightTextZone';
+import {Text} from 'react-native-paper';
 
 const DifficultSentenceTextContainer = ({
   targetLang,
@@ -13,6 +14,7 @@ const DifficultSentenceTextContainer = ({
 }) => {
   const [highlightedIndices, setHighlightedIndices] = useState([]);
   const [containerWidth, setContainerWidth] = useState(0);
+  const [isBlurredState, setIsBlurredState] = useState(true);
 
   const highlightMode = sentenceId === sentenceBeingHighlightedState;
 
@@ -53,9 +55,19 @@ const DifficultSentenceTextContainer = ({
       ) : (
         safeTextFunc(targetLang)
       )}
-      <View>
-        <Text>{baseLang}</Text>
-      </View>
+      <TouchableOpacity
+        style={{
+          opacity: isBlurredState ? 0.1 : 1,
+          alignItems: isBlurredState ? 'flex-end' : 'flex-start',
+        }}
+        onLongPress={() => setIsBlurredState(!isBlurredState)}>
+        <Text
+          style={{
+            fontSize: isBlurredState ? 10 : 12,
+          }}>
+          {baseLang}
+        </Text>
+      </TouchableOpacity>
     </>
   );
 };
