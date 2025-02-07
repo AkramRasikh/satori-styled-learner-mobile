@@ -8,6 +8,35 @@ import FlashCardSRSToggles from './FlashCardSRSToggles';
 import FlashCardModal from './FlashCardModal';
 import FlashCardLoadMoreBtn from './FlashCardLoadMoreBtn';
 import FlashCardBodyContainer from './FlashCardBodyContainer';
+import AnimationContainer from '../AnimationContainer';
+
+const NestedFlashCard = ({
+  fadeAnimNestedModal,
+  scaleAnimNestedModal,
+  wordData,
+  handleCloseModal,
+  handleDeleteWordWithAnimation,
+  collapseAnimationWithState,
+}) => {
+  const fadeAnim = fadeAnimNestedModal || useRef(new Animated.Value(0)).current;
+  const scaleAnim =
+    scaleAnimNestedModal || useRef(new Animated.Value(0.8)).current;
+  useAnimation({
+    fadeAnim,
+    scaleAnim,
+  });
+
+  return (
+    <AnimationContainer fadeAnim={fadeAnim} scaleAnim={scaleAnim}>
+      <FlashCardModal
+        wordData={wordData}
+        onClose={handleCloseModal}
+        deleteWord={handleDeleteWordWithAnimation}
+        collapseAnimation={collapseAnimationWithState}
+      />
+    </AnimationContainer>
+  );
+};
 
 const FlashCard = ({
   wordData,
@@ -22,9 +51,15 @@ const FlashCard = ({
   const [isCollapsingState, setIsCollapsingState] = useState(false);
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const scaleAnim = useRef(new Animated.Value(0.8)).current;
+  const fadeAnimNestedModal = useRef(new Animated.Value(0)).current;
+  const scaleAnimNestedModal = useRef(new Animated.Value(0.8)).current;
   const {collapseAnimation} = useAnimation({
     fadeAnim,
     scaleAnim,
+  });
+  const {collapseAnimation: collapseAnimationNestedFlashCard} = useAnimation({
+    fadeAnim: fadeAnimNestedModal,
+    scaleAnim: scaleAnimNestedModal,
   });
 
   const listTextNumber = index + 1 + ') ';
@@ -40,7 +75,11 @@ const FlashCard = ({
 
   const wordListText = listTextNumber + baseForm;
 
-  const handleCloseModal = () => {
+  const handleCloseModal = async () => {
+    await new Promise(resolve => {
+      collapseAnimationNestedFlashCard();
+      setTimeout(resolve, 100);
+    });
     setSelectedDueCardState(null);
   };
 
@@ -77,11 +116,13 @@ const FlashCard = ({
             />
             <Divider bold />
             {isSelectedWord ? (
-              <FlashCardModal
+              <NestedFlashCard
+                fadeAnimNestedModal={fadeAnimNestedModal}
+                scaleAnimNestedModal={scaleAnimNestedModal}
                 wordData={wordData}
-                onClose={handleCloseModal}
-                deleteWord={handleDeleteWordWithAnimation}
-                collapseAnimation={collapseAnimationWithState}
+                handleCloseModal={handleCloseModal}
+                handleDeleteWordWithAnimation={handleDeleteWordWithAnimation}
+                collapseAnimationWithState={collapseAnimationWithState}
               />
             ) : (
               <FlashCardSRSToggles
