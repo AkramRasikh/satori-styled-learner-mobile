@@ -1,7 +1,6 @@
 import React, {useRef, useState} from 'react';
-import {Animated, Dimensions, View} from 'react-native';
-import {Card, Divider, MD2Colors} from 'react-native-paper';
-import AnimationContainer from '../AnimationContainer';
+import {Animated} from 'react-native';
+import {Divider} from 'react-native-paper';
 import useAnimation from '../../hooks/useAnimation';
 import FlashCardLoadingSpinner from './FlashCardLoadingSpinner';
 import FlashCardTopSection from './FlashCardTopSection';
