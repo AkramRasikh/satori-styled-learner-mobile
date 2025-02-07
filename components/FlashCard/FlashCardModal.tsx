@@ -6,6 +6,7 @@ import DeleteWordSection from '../DeleteWordSection';
 
 import {DefaultTheme, Text} from 'react-native-paper';
 import FlashCardAudio from '../FlashCard/FlashCardAudio';
+import {SoundProvider} from '../WordSoundComponent/context/SoundProvider';
 
 const FlashCardModal = ({wordData, onClose, deleteWord, collapseAnimation}) => {
   const id = wordData.id;
@@ -51,7 +52,6 @@ const FlashCardModal = ({wordData, onClose, deleteWord, collapseAnimation}) => {
             const exampleNumber = index + 1 + ') ';
             const baseLang = exampleSentence.baseLang;
             const targetLang = exampleSentence.targetLang;
-            const isMediaContent = exampleSentence.isMediaContent;
             return (
               <View key={index}>
                 <Text style={styles.modalContent}>
@@ -60,10 +60,9 @@ const FlashCardModal = ({wordData, onClose, deleteWord, collapseAnimation}) => {
                 <Text style={styles.modalContent}>
                   {getSafeText(targetLang)}
                 </Text>
-                <FlashCardAudio
-                  sentenceData={exampleSentence}
-                  isMediaContent={isMediaContent}
-                />
+                <SoundProvider sentenceData={exampleSentence}>
+                  <FlashCardAudio />
+                </SoundProvider>
               </View>
             );
           })}
