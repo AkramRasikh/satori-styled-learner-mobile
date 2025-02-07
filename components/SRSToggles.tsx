@@ -6,85 +6,9 @@ import {
 } from '../srs-algo';
 import {useState} from 'react';
 import {getTimeDiffSRS} from '../utils/getTimeDiffSRS';
-import useWordData from '../context/WordData/useWordData';
 import {Button, Text} from 'react-native-paper';
 import AreYouSurePrompt from './AreYouSurePrompt';
 import {srsCalculationAndText} from '../utils/srs/srs-calculation-and-text';
-
-const SRSToggles = ({
-  id,
-  reviewData,
-  baseForm,
-  onCloseModal,
-  collapseAnimation,
-}) => {
-  const [nextReviewDateState, setNextReviewDateState] = useState('');
-  const timeNow = new Date();
-  const hasDueDate = reviewData?.due ? new Date(reviewData?.due) : null; // check if due yet
-  const hasDueDateInFuture = new Date(hasDueDate) > timeNow;
-
-  const {nextScheduledOptions, againText, hardText, goodText, easyText} =
-    srsCalculationAndText({
-      reviewData,
-      contentType: srsRetentionKeyTypes.vocab,
-      timeNow,
-    });
-
-  const {updateWordData} = useWordData();
-
-  const handleNextReview = async difficulty => {
-    const nextReviewData = nextScheduledOptions[difficulty].card;
-    await collapseAnimation?.();
-    updateWordData({
-      wordId: id,
-      wordBaseForm: baseForm,
-      fieldToUpdate: {
-        reviewData: {
-          ...nextReviewData,
-          due: nextReviewData.due.toISOString(),
-          last_review: nextReviewData.last_review.toISOString(),
-        },
-      },
-    });
-    setNextReviewDateState(nextReviewData.due);
-    onCloseModal?.();
-  };
-
-  return (
-    <View
-      style={{
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        marginTop: 10,
-      }}>
-      {nextReviewDateState ? (
-        <Text>
-          {getTimeDiffSRS({dueTimeStamp: nextReviewDateState, timeNow})}
-        </Text>
-      ) : hasDueDateInFuture ? (
-        <Text>
-          Due in {getTimeDiffSRS({dueTimeStamp: hasDueDate, timeNow})}
-        </Text>
-      ) : (
-        <>
-          <Button onPress={() => handleNextReview('1')} mode="outlined" compact>
-            {againText}
-          </Button>
-          <Button onPress={() => handleNextReview('2')} mode="outlined" compact>
-            {hardText}
-          </Button>
-          <Button onPress={() => handleNextReview('3')} mode="outlined" compact>
-            {goodText}
-          </Button>
-          <Button onPress={() => handleNextReview('4')} mode="outlined" compact>
-            {easyText}
-          </Button>
-        </>
-      )}
-    </View>
-  );
-};
 
 const GenericButton = ({clearBtns, children, onPress}) => {
   return (
@@ -318,5 +242,3 @@ export const DifficultSentencesSRSToggles = ({
     </View>
   );
 };
-
-export default SRSToggles;
