@@ -1,16 +1,13 @@
-import React, {Text, TouchableOpacity, View} from 'react-native';
-import {
-  getCardDataRelativeToNow,
-  getDueDate,
-  getNextScheduledOptions,
-} from '../srs-algo';
-import {getTimeDiffSRS} from '../utils/getTimeDiffSRS';
+import React, {View} from 'react-native';
+import {srsRetentionKeyTypes} from '../srs-algo';
+import SRSTogglesScaled from './SRSTogglesScaled';
+import {srsCalculationAndText} from '../utils/srs/srs-calculation-and-text';
+import {DeleteButton} from './Button';
 
 const SRSTogglesMini = ({
   sentence,
   updateSentenceData,
   setShowReviewSettings,
-  contentType,
   contentIndex,
   deleteFix,
 }) => {
@@ -19,19 +16,16 @@ const SRSTogglesMini = ({
   const reviewData = sentence?.reviewData;
   const isAdhoc = sentence?.isAdhoc;
 
-  const hasDueDate = getDueDate(reviewData);
-
   const nextReview = sentence?.nextReview;
-  const reviewHistory = sentence?.reviewHistory;
 
   const hasLegacyReviewSystem = !reviewData?.due && nextReview;
 
-  const cardDataRelativeToNow = getCardDataRelativeToNow({
-    hasDueDate,
-    reviewData,
-    nextReview,
-    reviewHistory,
-  });
+  const {againText, hardText, goodText, easyText, nextScheduledOptions} =
+    srsCalculationAndText({
+      reviewData,
+      contentType: srsRetentionKeyTypes.sentences,
+      timeNow,
+    });
 
   const getShouldRemoveLegacyFields = () => {
     if (hasLegacyReviewSystem) {
@@ -63,15 +57,6 @@ const SRSTogglesMini = ({
     }
   };
 
-  const nextScheduledOptions = getNextScheduledOptions({
-    card: cardDataRelativeToNow,
-    contentType,
-  });
-  const againDue = nextScheduledOptions['1'].card.due;
-  const hardDue = nextScheduledOptions['2'].card.due;
-  const goodDue = nextScheduledOptions['3'].card.due;
-  const easyDue = nextScheduledOptions['4'].card.due;
-
   const handleNextReview = async difficulty => {
     const nextReviewData = nextScheduledOptions[difficulty].card;
 
@@ -91,69 +76,24 @@ const SRSTogglesMini = ({
     }
   };
 
-  const againText = getTimeDiffSRS({dueTimeStamp: againDue, timeNow}) as string;
-  const hardText = getTimeDiffSRS({dueTimeStamp: hardDue, timeNow}) as string;
-  const goodText = getTimeDiffSRS({dueTimeStamp: goodDue, timeNow}) as string;
-  const easyText = getTimeDiffSRS({dueTimeStamp: easyDue, timeNow}) as string;
-
   return (
     <View
       style={{
         display: 'flex',
         flexDirection: 'row',
         gap: 5,
-        justifyContent: 'flex-start',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        width: '100%',
       }}>
-      <TouchableOpacity
-        style={{
-          alignSelf: 'center',
-          backgroundColor: '#6082B6',
-          padding: 5,
-          borderRadius: 10,
-        }}
-        onPress={() => handleNextReview('1')}>
-        <Text>{againText}</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={{
-          alignSelf: 'center',
-          backgroundColor: '#6082B6',
-          padding: 5,
-          borderRadius: 10,
-        }}
-        onPress={() => handleNextReview('2')}>
-        <Text>{hardText}</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={{
-          alignSelf: 'center',
-          backgroundColor: '#6082B6',
-          padding: 5,
-          borderRadius: 10,
-        }}
-        onPress={() => handleNextReview('3')}>
-        <Text>{goodText}</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={{
-          alignSelf: 'center',
-          backgroundColor: '#6082B6',
-          padding: 5,
-          borderRadius: 10,
-        }}
-        onPress={() => handleNextReview('4')}>
-        <Text>{easyText}</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={{
-          alignSelf: 'center',
-          backgroundColor: 'darkred',
-          padding: 5,
-          borderRadius: 10,
-        }}
-        onPress={handleClose}>
-        <Text>🗑️</Text>
-      </TouchableOpacity>
+      <SRSTogglesScaled
+        handleNextReview={handleNextReview}
+        againText={againText}
+        hardText={hardText}
+        goodText={goodText}
+        easyText={easyText}
+      />
+      <DeleteButton onPress={handleClose} />
     </View>
   );
 };

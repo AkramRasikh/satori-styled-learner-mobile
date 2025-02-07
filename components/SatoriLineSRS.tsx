@@ -1,7 +1,9 @@
-import React, {Text, TouchableOpacity, View} from 'react-native';
-import {getDueDate, srsRetentionKeyTypes} from '../srs-algo';
+import React, {View} from 'react-native';
+import {getDueDate} from '../srs-algo';
 import {getTimeDiffSRS} from '../utils/getTimeDiffSRS';
 import SRSTogglesMini from './SRSTogglesMini';
+import {DeleteButton} from './Button';
+import {DefaultTheme, Text} from 'react-native-paper';
 
 const SatoriLineSRS = ({
   topicName,
@@ -62,32 +64,25 @@ const SatoriLineSRS = ({
         width: '100%',
       }}>
       {hasDueDateInFuture ? (
-        <View style={{padding: 10, alignSelf: 'center'}}>
-          <Text>
-            Due in {getTimeDiffSRS({dueTimeStamp: hasDueDate, timeNow})}
-          </Text>
-        </View>
+        <Text
+          style={{
+            ...DefaultTheme.fonts.bodySmall,
+            alignSelf: 'center',
+            fontStyle: 'italic',
+          }}>
+          Due in {getTimeDiffSRS({dueTimeStamp: hasDueDate, timeNow})}
+        </Text>
       ) : (
         <SRSTogglesMini
           sentence={sentence}
           updateSentenceData={updateSentenceData}
           setShowReviewSettings={setShowReviewSettings}
-          contentType={srsRetentionKeyTypes.sentences}
           contentIndex={contentIndex}
           deleteFix
         />
       )}
       {showDeleteBtn && (
-        <TouchableOpacity
-          style={{
-            alignSelf: 'center',
-            backgroundColor: '#6082B6',
-            padding: 5,
-            borderRadius: 10,
-          }}
-          onPress={handleRemoveSentenceReview}>
-          <Text>Delete</Text>
-        </TouchableOpacity>
+        <DeleteButton onPress={handleRemoveSentenceReview} size={15} />
       )}
     </View>
   );
