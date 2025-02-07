@@ -1,6 +1,6 @@
-import React, {Text, View} from 'react-native';
+import React, {View} from 'react-native';
 import SwitchButton from './SwitchButton';
-import {DefaultTheme} from 'react-native-paper';
+import {Text, DefaultTheme} from 'react-native-paper';
 
 const SettingBlock = ({func, bool, text}) => {
   return (
