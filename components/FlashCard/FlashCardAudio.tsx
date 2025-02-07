@@ -4,7 +4,7 @@ import useMP3File from '../../hooks/useMP3File';
 import useLoadAudioInstance from '../../hooks/useLoadAudioInstance';
 
 import useLanguageSelector from '../../context/LanguageSelector/useLanguageSelector';
-import SoundWidget from '../SoundWidget';
+import SoundWidget from '../WordSoundComponent';
 import {Button} from 'react-native-paper';
 
 const FlashCardAudio = ({sentenceData, isMediaContent}) => {
