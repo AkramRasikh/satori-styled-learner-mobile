@@ -81,7 +81,7 @@ export const DifficultSentenceProvider = ({
     });
     const nextReviewData = nextScheduledOptions[difficulty].card;
     await collapseAnimation();
-    await updateSentenceData({
+    updateSentenceData({
       isAdhoc,
       topicName: sentence.topic,
       sentenceId: sentence.id,
