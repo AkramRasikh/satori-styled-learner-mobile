@@ -1,7 +1,7 @@
 import React, {View, Text} from 'react-native';
 import SatoriLine from './SatoriLine';
 import {useEffect, useState} from 'react';
-import MiniSnippetTimeChangeHandlers from './MiniSnippetTimeChangeHandlers';
+import {SnippetHandlersDifficultSentence} from './MiniSnippetTimeChangeHandlers';
 import useSnippetControls from '../hooks/useSnippetControls';
 
 const OneSnippetContainer = ({
@@ -105,7 +105,7 @@ const OneSnippetContainer = ({
       style={{
         backgroundColor: snipperIsPlayingState ? 'yellow' : 'transparent',
       }}>
-      <MiniSnippetTimeChangeHandlers
+      <SnippetHandlersDifficultSentence
         handleSetEarlierTime={handleSetEarlierTime}
         handleSaveSnippet={handleAddSnippetFunc}
         handleRemoveSnippet={handleRemoveFromState}
