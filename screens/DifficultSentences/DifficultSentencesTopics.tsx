@@ -1,5 +1,5 @@
 import React, {View} from 'react-native';
-import {FAB, MD2Colors} from 'react-native-paper';
+import TopicListButton from '../../components/TopicListButton';
 
 const DifficultSentencesTopics = ({
   generalTopicsAvailableState,
@@ -20,15 +20,11 @@ const DifficultSentencesTopics = ({
         const isSelected = generalTopic === selectedGeneralTopicState;
         const label = `${generalTopic} (${numberOfSentences})`;
         return (
-          <FAB
+          <TopicListButton
             key={generalTopic}
             label={label}
             onPress={() => handleShowThisTopicsSentences(generalTopic)}
-            customSize={30}
-            icon={isSelected ? 'check' : ''}
-            style={{
-              backgroundColor: isSelected ? MD2Colors.purple100 : '',
-            }}
+            isSelected={isSelected}
           />
         );
       })}
