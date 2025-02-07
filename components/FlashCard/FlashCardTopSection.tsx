@@ -27,13 +27,9 @@ const FlashCardTopSection = ({
         flexWrap: 'wrap',
       }}>
       {wordListText}
-      {
-        <Icon
-          source={freshCard ? 'new-box' : ''}
-          size={24}
-          color={MD2Colors.green500}
-        />
-      }
+      {freshCard && (
+        <Icon source={'new-box'} size={24} color={MD2Colors.green500} />
+      )}
     </Text>
     {isSelectedWord && (
       <IconButton
