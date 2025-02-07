@@ -83,7 +83,7 @@ const SRSTogglesMini = ({
         flexDirection: 'row',
         gap: 5,
         alignItems: 'center',
-        justifyContent: 'space-between',
+        justifyContent: 'space-around',
         width: '100%',
       }}>
       <SRSTogglesScaled
