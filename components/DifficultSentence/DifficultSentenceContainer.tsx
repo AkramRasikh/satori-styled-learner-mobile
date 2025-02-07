@@ -257,7 +257,7 @@ const DifficultSentenceContainer = ({
           saveWordFirebase={saveWordFirebase}
         />
         {isDueState ? (
-          <DifficultSentenceSRSToggles sentence={sentence.reviewData} />
+          <DifficultSentenceSRSToggles reviewData={sentence.reviewData} />
         ) : (
           <View style={{alignSelf: 'center'}}>
             <Text style={DefaultTheme.fonts.bodyMedium}>{text}</Text>
