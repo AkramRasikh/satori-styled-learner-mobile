@@ -7,11 +7,13 @@ const DifficultSentenceTextAction = ({
   isBeingHighlighed,
   handleShowAllMatchedWords,
 }) => {
-  const {handleCopyText, handleOpenUpGoogle} = useDifficultSentenceContext();
+  const {handleCopyText, handleOpenUpGoogle, matchedWordListState} =
+    useDifficultSentenceContext();
   const btnArr = [
     {
       icon: 'text-search',
       onPress: handleShowAllMatchedWords,
+      disabled: matchedWordListState.length === 0,
     },
     {
       icon: isBeingHighlighed ? 'close' : 'format-color-highlight',
@@ -45,6 +47,7 @@ const DifficultSentenceTextAction = ({
             size={15}
             onPress={btn.onPress}
             containerColor={btn?.containerColor}
+            disabled={btn?.disabled}
           />
         );
       })}

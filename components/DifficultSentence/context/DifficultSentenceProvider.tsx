@@ -1,4 +1,4 @@
-import React, {useRef} from 'react';
+import React, {useRef, useState} from 'react';
 import {Animated} from 'react-native';
 import {createContext, PropsWithChildren} from 'react';
 import {
@@ -18,6 +18,8 @@ export const DifficultSentenceProvider = ({
   sentence,
   children,
 }: PropsWithChildren<{}>) => {
+  const [matchedWordListState, setMatchedWordListState] = useState([]);
+
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const scaleAnim = useRef(new Animated.Value(0.8)).current;
 
@@ -106,6 +108,8 @@ export const DifficultSentenceProvider = ({
         fadeAnim,
         scaleAnim,
         handleOpenUpGoogle,
+        matchedWordListState,
+        setMatchedWordListState,
       }}>
       {children}
     </DifficultSentenceContext.Provider>

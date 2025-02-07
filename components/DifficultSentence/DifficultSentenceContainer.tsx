@@ -117,7 +117,6 @@ const DifficultSentenceContainer = ({
   handleWordUpdate,
   setSliceArrState,
 }) => {
-  const [matchedWordListState, setMatchedWordListState] = useState([]);
   const [showAllMatchedWordsState, setShowAllMatchedWordsState] =
     useState(false);
 
@@ -134,7 +133,8 @@ const DifficultSentenceContainer = ({
     updatingSentenceState,
   } = useData();
 
-  const {fadeAnim, scaleAnim} = useDifficultSentenceContext();
+  const {fadeAnim, scaleAnim, matchedWordListState, setMatchedWordListState} =
+    useDifficultSentenceContext();
 
   const isLastEl = toggleableSentencesStateLength === indexNum + 1;
   const isFirst = 0 === indexNum;
