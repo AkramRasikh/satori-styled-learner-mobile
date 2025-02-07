@@ -1,7 +1,16 @@
-import {createContext, PropsWithChildren} from 'react';
+import React, {createContext, PropsWithChildren} from 'react';
 
 export const FlashCardContext = createContext(null);
 
-export const FlashCardProvider = ({children}: PropsWithChildren<{}>) => {
-  return <FlashCardContext.Provider>{children}</FlashCardContext.Provider>;
+export const FlashCardProvider = ({
+  selectedDueCardState,
+  setSelectedDueCardState,
+  children,
+}: PropsWithChildren<{}>) => {
+  return (
+    <FlashCardContext.Provider
+      value={{selectedDueCardState, setSelectedDueCardState}}>
+      {children}
+    </FlashCardContext.Provider>
+  );
 };

@@ -1,27 +1,28 @@
 import React, {useRef, useState} from 'react';
 import {Animated, Dimensions, View} from 'react-native';
-import {Button, Card, Divider, MD2Colors} from 'react-native-paper';
-import AnimatedWordModal from '../WordModal';
+import {Card, Divider, MD2Colors} from 'react-native-paper';
 import AnimationContainer from '../AnimationContainer';
 import useAnimation from '../../hooks/useAnimation';
 import FlashCardLoadingSpinner from './FlashCardLoadingSpinner';
 import FlashCardTopSection from './FlashCardTopSection';
 import FlashCardSRSToggles from './FlashCardSRSToggles';
+import FlashCardModal from './FlashCardModal';
+import FlashCardLoadMoreBtn from './FlashCardLoadMoreBtn';
+import FlashCardBodyContainer from './FlashCardBodyContainer';
 
 const FlashCard = ({
   wordData,
   index,
-  selectedDueCardState,
   realCapacity,
   sliceArrState,
-  setSelectedDueCardState,
   handleDeleteWord,
   handleExpandWordArray,
+  selectedDueCardState,
+  setSelectedDueCardState,
 }) => {
   const [isCollapsingState, setIsCollapsingState] = useState(false);
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const scaleAnim = useRef(new Animated.Value(0.8)).current;
-
   const {collapseAnimation} = useAnimation({
     fadeAnim,
     scaleAnim,
@@ -55,64 +56,43 @@ const FlashCard = ({
     handleDeleteWord(wordData);
   };
 
-  const {width} = Dimensions.get('window');
-
   return (
     <>
       {isCollapsingState && <FlashCardLoadingSpinner />}
-      <AnimationContainer fadeAnim={fadeAnim} scaleAnim={scaleAnim}>
-        <View>
-          <Card
-            style={{
-              padding: 5,
-              width: isSelectedWord ? width * 0.9 : 'auto',
-              backgroundColor: cardReviewButNotDue
-                ? MD2Colors.blue100
-                : isCardDue && MD2Colors.red100,
-            }}>
-            <FlashCardTopSection
-              setSelectedDueCardState={setSelectedDueCardState}
-              wordData={wordData}
-              wordListText={wordListText}
-              freshCard={freshCard}
-              isSelectedWord={isSelectedWord}
-              handleCloseModal={handleCloseModal}
-            />
-            <Divider bold />
-            {!isSelectedWord && (
-              <FlashCardSRSToggles
-                reviewData={wordData.reviewData}
-                id={wordId}
-                baseForm={baseForm}
-                deleteWord={handleDeleteWordWithAnimation}
-                collapseAnimation={collapseAnimationWithState}
-              />
-            )}
-            {isSelectedWord && (
-              <AnimatedWordModal
-                wordData={wordData}
-                onClose={handleCloseModal}
-                deleteWord={handleDeleteWordWithAnimation}
-                collapseAnimation={collapseAnimationWithState}
-              />
-            )}
-          </Card>
-        </View>
-      </AnimationContainer>
+      <FlashCardBodyContainer
+        fadeAnim={fadeAnim}
+        scaleAnim={scaleAnim}
+        isCardDue={isCardDue}
+        isSelectedWord={isSelectedWord}
+        cardReviewButNotDue={cardReviewButNotDue}>
+        <FlashCardTopSection
+          setSelectedDueCardState={setSelectedDueCardState}
+          wordData={wordData}
+          wordListText={wordListText}
+          freshCard={freshCard}
+          isSelectedWord={isSelectedWord}
+          handleCloseModal={handleCloseModal}
+        />
+        <Divider bold />
+        {isSelectedWord ? (
+          <FlashCardModal
+            wordData={wordData}
+            onClose={handleCloseModal}
+            deleteWord={handleDeleteWordWithAnimation}
+            collapseAnimation={collapseAnimationWithState}
+          />
+        ) : (
+          <FlashCardSRSToggles
+            reviewData={wordData.reviewData}
+            id={wordId}
+            baseForm={baseForm}
+            deleteWord={handleDeleteWordWithAnimation}
+            collapseAnimation={collapseAnimationWithState}
+          />
+        )}
+      </FlashCardBodyContainer>
       {moreToLoad && (
-        <View
-          style={{
-            width: '100%',
-            paddingBottom: 30,
-            marginTop: 10,
-          }}>
-          <Button
-            onPress={handleExpandWordArray}
-            icon="refresh"
-            mode="outlined">
-            See More
-          </Button>
-        </View>
+        <FlashCardLoadMoreBtn handleExpandWordArray={handleExpandWordArray} />
       )}
     </>
   );
