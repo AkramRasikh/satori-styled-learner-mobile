@@ -115,6 +115,8 @@ function WordStudyContainer(): React.JSX.Element {
 
   const realCapacity = dueCardsState.length;
 
+  const slicedArr = dueCardsState.slice(0, sliceArrState);
+
   return (
     <ScreenContainerComponent updatePromptState={updatePromptState}>
       <ScrollView
@@ -146,7 +148,7 @@ function WordStudyContainer(): React.JSX.Element {
             gap: 5,
           }}>
           <FlashcardsWordsSection
-            dueCardsState={dueCardsState}
+            dueCardsState={slicedArr}
             handleDeleteWord={handleDeleteWordFlashCard}
             handleExpandWordArray={handleExpandWordArray}
             sliceArrState={sliceArrState}
