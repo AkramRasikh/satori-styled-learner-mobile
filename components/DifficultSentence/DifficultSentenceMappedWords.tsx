@@ -43,17 +43,9 @@ const DifficultSentenceMappedWords = ({
       </TouchableOpacity>
       {noReview && (
         <SRSTogglesQuickComprehensiveDiffSentencesWords
-          id={item.id}
-          reviewData={item?.reviewData}
-          baseForm={item?.baseForm}
+          wordData={item}
+          deleteWord={deleteWord}
           updateWordData={handleUpdateWordFinal}
-          clearBtns={getHexCode(indexNum)}
-          deleteWord={async () =>
-            await deleteWord({
-              wordId: item.id,
-              wordBaseForm: item.baseForm,
-            })
-          }
         />
       )}
     </View>

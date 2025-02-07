@@ -1,57 +1,42 @@
 import React, {TouchableOpacity, View} from 'react-native';
-import {
-  getEmptyCard,
-  getNextScheduledOptions,
-  srsRetentionKeyTypes,
-} from '../srs-algo';
+import {srsRetentionKeyTypes} from '../srs-algo';
 import {useState} from 'react';
 import {getTimeDiffSRS} from '../utils/getTimeDiffSRS';
-import {Button, Text} from 'react-native-paper';
+import {
+  Button,
+  DefaultTheme,
+  IconButton,
+  MD2Colors,
+  MD3Colors,
+  Text,
+} from 'react-native-paper';
 import AreYouSurePrompt from './AreYouSurePrompt';
 import {srsCalculationAndText} from '../utils/srs/srs-calculation-and-text';
 
-const GenericButton = ({clearBtns, children, onPress}) => {
-  return (
-    <TouchableOpacity
-      style={{
-        alignSelf: 'center',
-        backgroundColor: clearBtns ? 'transparent' : '#6082B6',
-        borderColor: clearBtns ? clearBtns : '#6082B6',
-        borderWidth: clearBtns ? 2 : 0,
-        padding: 5,
-        borderRadius: 10,
-      }}
-      onPress={onPress}>
-      {children}
-    </TouchableOpacity>
-  );
-};
-
 export const SRSTogglesQuickComprehensiveDiffSentencesWords = ({
-  id,
-  reviewData,
-  baseForm,
+  wordData,
   deleteWord,
   updateWordData,
-  clearBtns,
 }) => {
+  const id = wordData.id;
+  const reviewData = wordData?.reviewData;
+  const baseForm = wordData?.baseForm;
+
   const [showAreYouSureSectionState, setShowAreYouSureSectionState] =
     useState(false);
   const timeNow = new Date();
-  const hasDueDate = reviewData?.due ? new Date(reviewData?.due) : null; // check if due yet
 
-  const cardDataRelativeToNow = hasDueDate ? reviewData : getEmptyCard();
-
-  const nextScheduledOptions = getNextScheduledOptions({
-    card: cardDataRelativeToNow,
+  const {nextScheduledOptions, goodText, easyText} = srsCalculationAndText({
+    reviewData,
     contentType: srsRetentionKeyTypes.vocab,
+    timeNow,
   });
 
-  const goodDue = nextScheduledOptions['3'].card.due;
-  const easyDue = nextScheduledOptions['4'].card.due;
-
   const handleYesSure = () => {
-    deleteWord();
+    deleteWord({
+      wordId: id,
+      wordBaseForm: baseForm,
+    });
     setShowAreYouSureSectionState(false);
   };
 
@@ -69,10 +54,6 @@ export const SRSTogglesQuickComprehensiveDiffSentencesWords = ({
       },
     });
   };
-  const hasDueDateInFuture = new Date(hasDueDate) > timeNow;
-
-  const goodText = getTimeDiffSRS({dueTimeStamp: goodDue, timeNow}) as string;
-  const easyText = getTimeDiffSRS({dueTimeStamp: easyDue, timeNow}) as string;
 
   return (
     <>
@@ -84,32 +65,40 @@ export const SRSTogglesQuickComprehensiveDiffSentencesWords = ({
           alignSelf: 'flex-end',
           marginVertical: 5,
         }}>
-        {!hasDueDateInFuture && (
-          <>
-            <GenericButton
-              clearBtns={clearBtns}
-              onPress={() => handleNextReview('3')}>
-              <Text>{goodText}</Text>
-            </GenericButton>
-            <GenericButton
-              clearBtns={clearBtns}
-              onPress={() => handleNextReview('4')}>
-              <Text>{easyText}</Text>
-            </GenericButton>
-          </>
-        )}
-        <TouchableOpacity
+        <Button
+          onPress={() => handleNextReview('3')}
+          compact
+          mode="outlined"
+          textColor={DefaultTheme.colors.onSurface}
+          labelStyle={{
+            fontSize: 12,
+          }}>
+          {goodText}
+        </Button>
+
+        <Button
+          onPress={() => handleNextReview('4')}
+          compact
+          mode="outlined"
+          textColor={DefaultTheme.colors.onSurface}
+          labelStyle={{
+            fontSize: 12,
+          }}>
+          {easyText}
+        </Button>
+
+        <IconButton
+          icon="delete"
+          containerColor={MD3Colors.error50}
+          iconColor={MD2Colors.white}
+          size={15}
           style={{
             alignSelf: 'center',
-            borderWidth: 2,
-            padding: 5,
-            borderRadius: 10,
           }}
           onPress={() =>
             setShowAreYouSureSectionState(!showAreYouSureSectionState)
-          }>
-          <Text>🗑️</Text>
-        </TouchableOpacity>
+          }
+        />
       </View>
       {showAreYouSureSectionState && (
         <AreYouSurePrompt
