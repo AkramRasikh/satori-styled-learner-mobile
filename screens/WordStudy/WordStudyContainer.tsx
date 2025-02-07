@@ -23,7 +23,7 @@ function WordStudyContainer(): React.JSX.Element {
     state => state.learningContent,
   );
 
-  const scrollViewRef = useRef();
+  const scrollViewRef = useRef(null);
 
   const wordCategories = makeArrayUnique([...tagsState, ...generalTopicState]);
 

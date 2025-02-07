@@ -1,4 +1,4 @@
-import React, {useRef, useState} from 'react';
+import React, {MutableRefObject, useRef, useState} from 'react';
 import {Animated} from 'react-native';
 import {Divider} from 'react-native-paper';
 import useAnimation from '../../hooks/useAnimation';
@@ -54,7 +54,7 @@ const FlashCard = ({
   const scaleAnim = useRef(new Animated.Value(0.8)).current;
   const fadeAnimNestedModal = useRef(new Animated.Value(0)).current;
   const scaleAnimNestedModal = useRef(new Animated.Value(0.8)).current;
-  const targetRef = useRef();
+  const targetRef = useRef(null);
 
   const {collapseAnimation} = useAnimation({
     fadeAnim,
@@ -98,7 +98,7 @@ const FlashCard = ({
   };
 
   const scrollToTarget = () => {
-    targetRef.current?.measureLayout(scrollViewRef.current, (x, y) => {
+    targetRef.current?.measureLayout(scrollViewRef.current, (_, y) => {
       scrollViewRef.current?.scrollTo({y: y - 100, animated: true});
     });
   };
