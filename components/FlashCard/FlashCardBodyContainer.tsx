@@ -8,13 +8,14 @@ const FlashCardBodyContainer = ({
   isCardDue,
   isSelectedWord,
   cardReviewButNotDue,
+  targetRef,
   children,
 }) => {
   const {width} = Dimensions.get('window');
 
   return (
     <AnimationContainer fadeAnim={fadeAnim} scaleAnim={scaleAnim}>
-      <View>
+      <View ref={targetRef}>
         <Card
           style={{
             padding: 5,

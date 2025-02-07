@@ -8,6 +8,7 @@ const FlashcardsWordsSection = ({
   handleExpandWordArray,
   sliceArrState,
   realCapacity,
+  scrollViewRef,
 }) => {
   const [selectedDueCardState, setSelectedDueCardState] = useState();
 
@@ -22,6 +23,7 @@ const FlashcardsWordsSection = ({
         handleExpandWordArray={handleExpandWordArray}
         selectedDueCardState={selectedDueCardState}
         setSelectedDueCardState={setSelectedDueCardState}
+        scrollViewRef={scrollViewRef}
       />
     </FlashCardProvider>
   ));

@@ -47,12 +47,15 @@ const FlashCard = ({
   handleExpandWordArray,
   selectedDueCardState,
   setSelectedDueCardState,
+  scrollViewRef,
 }) => {
   const [isCollapsingState, setIsCollapsingState] = useState(false);
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const scaleAnim = useRef(new Animated.Value(0.8)).current;
   const fadeAnimNestedModal = useRef(new Animated.Value(0)).current;
   const scaleAnimNestedModal = useRef(new Animated.Value(0.8)).current;
+  const targetRef = useRef();
+
   const {collapseAnimation} = useAnimation({
     fadeAnim,
     scaleAnim,
@@ -94,6 +97,16 @@ const FlashCard = ({
     handleDeleteWord(wordData);
   };
 
+  const scrollToTarget = () => {
+    targetRef.current?.measureLayout(scrollViewRef.current, (x, y) => {
+      scrollViewRef.current?.scrollTo({y: y - 100, animated: true});
+    });
+  };
+  const selectWordWithScroll = () => {
+    setSelectedDueCardState(wordData);
+    scrollToTarget();
+  };
+
   return (
     <>
       {isCollapsingState ? (
@@ -105,10 +118,10 @@ const FlashCard = ({
             scaleAnim={scaleAnim}
             isCardDue={isCardDue}
             isSelectedWord={isSelectedWord}
-            cardReviewButNotDue={cardReviewButNotDue}>
+            cardReviewButNotDue={cardReviewButNotDue}
+            targetRef={targetRef}>
             <FlashCardTopSection
-              setSelectedDueCardState={setSelectedDueCardState}
-              wordData={wordData}
+              selectWordWithScroll={selectWordWithScroll}
               wordListText={wordListText}
               freshCard={freshCard}
               isSelectedWord={isSelectedWord}

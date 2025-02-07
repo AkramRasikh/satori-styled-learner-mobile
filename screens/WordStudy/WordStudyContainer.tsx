@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {useSelector} from 'react-redux';
 import {ScrollView, View} from 'react-native';
 import useFormatWordsToStudy from '../../hooks/useFormatWordsToStudy';
@@ -22,6 +22,8 @@ function WordStudyContainer(): React.JSX.Element {
   const targetLanguageLoadedContent = useSelector(
     state => state.learningContent,
   );
+
+  const scrollViewRef = useRef();
 
   const wordCategories = makeArrayUnique([...tagsState, ...generalTopicState]);
 
@@ -120,6 +122,7 @@ function WordStudyContainer(): React.JSX.Element {
   return (
     <ScreenContainerComponent updatePromptState={updatePromptState}>
       <ScrollView
+        ref={scrollViewRef}
         contentInsetAdjustmentBehavior="automatic"
         style={{padding: 10}}>
         <WordStudyHeader
@@ -153,6 +156,7 @@ function WordStudyContainer(): React.JSX.Element {
             handleExpandWordArray={handleExpandWordArray}
             sliceArrState={sliceArrState}
             realCapacity={realCapacity}
+            scrollViewRef={scrollViewRef}
           />
         </View>
       </ScrollView>

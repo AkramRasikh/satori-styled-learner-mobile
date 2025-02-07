@@ -3,15 +3,14 @@ import {Text, TouchableOpacity} from 'react-native';
 import {Icon, IconButton, MD2Colors, MD3Colors} from 'react-native-paper';
 
 const FlashCardTopSection = ({
-  setSelectedDueCardState,
-  wordData,
+  selectWordWithScroll,
   wordListText,
   freshCard,
   isSelectedWord,
   handleCloseModal,
 }) => (
   <TouchableOpacity
-    onPress={() => setSelectedDueCardState(wordData)}
+    onPress={selectWordWithScroll}
     style={{
       alignSelf: 'flex-start',
       marginVertical: 5,
