@@ -37,45 +37,45 @@ const SatoriLineControls = ({
         style={{
           display: 'flex',
           flexDirection: 'row',
-          gap: 10,
+          gap: 15,
         }}>
         <TouchableOpacity onPress={() => setShowEng(!showEng)}>
           <Text>🇬🇧</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={copySentence}>
-          <Icon source="content-copy" size={18} />
+          <Icon source="content-copy" size={20} />
         </TouchableOpacity>
         <TouchableOpacity onPress={openReviewPortal}>
-          <Icon source="calendar-clock" size={18} />
+          <Icon source="calendar-clock" size={20} />
         </TouchableOpacity>
         <TouchableOpacity onPress={handleOpenGoogle}>
-          <Icon source="google-translate" size={18} color={MD2Colors.blue600} />
+          <Icon source="google-translate" size={20} color={MD2Colors.blue600} />
         </TouchableOpacity>
         {topicSentence.notes ? (
           <TouchableOpacity onPress={() => setShowNotes(!showNotes)}>
-            <Icon source="notebook" size={18} />
+            <Icon source="notebook" size={20} />
           </TouchableOpacity>
         ) : null}
         {hasWordHint ? (
           <TouchableOpacity
             onPress={() => setShowWordHintState(!showWordHintState)}>
-            <Icon source="magnify" size={18} />
+            <Icon source="magnify" size={20} />
           </TouchableOpacity>
         ) : null}
         {highlightMode ? (
           <TouchableOpacity onPress={() => setHighlightMode(false)}>
-            <Icon source="close" size={18} color={MD3Colors.error50} />
+            <Icon source="close" size={20} color={MD3Colors.error50} />
           </TouchableOpacity>
         ) : (
           <TouchableOpacity onPress={() => setHighlightMode(true)}>
-            <Icon source="format-color-highlight" size={18} />
+            <Icon source="format-color-highlight" size={20} />
           </TouchableOpacity>
         )}
       </View>
       <TouchableOpacity onPress={handlePlayThisLine}>
         <Icon
           source={isPlaying && focusThisSentence ? 'pause' : 'play'}
-          size={18}
+          size={20}
           color={isPlaying && focusThisSentence && MD2Colors.green300}
         />
       </TouchableOpacity>
