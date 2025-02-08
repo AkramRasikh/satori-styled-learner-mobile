@@ -1,8 +1,7 @@
 import React, {useState} from 'react';
 import Clipboard from '@react-native-clipboard/clipboard';
-import {Text, TouchableOpacity, View} from 'react-native';
+import {Text, View} from 'react-native';
 import HighlightTextZone from './HighlightTextZone';
-import {filterElementsById} from '../utils/filter-elements-by-id';
 import SatoriLineControls from './SatoriLineControls';
 import SatoriLineSRS from './SatoriLineSRS';
 
@@ -23,7 +22,6 @@ const SatoriLine = ({
   safeText,
   textWidth,
   setHighlightMode,
-  onLongPress,
   topicName,
   updateSentenceData,
   contentIndex,
@@ -31,12 +29,7 @@ const SatoriLine = ({
   const [showEng, setShowEng] = useState(false);
   const [showNotes, setShowNotes] = useState(false);
   const [showReviewSettings, setShowReviewSettings] = useState(false);
-  const [showWordHintState, setShowWordHintState] = useState(false);
   const [showSentenceBreakdown, setShowSentenceBreakdown] = useState(false);
-
-  const filteredElements = filterElementsById(safeText, 'targetWord');
-  const hasWordHint = filteredElements.length > 0;
-  const showWordHint = showWordHintState && hasWordHint;
 
   const hasBeenMarkedAsDifficult =
     topicSentence?.nextReview || topicSentence?.reviewData?.due;
@@ -77,9 +70,6 @@ const SatoriLine = ({
         showNotes={showNotes}
         highlightMode={highlightMode}
         setHighlightMode={setHighlightMode}
-        setShowWordHintState={setShowWordHintState}
-        showWordHintState={showWordHintState}
-        hasWordHint={hasWordHint}
         showSentenceBreakdown={showSentenceBreakdown}
         setShowSentenceBreakdown={setShowSentenceBreakdown}
       />
@@ -111,30 +101,6 @@ const SatoriLine = ({
         </View>
       ) : null}
       {showNotes ? <Text>{topicSentence.notes}</Text> : null}
-      {showWordHint && (
-        <View
-          style={{
-            paddingTop: 5,
-            paddingBottom: 5,
-            width: textWidth,
-          }}>
-          <Text style={{fontSize: 20}}>
-            Target Words:{' '}
-            {filteredElements?.map((wordEl, index) => {
-              const isLastInArr = index + 1 === filteredElements.length;
-              return (
-                <View key={index}>
-                  <TouchableOpacity onLongPress={() => onLongPress(wordEl)}>
-                    <Text>
-                      {wordEl} {!isLastInArr ? ', ' : ''}
-                    </Text>
-                  </TouchableOpacity>
-                </View>
-              );
-            })}
-          </Text>
-        </View>
-      )}
       {showReviewSettings ? (
         <SatoriLineSRS
           sentence={topicSentence}

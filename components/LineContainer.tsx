@@ -138,7 +138,6 @@ const LineContainer = ({
   masterPlay,
   highlightMode,
   setHighlightMode,
-  onLongPress,
   topicName,
   updateSentenceData,
   currentTimeState,
@@ -210,7 +209,6 @@ const LineContainer = ({
                     safeText={topicSentence.safeText}
                     textWidth={width * 0.9}
                     setHighlightMode={setHighlightMode}
-                    onLongPress={onLongPress}
                     topicName={topicName}
                     updateSentenceData={updateSentenceData}
                     contentIndex={contentIndex}

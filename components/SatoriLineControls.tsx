@@ -16,9 +16,6 @@ const SatoriLineControls = ({
   showNotes,
   highlightMode,
   setHighlightMode,
-  setShowWordHintState,
-  showWordHintState,
-  hasWordHint,
   showSentenceBreakdown,
   setShowSentenceBreakdown,
 }) => {
@@ -60,12 +57,6 @@ const SatoriLineControls = ({
         {topicSentence.notes ? (
           <TouchableOpacity onPress={() => setShowNotes(!showNotes)}>
             <Icon source="notebook" size={20} />
-          </TouchableOpacity>
-        ) : null}
-        {hasWordHint ? (
-          <TouchableOpacity
-            onPress={() => setShowWordHintState(!showWordHintState)}>
-            <Icon source="magnify" size={20} />
           </TouchableOpacity>
         ) : null}
         {highlightMode ? (
