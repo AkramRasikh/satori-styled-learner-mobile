@@ -1,10 +1,6 @@
 import React, {View} from 'react-native';
-import {
-  IconButton,
-  MD2Colors,
-  MD3Colors,
-  ProgressBar,
-} from 'react-native-paper';
+import {IconButton, MD2Colors} from 'react-native-paper';
+import ProgressBarComponent from './ProgressBar';
 
 const TopicContentAudioSection = ({
   isPlaying,
@@ -17,8 +13,8 @@ const TopicContentAudioSection = ({
   soundDuration,
   setShowReviewSectionState,
 }) => {
-  const progress =
-    soundDuration && currentTimeState ? currentTimeState / soundDuration : 0;
+  const progressRate = currentTimeState / soundDuration || 0;
+  const text = `${currentTimeState?.toFixed(2)}/${soundDuration?.toFixed(2)}`;
 
   return (
     <View
@@ -26,14 +22,11 @@ const TopicContentAudioSection = ({
         padding: 10,
         gap: 10,
       }}>
-      <View
-        style={{
-          flex: 2,
-          marginVertical: 'auto',
-        }}>
-        <ProgressBar progress={progress} color={MD3Colors.error50} />
-      </View>
-
+      <ProgressBarComponent
+        progressWidth={'75%'}
+        progress={progressRate}
+        text={text}
+      />
       <View
         style={{
           gap: 5,
