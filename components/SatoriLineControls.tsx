@@ -2,6 +2,7 @@ import React, {Text, TouchableOpacity, View} from 'react-native';
 import useOpenGoogleTranslate from './useOpenGoogleTranslate';
 import {Icon, MD2Colors, MD3Colors} from 'react-native-paper';
 
+//
 const SatoriLineControls = ({
   handlePlayThisLine,
   isPlaying,
@@ -18,12 +19,17 @@ const SatoriLineControls = ({
   setShowWordHintState,
   showWordHintState,
   hasWordHint,
+  showSentenceBreakdown,
+  setShowSentenceBreakdown,
 }) => {
   const {openGoogleTranslateApp} = useOpenGoogleTranslate();
 
   const handleOpenGoogle = () => {
     openGoogleTranslateApp(topicSentence.targetLang);
   };
+
+  const hasVocabBreakdown = topicSentence?.vocab;
+
   return (
     <View
       style={{
@@ -71,6 +77,12 @@ const SatoriLineControls = ({
             <Icon source="format-color-highlight" size={20} />
           </TouchableOpacity>
         )}
+        {hasVocabBreakdown ? (
+          <TouchableOpacity
+            onPress={() => setShowSentenceBreakdown(!showSentenceBreakdown)}>
+            <Icon source="set-split" size={20} />
+          </TouchableOpacity>
+        ) : null}
       </View>
       <TouchableOpacity onPress={handlePlayThisLine}>
         <Icon

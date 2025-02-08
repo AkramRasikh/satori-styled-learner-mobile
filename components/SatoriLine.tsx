@@ -32,6 +32,7 @@ const SatoriLine = ({
   const [showNotes, setShowNotes] = useState(false);
   const [showReviewSettings, setShowReviewSettings] = useState(false);
   const [showWordHintState, setShowWordHintState] = useState(false);
+  const [showSentenceBreakdown, setShowSentenceBreakdown] = useState(false);
 
   const filteredElements = filterElementsById(safeText, 'targetWord');
   const hasWordHint = filteredElements.length > 0;
@@ -79,6 +80,8 @@ const SatoriLine = ({
         setShowWordHintState={setShowWordHintState}
         showWordHintState={showWordHintState}
         hasWordHint={hasWordHint}
+        showSentenceBreakdown={showSentenceBreakdown}
+        setShowSentenceBreakdown={setShowSentenceBreakdown}
       />
       {englishOnly ? null : highlightMode ? (
         <HighlightTextZone
