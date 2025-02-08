@@ -1,5 +1,5 @@
 import React, {View} from 'react-native';
-import {DefaultTheme, IconButton} from 'react-native-paper';
+import {DefaultTheme, IconButton, MD2Colors} from 'react-native-paper';
 import useDifficultSentenceContext from './context/useDifficultSentence';
 
 const DifficultSentenceTextAction = ({
@@ -24,6 +24,7 @@ const DifficultSentenceTextAction = ({
     {
       icon: 'google-translate',
       onPress: handleOpenUpGoogle,
+      iconColor: MD2Colors.blue600,
     },
     {
       icon: 'content-copy',
@@ -48,6 +49,7 @@ const DifficultSentenceTextAction = ({
             onPress={btn.onPress}
             containerColor={btn?.containerColor}
             disabled={btn?.disabled}
+            iconColor={btn?.iconColor}
           />
         );
       })}
