@@ -4,6 +4,8 @@ import {Text, View} from 'react-native';
 import HighlightTextZone from './HighlightTextZone';
 import SatoriLineControls from './SatoriLineControls';
 import SatoriLineSRS from './SatoriLineSRS';
+import VocabBreakdown from './VocabBreakdown';
+import {getHexCode} from '../utils/get-hex-code';
 
 const SatoriLine = ({
   id,
@@ -38,6 +40,17 @@ const SatoriLine = ({
     Clipboard.setString(topicSentence.targetLang);
   };
 
+  const vocabBreakDoownWithHexCode = showSentenceBreakdown
+    ? topicSentence.vocab.map((i, index) => {
+        return {
+          ...i,
+          color: getHexCode(index),
+        };
+      })
+    : null;
+
+  console.log('## vocabBreakDoownWithHexCode', vocabBreakDoownWithHexCode);
+
   const handlePlayThisLine = () => {
     if (isPlaying && focusThisSentence) {
       pauseSound();
@@ -46,47 +59,66 @@ const SatoriLine = ({
     }
   };
 
+  const getThisText = () => {
+    if (showSentenceBreakdown) {
+      return (
+        <Text>
+          {vocabBreakDoownWithHexCode.map(nestedSegment => (
+            <Text style={{color: nestedSegment.color}}>
+              {nestedSegment.surfaceForm}
+            </Text>
+          ))}
+        </Text>
+      );
+    } else {
+      return <Text>{topicSentence.targetLang}</Text>;
+    }
+  };
+
   const openReviewPortal = () => {
     setShowReviewSettings(!showReviewSettings);
   };
 
   return (
-    <Text
-      selectable={true}
-      style={{
-        backgroundColor: focusThisSentence ? 'yellow' : 'transparent',
-        color: hasBeenMarkedAsDifficult ? '#8B0000' : 'black',
-      }}>
-      <SatoriLineControls
-        handlePlayThisLine={handlePlayThisLine}
-        isPlaying={isPlaying}
-        focusThisSentence={focusThisSentence}
-        copySentence={copySentence}
-        openReviewPortal={openReviewPortal}
-        topicSentence={topicSentence}
-        setShowEng={setShowEng}
-        showEng={showEng}
-        setShowNotes={setShowNotes}
-        showNotes={showNotes}
-        highlightMode={highlightMode}
-        setHighlightMode={setHighlightMode}
-        showSentenceBreakdown={showSentenceBreakdown}
-        setShowSentenceBreakdown={setShowSentenceBreakdown}
-      />
-      {englishOnly ? null : highlightMode ? (
-        <HighlightTextZone
-          id={id}
-          sentenceIndex={sentenceIndex}
-          text={topicSentence.targetLang}
-          highlightedIndices={highlightedIndices}
-          setHighlightedIndices={setHighlightedIndices}
-          saveWordFirebase={saveWordFirebase}
+    <>
+      <Text
+        selectable={true}
+        style={{
+          backgroundColor: focusThisSentence ? 'yellow' : 'transparent',
+          color: hasBeenMarkedAsDifficult ? '#8B0000' : 'black',
+          fontSize: 20,
+        }}>
+        <SatoriLineControls
+          handlePlayThisLine={handlePlayThisLine}
+          isPlaying={isPlaying}
+          focusThisSentence={focusThisSentence}
+          copySentence={copySentence}
+          openReviewPortal={openReviewPortal}
+          topicSentence={topicSentence}
+          setShowEng={setShowEng}
+          showEng={showEng}
+          setShowNotes={setShowNotes}
+          showNotes={showNotes}
+          highlightMode={highlightMode}
           setHighlightMode={setHighlightMode}
-          textWidth={textWidth}
+          showSentenceBreakdown={showSentenceBreakdown}
+          setShowSentenceBreakdown={setShowSentenceBreakdown}
         />
-      ) : (
-        safeText
-      )}
+        {englishOnly ? null : highlightMode ? (
+          <HighlightTextZone
+            id={id}
+            sentenceIndex={sentenceIndex}
+            text={topicSentence.targetLang}
+            highlightedIndices={highlightedIndices}
+            setHighlightedIndices={setHighlightedIndices}
+            saveWordFirebase={saveWordFirebase}
+            setHighlightMode={setHighlightMode}
+            textWidth={textWidth}
+          />
+        ) : (
+          getThisText()
+        )}
+      </Text>
       {showEng || englishOnly || engMaster ? (
         <View
           style={{
@@ -100,6 +132,9 @@ const SatoriLine = ({
           </Text>
         </View>
       ) : null}
+      {showSentenceBreakdown ? (
+        <VocabBreakdown vocab={topicSentence.vocab} />
+      ) : null}
       {showNotes ? <Text>{topicSentence.notes}</Text> : null}
       {showReviewSettings ? (
         <SatoriLineSRS
@@ -110,7 +145,7 @@ const SatoriLine = ({
           contentIndex={contentIndex}
         />
       ) : null}
-    </Text>
+    </>
   );
 };
 

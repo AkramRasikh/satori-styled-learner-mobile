@@ -187,10 +187,9 @@ const LineContainer = ({
                   paddingTop: firstEl ? 10 : 0,
                 }}
                 key={id}>
-                <Text
+                <View
                   style={{
                     backgroundColor: highlightedTextState,
-                    fontSize: 20,
                   }}>
                   <SatoriLine
                     id={id}
@@ -213,7 +212,7 @@ const LineContainer = ({
                     updateSentenceData={updateSentenceData}
                     contentIndex={contentIndex}
                   />
-                </Text>
+                </View>
 
                 {thisSnippets?.map((snippetData, index) => {
                   return (
