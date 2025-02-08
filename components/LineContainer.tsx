@@ -205,7 +205,6 @@ const LineContainer = ({
                     engMaster={engMaster}
                     isPlaying={isPlaying}
                     pauseSound={pauseSound}
-                    safeText={topicSentence.safeText}
                     textWidth={width * 0.9}
                     setHighlightMode={setHighlightMode}
                     topicName={topicName}

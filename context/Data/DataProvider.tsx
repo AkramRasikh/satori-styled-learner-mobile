@@ -23,6 +23,7 @@ import {setSentencesStateDispatch} from '../../store/sentencesSlice';
 import {setSnippetsStateDispatch} from '../../store/snippetsSlice';
 import {deleteWordAPI} from '../../api/delete-word';
 import {updateWordAPI} from '../../api/update-word-data';
+import {breakdownSentenceAPI} from '../../api/breakdown-sentence';
 
 export const DataContext = createContext(null);
 
@@ -194,6 +195,42 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
       };
     } catch (error) {
       updatePromptFunc('Error saving updating adhoc sentence', 2000);
+    }
+  };
+
+  const breakdownSentence = async ({
+    topicName,
+    sentenceId,
+    language,
+    targetLang,
+    contentIndex,
+  }) => {
+    try {
+      setUpdatingSentenceState(sentenceId);
+      const resObj = await breakdownSentenceAPI({
+        topicName,
+        sentenceId,
+        targetLang,
+        language,
+      });
+
+      const updatedContentState = updateLoadedContentStateAfterSentenceUpdate({
+        sentenceId,
+        resObj,
+        contentIndex,
+      });
+      await storeDataLocalStorage(
+        dataStorageKeyPrefix + content,
+        updatedContentState,
+      );
+
+      updatePromptFunc(`${topicName} updated!`, 2000);
+      return resObj;
+    } catch (error) {
+      console.log('## breakdownSentence', {error});
+      updatePromptFunc(`Error updating sentence for ${topicName}`, 2000);
+    } finally {
+      setUpdatingSentenceState('');
     }
   };
 
@@ -561,6 +598,7 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
         deleteWord,
         updateWordData,
         updateMetaDataState,
+        breakdownSentence,
       }}>
       {children}
     </DataContext.Provider>

@@ -4,8 +4,11 @@ import {Text, View} from 'react-native';
 import HighlightTextZone from './HighlightTextZone';
 import SatoriLineControls from './SatoriLineControls';
 import SatoriLineSRS from './SatoriLineSRS';
-import VocabBreakdown from './VocabBreakdown';
+import SentenceBreakdown from './SentenceBreakdown';
 import {getHexCode} from '../utils/get-hex-code';
+import useLanguageSelector from '../context/LanguageSelector/useLanguageSelector';
+import useData from '../context/Data/useData';
+import {ActivityIndicator} from 'react-native-paper';
 
 const SatoriLine = ({
   id,
@@ -21,7 +24,6 @@ const SatoriLine = ({
   engMaster,
   isPlaying,
   pauseSound,
-  safeText,
   textWidth,
   setHighlightMode,
   topicName,
@@ -32,6 +34,26 @@ const SatoriLine = ({
   const [showNotes, setShowNotes] = useState(false);
   const [showReviewSettings, setShowReviewSettings] = useState(false);
   const [showSentenceBreakdown, setShowSentenceBreakdown] = useState(false);
+  const [isLoadingState, setIsLoadingState] = useState(false);
+
+  const {breakdownSentence} = useData();
+
+  const {languageSelectedState} = useLanguageSelector();
+  const getSentenceBreakdown = async () => {
+    setIsLoadingState(true);
+    try {
+      await breakdownSentence({
+        topicName,
+        sentenceId: topicSentence.id,
+        language: languageSelectedState,
+        targetLang: topicSentence.targetLang,
+        contentIndex,
+      });
+    } catch (error) {
+    } finally {
+      setIsLoadingState(false);
+    }
+  };
 
   const hasBeenMarkedAsDifficult =
     topicSentence?.nextReview || topicSentence?.reviewData?.due;
@@ -48,8 +70,6 @@ const SatoriLine = ({
         };
       })
     : null;
-
-  console.log('## vocabBreakDoownWithHexCode', vocabBreakDoownWithHexCode);
 
   const handlePlayThisLine = () => {
     if (isPlaying && focusThisSentence) {
@@ -81,6 +101,7 @@ const SatoriLine = ({
 
   return (
     <>
+      {isLoadingState && <ActivityIndicator />}
       <Text
         selectable={true}
         style={{
@@ -103,6 +124,7 @@ const SatoriLine = ({
           setHighlightMode={setHighlightMode}
           showSentenceBreakdown={showSentenceBreakdown}
           setShowSentenceBreakdown={setShowSentenceBreakdown}
+          getSentenceBreakdown={getSentenceBreakdown}
         />
         {englishOnly ? null : highlightMode ? (
           <HighlightTextZone
@@ -133,7 +155,10 @@ const SatoriLine = ({
         </View>
       ) : null}
       {showSentenceBreakdown ? (
-        <VocabBreakdown vocab={topicSentence.vocab} />
+        <SentenceBreakdown
+          vocab={topicSentence.vocab}
+          sentenceStructure={topicSentence.sentenceStructure}
+        />
       ) : null}
       {showNotes ? <Text>{topicSentence.notes}</Text> : null}
       {showReviewSettings ? (

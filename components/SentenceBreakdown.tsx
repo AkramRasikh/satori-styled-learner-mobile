@@ -2,7 +2,7 @@ import React, {View} from 'react-native';
 import {Text} from 'react-native-paper';
 import {getHexCode} from '../utils/get-hex-code';
 
-const VocabBreakdown = ({vocab}) => (
+const SentenceBreakdown = ({vocab, sentenceStructure}) => (
   <View>
     {vocab.map(({surfaceForm, meaning}, index) => {
       const listNumber = index + 1 + ') ';
@@ -25,7 +25,8 @@ const VocabBreakdown = ({vocab}) => (
         </View>
       );
     })}
+    <Text>{sentenceStructure}</Text>
   </View>
 );
 
-export default VocabBreakdown;
+export default SentenceBreakdown;

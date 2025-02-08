@@ -18,6 +18,7 @@ const SatoriLineControls = ({
   setHighlightMode,
   showSentenceBreakdown,
   setShowSentenceBreakdown,
+  getSentenceBreakdown,
 }) => {
   const {openGoogleTranslateApp} = useOpenGoogleTranslate();
 
@@ -25,7 +26,7 @@ const SatoriLineControls = ({
     openGoogleTranslateApp(topicSentence.targetLang);
   };
 
-  const hasVocabBreakdown = topicSentence?.vocab;
+  const hasSentenceBreakdown = topicSentence?.vocab;
 
   return (
     <View
@@ -68,12 +69,16 @@ const SatoriLineControls = ({
             <Icon source="format-color-highlight" size={20} />
           </TouchableOpacity>
         )}
-        {hasVocabBreakdown ? (
+        {hasSentenceBreakdown ? (
           <TouchableOpacity
             onPress={() => setShowSentenceBreakdown(!showSentenceBreakdown)}>
-            <Icon source="set-split" size={20} />
+            <Icon source="glasses" size={20} color={MD2Colors.green700} />
           </TouchableOpacity>
-        ) : null}
+        ) : (
+          <TouchableOpacity onPress={getSentenceBreakdown}>
+            <Icon source="glasses" size={20} color={MD3Colors.error50} />
+          </TouchableOpacity>
+        )}
       </View>
       <TouchableOpacity onPress={handlePlayThisLine}>
         <Icon
