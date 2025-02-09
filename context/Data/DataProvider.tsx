@@ -225,7 +225,7 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
       );
 
       updatePromptFunc(`${topicName} updated!`, 2000);
-      return resObj;
+      return updatedContentState[contentIndex];
     } catch (error) {
       console.log('## breakdownSentence', {error});
       updatePromptFunc(`Error updating sentence for ${topicName}`, 2000);

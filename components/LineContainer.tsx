@@ -149,6 +149,7 @@ const LineContainer = ({
   handleAddSnippet,
   highlightTargetTextState,
   contentIndex,
+  breakdownSentenceFunc,
 }) => {
   const handleRemoveFromTempSnippets = snippetId => {
     setMiniSnippets(prev =>
@@ -210,6 +211,7 @@ const LineContainer = ({
                     topicName={topicName}
                     updateSentenceData={updateSentenceData}
                     contentIndex={contentIndex}
+                    breakdownSentenceFunc={breakdownSentenceFunc}
                   />
                 </View>
 

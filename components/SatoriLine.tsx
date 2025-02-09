@@ -7,7 +7,6 @@ import SatoriLineSRS from './SatoriLineSRS';
 import SentenceBreakdown from './SentenceBreakdown';
 import {getHexCode} from '../utils/get-hex-code';
 import useLanguageSelector from '../context/LanguageSelector/useLanguageSelector';
-import useData from '../context/Data/useData';
 import {ActivityIndicator} from 'react-native-paper';
 
 const SatoriLine = ({
@@ -29,6 +28,7 @@ const SatoriLine = ({
   topicName,
   updateSentenceData,
   contentIndex,
+  breakdownSentenceFunc,
 }) => {
   const [showEng, setShowEng] = useState(false);
   const [showNotes, setShowNotes] = useState(false);
@@ -36,13 +36,11 @@ const SatoriLine = ({
   const [showSentenceBreakdown, setShowSentenceBreakdown] = useState(false);
   const [isLoadingState, setIsLoadingState] = useState(false);
 
-  const {breakdownSentence} = useData();
-
   const {languageSelectedState} = useLanguageSelector();
   const getSentenceBreakdown = async () => {
     setIsLoadingState(true);
     try {
-      await breakdownSentence({
+      await breakdownSentenceFunc({
         topicName,
         sentenceId: topicSentence.id,
         language: languageSelectedState,

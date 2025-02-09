@@ -20,8 +20,12 @@ const ContentScreen = () => {
     state => state.learningContent,
   );
 
-  const {updateSentenceViaContent, updateContentMetaData, updatePromptState} =
-    useData();
+  const {
+    updateSentenceViaContent,
+    updateContentMetaData,
+    updatePromptState,
+    breakdownSentence,
+  } = useData();
 
   const {
     removeDifficultSentenceFromState,
@@ -104,6 +108,25 @@ const ContentScreen = () => {
       return true;
     }
   };
+  const breakdownSentenceFunc = async ({
+    topicName,
+    sentenceId,
+    language,
+    targetLang,
+    contentIndex,
+  }) => {
+    const updatedSelectedState = await breakdownSentence({
+      topicName,
+      sentenceId,
+      language,
+      targetLang,
+      contentIndex,
+    });
+    if (updatedSelectedState) {
+      setSelectedContentState(updatedSelectedState);
+      setTriggerSentenceIdUpdate(sentenceId);
+    }
+  };
 
   if (!selectedTopic || !selectedContentState?.content) {
     return <LoadingScreen>Loading selected topic</LoadingScreen>;
@@ -120,6 +143,7 @@ const ContentScreen = () => {
           triggerSentenceIdUpdate={triggerSentenceIdUpdate}
           setTriggerSentenceIdUpdate={setTriggerSentenceIdUpdate}
           targetSentenceId={targetSentenceId}
+          breakdownSentenceFunc={breakdownSentenceFunc}
         />
       </View>
     </ScreenContainerComponent>

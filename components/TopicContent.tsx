@@ -48,6 +48,7 @@ const TopicContent = ({
   setTriggerSentenceIdUpdate,
   loadedContent,
   targetSentenceId,
+  breakdownSentenceFunc,
 }) => {
   const [masterPlay, setMasterPlay] = useState('');
   const [currentTimeState, setCurrentTimeState] = useState(0);
@@ -548,6 +549,7 @@ const TopicContent = ({
                 handleAddSnippet={handleAddSnippet}
                 highlightTargetTextState={highlightTargetTextState}
                 contentIndex={contentIndex}
+                breakdownSentenceFunc={breakdownSentenceFunc}
               />
             </ScrollView>
           </View>
@@ -623,6 +625,7 @@ const TopicContent = ({
             handleAddSnippet={handleAddSnippet}
             highlightTargetTextState={highlightTargetTextState}
             contentIndex={contentIndex}
+            breakdownSentenceFunc={breakdownSentenceFunc}
           />
         </ScrollView>
         {hasUnifiedMP3File && (
