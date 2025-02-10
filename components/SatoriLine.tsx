@@ -89,7 +89,7 @@ const SatoriLine = ({
         </Text>
       );
     } else {
-      return <Text>{topicSentence.targetLang}</Text>;
+      return topicSentence.safeText;
     }
   };
 

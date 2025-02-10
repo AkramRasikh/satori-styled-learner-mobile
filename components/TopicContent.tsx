@@ -39,6 +39,7 @@ import {
   srsRetentionKeyTypes,
 } from '../srs-algo';
 import AnimatedModal from './AnimatedModal';
+import TextSegment from './TextSegment';
 
 const TopicContent = ({
   topicName,
@@ -249,17 +250,7 @@ const TopicContent = ({
 
   const getSafeText = targetText => {
     const textSegments = underlineWordsInSentence(targetText);
-    return textSegments.map((segment, index) => {
-      return (
-        <Text
-          key={index}
-          id={segment.id}
-          style={[segment.style]}
-          onLongPress={() => onLongPress(segment.text)}>
-          {segment.text}
-        </Text>
-      );
-    });
+    return <TextSegment textSegments={textSegments} />;
   };
 
   const handleBulkReviews = async ({removeReview}) => {
