@@ -3,11 +3,9 @@ import {generateRandomId} from '../utils/generate-random-id';
 const useContentControls = ({
   url,
   targetLanguageLoadedWords,
-  setLongPressedWord,
   soundRef,
   setIsPlaying,
   setMiniSnippets,
-  longPressedWord,
   getSafeText,
   topicData,
   miniSnippets,
@@ -50,14 +48,6 @@ const useContentControls = ({
     setIsPlaying(false);
   };
 
-  const onLongPress = text => {
-    const longPressedTexts = targetLanguageLoadedWords?.filter(word =>
-      text.includes(word.surfaceForm),
-    );
-    if (longPressedTexts.length > 0) {
-      setLongPressedWord(longPressedTexts);
-    }
-  };
   const formatTextForTargetWords = () => {
     const formattedText = topicData.map(sentence => {
       const textWithUnderlinedWords = getSafeText(sentence.targetLang);
@@ -110,39 +100,10 @@ const useContentControls = ({
     );
   };
 
-  const getLongPressedWordData = () => {
-    return longPressedWord.map((word, index) => {
-      const surfaceForm = word.surfaceForm;
-      const baseForm = word.baseForm;
-      const phonetic = word.phonetic || word?.transliteration;
-      const definition = word.definition;
-
-      const isLastInArr = index + 1 === longPressedWord.length;
-
-      const newLine = !isLastInArr ? '\n' : '';
-      const indexToNumber = index + 1;
-
-      return (
-        indexToNumber +
-        ') ' +
-        surfaceForm +
-        ', ' +
-        baseForm +
-        ', ' +
-        phonetic +
-        ', ' +
-        definition +
-        newLine
-      );
-    });
-  };
-
   return {
-    onLongPress,
     formatTextForTargetWords,
     playFromThisSentence,
     deleteSnippet,
-    getLongPressedWordData,
     getTimeStamp,
   };
 };

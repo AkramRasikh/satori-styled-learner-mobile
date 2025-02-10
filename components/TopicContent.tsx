@@ -13,7 +13,6 @@ import DisplaySettings from './DisplaySettings';
 import useContentControls from '../hooks/useContentControls';
 import useAudioTextSync from '../hooks/useAudioTextSync';
 import LineContainer from './LineContainer';
-import LongPressedWord from './LongPressedWord';
 import useInitTopicWordList from '../hooks/useInitTopicWordList';
 import useFormatUnderlyingWords from '../hooks/useFormatUnderlyingWords';
 import TopicContentLoader from './TopicContentLoader';
@@ -54,7 +53,6 @@ const TopicContent = ({
   const [masterPlay, setMasterPlay] = useState('');
   const [currentTimeState, setCurrentTimeState] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [longPressedWord, setLongPressedWord] = useState([]);
   const [miniSnippets, setMiniSnippets] = useState([]);
   const [englishOnly, setEnglishOnly] = useState(false);
   const [engMaster, setEngMaster] = useState(true);
@@ -305,10 +303,6 @@ const TopicContent = ({
     }
   };
 
-  const handleRemoveWords = () => {
-    setLongPressedWord([]);
-  };
-
   const handleAddSnippet = async snippetData => {
     try {
       const snippetResponse = await addSnippet(snippetData);
@@ -322,19 +316,15 @@ const TopicContent = ({
   };
 
   const {
-    onLongPress,
     formatTextForTargetWords,
     playFromThisSentence,
     deleteSnippet,
-    getLongPressedWordData,
     getTimeStamp,
   } = useContentControls({
     targetLanguageLoadedWords,
-    setLongPressedWord,
     soundRef,
     setIsPlaying,
     setMiniSnippets,
-    longPressedWord,
     getSafeText,
     topicData: contentWithTimeStamps,
     miniSnippets,
@@ -470,12 +460,6 @@ const TopicContent = ({
         )}
         <View>
           <View>
-            {longPressedWord?.length ? (
-              <LongPressedWord
-                getLongPressedWordData={getLongPressedWordData}
-                handleRemoveWords={handleRemoveWords}
-              />
-            ) : null}
             {hasUnifiedMP3File && (
               <VideoPlayer
                 url={videoUrl}
@@ -564,12 +548,6 @@ const TopicContent = ({
         </AnimatedModal>
       )}
       <View>
-        {longPressedWord?.length ? (
-          <LongPressedWord
-            getLongPressedWordData={getLongPressedWordData}
-            handleRemoveWords={handleRemoveWords}
-          />
-        ) : null}
         <ScrollView
           contentInsetAdjustmentBehavior="automatic"
           style={{
