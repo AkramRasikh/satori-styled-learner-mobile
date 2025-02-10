@@ -81,8 +81,8 @@ const SatoriLine = ({
     if (showSentenceBreakdown) {
       return (
         <Text>
-          {vocabBreakDoownWithHexCode.map(nestedSegment => (
-            <Text style={{color: nestedSegment.color}}>
+          {vocabBreakDoownWithHexCode.map((nestedSegment, index) => (
+            <Text key={index} style={{color: nestedSegment.color}}>
               {nestedSegment.surfaceForm}
             </Text>
           ))}
@@ -98,8 +98,20 @@ const SatoriLine = ({
   };
 
   return (
-    <>
-      {isLoadingState && <ActivityIndicator />}
+    <View
+      style={{
+        opacity: isLoadingState ? 0.5 : 1,
+      }}>
+      {isLoadingState && (
+        <ActivityIndicator
+          style={{
+            position: 'absolute',
+            alignSelf: 'center',
+            top: '30%',
+            zIndex: 100,
+          }}
+        />
+      )}
       <Text
         selectable={true}
         style={{
@@ -162,13 +174,12 @@ const SatoriLine = ({
       {showReviewSettings ? (
         <SatoriLineSRS
           sentence={topicSentence}
-          topicName={topicName}
           updateSentenceData={updateSentenceData}
           setShowReviewSettings={setShowReviewSettings}
           contentIndex={contentIndex}
         />
       ) : null}
-    </>
+    </View>
   );
 };
 
