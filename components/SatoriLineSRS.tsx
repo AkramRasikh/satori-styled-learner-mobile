@@ -85,7 +85,7 @@ const SatoriLineSRS = ({
       style={{
         display: 'flex',
         flexDirection: 'row',
-        justifyContent: 'space-between',
+        justifyContent: 'space-around',
         padding: 5,
         width: '100%',
       }}>
