@@ -1,6 +1,7 @@
 import {generateRandomId} from '../utils/generate-random-id';
 
 const useContentControls = ({
+  url,
   targetLanguageLoadedWords,
   setLongPressedWord,
   soundRef,
@@ -13,7 +14,6 @@ const useContentControls = ({
   topicName,
   masterPlay,
   currentTimeState,
-  url,
   pauseSound,
   isText,
   setCurrentTimeState,
@@ -60,9 +60,29 @@ const useContentControls = ({
   };
   const formatTextForTargetWords = () => {
     const formattedText = topicData.map(sentence => {
+      const textWithUnderlinedWords = getSafeText(sentence.targetLang);
+      const matchedWords = [];
+      textWithUnderlinedWords.props.textSegments.forEach(segment => {
+        if (segment.id === 'targetWord') {
+          matchedWords.push(segment.text);
+        }
+      });
+
+      const matchedWordsComprehensive =
+        matchedWords.length > 0
+          ? matchedWords
+              .map(x => {
+                return targetLanguageLoadedWords.filter(word =>
+                  x.includes(word.surfaceForm),
+                );
+              })
+              .flat()
+          : [];
+
       return {
         ...sentence,
-        safeText: getSafeText(sentence.targetLang),
+        safeText: textWithUnderlinedWords,
+        matchedWords: matchedWordsComprehensive,
       };
     });
 

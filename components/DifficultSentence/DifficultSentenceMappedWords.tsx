@@ -18,6 +18,7 @@ const DifficultSentenceMappedWords = ({
   deleteWord,
   handleUpdateWordFinal,
   indexNum,
+  overrideReview,
 }) => {
   const noReview = !item?.reviewData;
   const matchedWordText = `${seperatedWords(item)} ${noReview ? '🆕' : ''}`;
@@ -41,7 +42,7 @@ const DifficultSentenceMappedWords = ({
           {matchedWordText}
         </Text>
       </TouchableOpacity>
-      {noReview && (
+      {noReview && !overrideReview && (
         <SRSTogglesQuickComprehensiveDiffSentencesWords
           wordData={item}
           deleteWord={deleteWord}

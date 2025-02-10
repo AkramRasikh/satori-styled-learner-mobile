@@ -19,6 +19,8 @@ const SatoriLineControls = ({
   showSentenceBreakdown,
   setShowSentenceBreakdown,
   getSentenceBreakdown,
+  setShowMatchedTranslation,
+  showMatchedTranslation,
 }) => {
   const {openGoogleTranslateApp} = useOpenGoogleTranslate();
 
@@ -27,6 +29,7 @@ const SatoriLineControls = ({
   };
 
   const hasSentenceBreakdown = topicSentence?.vocab;
+  const matchedWords = topicSentence?.matchedWords.length > 0;
 
   return (
     <View
@@ -77,6 +80,12 @@ const SatoriLineControls = ({
         ) : (
           <TouchableOpacity onPress={getSentenceBreakdown}>
             <Icon source="glasses" size={20} color={MD3Colors.error50} />
+          </TouchableOpacity>
+        )}
+        {matchedWords && (
+          <TouchableOpacity
+            onPress={() => setShowMatchedTranslation(!showMatchedTranslation)}>
+            <Icon source="book-open-variant" size={20} />
           </TouchableOpacity>
         )}
       </View>

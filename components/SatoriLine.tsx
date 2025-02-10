@@ -8,6 +8,9 @@ import SentenceBreakdown from './SentenceBreakdown';
 import {getHexCode} from '../utils/get-hex-code';
 import useLanguageSelector from '../context/LanguageSelector/useLanguageSelector';
 import {ActivityIndicator} from 'react-native-paper';
+import DifficultSentenceMappedWords from './DifficultSentence/DifficultSentenceMappedWords';
+import {checkOverlap} from '../utils/check-word-overlap';
+import TextSegmentContainer from './TextSegmentContainer';
 
 const SatoriLine = ({
   id,
@@ -34,6 +37,7 @@ const SatoriLine = ({
   const [showNotes, setShowNotes] = useState(false);
   const [showReviewSettings, setShowReviewSettings] = useState(false);
   const [showSentenceBreakdown, setShowSentenceBreakdown] = useState(false);
+  const [showMatchedTranslation, setShowMatchedTranslation] = useState(false);
   const [isLoadingState, setIsLoadingState] = useState(false);
 
   const {languageSelectedState} = useLanguageSelector();
@@ -88,6 +92,24 @@ const SatoriLine = ({
           ))}
         </Text>
       );
+    } else if (showMatchedTranslation) {
+      const textSegments = topicSentence.safeText.props.textSegments;
+      const wordsInOverlapCheck = checkOverlap(
+        topicSentence.matchedWords.map((i, index) => ({
+          ...i,
+          colorIndex: index,
+        })),
+      );
+      const matchedWordsWithColors = topicSentence.matchedWords.map(
+        (i, index) => ({...i, colorIndex: index}),
+      );
+      return (
+        <TextSegmentContainer
+          textSegments={textSegments}
+          wordsInOverlapCheck={wordsInOverlapCheck}
+          matchedWordListState={matchedWordsWithColors}
+        />
+      );
     } else {
       return topicSentence.safeText;
     }
@@ -135,6 +157,8 @@ const SatoriLine = ({
           showSentenceBreakdown={showSentenceBreakdown}
           setShowSentenceBreakdown={setShowSentenceBreakdown}
           getSentenceBreakdown={getSentenceBreakdown}
+          setShowMatchedTranslation={setShowMatchedTranslation}
+          showMatchedTranslation={showMatchedTranslation}
         />
         {englishOnly ? null : highlightMode ? (
           <HighlightTextZone
@@ -179,6 +203,19 @@ const SatoriLine = ({
           contentIndex={contentIndex}
         />
       ) : null}
+      {showMatchedTranslation &&
+        topicSentence.matchedWords.map((item, index) => {
+          return (
+            <DifficultSentenceMappedWords
+              item={item}
+              handleSelectWord={() => {}}
+              deleteWord={() => {}}
+              handleUpdateWordFinal={() => {}}
+              indexNum={index}
+              overrideReview
+            />
+          );
+        })}
     </View>
   );
 };
