@@ -8,7 +8,7 @@ import {
   PanResponder,
   Image,
 } from 'react-native';
-import useOpenGoogleTranslate from './useOpenGoogleTranslate';
+import useOpenGoogleTranslate from '../hooks/useOpenGoogleTranslate';
 
 const HighlightTextZone = ({
   id,

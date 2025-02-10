@@ -8,7 +8,7 @@ import {
   srsRetentionKeyTypes,
 } from '../../../srs-algo';
 import Clipboard from '@react-native-clipboard/clipboard';
-import useOpenGoogleTranslate from '../../useOpenGoogleTranslate';
+import useOpenGoogleTranslate from '../../../hooks/useOpenGoogleTranslate';
 import useAnimation from '../../../hooks/useAnimation';
 
 export const DifficultSentenceContext = createContext(null);
