@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {Dimensions} from 'react-native';
-import Video from 'react-native-video';
+import Video, {SelectedTrackType} from 'react-native-video';
 import {ActivityIndicator} from 'react-native-paper';
 
 const VideoPlayer = ({
@@ -42,6 +42,8 @@ const VideoPlayer = ({
           setIsLoading(false);
         }}
         onProgress={data => onProgressHandler(data.currentTime)}
+        ignoreSilentSwitch={'ignore'}
+        selectedAudioTrack={{type: SelectedTrackType.SYSTEM}}
       />
     </>
   );
