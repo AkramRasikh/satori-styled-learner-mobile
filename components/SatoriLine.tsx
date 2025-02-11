@@ -207,6 +207,7 @@ const SatoriLine = ({
         topicSentence.matchedWords.map((item, index) => {
           return (
             <DifficultSentenceMappedWords
+              key={index}
               item={item}
               handleSelectWord={() => {}}
               deleteWord={() => {}}
