@@ -1,5 +1,5 @@
 import React from 'react';
-import {createContext, PropsWithChildren, useEffect, useState} from 'react';
+import {createContext, PropsWithChildren, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {getAllData} from '../../api/load-content';
 import {updateSentenceDataAPI} from '../../api/update-sentence-data';
@@ -528,45 +528,42 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
 
     return matchedWordsData;
   };
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const allStudyDataRes = await getAllData({language, freshData: false});
-        const targetLanguageLoadedSentences = allStudyDataRes.sentences;
-        const targetLanguageLoadedContent = allStudyDataRes.content;
-        const targetLanguageLoadedSnippets = allStudyDataRes.snippets;
-        const targetLanguageLoadedWords = allStudyDataRes.words;
-        const targetLanguageLoadedSnippetsWithSavedTag =
-          targetLanguageLoadedSnippets?.map(item => ({
-            ...item,
-            saved: true,
-          }));
-        dispatch(
-          setSnippetsStateDispatch(targetLanguageLoadedSnippetsWithSavedTag),
-        );
-        const sortedContent = targetLanguageLoadedContent
-          ?.sort((a, b) => {
-            return a.isCore === b.isCore ? 0 : a.isCore ? -1 : 1;
-          })
-          .map((contentWidget, contentIndex) => ({
-            ...contentWidget,
-            contentIndex: contentIndex,
-          }));
-        dispatch(setLearningContentStateDispatch(sortedContent));
-        dispatch(setWordsStateDispatch(targetLanguageLoadedWords));
-        dispatch(setSentencesStateDispatch(targetLanguageLoadedSentences));
-      } catch (error) {
-        console.log('## DataProvider error: ', error);
-        setProvdiderError(error);
-      } finally {
-        setDataProviderIsLoading(false);
-      }
-    };
-    if (language) {
-      fetchData();
+  const fetchData = async selectedLanguage => {
+    try {
+      const allStudyDataRes = await getAllData({
+        language: selectedLanguage,
+        freshData: false,
+      });
+      const targetLanguageLoadedSentences = allStudyDataRes.sentences;
+      const targetLanguageLoadedContent = allStudyDataRes.content;
+      const targetLanguageLoadedSnippets = allStudyDataRes.snippets;
+      const targetLanguageLoadedWords = allStudyDataRes.words;
+      const targetLanguageLoadedSnippetsWithSavedTag =
+        targetLanguageLoadedSnippets?.map(item => ({
+          ...item,
+          saved: true,
+        }));
+      dispatch(
+        setSnippetsStateDispatch(targetLanguageLoadedSnippetsWithSavedTag),
+      );
+      const sortedContent = targetLanguageLoadedContent
+        ?.sort((a, b) => {
+          return a.isCore === b.isCore ? 0 : a.isCore ? -1 : 1;
+        })
+        .map((contentWidget, contentIndex) => ({
+          ...contentWidget,
+          contentIndex: contentIndex,
+        }));
+      dispatch(setLearningContentStateDispatch(sortedContent));
+      dispatch(setWordsStateDispatch(targetLanguageLoadedWords));
+      dispatch(setSentencesStateDispatch(targetLanguageLoadedSentences));
+    } catch (error) {
+      console.log('## DataProvider error: ', error);
+      setProvdiderError(error);
+    } finally {
+      setDataProviderIsLoading(false);
     }
-  }, [language]);
+  };
 
   return (
     <DataContext.Provider
@@ -599,6 +596,7 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
         updateWordData,
         updateMetaDataState,
         breakdownSentence,
+        fetchData,
       }}>
       {children}
     </DataContext.Provider>

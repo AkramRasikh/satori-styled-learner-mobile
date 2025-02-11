@@ -4,11 +4,14 @@ import useLanguageSelector from '../../context/LanguageSelector/useLanguageSelec
 import {LanguageEnum} from '../../context/LanguageSelector/LanguageSelectorProvider';
 import {clearStorage} from '../../helper-functions/local-storage-utils';
 import {Button, DefaultTheme, Text} from 'react-native-paper';
+import useData from '../../context/Data/useData';
 
 const LanguageSelector = ({navigation}): React.JSX.Element => {
   const {setLanguageSelectedState} = useLanguageSelector();
-  const handleLanguageSelection = (selectedLanguage: LanguageEnum) => {
+  const {fetchData} = useData();
+  const handleLanguageSelection = async (selectedLanguage: LanguageEnum) => {
     setLanguageSelectedState(selectedLanguage);
+    await fetchData(selectedLanguage);
     navigation.navigate('Home');
   };
   return (
