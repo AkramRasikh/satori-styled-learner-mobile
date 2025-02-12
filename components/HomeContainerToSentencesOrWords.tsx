@@ -16,13 +16,23 @@ const HomeContainerToSentencesOrWords = ({navigation}) => {
       style={{
         gap: 10,
         paddingBottom: 10,
+        flexDirection: 'row',
+        justifyContent: 'space-evenly',
       }}>
       <Button
         mode="elevated"
-        onPress={() => navigation.navigate('DifficultSentences')}>
+        onPress={() => navigation.navigate('DifficultSentences')}
+        style={{
+          flex: 1,
+        }}>
         Sentences ({difficultSentencesState.length})
       </Button>
-      <Button mode="elevated" onPress={() => navigation.navigate('WordStudy')}>
+      <Button
+        mode="elevated"
+        onPress={() => navigation.navigate('WordStudy')}
+        style={{
+          flex: 1,
+        }}>
         Words
       </Button>
     </View>
