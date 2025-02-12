@@ -1,7 +1,6 @@
 import React, {useState} from 'react';
 import {ScrollView, TouchableOpacity, View} from 'react-native';
 import {
-  ActivityIndicator,
   Button,
   DefaultTheme,
   Divider,
@@ -38,6 +37,14 @@ const Home = ({navigation}): React.JSX.Element => {
   const targetLanguageLoadedContentMasterState = useSelector(
     state => state.learningContent,
   );
+
+  const handleClearStorage = async () => {
+    await clearStorage();
+    setLanguageSelectedState();
+    setSelectedGeneralTopicState('');
+    setSelectedTopic('');
+    setShowMediaContentState('');
+  };
 
   const handleLanguageSelection = async selectedLanguage => {
     try {
@@ -170,7 +177,7 @@ const Home = ({navigation}): React.JSX.Element => {
             icon="backup-restore"
             mode="contained"
             buttonColor={MD3Colors.error30}
-            onPress={clearStorage}
+            onPress={handleClearStorage}
             labelStyle={{
               fontStyle: 'italic',
             }}>
