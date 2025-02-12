@@ -4,6 +4,8 @@ import {
   ActivityIndicator,
   Button,
   DefaultTheme,
+  Divider,
+  MD3Colors,
   Text,
 } from 'react-native-paper';
 import LoadingScreen from '../../components/LoadingScreen';
@@ -19,21 +21,19 @@ import {clearStorage} from '../../helper-functions/local-storage-utils';
 
 const languages = ['japanese', 'chinese'];
 
-const LanguageFlagComponent = ({children}) => {
-  return (
-    <Text
-      style={{
-        fontSize: 35,
-        shadowOffset: {
-          width: 3,
-          height: 3,
-        },
-        shadowOpacity: 0.3,
-      }}>
-      {children}
-    </Text>
-  );
-};
+const LanguageFlagComponent = ({text}) => (
+  <Text
+    style={{
+      fontSize: 35,
+      shadowOffset: {
+        width: 3,
+        height: 3,
+      },
+      shadowOpacity: 0.3,
+    }}>
+    {text}
+  </Text>
+);
 
 function Home({
   navigation,
@@ -121,8 +121,8 @@ function Home({
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'space-between',
-            minHeight: '100%',
             opacity: isLoadingLanguageState ? 0.5 : 1,
+            gap: 50,
           }}>
           <View>
             <View
@@ -130,7 +130,6 @@ function Home({
                 display: 'flex',
                 flexDirection: 'row',
                 justifyContent: 'space-around',
-                marginBottom: 15,
               }}>
               <View
                 style={{
@@ -139,9 +138,9 @@ function Home({
                   alignItems: 'center',
                 }}>
                 <Text style={DefaultTheme.fonts.labelLarge}>Selected: </Text>
-                <LanguageFlagComponent>
-                  {languageEmojiKey[languageSelectedState]}
-                </LanguageFlagComponent>
+                <LanguageFlagComponent
+                  text={languageEmojiKey[languageSelectedState]}
+                />
               </View>
               <View
                 style={{
@@ -157,12 +156,11 @@ function Home({
 
                     return (
                       <TouchableOpacity
+                        key={item}
                         onPress={async () => {
                           await handleLanguageSelection(item);
                         }}>
-                        <LanguageFlagComponent>
-                          {emojiFlag}
-                        </LanguageFlagComponent>
+                        <LanguageFlagComponent text={emojiFlag} />
                       </TouchableOpacity>
                     );
                   }
@@ -170,6 +168,11 @@ function Home({
                 })}
               </View>
             </View>
+            <Divider
+              style={{
+                marginVertical: 15,
+              }}
+            />
             <HomeContainerToSentencesOrWords navigation={navigation} />
             {!selectedTopic && (
               <Topics
@@ -185,7 +188,8 @@ function Home({
           </View>
           <Button
             icon="backup-restore"
-            mode="contained-tonal"
+            mode="contained"
+            buttonColor={MD3Colors.error30}
             onPress={clearStorage}
             labelStyle={{
               fontStyle: 'italic',
