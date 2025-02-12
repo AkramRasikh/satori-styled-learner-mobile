@@ -1,12 +1,6 @@
 import React, {useState} from 'react';
 import {ScrollView, TouchableOpacity, View} from 'react-native';
-import {
-  Button,
-  DefaultTheme,
-  Divider,
-  MD3Colors,
-  Text,
-} from 'react-native-paper';
+import {DefaultTheme, Divider, FAB, Text} from 'react-native-paper';
 import {useSelector} from 'react-redux';
 import HomeContainerToSentencesOrWords, {
   languageEmojiKey,
@@ -172,17 +166,12 @@ const Home = ({navigation}): React.JSX.Element => {
               />
             )}
           </View>
-
-          <Button
+          <FAB
             icon="backup-restore"
-            mode="contained"
-            buttonColor={MD3Colors.error30}
             onPress={handleClearStorage}
-            labelStyle={{
-              fontStyle: 'italic',
-            }}>
-            Clear Storage
-          </Button>
+            label={'Clear Storage'}
+            variant="tertiary"
+          />
         </View>
       </ScrollView>
     </ScreenContainerComponent>
