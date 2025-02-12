@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {ScrollView, View} from 'react-native';
-import {Button, FAB, MD2Colors, Text} from 'react-native-paper';
+import {Button, Divider, FAB, MD2Colors, Text} from 'react-native-paper';
 import LoadingScreen from '../../components/LoadingScreen';
 import HomeContainerToSentencesOrWords, {
   languageEmojiKey,
@@ -81,13 +81,7 @@ function Home({
             minHeight: '100%',
           }}>
           <View>
-            <View
-              style={{
-                padding: 10,
-                borderWidth: 1,
-                borderRadius: 10,
-                borderColor: MD2Colors.blueGrey400,
-              }}>
+            <View>
               <View
                 style={{
                   display: 'flex',
@@ -120,6 +114,16 @@ function Home({
                 />
               )}
             </View>
+
+            <Divider
+              bold
+              style={{
+                backgroundColor: MD2Colors.blueGrey300,
+                height: 1,
+                marginVertical: 10,
+              }}
+            />
+
             <View style={{padding: 10, gap: 10, marginVertical: 30}}>
               {languages.map(item => {
                 if (item !== languageSelectedState) {
@@ -140,6 +144,7 @@ function Home({
               })}
             </View>
           </View>
+
           <Button
             icon="backup-restore"
             mode="contained-tonal"
