@@ -14,9 +14,6 @@ const HomeContainerToSentencesOrWords = ({navigation}) => {
   return (
     <View
       style={{
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'space-around',
         gap: 10,
         paddingBottom: 10,
       }}>

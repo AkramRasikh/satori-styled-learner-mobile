@@ -1,6 +1,11 @@
 import React, {useState} from 'react';
-import {ScrollView, View} from 'react-native';
-import {Button, Divider, FAB, MD2Colors, Text} from 'react-native-paper';
+import {ScrollView, TouchableOpacity, View} from 'react-native';
+import {
+  ActivityIndicator,
+  Button,
+  DefaultTheme,
+  Text,
+} from 'react-native-paper';
 import LoadingScreen from '../../components/LoadingScreen';
 import HomeContainerToSentencesOrWords, {
   languageEmojiKey,
@@ -14,11 +19,28 @@ import {clearStorage} from '../../helper-functions/local-storage-utils';
 
 const languages = ['japanese', 'chinese'];
 
+const LanguageFlagComponent = ({children}) => {
+  return (
+    <Text
+      style={{
+        fontSize: 35,
+        shadowOffset: {
+          width: 3,
+          height: 3,
+        },
+        shadowOpacity: 0.3,
+      }}>
+      {children}
+    </Text>
+  );
+};
+
 function Home({
   navigation,
   targetLanguageLoadedContentMasterState,
 }): React.JSX.Element {
   const [selectedTopic, setSelectedTopic] = useState('');
+  const [isLoadingLanguageState, setIsLoadingLanguageState] = useState(false);
   const [
     targetLanguageLoadedContentState,
     setTargetLanguageLoadedContentState,
@@ -32,8 +54,14 @@ function Home({
     useLanguageSelector();
 
   const handleLanguageSelection = async selectedLanguage => {
-    await fetchData(selectedLanguage);
-    setLanguageSelectedState(selectedLanguage);
+    try {
+      setIsLoadingLanguageState(true);
+      await fetchData(selectedLanguage);
+      setLanguageSelectedState(selectedLanguage);
+    } catch (error) {
+    } finally {
+      setIsLoadingLanguageState(false);
+    }
   };
 
   useOnLoadContentScreen({
@@ -73,12 +101,24 @@ function Home({
         style={{
           padding: 10,
         }}>
+        {isLoadingLanguageState && (
+          <ActivityIndicator
+            style={{
+              position: 'absolute',
+              alignSelf: 'center',
+              zIndex: 100,
+              top: '50%',
+            }}
+            size="large"
+          />
+        )}
         <View
           style={{
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'space-between',
             minHeight: '100%',
+            opacity: isLoadingLanguageState ? 0.5 : 1,
           }}>
           <View>
             <View
@@ -86,23 +126,47 @@ function Home({
                 display: 'flex',
                 flexDirection: 'row',
                 justifyContent: 'space-around',
+                marginBottom: 15,
               }}>
-              <View>
-                <Text
-                  style={{
-                    fontSize: 35,
-                    shadowOffset: {
-                      width: 3,
-                      height: 3,
-                    },
-                    shadowOpacity: 0.3,
-                  }}>
+              <View
+                style={{
+                  display: 'flex',
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                }}>
+                <Text style={DefaultTheme.fonts.labelLarge}>Selected: </Text>
+                <LanguageFlagComponent>
                   {languageEmojiKey[languageSelectedState]}
-                </Text>
+                </LanguageFlagComponent>
               </View>
-              <HomeContainerToSentencesOrWords navigation={navigation} />
-            </View>
+              <View
+                style={{
+                  display: 'flex',
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  gap: 5,
+                }}>
+                <Text style={DefaultTheme.fonts.labelMedium}>Options:</Text>
+                {languages.map(item => {
+                  if (item !== languageSelectedState) {
+                    const emojiFlag = languageEmojiKey[item];
 
+                    return (
+                      <TouchableOpacity
+                        onPress={async () => {
+                          await handleLanguageSelection(item);
+                        }}>
+                        <LanguageFlagComponent>
+                          {emojiFlag}
+                        </LanguageFlagComponent>
+                      </TouchableOpacity>
+                    );
+                  }
+                  return null;
+                })}
+              </View>
+            </View>
+            <HomeContainerToSentencesOrWords navigation={navigation} />
             {!selectedTopic && (
               <Topics
                 setSelectedGeneralTopicState={setSelectedGeneralTopicState}
@@ -113,37 +177,15 @@ function Home({
               />
             )}
           </View>
-
-          <View>
-            <View style={{gap: 10, marginVertical: 20}}>
-              {languages.map(item => {
-                if (item !== languageSelectedState) {
-                  const emojiFlag = languageEmojiKey[item];
-
-                  return (
-                    <FAB
-                      key={item}
-                      label={`${emojiFlag} ${emojiFlag} Get ${item} content!`}
-                      onPress={async () => {
-                        await handleLanguageSelection(item);
-                      }}
-                    />
-                  );
-                } else {
-                  return null;
-                }
-              })}
-            </View>
-            <Button
-              icon="backup-restore"
-              mode="contained-tonal"
-              onPress={clearStorage}
-              labelStyle={{
-                fontStyle: 'italic',
-              }}>
-              Clear Storage
-            </Button>
-          </View>
+          <Button
+            icon="backup-restore"
+            mode="contained-tonal"
+            onPress={clearStorage}
+            labelStyle={{
+              fontStyle: 'italic',
+            }}>
+            Clear Storage
+          </Button>
         </View>
       </ScrollView>
     </ScreenContainerComponent>
