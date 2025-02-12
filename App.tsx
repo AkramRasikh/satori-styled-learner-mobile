@@ -11,7 +11,6 @@ import DifficultSentences from './screens/DifficultSentences';
 import Home from './screens/home';
 import {DataProvider} from './context/Data/DataProvider';
 import WordStudy from './screens/WordStudy';
-import LanguageSelectorScreen from './screens/LanguageSelector';
 import {LanguageSelectorProvider} from './context/LanguageSelector/LanguageSelectorProvider';
 import useSetupPlayer from './hooks/useSetupPlayer';
 import ContentScreen from './screens/Content/ContentScreen';
@@ -68,9 +67,6 @@ function App(): React.JSX.Element {
                 >
                   <Stack.Screen name="ContentScreen">
                     {props => <ContentScreen {...props} />}
-                  </Stack.Screen>
-                  <Stack.Screen name="LanguageSelector">
-                    {props => <LanguageSelectorScreen {...props} />}
                   </Stack.Screen>
                   <Stack.Screen name="Home">
                     {props => <Home {...props} />}
