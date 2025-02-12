@@ -8,6 +8,7 @@ import FlashcardsWordsSection from '../../components/FlashcardsWordsSection';
 import useWordData from '../../context/WordData/useWordData';
 import ScreenContainerComponent from '../../components/ScreenContainerComponent';
 import WordStudyHeader from './WordStudyHeader';
+import useLanguageSelector from '../../context/LanguageSelector/useLanguageSelector';
 
 function WordStudyContainer(): React.JSX.Element {
   const [tagsState, setTagsState] = useState<string[]>([]);
@@ -26,6 +27,8 @@ function WordStudyContainer(): React.JSX.Element {
   const scrollViewRef = useRef(null);
 
   const wordCategories = makeArrayUnique([...tagsState, ...generalTopicState]);
+
+  const {languageSelectedState} = useLanguageSelector();
 
   const {
     deleteWord,
@@ -46,6 +49,7 @@ function WordStudyContainer(): React.JSX.Element {
     targetLanguageLoadedContent,
     targetLanguageLoadedSentences,
     setDueCardsState,
+    languageSelectedState,
   });
 
   const handleExpandWordArray = () => {

@@ -10,6 +10,7 @@ const useFormatWordsToStudy = ({
   targetLanguageLoadedContent,
   targetLanguageLoadedSentences,
   setDueCardsState,
+  languageSelectedState,
 }) => {
   const timeNow = new Date();
   useEffect(() => {
@@ -125,6 +126,6 @@ const useFormatWordsToStudy = ({
     setTagsState(tagsAvailable);
     setGeneralTopicState(generalTopics);
     setDueCardsState(dueCards);
-  }, []);
+  }, [languageSelectedState]);
 };
 export default useFormatWordsToStudy;

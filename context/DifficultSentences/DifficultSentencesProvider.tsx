@@ -5,6 +5,7 @@ import React, {
   useState,
 } from 'react';
 import useLoadDifficultSentences from '../../hooks/useLoadDifficultSentences';
+import useLanguageSelector from '../LanguageSelector/useLanguageSelector';
 
 export const DifficultSentencesContext = createContext(null);
 
@@ -18,6 +19,8 @@ export const DifficultSentencesProvider = ({
   ] = useState(false);
 
   const {getAllDataReady} = useLoadDifficultSentences();
+
+  const {languageSelectedState} = useLanguageSelector();
 
   const removeDifficultSentenceFromState = sentenceId => {
     const updatedDifficultSentences = difficultSentencesState.filter(
@@ -48,6 +51,12 @@ export const DifficultSentencesProvider = ({
     setDifficultSentencesState(difficultSentencesData);
     setDifficultSentencesHasBeenSetState(true);
   };
+
+  useEffect(() => {
+    if (languageSelectedState) {
+      setDifficultSentencesHasBeenSetState(false);
+    }
+  }, [languageSelectedState]); // Is there a more efficient way??
 
   useEffect(() => {
     const difficultSentencesData = getAllDataReady();
