@@ -2,6 +2,8 @@ import React, {useState} from 'react';
 import TopicTitleButton from './TopicTitleButton';
 import {View} from 'react-native';
 import {FAB} from 'react-native-paper';
+import {languageEmojiKey} from './HomeContainerToSentencesOrWords';
+import useLanguageSelector from '../context/LanguageSelector/useLanguageSelector';
 
 const TopicSectionContainer = ({
   label,
@@ -77,6 +79,7 @@ const Topics = ({
   setSelectedGeneralTopicState,
 }) => {
   const [showMediaContentState, setShowMediaContentState] = useState('');
+  const {languageSelectedState} = useLanguageSelector();
   const handleOnPress = title => {
     if (!selectedGeneralTopicState) {
       handleShowGeneralTopic(title);
@@ -131,13 +134,14 @@ const Topics = ({
     }
   });
 
+  const flagEmoji = languageEmojiKey[languageSelectedState];
   const isContent = showMediaContentState === 'content';
   const isMedia = showMediaContentState === 'media';
   const selectedContentLabel = isContent ? ` ${selectedGeneralTopicState}` : '';
   const selectedMediaLabel = isMedia ? ` ${selectedGeneralTopicState}` : '';
 
-  const contentLabel = `Content (${contentGeneralTopicCount}/${standardContent.length})${selectedContentLabel}`;
-  const mediaLabel = `Media (${mediaGeneralTopicCount}/${mediaContent.length})${selectedMediaLabel}`;
+  const contentLabel = `${flagEmoji} Content (${contentGeneralTopicCount}/${standardContent.length})${selectedContentLabel}`;
+  const mediaLabel = `${flagEmoji} Media (${mediaGeneralTopicCount}/${mediaContent.length})${selectedMediaLabel}`;
 
   return (
     <View style={{gap: 10}}>

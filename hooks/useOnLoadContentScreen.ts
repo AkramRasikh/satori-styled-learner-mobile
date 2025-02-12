@@ -13,6 +13,7 @@ const useOnLoadContentScreen = ({
   setTargetLanguageLoadedContentState,
   setAllTopicsMetaDataState,
   updateMetaDataState,
+  languageSelectedState,
 }) => {
   const generalTopicObjKeys: string[] = [];
   const allTopicsMetaData = [];
@@ -88,7 +89,7 @@ const useOnLoadContentScreen = ({
       }),
     );
     setAllTopicsMetaDataState(allTopicsMetaData);
-  }, [updateMetaDataState]);
+  }, [updateMetaDataState, languageSelectedState]);
 };
 
 export default useOnLoadContentScreen;
