@@ -16,6 +16,7 @@ export const LanguageSelectorProvider = ({children}: PropsWithChildren<{}>) => {
       value={{
         languageSelectedState,
         setLanguageSelectedState,
+        languagesAvailable: [LanguageEnum.Chinese, LanguageEnum.Japanese],
       }}>
       {children}
     </LanguageSelectorContext.Provider>

@@ -1,20 +1,19 @@
 import React, {useState} from 'react';
-import {ScrollView, TouchableOpacity, View} from 'react-native';
-import {DefaultTheme, Divider, FAB, Text} from 'react-native-paper';
+import {ScrollView} from 'react-native';
+import {Divider} from 'react-native-paper';
 import {useSelector} from 'react-redux';
-import HomeContainerToSentencesOrWords, {
-  languageEmojiKey,
-} from '../../components/HomeContainerToSentencesOrWords';
+import HomeContainerToSentencesOrWords from '../../components/HomeContainerToSentencesOrWords';
 import Topics from '../../components/Topics';
 import useOnLoadContentScreen from '../../hooks/useOnLoadContentScreen';
 import ScreenContainerComponent from '../../components/ScreenContainerComponent';
 import useData from '../../context/Data/useData';
 import useLanguageSelector from '../../context/LanguageSelector/useLanguageSelector';
 import {clearStorage} from '../../helper-functions/local-storage-utils';
-import LanguageFlag from './components/LanguageFlag';
-import LanguageLoadingIndicator from './components/LanguageLoadingIndicator';
-
-const languages = ['japanese', 'chinese'];
+import LanguageLoadingIndicator, {
+  LoadingContainer,
+} from './components/LanguageLoadingIndicator';
+import LanguageSelection from './components/LanguageSelection';
+import ClearStorageButton from './components/ClearStorageButton';
 
 const Home = ({navigation}): React.JSX.Element => {
   const [selectedTopic, setSelectedTopic] = useState('');
@@ -87,92 +86,33 @@ const Home = ({navigation}): React.JSX.Element => {
           padding: 10,
         }}>
         {isLoadingLanguageState && <LanguageLoadingIndicator />}
-        <View
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'space-between',
-            opacity: isLoadingLanguageState ? 0.5 : 1,
-            gap: 50,
-          }}>
-          <View>
-            <View
-              style={{
-                display: 'flex',
-                flexDirection: 'row',
-                justifyContent: 'space-around',
-              }}>
-              <View
-                style={{
-                  display: 'flex',
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                }}>
-                <Text style={DefaultTheme.fonts.labelLarge}>Selected: </Text>
-
-                <LanguageFlag
-                  text={
-                    languageSelectedState
-                      ? languageEmojiKey[languageSelectedState]
-                      : '🚫'
-                  }
-                />
-              </View>
-              <View
-                style={{
-                  display: 'flex',
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  gap: 5,
-                }}>
-                <Text style={DefaultTheme.fonts.labelMedium}>Options:</Text>
-                {languages.map(item => {
-                  if (item !== languageSelectedState) {
-                    const emojiFlag = languageEmojiKey[item];
-
-                    return (
-                      <TouchableOpacity
-                        key={item}
-                        onPress={async () => {
-                          await handleLanguageSelection(item);
-                        }}>
-                        <LanguageFlag text={emojiFlag} />
-                      </TouchableOpacity>
-                    );
-                  }
-                  return null;
-                })}
-              </View>
-            </View>
-            {languageSelectedState && (
-              <>
-                <Divider
-                  style={{
-                    marginVertical: 15,
-                  }}
-                />
-                <HomeContainerToSentencesOrWords navigation={navigation} />
-              </>
-            )}
-            {!selectedTopic && languageSelectedState && (
-              <Topics
-                setSelectedGeneralTopicState={setSelectedGeneralTopicState}
-                selectedGeneralTopicState={selectedGeneralTopicState}
-                handleShowGeneralTopic={handleShowGeneralTopic}
-                handleShowTopic={handleShowTopic}
-                allTopicsMetaDataState={allTopicsMetaDataState}
-                showMediaContentState={showMediaContentState}
-                setShowMediaContentState={setShowMediaContentState}
-              />
-            )}
-          </View>
-          <FAB
-            icon="backup-restore"
-            onPress={handleClearStorage}
-            label={'Clear Storage'}
-            variant="tertiary"
+        <LoadingContainer isLoadingLanguageState={isLoadingLanguageState}>
+          <LanguageSelection
+            handleLanguageSelection={handleLanguageSelection}
           />
-        </View>
+          {languageSelectedState && (
+            <Divider
+              style={{
+                marginBottom: 10,
+              }}
+            />
+          )}
+          {languageSelectedState && (
+            <HomeContainerToSentencesOrWords navigation={navigation} />
+          )}
+          {languageSelectedState && !selectedTopic && (
+            <Topics
+              setSelectedGeneralTopicState={setSelectedGeneralTopicState}
+              selectedGeneralTopicState={selectedGeneralTopicState}
+              handleShowGeneralTopic={handleShowGeneralTopic}
+              handleShowTopic={handleShowTopic}
+              allTopicsMetaDataState={allTopicsMetaDataState}
+              showMediaContentState={showMediaContentState}
+              setShowMediaContentState={setShowMediaContentState}
+            />
+          )}
+        </LoadingContainer>
+        <ClearStorageButton handleClearStorage={handleClearStorage} />
       </ScrollView>
     </ScreenContainerComponent>
   );

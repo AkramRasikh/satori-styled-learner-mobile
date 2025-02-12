@@ -1,4 +1,5 @@
 import React from 'react';
+import {View} from 'react-native';
 import {ActivityIndicator} from 'react-native-paper';
 
 const LanguageLoadingIndicator = () => (
@@ -11,6 +12,17 @@ const LanguageLoadingIndicator = () => (
     }}
     size="large"
   />
+);
+
+export const LoadingContainer = ({children, isLoadingLanguageState}) => (
+  <View
+    style={{
+      opacity: isLoadingLanguageState ? 0.5 : 1,
+      gap: 10,
+      marginBottom: 20,
+    }}>
+    {children}
+  </View>
 );
 
 export default LanguageLoadingIndicator;
