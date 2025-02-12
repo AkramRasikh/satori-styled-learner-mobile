@@ -81,50 +81,41 @@ function Home({
             minHeight: '100%',
           }}>
           <View>
-            <View>
-              <View
-                style={{
-                  display: 'flex',
-                  flexDirection: 'row',
-                  justifyContent: 'space-around',
-                }}>
-                <View>
-                  <Text
-                    style={{
-                      fontSize: 35,
-                      shadowOffset: {
-                        width: 3,
-                        height: 3,
-                      },
-                      shadowOpacity: 0.3,
-                    }}>
-                    {languageEmojiKey[languageSelectedState]}
-                  </Text>
-                </View>
-                <HomeContainerToSentencesOrWords navigation={navigation} />
+            <View
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+                justifyContent: 'space-around',
+              }}>
+              <View>
+                <Text
+                  style={{
+                    fontSize: 35,
+                    shadowOffset: {
+                      width: 3,
+                      height: 3,
+                    },
+                    shadowOpacity: 0.3,
+                  }}>
+                  {languageEmojiKey[languageSelectedState]}
+                </Text>
               </View>
-
-              {!selectedTopic && (
-                <Topics
-                  setSelectedGeneralTopicState={setSelectedGeneralTopicState}
-                  selectedGeneralTopicState={selectedGeneralTopicState}
-                  handleShowGeneralTopic={handleShowGeneralTopic}
-                  handleShowTopic={handleShowTopic}
-                  allTopicsMetaDataState={allTopicsMetaDataState}
-                />
-              )}
+              <HomeContainerToSentencesOrWords navigation={navigation} />
             </View>
 
-            <Divider
-              bold
-              style={{
-                backgroundColor: MD2Colors.blueGrey300,
-                height: 1,
-                marginVertical: 10,
-              }}
-            />
+            {!selectedTopic && (
+              <Topics
+                setSelectedGeneralTopicState={setSelectedGeneralTopicState}
+                selectedGeneralTopicState={selectedGeneralTopicState}
+                handleShowGeneralTopic={handleShowGeneralTopic}
+                handleShowTopic={handleShowTopic}
+                allTopicsMetaDataState={allTopicsMetaDataState}
+              />
+            )}
+          </View>
 
-            <View style={{padding: 10, gap: 10, marginVertical: 30}}>
+          <View>
+            <View style={{gap: 10, marginVertical: 20}}>
               {languages.map(item => {
                 if (item !== languageSelectedState) {
                   const emojiFlag = languageEmojiKey[item];
@@ -143,17 +134,16 @@ function Home({
                 }
               })}
             </View>
+            <Button
+              icon="backup-restore"
+              mode="contained-tonal"
+              onPress={clearStorage}
+              labelStyle={{
+                fontStyle: 'italic',
+              }}>
+              Clear Storage
+            </Button>
           </View>
-
-          <Button
-            icon="backup-restore"
-            mode="contained-tonal"
-            onPress={clearStorage}
-            labelStyle={{
-              fontStyle: 'italic',
-            }}>
-            Clear Storage
-          </Button>
         </View>
       </ScrollView>
     </ScreenContainerComponent>
