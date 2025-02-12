@@ -8,7 +8,6 @@ import {
   MD3Colors,
   Text,
 } from 'react-native-paper';
-import LoadingScreen from '../../components/LoadingScreen';
 import HomeContainerToSentencesOrWords, {
   languageEmojiKey,
 } from '../../components/HomeContainerToSentencesOrWords';
@@ -42,10 +41,6 @@ function Home({
   const [selectedTopic, setSelectedTopic] = useState('');
   const [showMediaContentState, setShowMediaContentState] = useState('');
   const [isLoadingLanguageState, setIsLoadingLanguageState] = useState(false);
-  const [
-    targetLanguageLoadedContentState,
-    setTargetLanguageLoadedContentState,
-  ] = useState([]);
   const [allTopicsMetaDataState, setAllTopicsMetaDataState] = useState([]);
   const [selectedGeneralTopicState, setSelectedGeneralTopicState] =
     useState('');
@@ -57,10 +52,10 @@ function Home({
   const handleLanguageSelection = async selectedLanguage => {
     try {
       setIsLoadingLanguageState(true);
-      await fetchData(selectedLanguage);
       setSelectedGeneralTopicState('');
       setSelectedTopic('');
       setShowMediaContentState('');
+      await fetchData(selectedLanguage);
       setLanguageSelectedState(selectedLanguage);
     } catch (error) {
     } finally {
@@ -70,7 +65,6 @@ function Home({
 
   useOnLoadContentScreen({
     targetLanguageLoadedContentMasterState,
-    setTargetLanguageLoadedContentState,
     setAllTopicsMetaDataState,
     updateMetaDataState,
     languageSelectedState,
@@ -93,10 +87,6 @@ function Home({
   const handleShowGeneralTopic = generalTopic => {
     setSelectedGeneralTopicState(generalTopic);
   };
-
-  if (targetLanguageLoadedContentState?.length === 0) {
-    return <LoadingScreen>Loading data...</LoadingScreen>;
-  }
 
   return (
     <ScreenContainerComponent>
@@ -138,8 +128,13 @@ function Home({
                   alignItems: 'center',
                 }}>
                 <Text style={DefaultTheme.fonts.labelLarge}>Selected: </Text>
+
                 <LanguageFlagComponent
-                  text={languageEmojiKey[languageSelectedState]}
+                  text={
+                    languageSelectedState
+                      ? languageEmojiKey[languageSelectedState]
+                      : '🚫'
+                  }
                 />
               </View>
               <View
@@ -168,13 +163,17 @@ function Home({
                 })}
               </View>
             </View>
-            <Divider
-              style={{
-                marginVertical: 15,
-              }}
-            />
-            <HomeContainerToSentencesOrWords navigation={navigation} />
-            {!selectedTopic && (
+            {languageSelectedState && (
+              <>
+                <Divider
+                  style={{
+                    marginVertical: 15,
+                  }}
+                />
+                <HomeContainerToSentencesOrWords navigation={navigation} />
+              </>
+            )}
+            {!selectedTopic && languageSelectedState && (
               <Topics
                 setSelectedGeneralTopicState={setSelectedGeneralTopicState}
                 selectedGeneralTopicState={selectedGeneralTopicState}
@@ -186,16 +185,18 @@ function Home({
               />
             )}
           </View>
-          <Button
-            icon="backup-restore"
-            mode="contained"
-            buttonColor={MD3Colors.error30}
-            onPress={clearStorage}
-            labelStyle={{
-              fontStyle: 'italic',
-            }}>
-            Clear Storage
-          </Button>
+          {languageSelectedState && (
+            <Button
+              icon="backup-restore"
+              mode="contained"
+              buttonColor={MD3Colors.error30}
+              onPress={clearStorage}
+              labelStyle={{
+                fontStyle: 'italic',
+              }}>
+              Clear Storage
+            </Button>
+          )}
         </View>
       </ScrollView>
     </ScreenContainerComponent>

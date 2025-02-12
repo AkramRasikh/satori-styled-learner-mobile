@@ -63,7 +63,7 @@ function App(): React.JSX.Element {
             <SafeAreaProvider>
               <NavigationContainer>
                 <Stack.Navigator
-                  initialRouteName="LanguageSelector" // This sets the default screen
+                  initialRouteName="Home" // This sets the default screen
                   screenOptions={{headerShown: false}} // Optional: Hide headers
                 >
                   <Stack.Screen name="ContentScreen">

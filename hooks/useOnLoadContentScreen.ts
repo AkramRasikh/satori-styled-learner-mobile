@@ -10,7 +10,6 @@ const today = new Date();
 
 const useOnLoadContentScreen = ({
   targetLanguageLoadedContentMasterState,
-  setTargetLanguageLoadedContentState,
   setAllTopicsMetaDataState,
   updateMetaDataState,
   languageSelectedState,
@@ -83,11 +82,11 @@ const useOnLoadContentScreen = ({
       );
     });
 
-    setTargetLanguageLoadedContentState(
-      targetContent.sort((a, b) => {
-        return a.isCore === b.isCore ? 0 : a.isCore ? -1 : 1;
-      }),
-    );
+    // setTargetLanguageLoadedContentState(
+    //   targetContent.sort((a, b) => {
+    //     return a.isCore === b.isCore ? 0 : a.isCore ? -1 : 1;
+    //   }),
+    // );
     setAllTopicsMetaDataState(allTopicsMetaData);
   }, [updateMetaDataState, languageSelectedState]);
 };
