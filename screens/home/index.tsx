@@ -18,22 +18,11 @@ import ScreenContainerComponent from '../../components/ScreenContainerComponent'
 import useData from '../../context/Data/useData';
 import useLanguageSelector from '../../context/LanguageSelector/useLanguageSelector';
 import {clearStorage} from '../../helper-functions/local-storage-utils';
+import LanguageFlag from './components/LanguageFlag';
+import LanguageLoadingIndicator from './components/LanguageLoadingIndicator';
 
 const languages = ['japanese', 'chinese'];
 
-const LanguageFlagComponent = ({text}) => (
-  <Text
-    style={{
-      fontSize: 35,
-      shadowOffset: {
-        width: 3,
-        height: 3,
-      },
-      shadowOpacity: 0.3,
-    }}>
-    {text}
-  </Text>
-);
 const Home = ({navigation}): React.JSX.Element => {
   const [selectedTopic, setSelectedTopic] = useState('');
   const [showMediaContentState, setShowMediaContentState] = useState('');
@@ -96,17 +85,7 @@ const Home = ({navigation}): React.JSX.Element => {
         style={{
           padding: 10,
         }}>
-        {isLoadingLanguageState && (
-          <ActivityIndicator
-            style={{
-              position: 'absolute',
-              alignSelf: 'center',
-              zIndex: 100,
-              top: '50%',
-            }}
-            size="large"
-          />
-        )}
+        {isLoadingLanguageState && <LanguageLoadingIndicator />}
         <View
           style={{
             display: 'flex',
@@ -130,7 +109,7 @@ const Home = ({navigation}): React.JSX.Element => {
                 }}>
                 <Text style={DefaultTheme.fonts.labelLarge}>Selected: </Text>
 
-                <LanguageFlagComponent
+                <LanguageFlag
                   text={
                     languageSelectedState
                       ? languageEmojiKey[languageSelectedState]
@@ -156,7 +135,7 @@ const Home = ({navigation}): React.JSX.Element => {
                         onPress={async () => {
                           await handleLanguageSelection(item);
                         }}>
-                        <LanguageFlagComponent text={emojiFlag} />
+                        <LanguageFlag text={emojiFlag} />
                       </TouchableOpacity>
                     );
                   }
@@ -186,18 +165,17 @@ const Home = ({navigation}): React.JSX.Element => {
               />
             )}
           </View>
-          {languageSelectedState && (
-            <Button
-              icon="backup-restore"
-              mode="contained"
-              buttonColor={MD3Colors.error30}
-              onPress={clearStorage}
-              labelStyle={{
-                fontStyle: 'italic',
-              }}>
-              Clear Storage
-            </Button>
-          )}
+
+          <Button
+            icon="backup-restore"
+            mode="contained"
+            buttonColor={MD3Colors.error30}
+            onPress={clearStorage}
+            labelStyle={{
+              fontStyle: 'italic',
+            }}>
+            Clear Storage
+          </Button>
         </View>
       </ScrollView>
     </ScreenContainerComponent>
