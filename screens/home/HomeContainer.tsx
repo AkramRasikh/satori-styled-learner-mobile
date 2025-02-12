@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {ScrollView, View} from 'react-native';
-import {Button, FAB, Text} from 'react-native-paper';
+import {Button, FAB, MD2Colors, Text} from 'react-native-paper';
 import LoadingScreen from '../../components/LoadingScreen';
 import HomeContainerToSentencesOrWords, {
   languageEmojiKey,
@@ -70,68 +70,86 @@ function Home({
     <ScreenContainerComponent>
       <ScrollView
         contentInsetAdjustmentBehavior="automatic"
-        style={{padding: 10}}>
-        <View style={{padding: 10, borderWidth: 1, borderRadius: 10}}>
-          <View
-            style={{
-              display: 'flex',
-              flexDirection: 'row',
-              justifyContent: 'space-around',
-            }}>
-            <View>
-              <Text
-                style={{
-                  fontSize: 35,
-                  shadowOffset: {
-                    width: 3,
-                    height: 3,
-                  },
-                  shadowOpacity: 0.3,
-                }}>
-                {languageEmojiKey[languageSelectedState]}
-              </Text>
-            </View>
-            <HomeContainerToSentencesOrWords navigation={navigation} />
-          </View>
-
-          {!selectedTopic && (
-            <Topics
-              setSelectedGeneralTopicState={setSelectedGeneralTopicState}
-              selectedGeneralTopicState={selectedGeneralTopicState}
-              handleShowGeneralTopic={handleShowGeneralTopic}
-              handleShowTopic={handleShowTopic}
-              allTopicsMetaDataState={allTopicsMetaDataState}
-            />
-          )}
-        </View>
-        <View style={{padding: 10, gap: 10, marginVertical: 30}}>
-          {languages.map(item => {
-            if (item !== languageSelectedState) {
-              const emojiFlag = languageEmojiKey[item];
-
-              return (
-                <FAB
-                  key={item}
-                  label={`Get ${item} content! ${emojiFlag}`}
-                  onPress={async () => {
-                    await handleLanguageSelection(item);
-                  }}
-                />
-              );
-            } else {
-              return null;
-            }
-          })}
-        </View>
-        <Button
-          icon="backup-restore"
-          mode="contained-tonal"
-          onPress={clearStorage}
-          labelStyle={{
-            fontStyle: 'italic',
+        style={{
+          padding: 10,
+        }}>
+        <View
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'space-between',
+            minHeight: '100%',
           }}>
-          Clear Storage
-        </Button>
+          <View>
+            <View
+              style={{
+                padding: 10,
+                borderWidth: 1,
+                borderRadius: 10,
+                borderColor: MD2Colors.blueGrey400,
+              }}>
+              <View
+                style={{
+                  display: 'flex',
+                  flexDirection: 'row',
+                  justifyContent: 'space-around',
+                }}>
+                <View>
+                  <Text
+                    style={{
+                      fontSize: 35,
+                      shadowOffset: {
+                        width: 3,
+                        height: 3,
+                      },
+                      shadowOpacity: 0.3,
+                    }}>
+                    {languageEmojiKey[languageSelectedState]}
+                  </Text>
+                </View>
+                <HomeContainerToSentencesOrWords navigation={navigation} />
+              </View>
+
+              {!selectedTopic && (
+                <Topics
+                  setSelectedGeneralTopicState={setSelectedGeneralTopicState}
+                  selectedGeneralTopicState={selectedGeneralTopicState}
+                  handleShowGeneralTopic={handleShowGeneralTopic}
+                  handleShowTopic={handleShowTopic}
+                  allTopicsMetaDataState={allTopicsMetaDataState}
+                />
+              )}
+            </View>
+            <View style={{padding: 10, gap: 10, marginVertical: 30}}>
+              {languages.map(item => {
+                if (item !== languageSelectedState) {
+                  const emojiFlag = languageEmojiKey[item];
+
+                  return (
+                    <FAB
+                      key={item}
+                      label={`${emojiFlag} ${emojiFlag} Get ${item} content!`}
+                      onPress={async () => {
+                        await handleLanguageSelection(item);
+                      }}
+                    />
+                  );
+                } else {
+                  return null;
+                }
+              })}
+            </View>
+          </View>
+          <Button
+            icon="backup-restore"
+            mode="contained-tonal"
+            onPress={clearStorage}
+            labelStyle={{
+              fontStyle: 'italic',
+            }}>
+            Clear Storage
+          </Button>
+        </View>
       </ScrollView>
     </ScreenContainerComponent>
   );
