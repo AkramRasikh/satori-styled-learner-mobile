@@ -77,8 +77,9 @@ const Topics = ({
   handleShowGeneralTopic,
   handleShowTopic,
   setSelectedGeneralTopicState,
+  showMediaContentState,
+  setShowMediaContentState,
 }) => {
-  const [showMediaContentState, setShowMediaContentState] = useState('');
   const {languageSelectedState} = useLanguageSelector();
   const handleOnPress = title => {
     if (!selectedGeneralTopicState) {

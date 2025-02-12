@@ -40,6 +40,7 @@ function Home({
   targetLanguageLoadedContentMasterState,
 }): React.JSX.Element {
   const [selectedTopic, setSelectedTopic] = useState('');
+  const [showMediaContentState, setShowMediaContentState] = useState('');
   const [isLoadingLanguageState, setIsLoadingLanguageState] = useState(false);
   const [
     targetLanguageLoadedContentState,
@@ -57,6 +58,9 @@ function Home({
     try {
       setIsLoadingLanguageState(true);
       await fetchData(selectedLanguage);
+      setSelectedGeneralTopicState('');
+      setSelectedTopic('');
+      setShowMediaContentState('');
       setLanguageSelectedState(selectedLanguage);
     } catch (error) {
     } finally {
@@ -174,6 +178,8 @@ function Home({
                 handleShowGeneralTopic={handleShowGeneralTopic}
                 handleShowTopic={handleShowTopic}
                 allTopicsMetaDataState={allTopicsMetaDataState}
+                showMediaContentState={showMediaContentState}
+                setShowMediaContentState={setShowMediaContentState}
               />
             )}
           </View>
