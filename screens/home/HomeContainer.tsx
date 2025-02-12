@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import {ScrollView, View} from 'react-native';
+import {Button, FAB, Text} from 'react-native-paper';
 import LoadingScreen from '../../components/LoadingScreen';
 import HomeContainerToSentencesOrWords, {
   languageEmojiKey,
@@ -9,7 +10,7 @@ import useOnLoadContentScreen from '../../hooks/useOnLoadContentScreen';
 import ScreenContainerComponent from '../../components/ScreenContainerComponent';
 import useData from '../../context/Data/useData';
 import useLanguageSelector from '../../context/LanguageSelector/useLanguageSelector';
-import {FAB} from 'react-native-paper';
+import {clearStorage} from '../../helper-functions/local-storage-utils';
 
 const languages = ['japanese', 'chinese'];
 
@@ -70,18 +71,40 @@ function Home({
       <ScrollView
         contentInsetAdjustmentBehavior="automatic"
         style={{padding: 10}}>
-        <HomeContainerToSentencesOrWords navigation={navigation} />
+        <View style={{padding: 10, borderWidth: 1, borderRadius: 10}}>
+          <View
+            style={{
+              display: 'flex',
+              flexDirection: 'row',
+              justifyContent: 'space-around',
+            }}>
+            <View>
+              <Text
+                style={{
+                  fontSize: 35,
+                  shadowOffset: {
+                    width: 3,
+                    height: 3,
+                  },
+                  shadowOpacity: 0.3,
+                }}>
+                {languageEmojiKey[languageSelectedState]}
+              </Text>
+            </View>
+            <HomeContainerToSentencesOrWords navigation={navigation} />
+          </View>
 
-        {!selectedTopic && (
-          <Topics
-            setSelectedGeneralTopicState={setSelectedGeneralTopicState}
-            selectedGeneralTopicState={selectedGeneralTopicState}
-            handleShowGeneralTopic={handleShowGeneralTopic}
-            handleShowTopic={handleShowTopic}
-            allTopicsMetaDataState={allTopicsMetaDataState}
-          />
-        )}
-        <View style={{padding: 10, gap: 10, marginTop: 50}}>
+          {!selectedTopic && (
+            <Topics
+              setSelectedGeneralTopicState={setSelectedGeneralTopicState}
+              selectedGeneralTopicState={selectedGeneralTopicState}
+              handleShowGeneralTopic={handleShowGeneralTopic}
+              handleShowTopic={handleShowTopic}
+              allTopicsMetaDataState={allTopicsMetaDataState}
+            />
+          )}
+        </View>
+        <View style={{padding: 10, gap: 10, marginVertical: 30}}>
           {languages.map(item => {
             if (item !== languageSelectedState) {
               const emojiFlag = languageEmojiKey[item];
@@ -100,6 +123,15 @@ function Home({
             }
           })}
         </View>
+        <Button
+          icon="backup-restore"
+          mode="contained-tonal"
+          onPress={clearStorage}
+          labelStyle={{
+            fontStyle: 'italic',
+          }}>
+          Clear Storage
+        </Button>
       </ScrollView>
     </ScreenContainerComponent>
   );

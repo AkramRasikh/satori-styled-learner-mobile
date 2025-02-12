@@ -1,7 +1,7 @@
 import React from 'react';
 import {View} from 'react-native';
 import {Button} from 'react-native-paper';
-import useLanguageSelector from '../context/LanguageSelector/useLanguageSelector';
+import useDifficultSentences from '../context/DifficultSentences/useDifficultSentencesProvider';
 
 export const languageEmojiKey = {
   japanese: '🇯🇵',
@@ -9,8 +9,8 @@ export const languageEmojiKey = {
 };
 
 const HomeContainerToSentencesOrWords = ({navigation}) => {
-  const {languageSelectedState} = useLanguageSelector();
-  const emojiFlag = languageEmojiKey[languageSelectedState];
+  const {difficultSentencesState} = useDifficultSentences();
+
   return (
     <View
       style={{
@@ -23,10 +23,10 @@ const HomeContainerToSentencesOrWords = ({navigation}) => {
       <Button
         mode="elevated"
         onPress={() => navigation.navigate('DifficultSentences')}>
-        Sentences 🤓{emojiFlag}
+        Sentences ({difficultSentencesState.length})
       </Button>
       <Button mode="elevated" onPress={() => navigation.navigate('WordStudy')}>
-        Words 🤓{emojiFlag}
+        Words
       </Button>
     </View>
   );
