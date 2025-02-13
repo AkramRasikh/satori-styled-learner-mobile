@@ -1,18 +1,22 @@
 import React, {View} from 'react-native';
 import {IconButton, MD2Colors} from 'react-native-paper';
 import ProgressBarComponent from './ProgressBar';
+import useTopicContentAudio from './TopicContent/context/useTopicContentAudio';
 
 const TopicContentAudioSection = ({
-  isPlaying,
-  playSound,
-  pauseSound,
-  rewindSound,
-  forwardSound,
   initSnippet,
-  currentTimeState,
   soundDuration,
   setShowReviewSectionState,
 }) => {
+  const {
+    playSound,
+    pauseSound,
+    rewindSound,
+    forwardSound,
+    isPlaying,
+    currentTimeState,
+  } = useTopicContentAudio();
+
   const progressRate = currentTimeState / soundDuration || 0;
   const text = `${currentTimeState?.toFixed(2)}/${soundDuration?.toFixed(2)}`;
 

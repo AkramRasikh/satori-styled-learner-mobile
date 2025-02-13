@@ -1,8 +1,6 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useSelector} from 'react-redux';
-import Sound from 'react-native-sound';
 import {View, Text, ScrollView, Dimensions} from 'react-native';
-import useSoundHook from '../../hooks/useSoundHook';
 import useGetCombinedAudioData, {
   getFirebaseAudioURL,
   getFirebaseVideoURL,
@@ -17,11 +15,8 @@ import useFormatUnderlyingWords from '../../hooks/useFormatUnderlyingWords';
 import TopicContentLoader from '../TopicContentLoader';
 import useSetTopicAudioDataInState from '../../hooks/useSetTopicAudioDataInState';
 import ReviewSection from '../ReviewSection';
-import useMP3File from '../../hooks/useMP3File';
-import useLoadAudioInstance from '../../hooks/useLoadAudioInstance';
 import useLanguageSelector from '../../context/LanguageSelector/useLanguageSelector';
 import AudioToggles from '../AudioToggles';
-import {VideoRef} from 'react-native-video';
 import VideoPlayer from '../VideoPlayer';
 import useTrackCurrentTimeState from '../../hooks/useTrackCurrentTimeState';
 import useVideoTextSync from '../../hooks/useVideoTextSync';
@@ -40,6 +35,7 @@ import AnimatedModal from '../AnimatedModal';
 import TextSegment from '../TextSegment';
 import useTopicContent from './context/useTopicContentSnippets';
 import {generateRandomId} from '../../utils/generate-random-id';
+import useTopicContentAudio from './context/useTopicContentAudio';
 
 const timeDataWithinSnippet = (thisItem, currentTimeState) => {
   const pointInAudioInSnippet = currentTimeState - thisItem.startAt;
@@ -57,12 +53,9 @@ const TopicContent = ({
   breakdownSentenceFunc,
 }) => {
   const [masterPlay, setMasterPlay] = useState('');
-  const [currentTimeState, setCurrentTimeState] = useState(0);
-  const [isPlaying, setIsPlaying] = useState(false);
   const [englishOnly, setEnglishOnly] = useState(false);
   const [engMaster, setEngMaster] = useState(true);
   const [highlightMode, setHighlightMode] = useState(false);
-  const [isVideoModeState, setIsVideoModeState] = useState(false);
   const [showReviewSectionState, setShowReviewSectionState] = useState(false);
   const [highlightedIndices, setHighlightedIndices] = useState([]);
   const [formattedData, setFormattedData] = useState([]);
@@ -74,9 +67,6 @@ const TopicContent = ({
   const [highlightTargetTextState, setHighlightTargetTextState] = useState('');
   const [updateWordList, setUpdateWordList] = useState(false);
   const [audioLoadingProgress, setAudioLoadingProgress] = useState(0);
-  const [isVideoPlaying, setIsVideoPlaying] = useState(false);
-  const [currentVideoTimeState, setCurrentVideoTimeState] = useState(0);
-  const [videoDurationState, setVideoDurationState] = useState(0);
 
   const {languageSelectedState} = useLanguageSelector();
   const targetLanguageLoadedWords = useSelector(state => state.words);
@@ -90,6 +80,28 @@ const TopicContent = ({
   } = useData();
 
   const {selectedSnippetsState, setSelectedSnippetsState} = useTopicContent();
+  const {
+    isLoaded,
+    seekHandler,
+    handlePlayFromThisSentence,
+    playFromHere,
+    setIsPlaying,
+    handleVideoPause,
+    currentTimeState,
+    setCurrentTimeState,
+    soundRef,
+    currentVideoTimeState,
+    isVideoPlaying,
+    setCurrentVideoTimeState,
+    setVideoDurationState,
+    playVideo,
+    progress,
+    videoRef,
+    isPlaying,
+    isVideoModeState,
+    setIsVideoModeState,
+    pauseSound,
+  } = useTopicContentAudio();
 
   const hasContentToReview = formattedData?.some(
     sentenceWidget => sentenceWidget?.reviewData,
@@ -107,83 +119,10 @@ const TopicContent = ({
   const hasUnifiedMP3File = loadedContent.hasAudio;
   const hasAlreadyBeenUnified = structuredUnifiedData[topicName]?.content;
 
-  const soundRef = useRef<Sound>(null);
-  const videoRef = useRef<VideoRef>(null);
-
-  const jumpAudioValue = 2;
-
-  const progress =
-    currentVideoTimeState && videoDurationState
-      ? currentVideoTimeState / videoDurationState
-      : 0;
-
-  const videoInstance = videoRef?.current;
-
-  const jumpToAudioPoint = (videoPosition: number) => {
-    if (!videoInstance) {
-      return null;
-    }
-    videoInstance.seek(videoPosition);
-  };
-
-  const seekHandler = (isForward: boolean) => {
-    if (!videoInstance) {
-      return null;
-    }
-    if (isForward) {
-      videoInstance.seek(currentVideoTimeState + jumpAudioValue);
-    } else {
-      videoInstance.seek(currentVideoTimeState - jumpAudioValue);
-    }
-  };
-
-  const playVideo = () => {
-    if (isVideoPlaying) {
-      setIsVideoPlaying(false);
-    } else {
-      setIsVideoPlaying(true);
-    }
-  };
-
   const {height, width} = Dimensions?.get('window');
   const url = getFirebaseAudioURL(topicName, languageSelectedState);
 
   const soundDuration = soundRef?.current?._duration || 0;
-
-  const {loadFile, filePath} = useMP3File(topicName);
-
-  const {triggerLoadURL, isLoaded} = useLoadAudioInstance({
-    soundRef,
-    url: filePath,
-  });
-
-  useEffect(() => {
-    if (filePath) {
-      triggerLoadURL();
-    }
-  }, [filePath]);
-
-  const handleLoad = () => {
-    loadFile(topicName, url);
-  };
-
-  useEffect(() => {
-    handleLoad();
-  }, []);
-
-  const {playSound, pauseSound, rewindSound, forwardSound} = useSoundHook({
-    url,
-    soundRef,
-    isPlaying,
-    setIsPlaying,
-    topicName,
-  });
-
-  const handleVideoPause = () => {
-    if (isVideoPlaying && isVideoModeState) {
-      setIsVideoPlaying(false);
-    }
-  };
 
   const handleVideoMode = (switchToVideoMode: boolean) => {
     if (switchToVideoMode) {
@@ -310,24 +249,10 @@ const TopicContent = ({
     soundDuration,
   });
 
-  const playFromHere = seconds => {
-    if (soundRef.current) {
-      soundRef.current.getCurrentTime(() => {
-        soundRef.current.setCurrentTime(seconds);
-      });
-      setCurrentTimeState(seconds);
-      soundRef.current.play();
-      setIsPlaying(true);
-    }
-  };
-
-  const {formatTextForTargetWords, playFromThisSentence} = useContentControls({
+  const {formatTextForTargetWords} = useContentControls({
     targetLanguageLoadedWords,
-    soundRef,
-    setIsPlaying,
     getSafeText,
     topicData: contentWithTimeStamps,
-    setCurrentTimeState,
   });
 
   useVideoTextSync({
@@ -406,17 +331,6 @@ const TopicContent = ({
     setTriggerSentenceIdUpdate,
   ]);
 
-  const handlePlayFromThisSentence = playFromHere => {
-    if (isVideoModeState) {
-      jumpToAudioPoint(realStartTime + playFromHere);
-      if (!isVideoPlaying) {
-        playVideo();
-      }
-    } else {
-      playFromThisSentence(playFromHere);
-    }
-  };
-
   const videoUrl = hasVideo
     ? getFirebaseVideoURL(getGeneralTopicName(topicName), languageSelectedState)
     : '';
@@ -451,7 +365,7 @@ const TopicContent = ({
         )}
         <View>
           <View>
-            {hasUnifiedMP3File && (
+            {hasVideo && (
               <VideoPlayer
                 url={videoUrl}
                 videoRef={videoRef}
@@ -579,13 +493,7 @@ const TopicContent = ({
         </ScrollView>
         {hasUnifiedMP3File && (
           <TopicContentAudioSection
-            isPlaying={isPlaying}
-            playSound={playSound}
-            pauseSound={pauseSound}
-            rewindSound={rewindSound}
-            forwardSound={forwardSound}
             initSnippet={initSnippet}
-            currentTimeState={currentTimeState}
             soundDuration={soundDuration}
             setShowReviewSectionState={setShowReviewSectionState}
           />

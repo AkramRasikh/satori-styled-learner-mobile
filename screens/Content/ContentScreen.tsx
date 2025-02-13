@@ -10,6 +10,7 @@ import ScreenContainerComponent from '../../components/ScreenContainerComponent'
 import useData from '../../context/Data/useData';
 import useDifficultSentences from '../../context/DifficultSentences/useDifficultSentencesProvider';
 import {TopicContentSnippetsProvider} from '../../components/TopicContent/context/TopicContentSnippetsProvider';
+import {TopicContentAudioProvider} from '../../components/TopicContent/context/TopicContentAudioProvider';
 
 const ContentScreen = () => {
   const route = useRoute();
@@ -137,22 +138,26 @@ const ContentScreen = () => {
   return (
     <ScreenContainerComponent updatePromptState={updatePromptState}>
       <View style={{padding: 10}}>
-        <TopicContentSnippetsProvider
+        <TopicContentAudioProvider
           topicName={selectedTopic}
-          loadedContent={selectedContentState}
-          selectedSnippetsState={selectedSnippetsState}
-          setSelectedSnippetsState={setSelectedSnippetsState}>
-          <TopicContent
+          realStartTime={selectedContentState?.realStartTime}>
+          <TopicContentSnippetsProvider
             topicName={selectedTopic}
             loadedContent={selectedContentState}
-            updateTopicMetaData={updateMetaData}
-            updateSentenceData={updateSentenceDataFunc}
-            triggerSentenceIdUpdate={triggerSentenceIdUpdate}
-            setTriggerSentenceIdUpdate={setTriggerSentenceIdUpdate}
-            targetSentenceId={targetSentenceId}
-            breakdownSentenceFunc={breakdownSentenceFunc}
-          />
-        </TopicContentSnippetsProvider>
+            selectedSnippetsState={selectedSnippetsState}
+            setSelectedSnippetsState={setSelectedSnippetsState}>
+            <TopicContent
+              topicName={selectedTopic}
+              loadedContent={selectedContentState}
+              updateTopicMetaData={updateMetaData}
+              updateSentenceData={updateSentenceDataFunc}
+              triggerSentenceIdUpdate={triggerSentenceIdUpdate}
+              setTriggerSentenceIdUpdate={setTriggerSentenceIdUpdate}
+              targetSentenceId={targetSentenceId}
+              breakdownSentenceFunc={breakdownSentenceFunc}
+            />
+          </TopicContentSnippetsProvider>
+        </TopicContentAudioProvider>
       </View>
     </ScreenContainerComponent>
   );

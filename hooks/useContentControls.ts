@@ -1,10 +1,7 @@
 const useContentControls = ({
   targetLanguageLoadedWords,
-  soundRef,
-  setIsPlaying,
   getSafeText,
   topicData,
-  setCurrentTimeState,
 }) => {
   const formatTextForTargetWords = () => {
     const formattedText = topicData.map(sentence => {
@@ -36,20 +33,9 @@ const useContentControls = ({
 
     return formattedText;
   };
-  const playFromThisSentence = playFromHere => {
-    if (soundRef.current && isFinite(playFromHere)) {
-      soundRef.current.getCurrentTime(() => {
-        soundRef.current.setCurrentTime(playFromHere);
-      });
-      setCurrentTimeState(playFromHere);
-      soundRef.current.play();
-      setIsPlaying(true);
-    }
-  };
 
   return {
     formatTextForTargetWords,
-    playFromThisSentence,
   };
 };
 
