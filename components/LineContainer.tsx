@@ -157,89 +157,86 @@ const LineContainer = ({
     );
   };
   return (
-    <View>
-      <View
-        style={{
-          flexDirection: 'row',
-          flexWrap: 'wrap',
-        }}>
-        <Text style={{fontSize: 20}}>
-          {formattedData?.map((topicSentence, index) => {
-            if (topicSentence.targetLang === '') return null;
-            const id = topicSentence.id;
-            const focusThisSentence = id === masterPlay;
-            const firstEl = index === 0;
+    <View
+      style={{
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+      }}>
+      <Text style={{fontSize: 20}}>
+        {formattedData?.map((topicSentence, index) => {
+          if (topicSentence.targetLang === '') return null;
+          const id = topicSentence.id;
+          const focusThisSentence = id === masterPlay;
+          const firstEl = index === 0;
 
-            const thisSnippets = snippetsLocalAndDb?.filter(
-              item => id === item.sentenceId,
-            );
+          const thisSnippets = snippetsLocalAndDb?.filter(
+            item => id === item.sentenceId,
+          );
 
-            const isHighlightedText = highlightTargetTextState === id;
-            const highlightedTextState = isHighlightedText
-              ? 'orange'
-              : focusThisSentence
-              ? 'yellow'
-              : 'transparent';
+          const isHighlightedText = highlightTargetTextState === id;
+          const highlightedTextState = isHighlightedText
+            ? 'orange'
+            : focusThisSentence
+            ? 'yellow'
+            : 'transparent';
 
-            return (
+          return (
+            <View
+              style={{
+                marginBottom: 10,
+                paddingTop: firstEl ? 10 : 0,
+              }}
+              key={id}>
               <View
                 style={{
-                  marginBottom: 10,
-                  paddingTop: firstEl ? 10 : 0,
-                }}
-                key={id}>
-                <View
-                  style={{
-                    backgroundColor: highlightedTextState,
-                  }}>
-                  <SatoriLine
-                    id={id}
-                    sentenceIndex={index}
-                    focusThisSentence={focusThisSentence}
-                    topicSentence={topicSentence}
-                    playFromThisSentence={playFromThisSentence}
-                    englishOnly={englishOnly}
-                    highlightMode={highlightMode}
-                    highlightedIndices={highlightedIndices}
-                    setHighlightedIndices={setHighlightedIndices}
-                    saveWordFirebase={saveWordFirebase}
-                    engMaster={engMaster}
-                    isPlaying={isPlaying}
-                    pauseSound={pauseSound}
-                    textWidth={width * 0.9}
-                    setHighlightMode={setHighlightMode}
-                    topicName={topicName}
-                    updateSentenceData={updateSentenceData}
-                    contentIndex={contentIndex}
-                    breakdownSentenceFunc={breakdownSentenceFunc}
-                  />
-                </View>
-
-                {thisSnippets?.map((snippetData, index) => {
-                  return (
-                    <OneSnippetContainer
-                      key={index}
-                      snippet={snippetData}
-                      deleteSnippet={deleteSnippet}
-                      addSnippet={addSnippet}
-                      removeSnippet={removeSnippet}
-                      playSound={playSound}
-                      pauseSound={pauseSound}
-                      isPlaying={isPlaying}
-                      currentTimeState={currentTimeState}
-                      indexList={index}
-                      handleRemoveFromTempSnippets={
-                        handleRemoveFromTempSnippets
-                      }
-                      handleAddSnippet={handleAddSnippet}
-                    />
-                  );
-                })}
+                  backgroundColor: highlightedTextState,
+                }}>
+                <SatoriLine
+                  id={id}
+                  sentenceIndex={index}
+                  focusThisSentence={focusThisSentence}
+                  topicSentence={topicSentence}
+                  playFromThisSentence={playFromThisSentence}
+                  englishOnly={englishOnly}
+                  highlightMode={highlightMode}
+                  highlightedIndices={highlightedIndices}
+                  setHighlightedIndices={setHighlightedIndices}
+                  saveWordFirebase={saveWordFirebase}
+                  engMaster={engMaster}
+                  isPlaying={isPlaying}
+                  pauseSound={pauseSound}
+                  textWidth={width * 0.9}
+                  setHighlightMode={setHighlightMode}
+                  topicName={topicName}
+                  updateSentenceData={updateSentenceData}
+                  contentIndex={contentIndex}
+                  breakdownSentenceFunc={breakdownSentenceFunc}
+                  index={index}
+                />
               </View>
-            );
-          })}
-        </Text>
-      </View>
+
+              {thisSnippets?.map((snippetData, index) => {
+                return (
+                  <OneSnippetContainer
+                    key={index}
+                    snippet={snippetData}
+                    deleteSnippet={deleteSnippet}
+                    addSnippet={addSnippet}
+                    removeSnippet={removeSnippet}
+                    playSound={playSound}
+                    pauseSound={pauseSound}
+                    isPlaying={isPlaying}
+                    currentTimeState={currentTimeState}
+                    indexList={index}
+                    handleRemoveFromTempSnippets={handleRemoveFromTempSnippets}
+                    handleAddSnippet={handleAddSnippet}
+                  />
+                );
+              })}
+            </View>
+          );
+        })}
+      </Text>
     </View>
   );
 };
