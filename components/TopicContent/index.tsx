@@ -2,43 +2,43 @@ import React, {useEffect, useMemo, useRef, useState} from 'react';
 import {useSelector} from 'react-redux';
 import Sound from 'react-native-sound';
 import {View, Text, ScrollView, Dimensions} from 'react-native';
-import useSoundHook from '../hooks/useSoundHook';
+import useSoundHook from '../../hooks/useSoundHook';
 import useGetCombinedAudioData, {
   getFirebaseAudioURL,
   getFirebaseVideoURL,
-} from '../hooks/useGetCombinedAudioData';
-import useHighlightWordToWordBank from '../hooks/useHighlightWordToWordBank';
-import {mergeAndRemoveDuplicates} from '../utils/merge-and-remove-duplicates';
-import DisplaySettings from './DisplaySettings';
-import useContentControls from '../hooks/useContentControls';
-import useAudioTextSync from '../hooks/useAudioTextSync';
-import LineContainer from './LineContainer';
-import useInitTopicWordList from '../hooks/useInitTopicWordList';
-import useFormatUnderlyingWords from '../hooks/useFormatUnderlyingWords';
-import TopicContentLoader from './TopicContentLoader';
-import useSetTopicAudioDataInState from '../hooks/useSetTopicAudioDataInState';
-import ReviewSection from './ReviewSection';
-import useMP3File from '../hooks/useMP3File';
-import useLoadAudioInstance from '../hooks/useLoadAudioInstance';
-import useLanguageSelector from '../context/LanguageSelector/useLanguageSelector';
-import AudioToggles from './AudioToggles';
+} from '../../hooks/useGetCombinedAudioData';
+import useHighlightWordToWordBank from '../../hooks/useHighlightWordToWordBank';
+import {mergeAndRemoveDuplicates} from '../../utils/merge-and-remove-duplicates';
+import DisplaySettings from '../DisplaySettings';
+import useContentControls from '../../hooks/useContentControls';
+import useAudioTextSync from '../../hooks/useAudioTextSync';
+import LineContainer from '../LineContainer';
+import useInitTopicWordList from '../../hooks/useInitTopicWordList';
+import useFormatUnderlyingWords from '../../hooks/useFormatUnderlyingWords';
+import TopicContentLoader from '../TopicContentLoader';
+import useSetTopicAudioDataInState from '../../hooks/useSetTopicAudioDataInState';
+import ReviewSection from '../ReviewSection';
+import useMP3File from '../../hooks/useMP3File';
+import useLoadAudioInstance from '../../hooks/useLoadAudioInstance';
+import useLanguageSelector from '../../context/LanguageSelector/useLanguageSelector';
+import AudioToggles from '../AudioToggles';
 import {VideoRef} from 'react-native-video';
-import VideoPlayer from './VideoPlayer';
-import useTrackCurrentTimeState from '../hooks/useTrackCurrentTimeState';
-import useVideoTextSync from '../hooks/useVideoTextSync';
+import VideoPlayer from '../VideoPlayer';
+import useTrackCurrentTimeState from '../../hooks/useTrackCurrentTimeState';
+import useVideoTextSync from '../../hooks/useVideoTextSync';
 import useSetSecondsToSentenceIds, {
   mapSentenceIdsToSeconds,
-} from '../hooks/useSetSecondsToSentenceIds';
-import TopicContentAudioSection from './TopicContentAudioSection';
-import useData from '../context/Data/useData';
-import {getGeneralTopicName} from '../utils/get-general-topic-name';
+} from '../../hooks/useSetSecondsToSentenceIds';
+import TopicContentAudioSection from '../TopicContentAudioSection';
+import useData from '../../context/Data/useData';
+import {getGeneralTopicName} from '../../utils/get-general-topic-name';
 import {
   getEmptyCard,
   getNextScheduledOptions,
   srsRetentionKeyTypes,
-} from '../srs-algo';
-import AnimatedModal from './AnimatedModal';
-import TextSegment from './TextSegment';
+} from '../../srs-algo';
+import AnimatedModal from '../AnimatedModal';
+import TextSegment from '../TextSegment';
 
 const TopicContent = ({
   topicName,
