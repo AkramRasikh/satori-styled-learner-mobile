@@ -1,46 +1,28 @@
 import React, {useEffect, useState} from 'react';
 import {useSelector} from 'react-redux';
-import {View, Text, ScrollView, Dimensions} from 'react-native';
 import useGetCombinedAudioData, {
   getFirebaseAudioURL,
-  getFirebaseVideoURL,
 } from '../../hooks/useGetCombinedAudioData';
 import useHighlightWordToWordBank from '../../hooks/useHighlightWordToWordBank';
-import DisplaySettings from '../DisplaySettings';
 import useContentControls from '../../hooks/useContentControls';
-import useAudioTextSync from '../../hooks/useAudioTextSync';
-import LineContainer from '../LineContainer';
 import useInitTopicWordList from '../../hooks/useInitTopicWordList';
 import useFormatUnderlyingWords from '../../hooks/useFormatUnderlyingWords';
 import TopicContentLoader from '../TopicContentLoader';
 import useSetTopicAudioDataInState from '../../hooks/useSetTopicAudioDataInState';
-import ReviewSection from '../ReviewSection';
 import useLanguageSelector from '../../context/LanguageSelector/useLanguageSelector';
-import AudioToggles from '../AudioToggles';
-import VideoPlayer from '../VideoPlayer';
-import useTrackCurrentTimeState from '../../hooks/useTrackCurrentTimeState';
-import useVideoTextSync from '../../hooks/useVideoTextSync';
 import useSetSecondsToSentenceIds, {
   mapSentenceIdsToSeconds,
 } from '../../hooks/useSetSecondsToSentenceIds';
-import TopicContentAudioSection from '../TopicContentAudioSection';
 import useData from '../../context/Data/useData';
-import {getGeneralTopicName} from '../../utils/get-general-topic-name';
 import {
   getEmptyCard,
   getNextScheduledOptions,
   srsRetentionKeyTypes,
 } from '../../srs-algo';
-import AnimatedModal from '../AnimatedModal';
 import TextSegment from '../TextSegment';
-import useTopicContent from './context/useTopicContentSnippets';
-import {generateRandomId} from '../../utils/generate-random-id';
 import useTopicContentAudio from './context/useTopicContentAudio';
-
-const timeDataWithinSnippet = (thisItem, currentTimeState) => {
-  const pointInAudioInSnippet = currentTimeState - thisItem.startAt;
-  return pointInAudioInSnippet;
-};
+import TopicContentAudioMode from './TopicContentAudioMode';
+import TopicContentVideoMode from './TopicContentVideoMode';
 
 const TopicContent = ({
   topicName,
@@ -52,12 +34,6 @@ const TopicContent = ({
   targetSentenceId,
   breakdownSentenceFunc,
 }) => {
-  const [masterPlay, setMasterPlay] = useState('');
-  const [englishOnly, setEnglishOnly] = useState(false);
-  const [engMaster, setEngMaster] = useState(true);
-  const [highlightMode, setHighlightMode] = useState(false);
-  const [showReviewSectionState, setShowReviewSectionState] = useState(false);
-  const [highlightedIndices, setHighlightedIndices] = useState([]);
   const [formattedData, setFormattedData] = useState([]);
   const [secondsToSentencesMapState, setSecondsToSentencesMapState] = useState<
     string[]
@@ -75,54 +51,22 @@ const TopicContent = ({
     structuredUnifiedData,
     setStructuredUnifiedData,
     pureWords: pureWordsUnique,
-    saveWordFirebase,
     sentenceReviewBulk,
   } = useData();
 
-  const {selectedSnippetsState, setSelectedSnippetsState} = useTopicContent();
-  const {
-    isLoaded,
-    seekHandler,
-    handlePlayFromThisSentence,
-    playFromHere,
-    setIsPlaying,
-    handleVideoPause,
-    currentTimeState,
-    setCurrentTimeState,
-    soundRef,
-    currentVideoTimeState,
-    isVideoPlaying,
-    setCurrentVideoTimeState,
-    setVideoDurationState,
-    playVideo,
-    progress,
-    videoRef,
-    isPlaying,
-    isVideoModeState,
-    setIsVideoModeState,
-    pauseSound,
-  } = useTopicContentAudio();
+  const {isLoaded, soundRef, isVideoModeState, setIsVideoModeState} =
+    useTopicContentAudio();
 
   const hasContentToReview = formattedData?.some(
     sentenceWidget => sentenceWidget?.reviewData,
   );
 
-  const {
-    reviewHistory,
-    content,
-    nextReview,
-    isCore,
-    contentIndex,
-    origin,
-    hasVideo,
-    realStartTime,
-    hasAudio,
-  } = loadedContent;
+  const {content, isCore, contentIndex, origin, realStartTime, hasAudio} =
+    loadedContent;
 
   const isMediaContent = origin === 'netflix' || origin === 'youtube';
   const hasAlreadyBeenUnified = structuredUnifiedData[topicName]?.content;
 
-  const {height} = Dimensions?.get('window');
   const url = getFirebaseAudioURL(topicName, languageSelectedState);
 
   const soundDuration = soundRef?.current?._duration || 0;
@@ -184,33 +128,6 @@ const TopicContent = ({
     return <TextSegment textSegments={textSegments} />;
   };
 
-  const initSnippet = () => {
-    const isText = true;
-    const id = topicName + '-' + generateRandomId();
-    const thisItem = contentWithTimeStamps.find(item => item.id === masterPlay);
-    const targetLang = thisItem?.targetLang;
-    if (!targetLang) {
-      return null;
-    }
-    const itemToSave = {
-      id,
-      sentenceId: masterPlay,
-      pointInAudio: isText
-        ? timeDataWithinSnippet(thisItem, currentTimeState)
-        : currentTimeState,
-      isIsolated: isText ? true : false,
-      endAt: thisItem.endAt,
-      startAt: thisItem.startAt,
-      url,
-      pointInAudioOnClick: currentTimeState,
-      targetLang,
-      topicName,
-    };
-    setSelectedSnippetsState(prev => [...prev, itemToSave]);
-    pauseSound();
-    setIsPlaying(false);
-  };
-
   const handleBulkReviews = async ({removeReview}) => {
     const emptyCard = getEmptyCard();
 
@@ -258,12 +175,6 @@ const TopicContent = ({
     topicData: contentWithTimeStamps,
   });
 
-  useVideoTextSync({
-    currentVideoTimeState,
-    setMasterPlay,
-    secondsToSentencesMapState,
-  });
-
   useInitTopicWordList({
     targetLanguageLoadedWords,
     setInitTargetLanguageWordsList,
@@ -285,17 +196,6 @@ const TopicContent = ({
     topicData: content,
     hasAlreadyBeenUnified,
     setStructuredUnifiedData,
-  });
-
-  useTrackCurrentTimeState({
-    soundRef,
-    setCurrentTimeState,
-  });
-
-  useAudioTextSync({
-    currentTimeState,
-    setMasterPlay,
-    secondsToSentencesMapState,
   });
 
   useSetSecondsToSentenceIds({
@@ -334,10 +234,6 @@ const TopicContent = ({
     setTriggerSentenceIdUpdate,
   ]);
 
-  const videoUrl = hasVideo
-    ? getFirebaseVideoURL(getGeneralTopicName(topicName), languageSelectedState)
-    : '';
-
   if (!isLoaded || formattedData?.length === 0) {
     return (
       <TopicContentLoader
@@ -351,156 +247,39 @@ const TopicContent = ({
 
   if (isVideoModeState) {
     return (
-      <>
-        {showReviewSectionState && (
-          <AnimatedModal
-            visible
-            onClose={() => setShowReviewSectionState(false)}>
-            <ReviewSection
-              topicName={topicName}
-              reviewHistory={reviewHistory}
-              nextReview={nextReview}
-              updateTopicMetaData={updateTopicMetaData}
-              handleBulkReviews={handleBulkReviews}
-              hasSomeReviewedSentences={hasContentToReview}
-            />
-          </AnimatedModal>
-        )}
-        <View>
-          <View>
-            {hasVideo && (
-              <VideoPlayer
-                url={videoUrl}
-                videoRef={videoRef}
-                isPlaying={isVideoPlaying}
-                onProgressHandler={setCurrentVideoTimeState}
-                setVideoDuration={setVideoDurationState}
-              />
-            )}
-            <View>
-              <AudioToggles
-                isPlaying={isVideoPlaying}
-                playSound={playVideo}
-                seekHandler={seekHandler}
-                progress={progress}
-                setShowReviewSectionState={setShowReviewSectionState}
-              />
-            </View>
-            <ScrollView
-              contentInsetAdjustmentBehavior="automatic"
-              style={{
-                maxHeight: height * 0.58,
-                paddingVertical: 5,
-              }}>
-              <View style={{alignSelf: 'center'}}>
-                <Text>{topicName}</Text>
-              </View>
-              <DisplaySettings
-                englishOnly={englishOnly}
-                setEnglishOnly={setEnglishOnly}
-                engMaster={engMaster}
-                setEngMaster={setEngMaster}
-                handleIsCore={handleIsCore}
-                isCore={isCore}
-                isVideoModeState={isVideoModeState}
-                hasVideo={hasVideo}
-                handleVideoMode={handleVideoMode}
-              />
-              <LineContainer
-                formattedData={formattedData}
-                playFromThisSentence={handlePlayFromThisSentence}
-                englishOnly={englishOnly}
-                highlightedIndices={highlightedIndices}
-                setHighlightedIndices={setHighlightedIndices}
-                saveWordFirebase={saveWordFirebase}
-                engMaster={engMaster}
-                isPlaying={isVideoPlaying}
-                pauseSound={handleVideoPause}
-                snippetsLocalAndDb={selectedSnippetsState}
-                masterPlay={masterPlay}
-                highlightMode={highlightMode}
-                setHighlightMode={setHighlightMode}
-                topicName={topicName}
-                updateSentenceData={updateSentenceData}
-                currentTimeState={currentTimeState}
-                playSound={playFromHere}
-                highlightTargetTextState={highlightTargetTextState}
-                contentIndex={contentIndex}
-                breakdownSentenceFunc={breakdownSentenceFunc}
-              />
-            </ScrollView>
-          </View>
-        </View>
-      </>
+      <TopicContentVideoMode
+        topicName={topicName}
+        updateTopicMetaData={updateTopicMetaData}
+        updateSentenceData={updateSentenceData}
+        loadedContent={loadedContent}
+        breakdownSentenceFunc={breakdownSentenceFunc}
+        handleVideoMode={handleVideoMode}
+        handleIsCore={handleIsCore}
+        handleBulkReviews={handleBulkReviews}
+        formattedData={formattedData}
+        highlightTargetTextState={highlightTargetTextState}
+        secondsToSentencesMapState={secondsToSentencesMapState}
+      />
     );
   }
 
   return (
-    <>
-      {showReviewSectionState && (
-        <AnimatedModal visible onClose={() => setShowReviewSectionState(false)}>
-          <ReviewSection
-            topicName={topicName}
-            reviewHistory={reviewHistory}
-            nextReview={nextReview}
-            updateTopicMetaData={updateTopicMetaData}
-            handleBulkReviews={handleBulkReviews}
-            hasSomeReviewedSentences={hasContentToReview}
-          />
-        </AnimatedModal>
-      )}
-      <View>
-        <ScrollView
-          contentInsetAdjustmentBehavior="automatic"
-          style={{
-            maxHeight: height * 0.8,
-          }}>
-          <View style={{alignSelf: 'center'}}>
-            <Text>{topicName}</Text>
-          </View>
-          <DisplaySettings
-            englishOnly={englishOnly}
-            setEnglishOnly={setEnglishOnly}
-            engMaster={engMaster}
-            setEngMaster={setEngMaster}
-            handleIsCore={handleIsCore}
-            isCore={isCore}
-            isVideoModeState={isVideoModeState}
-            hasVideo={hasVideo}
-            handleVideoMode={handleVideoMode}
-          />
-          <LineContainer
-            formattedData={formattedData}
-            playFromThisSentence={handlePlayFromThisSentence}
-            englishOnly={englishOnly}
-            highlightedIndices={highlightedIndices}
-            setHighlightedIndices={setHighlightedIndices}
-            saveWordFirebase={saveWordFirebase}
-            engMaster={engMaster}
-            isPlaying={isPlaying}
-            pauseSound={pauseSound}
-            snippetsLocalAndDb={selectedSnippetsState}
-            masterPlay={masterPlay}
-            highlightMode={highlightMode}
-            setHighlightMode={setHighlightMode}
-            topicName={topicName}
-            updateSentenceData={updateSentenceData}
-            currentTimeState={currentTimeState}
-            playSound={playFromHere}
-            highlightTargetTextState={highlightTargetTextState}
-            contentIndex={contentIndex}
-            breakdownSentenceFunc={breakdownSentenceFunc}
-          />
-        </ScrollView>
-        {hasAudio && (
-          <TopicContentAudioSection
-            initSnippet={initSnippet}
-            soundDuration={soundDuration}
-            setShowReviewSectionState={setShowReviewSectionState}
-          />
-        )}
-      </View>
-    </>
+    <TopicContentAudioMode
+      topicName={topicName}
+      updateTopicMetaData={updateTopicMetaData}
+      updateSentenceData={updateSentenceData}
+      loadedContent={loadedContent}
+      breakdownSentenceFunc={breakdownSentenceFunc}
+      handleBulkReviews={handleBulkReviews}
+      handleIsCore={handleIsCore}
+      contentWithTimeStamps={contentWithTimeStamps}
+      handleVideoMode={handleVideoMode}
+      secondsToSentencesMapState={secondsToSentencesMapState}
+      highlightTargetTextState={highlightTargetTextState}
+      formattedData={formattedData}
+      hasContentToReview={hasContentToReview}
+      url={url}
+    />
   );
 };
 
