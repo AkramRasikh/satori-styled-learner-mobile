@@ -64,15 +64,6 @@ const SatoriLine = ({
     Clipboard.setString(topicSentence.targetLang);
   };
 
-  const vocabBreakDoownWithHexCode = showSentenceBreakdown
-    ? topicSentence.vocab.map((i, index) => {
-        return {
-          ...i,
-          color: getHexCode(index),
-        };
-      })
-    : null;
-
   const handlePlayThisLine = () => {
     if (isPlaying && focusThisSentence) {
       pauseSound();
@@ -83,6 +74,14 @@ const SatoriLine = ({
 
   const getThisText = () => {
     if (showSentenceBreakdown) {
+      const vocabBreakDoownWithHexCode = showSentenceBreakdown
+        ? topicSentence.vocab.map((i, index) => {
+            return {
+              ...i,
+              color: getHexCode(index),
+            };
+          })
+        : null;
       return (
         <Text>
           {vocabBreakDoownWithHexCode.map((nestedSegment, index) => (
