@@ -16,7 +16,7 @@ const LanguagesAvailable = ({handleLanguageSelection}) => {
         alignItems: 'center',
         gap: 5,
       }}>
-      <Text style={DefaultTheme.fonts.labelMedium}>Options:</Text>
+      <Text style={DefaultTheme.fonts.labelMedium}>Languages:</Text>
       {languagesAvailable.map(item => {
         if (item !== languageSelectedState) {
           const emojiFlag = languageEmojiKey[item];
