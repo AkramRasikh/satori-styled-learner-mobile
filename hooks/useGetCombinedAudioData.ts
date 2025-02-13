@@ -23,7 +23,7 @@ export const getFirebaseVideoURL = (mp3FileName: string, language: string) => {
 };
 
 const useGetCombinedAudioData = ({
-  hasUnifiedMP3File,
+  hasAudio,
   audioFiles,
   hasAlreadyBeenUnified,
   setAudioLoadingProgress,
@@ -86,7 +86,7 @@ const useGetCombinedAudioData = ({
     };
 
     if (
-      hasUnifiedMP3File &&
+      hasAudio &&
       audioFiles?.length > 0 &&
       !(durations?.length > 0) &&
       !hasAlreadyBeenUnified &&
@@ -97,7 +97,7 @@ const useGetCombinedAudioData = ({
     }
   }, [
     audioFiles,
-    hasUnifiedMP3File,
+    hasAudio,
     dataHasBeenFetched,
     durations,
     hasAlreadyBeenUnified,

@@ -107,19 +107,22 @@ const TopicContent = ({
     sentenceWidget => sentenceWidget?.reviewData,
   );
 
-  const {reviewHistory, content, nextReview} = loadedContent;
+  const {
+    reviewHistory,
+    content,
+    nextReview,
+    isCore,
+    contentIndex,
+    origin,
+    hasVideo,
+    realStartTime,
+    hasAudio,
+  } = loadedContent;
 
-  const isCore = loadedContent?.isCore;
-  const contentIndex = loadedContent?.contentIndex;
-  const isMediaContent =
-    loadedContent?.origin === 'netflix' || loadedContent?.origin === 'youtube';
-  const hasVideo = loadedContent?.hasVideo;
-  const realStartTime = loadedContent?.realStartTime;
-
-  const hasUnifiedMP3File = loadedContent.hasAudio;
+  const isMediaContent = origin === 'netflix' || origin === 'youtube';
   const hasAlreadyBeenUnified = structuredUnifiedData[topicName]?.content;
 
-  const {height, width} = Dimensions?.get('window');
+  const {height} = Dimensions?.get('window');
   const url = getFirebaseAudioURL(topicName, languageSelectedState);
 
   const soundDuration = soundRef?.current?._duration || 0;
@@ -241,7 +244,7 @@ const TopicContent = ({
   };
 
   const contentWithTimeStamps = useGetCombinedAudioData({
-    hasUnifiedMP3File,
+    hasAudio,
     audioFiles: content,
     hasAlreadyBeenUnified,
     setAudioLoadingProgress,
@@ -413,7 +416,6 @@ const TopicContent = ({
                 engMaster={engMaster}
                 isPlaying={isVideoPlaying}
                 pauseSound={handleVideoPause}
-                width={width}
                 snippetsLocalAndDb={selectedSnippetsState}
                 masterPlay={masterPlay}
                 highlightMode={highlightMode}
@@ -477,7 +479,6 @@ const TopicContent = ({
             engMaster={engMaster}
             isPlaying={isPlaying}
             pauseSound={pauseSound}
-            width={width}
             snippetsLocalAndDb={selectedSnippetsState}
             masterPlay={masterPlay}
             highlightMode={highlightMode}
@@ -491,7 +492,7 @@ const TopicContent = ({
             breakdownSentenceFunc={breakdownSentenceFunc}
           />
         </ScrollView>
-        {hasUnifiedMP3File && (
+        {hasAudio && (
           <TopicContentAudioSection
             initSnippet={initSnippet}
             soundDuration={soundDuration}

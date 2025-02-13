@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text} from 'react-native';
+import {View, Text, Dimensions} from 'react-native';
 import SatoriLine from './SatoriLine';
 import {useEffect, useState} from 'react';
 import {SnippetHandlersDifficultSentence} from './MiniSnippetTimeChangeHandlers';
@@ -134,7 +134,6 @@ const LineContainer = ({
   engMaster,
   isPlaying,
   pauseSound,
-  width,
   snippetsLocalAndDb,
   masterPlay,
   highlightMode,
@@ -146,82 +145,86 @@ const LineContainer = ({
   highlightTargetTextState,
   contentIndex,
   breakdownSentenceFunc,
-}) => (
-  <View
-    style={{
-      flexDirection: 'row',
-      flexWrap: 'wrap',
-    }}>
-    <Text style={{fontSize: 20}}>
-      {formattedData?.map((topicSentence, index) => {
-        if (topicSentence.targetLang === '') return null;
-        const id = topicSentence.id;
-        const focusThisSentence = id === masterPlay;
-        const firstEl = index === 0;
+}) => {
+  const {width} = Dimensions.get('window');
 
-        const thisSnippets = snippetsLocalAndDb?.filter(
-          item => id === item.sentenceId,
-        );
+  return (
+    <View
+      style={{
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+      }}>
+      <Text style={{fontSize: 20}}>
+        {formattedData?.map((topicSentence, index) => {
+          if (topicSentence.targetLang === '') return null;
+          const id = topicSentence.id;
+          const focusThisSentence = id === masterPlay;
+          const firstEl = index === 0;
 
-        const isHighlightedText = highlightTargetTextState === id;
-        const highlightedTextState = isHighlightedText
-          ? 'orange'
-          : focusThisSentence
-          ? 'yellow'
-          : 'transparent';
+          const thisSnippets = snippetsLocalAndDb?.filter(
+            item => id === item.sentenceId,
+          );
 
-        return (
-          <View
-            style={{
-              marginBottom: 10,
-              paddingTop: firstEl ? 10 : 0,
-            }}
-            key={id}>
+          const isHighlightedText = highlightTargetTextState === id;
+          const highlightedTextState = isHighlightedText
+            ? 'orange'
+            : focusThisSentence
+            ? 'yellow'
+            : 'transparent';
+
+          return (
             <View
               style={{
-                backgroundColor: highlightedTextState,
-              }}>
-              <SatoriLine
-                id={id}
-                sentenceIndex={index}
-                focusThisSentence={focusThisSentence}
-                topicSentence={topicSentence}
-                playFromThisSentence={playFromThisSentence}
-                englishOnly={englishOnly}
-                highlightMode={highlightMode}
-                highlightedIndices={highlightedIndices}
-                setHighlightedIndices={setHighlightedIndices}
-                saveWordFirebase={saveWordFirebase}
-                engMaster={engMaster}
-                isPlaying={isPlaying}
-                pauseSound={pauseSound}
-                textWidth={width * 0.9}
-                setHighlightMode={setHighlightMode}
-                topicName={topicName}
-                updateSentenceData={updateSentenceData}
-                contentIndex={contentIndex}
-                breakdownSentenceFunc={breakdownSentenceFunc}
-              />
-            </View>
-
-            {thisSnippets?.map((snippetData, index) => {
-              return (
-                <OneSnippetContainer
-                  key={index}
-                  snippet={snippetData}
-                  playSound={playSound}
-                  pauseSound={pauseSound}
+                marginBottom: 10,
+                paddingTop: firstEl ? 10 : 0,
+              }}
+              key={id}>
+              <View
+                style={{
+                  backgroundColor: highlightedTextState,
+                }}>
+                <SatoriLine
+                  id={id}
+                  sentenceIndex={index}
+                  focusThisSentence={focusThisSentence}
+                  topicSentence={topicSentence}
+                  playFromThisSentence={playFromThisSentence}
+                  englishOnly={englishOnly}
+                  highlightMode={highlightMode}
+                  highlightedIndices={highlightedIndices}
+                  setHighlightedIndices={setHighlightedIndices}
+                  saveWordFirebase={saveWordFirebase}
+                  engMaster={engMaster}
                   isPlaying={isPlaying}
-                  currentTimeState={currentTimeState}
-                  indexList={index}
+                  pauseSound={pauseSound}
+                  textWidth={width * 0.9}
+                  setHighlightMode={setHighlightMode}
+                  topicName={topicName}
+                  updateSentenceData={updateSentenceData}
+                  contentIndex={contentIndex}
+                  breakdownSentenceFunc={breakdownSentenceFunc}
                 />
-              );
-            })}
-          </View>
-        );
-      })}
-    </Text>
-  </View>
-);
+              </View>
+
+              {thisSnippets?.map((snippetData, index) => {
+                return (
+                  <OneSnippetContainer
+                    key={index}
+                    snippet={snippetData}
+                    playSound={playSound}
+                    pauseSound={pauseSound}
+                    isPlaying={isPlaying}
+                    currentTimeState={currentTimeState}
+                    indexList={index}
+                  />
+                );
+              })}
+            </View>
+          );
+        })}
+      </Text>
+    </View>
+  );
+};
 
 export default LineContainer;
