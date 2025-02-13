@@ -8,7 +8,7 @@ const TopicContentAudioSection = ({
   pauseSound,
   rewindSound,
   forwardSound,
-  getTimeStamp,
+  initSnippet,
   currentTimeState,
   soundDuration,
   setShowReviewSectionState,
@@ -39,11 +39,7 @@ const TopicContentAudioSection = ({
           onPress={() => setShowReviewSectionState(prev => !prev)}
           icon="clock"
         />
-        <IconButton
-          mode="contained"
-          onPress={getTimeStamp}
-          icon="content-cut"
-        />
+        <IconButton mode="contained" onPress={initSnippet} icon="content-cut" />
         <IconButton mode="contained" onPress={rewindSound} icon="rewind" />
         <IconButton
           mode="contained"

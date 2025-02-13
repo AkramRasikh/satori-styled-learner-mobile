@@ -7,7 +7,6 @@ const useSnippetControls = ({
   snippetStartAtLimit,
   deleteSnippet,
   addSnippet,
-  removeSnippet,
   snippet,
 }) => {
   const handleSetEarlierTime = forward => {
@@ -72,14 +71,10 @@ const useSnippetControls = ({
     };
     addSnippet(formattedSnippet);
   };
-  const handleRemoveSnippet = () => {
-    removeSnippet({snippetId: snippet.id, sentenceId: snippet.sentenceId});
-  };
 
   return {
     handleDelete,
     handleAddingSnippet,
-    handleRemoveSnippet,
     handleSetEarlierTime,
     handleSetDuration,
   };

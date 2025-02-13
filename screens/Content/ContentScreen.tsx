@@ -9,12 +9,14 @@ import ScreenContainerComponent from '../../components/ScreenContainerComponent'
 
 import useData from '../../context/Data/useData';
 import useDifficultSentences from '../../context/DifficultSentences/useDifficultSentencesProvider';
+import {TopicContentSnippetsProvider} from '../../components/TopicContent/context/TopicContentSnippetsProvider';
 
 const ContentScreen = () => {
   const route = useRoute();
 
   const [triggerSentenceIdUpdate, setTriggerSentenceIdUpdate] = useState(null);
   const [selectedContentState, setSelectedContentState] = useState(null);
+  const [selectedSnippetsState, setSelectedSnippetsState] = useState([]);
 
   const targetLanguageLoadedContentMasterState = useSelector(
     state => state.learningContent,
@@ -135,16 +137,22 @@ const ContentScreen = () => {
   return (
     <ScreenContainerComponent updatePromptState={updatePromptState}>
       <View style={{padding: 10}}>
-        <TopicContent
+        <TopicContentSnippetsProvider
           topicName={selectedTopic}
           loadedContent={selectedContentState}
-          updateTopicMetaData={updateMetaData}
-          updateSentenceData={updateSentenceDataFunc}
-          triggerSentenceIdUpdate={triggerSentenceIdUpdate}
-          setTriggerSentenceIdUpdate={setTriggerSentenceIdUpdate}
-          targetSentenceId={targetSentenceId}
-          breakdownSentenceFunc={breakdownSentenceFunc}
-        />
+          selectedSnippetsState={selectedSnippetsState}
+          setSelectedSnippetsState={setSelectedSnippetsState}>
+          <TopicContent
+            topicName={selectedTopic}
+            loadedContent={selectedContentState}
+            updateTopicMetaData={updateMetaData}
+            updateSentenceData={updateSentenceDataFunc}
+            triggerSentenceIdUpdate={triggerSentenceIdUpdate}
+            setTriggerSentenceIdUpdate={setTriggerSentenceIdUpdate}
+            targetSentenceId={targetSentenceId}
+            breakdownSentenceFunc={breakdownSentenceFunc}
+          />
+        </TopicContentSnippetsProvider>
       </View>
     </ScreenContainerComponent>
   );

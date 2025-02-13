@@ -1,25 +1,25 @@
-import React, {View, Text} from 'react-native';
+import React from 'react';
+import {View, Text} from 'react-native';
 import SatoriLine from './SatoriLine';
 import {useEffect, useState} from 'react';
 import {SnippetHandlersDifficultSentence} from './MiniSnippetTimeChangeHandlers';
 import useSnippetControls from '../hooks/useSnippetControls';
+import useTopicContent from './TopicContent/context/useTopicContentSnippets';
 
 const OneSnippetContainer = ({
   snippet,
-  deleteSnippet,
-  addSnippet,
-  removeSnippet,
   playSound,
   pauseSound,
   isPlaying,
   indexList,
   currentTimeState,
-  handleRemoveFromTempSnippets,
-  handleAddSnippet,
 }) => {
   const [snipperIsPlayingState, setSnipperIsPlayingState] = useState(false);
   const [adjustableStartTime, setAdjustableStartTime] = useState();
   const [adjustableDuration, setAdjustableDuration] = useState(4);
+
+  const {handleAddSnippet, deleteSnippet, setSelectedSnippetsState} =
+    useTopicContent();
 
   const id = snippet.id;
   const sentenceId = snippet.sentenceId;
@@ -39,7 +39,9 @@ const OneSnippetContainer = ({
     if (isSaved) {
       deleteSnippet({snippetId: id, sentenceId});
     } else {
-      handleRemoveFromTempSnippets(id);
+      setSelectedSnippetsState(prev =>
+        prev.filter(snippetData => snippetData.id !== id),
+      );
     }
   };
 
@@ -94,10 +96,9 @@ const OneSnippetContainer = ({
     setAdjustableDuration,
     snippetEndAtLimit,
     snippetStartAtLimit,
-    deleteSnippet,
-    addSnippet,
-    removeSnippet,
     snippet,
+    deleteSnippet: () => {},
+    addSnippet: () => {},
   });
 
   return (
@@ -141,104 +142,86 @@ const LineContainer = ({
   topicName,
   updateSentenceData,
   currentTimeState,
-  addSnippet,
-  removeSnippet,
-  deleteSnippet,
-  setMiniSnippets,
   playSound,
-  handleAddSnippet,
   highlightTargetTextState,
   contentIndex,
   breakdownSentenceFunc,
-}) => {
-  const handleRemoveFromTempSnippets = snippetId => {
-    setMiniSnippets(prev =>
-      prev.filter(snippetDataState => snippetDataState.id !== snippetId),
-    );
-  };
-  return (
-    <View
-      style={{
-        flexDirection: 'row',
-        flexWrap: 'wrap',
-      }}>
-      <Text style={{fontSize: 20}}>
-        {formattedData?.map((topicSentence, index) => {
-          if (topicSentence.targetLang === '') return null;
-          const id = topicSentence.id;
-          const focusThisSentence = id === masterPlay;
-          const firstEl = index === 0;
+}) => (
+  <View
+    style={{
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+    }}>
+    <Text style={{fontSize: 20}}>
+      {formattedData?.map((topicSentence, index) => {
+        if (topicSentence.targetLang === '') return null;
+        const id = topicSentence.id;
+        const focusThisSentence = id === masterPlay;
+        const firstEl = index === 0;
 
-          const thisSnippets = snippetsLocalAndDb?.filter(
-            item => id === item.sentenceId,
-          );
+        const thisSnippets = snippetsLocalAndDb?.filter(
+          item => id === item.sentenceId,
+        );
 
-          const isHighlightedText = highlightTargetTextState === id;
-          const highlightedTextState = isHighlightedText
-            ? 'orange'
-            : focusThisSentence
-            ? 'yellow'
-            : 'transparent';
+        const isHighlightedText = highlightTargetTextState === id;
+        const highlightedTextState = isHighlightedText
+          ? 'orange'
+          : focusThisSentence
+          ? 'yellow'
+          : 'transparent';
 
-          return (
+        return (
+          <View
+            style={{
+              marginBottom: 10,
+              paddingTop: firstEl ? 10 : 0,
+            }}
+            key={id}>
             <View
               style={{
-                marginBottom: 10,
-                paddingTop: firstEl ? 10 : 0,
-              }}
-              key={id}>
-              <View
-                style={{
-                  backgroundColor: highlightedTextState,
-                }}>
-                <SatoriLine
-                  id={id}
-                  sentenceIndex={index}
-                  focusThisSentence={focusThisSentence}
-                  topicSentence={topicSentence}
-                  playFromThisSentence={playFromThisSentence}
-                  englishOnly={englishOnly}
-                  highlightMode={highlightMode}
-                  highlightedIndices={highlightedIndices}
-                  setHighlightedIndices={setHighlightedIndices}
-                  saveWordFirebase={saveWordFirebase}
-                  engMaster={engMaster}
-                  isPlaying={isPlaying}
-                  pauseSound={pauseSound}
-                  textWidth={width * 0.9}
-                  setHighlightMode={setHighlightMode}
-                  topicName={topicName}
-                  updateSentenceData={updateSentenceData}
-                  contentIndex={contentIndex}
-                  breakdownSentenceFunc={breakdownSentenceFunc}
-                  index={index}
-                />
-              </View>
-
-              {thisSnippets?.map((snippetData, index) => {
-                return (
-                  <OneSnippetContainer
-                    key={index}
-                    snippet={snippetData}
-                    deleteSnippet={deleteSnippet}
-                    addSnippet={addSnippet}
-                    removeSnippet={removeSnippet}
-                    playSound={playSound}
-                    pauseSound={pauseSound}
-                    isPlaying={isPlaying}
-                    currentTimeState={currentTimeState}
-                    indexList={index}
-                    handleRemoveFromTempSnippets={handleRemoveFromTempSnippets}
-                    handleAddSnippet={handleAddSnippet}
-                  />
-                );
-              })}
+                backgroundColor: highlightedTextState,
+              }}>
+              <SatoriLine
+                id={id}
+                sentenceIndex={index}
+                focusThisSentence={focusThisSentence}
+                topicSentence={topicSentence}
+                playFromThisSentence={playFromThisSentence}
+                englishOnly={englishOnly}
+                highlightMode={highlightMode}
+                highlightedIndices={highlightedIndices}
+                setHighlightedIndices={setHighlightedIndices}
+                saveWordFirebase={saveWordFirebase}
+                engMaster={engMaster}
+                isPlaying={isPlaying}
+                pauseSound={pauseSound}
+                textWidth={width * 0.9}
+                setHighlightMode={setHighlightMode}
+                topicName={topicName}
+                updateSentenceData={updateSentenceData}
+                contentIndex={contentIndex}
+                breakdownSentenceFunc={breakdownSentenceFunc}
+              />
             </View>
-          );
-        })}
-      </Text>
-    </View>
-  );
-};
+
+            {thisSnippets?.map((snippetData, index) => {
+              return (
+                <OneSnippetContainer
+                  key={index}
+                  snippet={snippetData}
+                  playSound={playSound}
+                  pauseSound={pauseSound}
+                  isPlaying={isPlaying}
+                  currentTimeState={currentTimeState}
+                  indexList={index}
+                />
+              );
+            })}
+          </View>
+        );
+      })}
+    </Text>
+  </View>
+);
 
 export default LineContainer;

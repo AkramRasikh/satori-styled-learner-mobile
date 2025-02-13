@@ -1,53 +1,11 @@
-import {generateRandomId} from '../utils/generate-random-id';
-
 const useContentControls = ({
-  url,
   targetLanguageLoadedWords,
   soundRef,
   setIsPlaying,
-  setMiniSnippets,
   getSafeText,
   topicData,
-  miniSnippets,
-  topicName,
-  masterPlay,
-  currentTimeState,
-  pauseSound,
-  isText,
   setCurrentTimeState,
-  setSelectedSnippetsState,
-  removeSnippet,
 }) => {
-  const timeDataWithinSnippet = (thisItem, currentTimeState) => {
-    const pointInAudioInSnippet = currentTimeState - thisItem.startAt;
-    return pointInAudioInSnippet;
-  };
-  const getTimeStamp = () => {
-    const id = topicName + '-' + generateRandomId();
-    const thisItem = topicData.find(item => item.id === masterPlay);
-    const targetLang = thisItem?.targetLang;
-    if (!targetLang) {
-      return null;
-    }
-    const itemToSave = {
-      id,
-      sentenceId: masterPlay,
-      pointInAudio: isText
-        ? timeDataWithinSnippet(thisItem, currentTimeState)
-        : currentTimeState,
-      isIsolated: isText ? true : false,
-      endAt: thisItem.endAt,
-      startAt: thisItem.startAt,
-      url,
-      pointInAudioOnClick: currentTimeState,
-      targetLang,
-      topicName,
-    };
-    setMiniSnippets(prev => [...prev, itemToSave]);
-    pauseSound();
-    setIsPlaying(false);
-  };
-
   const formatTextForTargetWords = () => {
     const formattedText = topicData.map(sentence => {
       const textWithUnderlinedWords = getSafeText(sentence.targetLang);
@@ -89,22 +47,9 @@ const useContentControls = ({
     }
   };
 
-  const deleteSnippet = ({snippetId, sentenceId}) => {
-    removeSnippet({snippetId, sentenceId});
-    const newSnippets = miniSnippets.filter(
-      snippet => snippet.id !== snippetId,
-    );
-    setMiniSnippets(newSnippets);
-    setSelectedSnippetsState(prev =>
-      prev.filter(snippetData => snippetData.id !== snippetId),
-    );
-  };
-
   return {
     formatTextForTargetWords,
     playFromThisSentence,
-    deleteSnippet,
-    getTimeStamp,
   };
 };
 

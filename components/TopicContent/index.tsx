@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {useSelector} from 'react-redux';
 import Sound from 'react-native-sound';
 import {View, Text, ScrollView, Dimensions} from 'react-native';
@@ -8,7 +8,6 @@ import useGetCombinedAudioData, {
   getFirebaseVideoURL,
 } from '../../hooks/useGetCombinedAudioData';
 import useHighlightWordToWordBank from '../../hooks/useHighlightWordToWordBank';
-import {mergeAndRemoveDuplicates} from '../../utils/merge-and-remove-duplicates';
 import DisplaySettings from '../DisplaySettings';
 import useContentControls from '../../hooks/useContentControls';
 import useAudioTextSync from '../../hooks/useAudioTextSync';
@@ -39,6 +38,13 @@ import {
 } from '../../srs-algo';
 import AnimatedModal from '../AnimatedModal';
 import TextSegment from '../TextSegment';
+import useTopicContent from './context/useTopicContentSnippets';
+import {generateRandomId} from '../../utils/generate-random-id';
+
+const timeDataWithinSnippet = (thisItem, currentTimeState) => {
+  const pointInAudioInSnippet = currentTimeState - thisItem.startAt;
+  return pointInAudioInSnippet;
+};
 
 const TopicContent = ({
   topicName,
@@ -53,7 +59,6 @@ const TopicContent = ({
   const [masterPlay, setMasterPlay] = useState('');
   const [currentTimeState, setCurrentTimeState] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [miniSnippets, setMiniSnippets] = useState([]);
   const [englishOnly, setEnglishOnly] = useState(false);
   const [engMaster, setEngMaster] = useState(true);
   const [highlightMode, setHighlightMode] = useState(false);
@@ -72,31 +77,23 @@ const TopicContent = ({
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
   const [currentVideoTimeState, setCurrentVideoTimeState] = useState(0);
   const [videoDurationState, setVideoDurationState] = useState(0);
-  const [selectedSnippetsState, setSelectedSnippetsState] = useState([]);
 
   const {languageSelectedState} = useLanguageSelector();
   const targetLanguageLoadedWords = useSelector(state => state.words);
-  const targetLanguageSnippetsState = useSelector(state => state.snippets);
 
   const {
     structuredUnifiedData,
     setStructuredUnifiedData,
     pureWords: pureWordsUnique,
     saveWordFirebase,
-    addSnippet,
-    removeSnippet,
     sentenceReviewBulk,
   } = useData();
+
+  const {selectedSnippetsState, setSelectedSnippetsState} = useTopicContent();
 
   const hasContentToReview = formattedData?.some(
     sentenceWidget => sentenceWidget?.reviewData,
   );
-
-  useEffect(() => {
-    setSelectedSnippetsState(
-      targetLanguageSnippetsState?.filter(item => item.topicName === topicName),
-    );
-  }, []);
 
   const {reviewHistory, content, nextReview} = loadedContent;
 
@@ -109,12 +106,6 @@ const TopicContent = ({
 
   const hasUnifiedMP3File = loadedContent.hasAudio;
   const hasAlreadyBeenUnified = structuredUnifiedData[topicName]?.content;
-  const snippetsLocalAndDb = useMemo(() => {
-    return mergeAndRemoveDuplicates(
-      selectedSnippetsState?.sort((a, b) => a.pointInAudio - b.pointInAudio),
-      miniSnippets,
-    );
-  }, [selectedSnippetsState, miniSnippets]);
 
   const soundRef = useRef<Sound>(null);
   const videoRef = useRef<VideoRef>(null);
@@ -251,6 +242,33 @@ const TopicContent = ({
     return <TextSegment textSegments={textSegments} />;
   };
 
+  const initSnippet = () => {
+    const isText = true;
+    const id = topicName + '-' + generateRandomId();
+    const thisItem = contentWithTimeStamps.find(item => item.id === masterPlay);
+    const targetLang = thisItem?.targetLang;
+    if (!targetLang) {
+      return null;
+    }
+    const itemToSave = {
+      id,
+      sentenceId: masterPlay,
+      pointInAudio: isText
+        ? timeDataWithinSnippet(thisItem, currentTimeState)
+        : currentTimeState,
+      isIsolated: isText ? true : false,
+      endAt: thisItem.endAt,
+      startAt: thisItem.startAt,
+      url,
+      pointInAudioOnClick: currentTimeState,
+      targetLang,
+      topicName,
+    };
+    setSelectedSnippetsState(prev => [...prev, itemToSave]);
+    pauseSound();
+    setIsPlaying(false);
+  };
+
   const handleBulkReviews = async ({removeReview}) => {
     const emptyCard = getEmptyCard();
 
@@ -303,40 +321,13 @@ const TopicContent = ({
     }
   };
 
-  const handleAddSnippet = async snippetData => {
-    try {
-      const snippetResponse = await addSnippet(snippetData);
-      setSelectedSnippetsState(prev => [
-        ...prev,
-        {...snippetResponse, saved: true},
-      ]);
-    } catch (error) {
-      console.error('## failed to add snippet state');
-    }
-  };
-
-  const {
-    formatTextForTargetWords,
-    playFromThisSentence,
-    deleteSnippet,
-    getTimeStamp,
-  } = useContentControls({
+  const {formatTextForTargetWords, playFromThisSentence} = useContentControls({
     targetLanguageLoadedWords,
     soundRef,
     setIsPlaying,
-    setMiniSnippets,
     getSafeText,
     topicData: contentWithTimeStamps,
-    miniSnippets,
-    topicName,
-    masterPlay,
-    currentTimeState,
-    url,
-    pauseSound,
-    isText: true,
     setCurrentTimeState,
-    setSelectedSnippetsState,
-    removeSnippet,
   });
 
   useVideoTextSync({
@@ -509,19 +500,14 @@ const TopicContent = ({
                 isPlaying={isVideoPlaying}
                 pauseSound={handleVideoPause}
                 width={width}
-                snippetsLocalAndDb={snippetsLocalAndDb}
+                snippetsLocalAndDb={selectedSnippetsState}
                 masterPlay={masterPlay}
                 highlightMode={highlightMode}
                 setHighlightMode={setHighlightMode}
                 topicName={topicName}
                 updateSentenceData={updateSentenceData}
                 currentTimeState={currentTimeState}
-                addSnippet={addSnippet}
-                removeSnippet={removeSnippet}
-                deleteSnippet={deleteSnippet}
                 playSound={playFromHere}
-                setMiniSnippets={setMiniSnippets}
-                handleAddSnippet={handleAddSnippet}
                 highlightTargetTextState={highlightTargetTextState}
                 contentIndex={contentIndex}
                 breakdownSentenceFunc={breakdownSentenceFunc}
@@ -570,7 +556,6 @@ const TopicContent = ({
           <LineContainer
             formattedData={formattedData}
             playFromThisSentence={handlePlayFromThisSentence}
-            // playFromThisSentence={playFromThisSentence}
             englishOnly={englishOnly}
             highlightedIndices={highlightedIndices}
             setHighlightedIndices={setHighlightedIndices}
@@ -579,19 +564,14 @@ const TopicContent = ({
             isPlaying={isPlaying}
             pauseSound={pauseSound}
             width={width}
-            snippetsLocalAndDb={snippetsLocalAndDb}
+            snippetsLocalAndDb={selectedSnippetsState}
             masterPlay={masterPlay}
             highlightMode={highlightMode}
             setHighlightMode={setHighlightMode}
             topicName={topicName}
             updateSentenceData={updateSentenceData}
             currentTimeState={currentTimeState}
-            addSnippet={addSnippet}
-            removeSnippet={removeSnippet}
-            deleteSnippet={deleteSnippet}
             playSound={playFromHere}
-            setMiniSnippets={setMiniSnippets}
-            handleAddSnippet={handleAddSnippet}
             highlightTargetTextState={highlightTargetTextState}
             contentIndex={contentIndex}
             breakdownSentenceFunc={breakdownSentenceFunc}
@@ -604,7 +584,7 @@ const TopicContent = ({
             pauseSound={pauseSound}
             rewindSound={rewindSound}
             forwardSound={forwardSound}
-            getTimeStamp={getTimeStamp}
+            initSnippet={initSnippet}
             currentTimeState={currentTimeState}
             soundDuration={soundDuration}
             setShowReviewSectionState={setShowReviewSectionState}
