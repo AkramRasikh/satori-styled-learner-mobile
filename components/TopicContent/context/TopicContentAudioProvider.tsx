@@ -77,7 +77,7 @@ export const TopicContentAudioProvider = ({
     videoInstance.seek(videoPosition);
   };
 
-  const jumpAudioValue = 2;
+  const jumpAudioValue = 3;
 
   const seekHandler = (isForward: boolean) => {
     if (!videoInstance) {
