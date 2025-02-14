@@ -1,4 +1,4 @@
-import React, {useRef} from 'react';
+import React from 'react';
 import {View, Text, Dimensions} from 'react-native';
 import SatoriLine from './SatoriLine';
 import {useEffect, useState} from 'react';
@@ -147,10 +147,7 @@ const LineContainer = ({
   breakdownSentenceFunc,
 }) => {
   const {width} = Dimensions.get('window');
-  const lineContainerRef = useRef(0);
-  lineContainerRef.current = lineContainerRef.current + 1;
 
-  console.log('## lineContainerRef', lineContainerRef);
   return (
     <View
       style={{
