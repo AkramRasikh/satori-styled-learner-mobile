@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {View} from 'react-native';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {useRoute} from '@react-navigation/native';
 
 import TopicContent from '../../components/TopicContent';
@@ -16,6 +16,7 @@ import {
   getNextScheduledOptions,
   srsRetentionKeyTypes,
 } from '../../srs-algo';
+import {setLearningContentStateDispatch} from '../../store/contentSlice';
 
 const ContentScreen = () => {
   const route = useRoute();
@@ -29,14 +30,14 @@ const ContentScreen = () => {
     state => state.learningContent,
   );
 
+  const dispatch = useDispatch();
+
   const {
     updateSentenceViaContent,
     updateContentMetaData,
     updatePromptState,
     breakdownSentence,
     sentenceReviewBulk,
-    structuredUnifiedData,
-    setStructuredUnifiedData,
   } = useData();
 
   const {
@@ -49,6 +50,26 @@ const ContentScreen = () => {
 
   const selectedTopic =
     targetLanguageLoadedContentMasterState[selectedTopicIndex].title;
+
+  const updateContentMetaDataIsLoadedDispatch = durationsArr => {
+    const updatedState = [...targetLanguageLoadedContentMasterState];
+    const thisTopicData = updatedState[selectedTopicIndex];
+    const newTopicState = {
+      ...thisTopicData,
+      isDurationAudioLoaded: true,
+      content: durationsArr,
+    };
+    updatedState[selectedTopicIndex] = {
+      ...newTopicState,
+    };
+    setSelectedContentState({
+      ...selectedContentState,
+      isDurationAudioLoaded: true,
+      content: durationsArr,
+    });
+
+    dispatch(setLearningContentStateDispatch(updatedState));
+  };
 
   useEffect(() => {
     setSelectedContentState(
@@ -134,10 +155,6 @@ const ContentScreen = () => {
         };
       });
       setFormattedData(updatedFormattedData);
-      setStructuredUnifiedData(prevState => ({
-        ...prevState,
-        [selectedTopic]: {content: updatedFormattedData},
-      }));
     }
   };
 
@@ -215,8 +232,9 @@ const ContentScreen = () => {
               setFormattedData={setFormattedData}
               updateTopicMetaData={updateMetaData}
               handleBulkReviews={handleBulkReviews}
-              structuredUnifiedData={structuredUnifiedData}
-              setStructuredUnifiedData={setStructuredUnifiedData}
+              updateContentMetaDataIsLoadedDispatch={
+                updateContentMetaDataIsLoadedDispatch
+              }
             />
           </TopicContentSnippetsProvider>
         </TopicContentAudioProvider>

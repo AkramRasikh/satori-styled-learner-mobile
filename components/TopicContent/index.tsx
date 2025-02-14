@@ -8,7 +8,6 @@ import useContentControls from '../../hooks/useContentControls';
 import useInitTopicWordList from '../../hooks/useInitTopicWordList';
 import useFormatUnderlyingWords from '../../hooks/useFormatUnderlyingWords';
 import TopicContentLoader from '../TopicContentLoader';
-import useSetTopicAudioDataInState from '../../hooks/useSetTopicAudioDataInState';
 import useLanguageSelector from '../../context/LanguageSelector/useLanguageSelector';
 import useSetSecondsToSentenceIds, {
   mapSentenceIdsToSeconds,
@@ -33,8 +32,7 @@ const TopicContent = ({
   formattedData,
   setFormattedData,
   handleBulkReviews,
-  structuredUnifiedData,
-  setStructuredUnifiedData,
+  updateContentMetaDataIsLoadedDispatch,
 }) => {
   const [secondsToSentencesMapState, setSecondsToSentencesMapState] = useState<
     string[]
@@ -57,10 +55,10 @@ const TopicContent = ({
     sentenceWidget => sentenceWidget?.reviewData,
   );
 
-  const {content, origin, realStartTime, hasAudio} = loadedContent;
+  const {content, origin, realStartTime, hasAudio, isDurationAudioLoaded} =
+    loadedContent;
 
   const isMediaContent = origin === 'netflix' || origin === 'youtube';
-  const hasAlreadyBeenUnified = structuredUnifiedData[topicName]?.content;
 
   const url = getFirebaseAudioURL(topicName, languageSelectedState);
 
@@ -71,7 +69,7 @@ const TopicContent = ({
       setIsVideoModeState(true);
       setSecondsToSentencesMapState(
         mapSentenceIdsToSeconds({
-          contentWithTimeStamps,
+          content,
           duration: soundDuration,
           isVideoModeState: true,
           realStartTime,
@@ -81,7 +79,7 @@ const TopicContent = ({
       setIsVideoModeState(false);
       setSecondsToSentencesMapState(
         mapSentenceIdsToSeconds({
-          contentWithTimeStamps,
+          content,
           duration: soundDuration,
           isVideoModeState: false,
           realStartTime,
@@ -112,19 +110,20 @@ const TopicContent = ({
     return <TextSegment textSegments={textSegments} />;
   };
 
-  const contentWithTimeStamps = useGetCombinedAudioData({
+  useGetCombinedAudioData({
     hasAudio,
-    audioFiles: content,
-    hasAlreadyBeenUnified,
+    content,
     setAudioLoadingProgress,
     isMediaContent,
     soundDuration,
+    updateContentMetaDataIsLoadedDispatch,
+    isDurationAudioLoaded,
   });
 
   const {formatTextForTargetWords} = useContentControls({
     targetLanguageLoadedWords,
     getSafeText,
-    topicData: contentWithTimeStamps,
+    topicData: content,
   });
 
   useInitTopicWordList({
@@ -136,22 +135,13 @@ const TopicContent = ({
     setFormattedData,
     formatTextForTargetWords,
     formattedData,
-    contentWithTimeStamps,
+    content,
     setUpdateWordList,
     updateWordList,
   });
 
-  useSetTopicAudioDataInState({
-    structuredUnifiedData,
-    topicName,
-    contentWithTimeStamps,
-    topicData: content,
-    hasAlreadyBeenUnified,
-    setStructuredUnifiedData,
-  });
-
   useSetSecondsToSentenceIds({
-    contentWithTimeStamps,
+    content,
     soundDuration,
     secondsToSentencesMapState,
     setSecondsToSentencesMapState,
@@ -172,14 +162,9 @@ const TopicContent = ({
       });
       setFormattedData(updatedFormattedData);
       setTriggerSentenceIdUpdate(null);
-      setStructuredUnifiedData(prevState => ({
-        ...prevState,
-        [topicName]: {content: updatedFormattedData},
-      }));
     }
   }, [
     topicName,
-    setStructuredUnifiedData,
     triggerSentenceIdUpdate,
     formattedData,
     content,
@@ -227,7 +212,7 @@ const TopicContent = ({
       breakdownSentenceFunc={breakdownSentenceFunc}
       handleBulkReviews={handleBulkReviews}
       handleIsCore={handleIsCore}
-      contentWithTimeStamps={contentWithTimeStamps}
+      content={content}
       handleVideoMode={handleVideoMode}
       secondsToSentencesMapState={secondsToSentencesMapState}
       highlightTargetTextState={highlightTargetTextState}

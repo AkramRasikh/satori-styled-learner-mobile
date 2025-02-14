@@ -25,7 +25,7 @@ const TopicContentAudioMode = ({
   breakdownSentenceFunc,
   handleBulkReviews,
   handleIsCore,
-  contentWithTimeStamps,
+  content,
   handleVideoMode,
   secondsToSentencesMapState,
   highlightTargetTextState,
@@ -64,7 +64,7 @@ const TopicContentAudioMode = ({
   const initSnippet = () => {
     const isText = true;
     const id = topicName + '-' + generateRandomId();
-    const thisItem = contentWithTimeStamps.find(item => item.id === masterPlay);
+    const thisItem = content.find(item => item.id === masterPlay);
     const targetLang = thisItem?.targetLang;
     if (!targetLang) {
       return null;

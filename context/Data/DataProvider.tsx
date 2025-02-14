@@ -34,7 +34,6 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
   const [provdiderError, setProvdiderError] = useState(null);
   const [updatePromptState, setUpdatePromptState] = useState('');
   const [isAdhocDataLoading, setIsAdhocDataLoading] = useState(false);
-  const [structuredUnifiedData, setStructuredUnifiedData] = useState([]);
   const [combineWordsListState, setCombineWordsListState] = useState([]);
   const [updateMetaDataState, setUpdateMetaDataState] = useState(0);
   const adhocTargetLanguageSentencesState = useSelector(
@@ -580,8 +579,6 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
         saveWordFirebase,
         getThisSentencesWordList,
         updatingSentenceState,
-        structuredUnifiedData,
-        setStructuredUnifiedData,
         updateContentMetaData,
         updateSentenceViaContent,
         bulkAddReviews,

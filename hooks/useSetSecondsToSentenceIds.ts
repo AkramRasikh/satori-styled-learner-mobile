@@ -1,21 +1,21 @@
 import {useEffect} from 'react';
 
 export const mapSentenceIdsToSeconds = ({
-  contentWithTimeStamps,
+  content,
   duration,
   isVideoModeState,
   realStartTime,
 }) => {
-  if (!contentWithTimeStamps || !duration) {
+  if (!content || !duration) {
     return null;
   }
   const arrOfSecondsMappedIds: string[] = isVideoModeState
     ? Array.from({length: realStartTime}, () => 'placeholderId')
     : [];
 
-  contentWithTimeStamps.forEach((item, index) => {
+  content.forEach((item, index) => {
     const isFirst = index === 0;
-    const isLast = index + 1 === contentWithTimeStamps.length;
+    const isLast = index + 1 === content.length;
 
     const startAt = isFirst ? 0 : item.startAt;
     const endAt = isLast ? duration : item.endAt - 1;
@@ -34,7 +34,7 @@ export const mapSentenceIdsToSeconds = ({
 };
 
 const useSetSecondsToSentenceIds = ({
-  contentWithTimeStamps,
+  content,
   soundDuration,
   secondsToSentencesMapState,
   setSecondsToSentencesMapState,
@@ -42,14 +42,14 @@ const useSetSecondsToSentenceIds = ({
   realStartTime,
 }) => {
   useEffect(() => {
-    const hasFormattedContent = contentWithTimeStamps.length;
+    const hasFormattedContent = content.length;
     if (
       soundDuration &&
       hasFormattedContent > 0 &&
       secondsToSentencesMapState?.length === 0
     ) {
       const mappedIds = mapSentenceIdsToSeconds({
-        contentWithTimeStamps,
+        content,
         duration: soundDuration,
         isVideoModeState,
         realStartTime,
@@ -61,7 +61,7 @@ const useSetSecondsToSentenceIds = ({
     isVideoModeState,
     soundDuration,
     secondsToSentencesMapState,
-    contentWithTimeStamps,
+    content,
     setSecondsToSentencesMapState,
   ]);
 };

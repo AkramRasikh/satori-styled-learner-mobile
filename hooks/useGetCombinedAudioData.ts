@@ -24,24 +24,23 @@ export const getFirebaseVideoURL = (mp3FileName: string, language: string) => {
 
 const useGetCombinedAudioData = ({
   hasAudio,
-  audioFiles,
-  hasAlreadyBeenUnified,
+  content,
   setAudioLoadingProgress,
   isMediaContent,
   soundDuration,
+  updateContentMetaDataIsLoadedDispatch,
+  isDurationAudioLoaded,
 }) => {
-  const [durations, setDurations] = useState([]);
-  const [dataHasBeenFetched, setDataHasBeenFetch] = useState(false);
   const {languageSelectedState} = useLanguageSelector();
 
   useEffect(() => {
     const fetchDurations = async () => {
       if (isMediaContent) {
-        const sortedAudios = audioFiles.map((audioItem, index) => {
-          const isLast = index + 1 === audioFiles.length;
+        const sortedAudios = content.map((audioItem, index) => {
+          const isLast = index + 1 === content.length;
           const startAt = audioItem.time;
           const thisDuration = !isLast
-            ? audioFiles[index + 1].time - startAt
+            ? content[index + 1].time - startAt
             : soundDuration - startAt;
           setAudioLoadingProgress?.(prev => (prev += 1));
           return {
@@ -50,11 +49,11 @@ const useGetCombinedAudioData = ({
             endAt: startAt + thisDuration,
           };
         });
-        setDurations(sortedAudios);
+        updateContentMetaDataIsLoadedDispatch?.(sortedAudios);
       } else {
         let endAt = 0;
 
-        const durationsPromises = audioFiles.map((item, index) => {
+        const durationsPromises = content.map((item, index) => {
           const url = getFirebaseAudioURL(item.id, languageSelectedState);
           return new Promise(resolve => {
             const sound = new Sound(url, '', error => {
@@ -81,34 +80,14 @@ const useGetCombinedAudioData = ({
           });
         });
         const durationsResults = await Promise.all(durationsPromises);
-        setDurations(durationsResults);
+        updateContentMetaDataIsLoadedDispatch?.(durationsResults);
       }
     };
 
-    if (
-      hasAudio &&
-      audioFiles?.length > 0 &&
-      !(durations?.length > 0) &&
-      !hasAlreadyBeenUnified &&
-      !dataHasBeenFetched
-    ) {
+    if (hasAudio && !isDurationAudioLoaded) {
       fetchDurations();
-      setDataHasBeenFetch(true);
     }
-  }, [
-    audioFiles,
-    hasAudio,
-    dataHasBeenFetched,
-    durations,
-    hasAlreadyBeenUnified,
-    isMediaContent,
-  ]);
-
-  if (hasAlreadyBeenUnified?.length > 1) {
-    return hasAlreadyBeenUnified;
-  } else {
-    return durations;
-  }
+  }, [content, hasAudio, isMediaContent, isDurationAudioLoaded]);
 };
 
 export default useGetCombinedAudioData;
