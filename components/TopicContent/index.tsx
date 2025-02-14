@@ -34,6 +34,7 @@ const TopicContent = ({
   loadedContent,
   targetSentenceId,
   breakdownSentenceFunc,
+  handleIsCore,
 }) => {
   const [formattedData, setFormattedData] = useState([]);
   const [secondsToSentencesMapState, setSecondsToSentencesMapState] = useState<
@@ -62,7 +63,7 @@ const TopicContent = ({
     sentenceWidget => sentenceWidget?.reviewData,
   );
 
-  const {content, isCore, contentIndex, origin, realStartTime, hasAudio} =
+  const {content, contentIndex, origin, realStartTime, hasAudio} =
     loadedContent;
 
   const isMediaContent = origin === 'netflix' || origin === 'youtube';
@@ -99,17 +100,6 @@ const TopicContent = ({
   const {underlineWordsInSentence} = useHighlightWordToWordBank({
     pureWordsUnique,
   });
-
-  const handleIsCore = () => {
-    const fieldToUpdate = {
-      isCore: !Boolean(isCore),
-    };
-
-    updateTopicMetaData({
-      topicName,
-      fieldToUpdate,
-    });
-  };
 
   useEffect(() => {
     if (targetSentenceId && !(!isLoaded || formattedData?.length === 0)) {

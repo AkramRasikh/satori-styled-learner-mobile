@@ -50,17 +50,6 @@ const ContentScreen = () => {
   const getThisSentenceData = (state, sentenceId) =>
     state.find(sentence => sentence.id === sentenceId);
 
-  const updateMetaData = async ({topicName, fieldToUpdate}) => {
-    const thisUpdatedContent = await updateContentMetaData({
-      topicName,
-      fieldToUpdate,
-      contentIndex: selectedTopicIndex,
-    });
-    if (thisUpdatedContent) {
-      setSelectedContentState(thisUpdatedContent);
-    }
-  };
-
   const updateDifficultSentencesProvider = (
     updatedContentState,
     sentenceId,
@@ -94,6 +83,20 @@ const ContentScreen = () => {
       });
     } else if (isRemoveDifficulty) {
       removeDifficultSentenceFromState(sentenceId);
+    }
+  };
+
+  const handleIsCore = async () => {
+    const fieldToUpdate = {
+      isCore: !Boolean(selectedContentState?.isCore),
+    };
+    const thisUpdatedContent = await updateContentMetaData({
+      topicName: selectedTopic,
+      fieldToUpdate,
+      contentIndex: selectedTopicIndex,
+    });
+    if (thisUpdatedContent) {
+      setSelectedContentState(thisUpdatedContent);
     }
   };
 
@@ -149,12 +152,12 @@ const ContentScreen = () => {
             <TopicContent
               topicName={selectedTopic}
               loadedContent={selectedContentState}
-              updateTopicMetaData={updateMetaData}
               updateSentenceData={updateSentenceDataFunc}
               triggerSentenceIdUpdate={triggerSentenceIdUpdate}
               setTriggerSentenceIdUpdate={setTriggerSentenceIdUpdate}
               targetSentenceId={targetSentenceId}
               breakdownSentenceFunc={breakdownSentenceFunc}
+              handleIsCore={handleIsCore}
             />
           </TopicContentSnippetsProvider>
         </TopicContentAudioProvider>
