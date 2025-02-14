@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import Clipboard from '@react-native-clipboard/clipboard';
 import {Text, View} from 'react-native';
 import HighlightTextZone from './HighlightTextZone';
@@ -39,6 +39,7 @@ const SatoriLine = ({
   const [showSentenceBreakdown, setShowSentenceBreakdown] = useState(false);
   const [showMatchedTranslation, setShowMatchedTranslation] = useState(false);
   const [isLoadingState, setIsLoadingState] = useState(false);
+  const [safeTextState, setSafeTextState] = useState();
 
   const {languageSelectedState} = useLanguageSelector();
   const getSentenceBreakdown = async () => {
@@ -114,6 +115,10 @@ const SatoriLine = ({
     }
   };
 
+  useEffect(() => {
+    setSafeTextState(getThisText());
+  }, [showSentenceBreakdown, showMatchedTranslation, setSafeTextState]);
+
   const openReviewPortal = () => {
     setShowReviewSettings(!showReviewSettings);
   };
@@ -171,7 +176,7 @@ const SatoriLine = ({
             textWidth={textWidth}
           />
         ) : (
-          getThisText()
+          safeTextState
         )}
       </Text>
       {showEng || englishOnly || engMaster ? (
