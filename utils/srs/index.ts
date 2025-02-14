@@ -1,4 +1,5 @@
 import {createEmptyCard, generatorParameters, fsrs} from 'ts-fsrs';
+import {getEmptyCard} from '../../srs-algo';
 
 // grade = [1,2,3,4]
 export const srsRetentionKey = {
@@ -26,15 +27,6 @@ const initFsrs = ({contentType}) => {
 export const getNextScheduledOptions = ({card, contentType}) => {
   const f = initFsrs({contentType});
   return f.repeat(card, new Date());
-};
-
-// last_review: new Date('2024-10-11T11:09:52.190Z'),
-export const getEmptyCard = () => {
-  const card = createEmptyCard() as any;
-  card.ease = 2.5; // Default ease factor for a new card
-  card.interval = 0; // Initial interval for a new card
-  card.state = 'new'; // Set the card state
-  return card;
 };
 
 export const initCardWithPreviousDateInfo = ({

@@ -1,4 +1,5 @@
-import {getEmptyCard, getNextScheduledOptions} from '.';
+import {getNextScheduledOptions} from '.';
+import {getEmptyCard} from '../../srs-algo';
 import {getTimeDiffSRS} from '../getTimeDiffSRS';
 
 export const srsCalculationAndText = ({reviewData, contentType, timeNow}) => {
