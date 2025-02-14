@@ -11,6 +11,11 @@ import useData from '../../context/Data/useData';
 import useDifficultSentences from '../../context/DifficultSentences/useDifficultSentencesProvider';
 import {TopicContentSnippetsProvider} from '../../components/TopicContent/context/TopicContentSnippetsProvider';
 import {TopicContentAudioProvider} from '../../components/TopicContent/context/TopicContentAudioProvider';
+import {
+  getEmptyCard,
+  getNextScheduledOptions,
+  srsRetentionKeyTypes,
+} from '../../srs-algo';
 
 const ContentScreen = () => {
   const route = useRoute();
@@ -18,6 +23,7 @@ const ContentScreen = () => {
   const [triggerSentenceIdUpdate, setTriggerSentenceIdUpdate] = useState(null);
   const [selectedContentState, setSelectedContentState] = useState(null);
   const [selectedSnippetsState, setSelectedSnippetsState] = useState([]);
+  const [formattedData, setFormattedData] = useState([]);
 
   const targetLanguageLoadedContentMasterState = useSelector(
     state => state.learningContent,
@@ -28,6 +34,9 @@ const ContentScreen = () => {
     updateContentMetaData,
     updatePromptState,
     breakdownSentence,
+    sentenceReviewBulk,
+    structuredUnifiedData,
+    setStructuredUnifiedData,
   } = useData();
 
   const {
@@ -100,6 +109,38 @@ const ContentScreen = () => {
     }
   };
 
+  const handleBulkReviews = async ({removeReview}) => {
+    const emptyCard = getEmptyCard();
+
+    const nextScheduledOptions = getNextScheduledOptions({
+      card: emptyCard,
+      contentType: srsRetentionKeyTypes.sentences,
+    });
+    const nextDueCard = nextScheduledOptions['2'].card;
+    const updatedContent = await sentenceReviewBulk({
+      topicName: selectedTopic,
+      fieldToUpdate: {
+        reviewData: nextDueCard,
+      },
+      contentIndex: selectedTopicIndex,
+      removeReview,
+    });
+
+    if (updatedContent) {
+      const updatedFormattedData = formattedData.map(item => {
+        return {
+          ...item,
+          reviewData: removeReview ? null : nextDueCard,
+        };
+      });
+      setFormattedData(updatedFormattedData);
+      setStructuredUnifiedData(prevState => ({
+        ...prevState,
+        [selectedTopic]: {content: updatedFormattedData},
+      }));
+    }
+  };
+
   const updateSentenceDataFunc = async ({sentenceId, fieldToUpdate}) => {
     const updatedSelectedState = await updateSentenceViaContent({
       topicName: selectedTopic,
@@ -114,6 +155,18 @@ const ContentScreen = () => {
       return true;
     }
   };
+
+  const updateMetaData = async ({topicName, fieldToUpdate}) => {
+    const thisUpdatedContent = await updateContentMetaData({
+      topicName,
+      fieldToUpdate,
+      contentIndex: selectedTopicIndex,
+    });
+    if (thisUpdatedContent) {
+      setSelectedContentState(thisUpdatedContent);
+    }
+  };
+
   const breakdownSentenceFunc = async ({
     topicName,
     sentenceId,
@@ -158,6 +211,12 @@ const ContentScreen = () => {
               targetSentenceId={targetSentenceId}
               breakdownSentenceFunc={breakdownSentenceFunc}
               handleIsCore={handleIsCore}
+              formattedData={formattedData}
+              setFormattedData={setFormattedData}
+              updateTopicMetaData={updateMetaData}
+              handleBulkReviews={handleBulkReviews}
+              structuredUnifiedData={structuredUnifiedData}
+              setStructuredUnifiedData={setStructuredUnifiedData}
             />
           </TopicContentSnippetsProvider>
         </TopicContentAudioProvider>

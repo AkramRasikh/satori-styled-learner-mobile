@@ -14,11 +14,6 @@ import useSetSecondsToSentenceIds, {
   mapSentenceIdsToSeconds,
 } from '../../hooks/useSetSecondsToSentenceIds';
 import useData from '../../context/Data/useData';
-import {
-  getEmptyCard,
-  getNextScheduledOptions,
-  srsRetentionKeyTypes,
-} from '../../srs-algo';
 import TextSegment from '../TextSegment';
 import useTopicContentAudio from './context/useTopicContentAudio';
 import TopicContentAudioMode from './TopicContentAudioMode';
@@ -35,8 +30,12 @@ const TopicContent = ({
   targetSentenceId,
   breakdownSentenceFunc,
   handleIsCore,
+  formattedData,
+  setFormattedData,
+  handleBulkReviews,
+  structuredUnifiedData,
+  setStructuredUnifiedData,
 }) => {
-  const [formattedData, setFormattedData] = useState([]);
   const [secondsToSentencesMapState, setSecondsToSentencesMapState] = useState<
     string[]
   >([]);
@@ -49,12 +48,7 @@ const TopicContent = ({
   const {languageSelectedState} = useLanguageSelector();
   const targetLanguageLoadedWords = useSelector(state => state.words);
 
-  const {
-    structuredUnifiedData,
-    setStructuredUnifiedData,
-    pureWords: pureWordsUnique,
-    sentenceReviewBulk,
-  } = useData();
+  const {pureWords: pureWordsUnique} = useData();
 
   const {isLoaded, soundRef, isVideoModeState, setIsVideoModeState} =
     useTopicContentAudio();
@@ -63,8 +57,7 @@ const TopicContent = ({
     sentenceWidget => sentenceWidget?.reviewData,
   );
 
-  const {content, contentIndex, origin, realStartTime, hasAudio} =
-    loadedContent;
+  const {content, origin, realStartTime, hasAudio} = loadedContent;
 
   const isMediaContent = origin === 'netflix' || origin === 'youtube';
   const hasAlreadyBeenUnified = structuredUnifiedData[topicName]?.content;
@@ -117,38 +110,6 @@ const TopicContent = ({
   const getSafeText = targetText => {
     const textSegments = underlineWordsInSentence(targetText);
     return <TextSegment textSegments={textSegments} />;
-  };
-
-  const handleBulkReviews = async ({removeReview}) => {
-    const emptyCard = getEmptyCard();
-
-    const nextScheduledOptions = getNextScheduledOptions({
-      card: emptyCard,
-      contentType: srsRetentionKeyTypes.sentences,
-    });
-    const nextDueCard = nextScheduledOptions['2'].card;
-    const updatedContent = await sentenceReviewBulk({
-      topicName,
-      fieldToUpdate: {
-        reviewData: nextDueCard,
-      },
-      contentIndex,
-      removeReview,
-    });
-
-    if (updatedContent) {
-      const updatedFormattedData = formattedData.map(item => {
-        return {
-          ...item,
-          reviewData: removeReview ? null : nextDueCard,
-        };
-      });
-      setFormattedData(updatedFormattedData);
-      setStructuredUnifiedData(prevState => ({
-        ...prevState,
-        [topicName]: {content: updatedFormattedData},
-      }));
-    }
   };
 
   const contentWithTimeStamps = useGetCombinedAudioData({
