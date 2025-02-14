@@ -10,7 +10,7 @@ import VideoPlayer from '../VideoPlayer';
 import useData from '../../context/Data/useData';
 import {getGeneralTopicName} from '../../utils/get-general-topic-name';
 import AnimatedModal from '../AnimatedModal';
-import useTopicContentAudio from './context/useTopicContentAudio';
+import useTopicContentVideo from './context/useTopicContentVideo';
 
 const {height} = Dimensions?.get('window');
 
@@ -26,6 +26,7 @@ const TopicContentVideoMode = ({
   formattedData,
   highlightTargetTextState,
   secondsToSentencesMapState,
+  hasContentToReview,
 }) => {
   const [englishOnly, setEnglishOnly] = useState(false);
   const [engMaster, setEngMaster] = useState(true);
@@ -38,24 +39,18 @@ const TopicContentVideoMode = ({
   const {saveWordFirebase} = useData();
 
   const {
-    seekHandler,
-    handlePlayFromThisSentence,
-    playFromHere,
-    handleVideoPause,
     currentTimeState,
     currentVideoTimeState,
+    videoRef,
     isVideoPlaying,
+    progress,
+    seekHandler,
+    handlePlayFromThisSentence,
+    handleVideoPause,
     setCurrentVideoTimeState,
     setVideoDurationState,
     playVideo,
-    progress,
-    videoRef,
-    isVideoModeState,
-  } = useTopicContentAudio();
-
-  const hasContentToReview = formattedData?.some(
-    sentenceWidget => sentenceWidget?.reviewData,
-  );
+  } = useTopicContentVideo();
 
   const {reviewHistory, nextReview, isCore, contentIndex, hasVideo} =
     loadedContent;
@@ -117,7 +112,7 @@ const TopicContentVideoMode = ({
               setEngMaster={setEngMaster}
               handleIsCore={handleIsCore}
               isCore={isCore}
-              isVideoModeState={isVideoModeState}
+              isVideoModeState={true}
               hasVideo={hasVideo}
               handleVideoMode={handleVideoMode}
             />
@@ -137,7 +132,7 @@ const TopicContentVideoMode = ({
               topicName={topicName}
               updateSentenceData={updateSentenceData}
               currentTimeState={currentTimeState}
-              playSound={playFromHere}
+              playSound={playVideo}
               highlightTargetTextState={highlightTargetTextState}
               contentIndex={contentIndex}
               breakdownSentenceFunc={breakdownSentenceFunc}

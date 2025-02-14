@@ -23,6 +23,7 @@ import TextSegment from '../TextSegment';
 import useTopicContentAudio from './context/useTopicContentAudio';
 import TopicContentAudioMode from './TopicContentAudioMode';
 import TopicContentVideoMode from './TopicContentVideoMode';
+import {TopicContentVideoProvider} from './context/TopicContentVideoProvider';
 
 const TopicContent = ({
   topicName,
@@ -247,19 +248,22 @@ const TopicContent = ({
 
   if (isVideoModeState) {
     return (
-      <TopicContentVideoMode
-        topicName={topicName}
-        updateTopicMetaData={updateTopicMetaData}
-        updateSentenceData={updateSentenceData}
-        loadedContent={loadedContent}
-        breakdownSentenceFunc={breakdownSentenceFunc}
-        handleVideoMode={handleVideoMode}
-        handleIsCore={handleIsCore}
-        handleBulkReviews={handleBulkReviews}
-        formattedData={formattedData}
-        highlightTargetTextState={highlightTargetTextState}
-        secondsToSentencesMapState={secondsToSentencesMapState}
-      />
+      <TopicContentVideoProvider realStartTime={realStartTime}>
+        <TopicContentVideoMode
+          topicName={topicName}
+          updateTopicMetaData={updateTopicMetaData}
+          updateSentenceData={updateSentenceData}
+          loadedContent={loadedContent}
+          breakdownSentenceFunc={breakdownSentenceFunc}
+          handleVideoMode={handleVideoMode}
+          handleIsCore={handleIsCore}
+          handleBulkReviews={handleBulkReviews}
+          formattedData={formattedData}
+          highlightTargetTextState={highlightTargetTextState}
+          secondsToSentencesMapState={secondsToSentencesMapState}
+          hasContentToReview={hasContentToReview}
+        />
+      </TopicContentVideoProvider>
     );
   }
 
