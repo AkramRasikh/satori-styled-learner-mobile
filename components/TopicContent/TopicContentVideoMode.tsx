@@ -7,11 +7,12 @@ import ReviewSection from '../ReviewSection';
 import useLanguageSelector from '../../context/LanguageSelector/useLanguageSelector';
 import AudioToggles from '../AudioToggles';
 import VideoPlayer from '../VideoPlayer';
-import useVideoTextSync from '../../hooks/useVideoTextSync';
 import useData from '../../context/Data/useData';
 import {getGeneralTopicName} from '../../utils/get-general-topic-name';
 import AnimatedModal from '../AnimatedModal';
 import useTopicContentAudio from './context/useTopicContentAudio';
+
+const {height} = Dimensions?.get('window');
 
 const TopicContentVideoMode = ({
   topicName,
@@ -26,7 +27,6 @@ const TopicContentVideoMode = ({
   highlightTargetTextState,
   secondsToSentencesMapState,
 }) => {
-  const [masterPlay, setMasterPlay] = useState('');
   const [englishOnly, setEnglishOnly] = useState(false);
   const [engMaster, setEngMaster] = useState(true);
   const [highlightMode, setHighlightMode] = useState(false);
@@ -60,13 +60,10 @@ const TopicContentVideoMode = ({
   const {reviewHistory, nextReview, isCore, contentIndex, hasVideo} =
     loadedContent;
 
-  const {height} = Dimensions?.get('window');
-
-  useVideoTextSync({
-    currentVideoTimeState,
-    setMasterPlay,
-    secondsToSentencesMapState,
-  });
+  const masterPlay =
+    currentVideoTimeState &&
+    secondsToSentencesMapState?.length > 0 &&
+    secondsToSentencesMapState[Math.floor(currentVideoTimeState)];
 
   const videoUrl = hasVideo
     ? getFirebaseVideoURL(getGeneralTopicName(topicName), languageSelectedState)
