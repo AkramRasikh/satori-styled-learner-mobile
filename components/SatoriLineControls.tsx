@@ -1,5 +1,4 @@
 import React, {Text, TouchableOpacity, View} from 'react-native';
-import useOpenGoogleTranslate from '../hooks/useOpenGoogleTranslate';
 import {Icon, MD2Colors, MD3Colors} from 'react-native-paper';
 
 const SatoriLineControls = ({
