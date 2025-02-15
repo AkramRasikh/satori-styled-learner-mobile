@@ -165,7 +165,6 @@ const TopicContent = ({
   return (
     <TopicContentAudioProvider
       topicName={topicName}
-      realStartTime={realStartTime}
       isVideoModeState={isVideoModeState}
       soundRef={soundRef}>
       <TopicContentAudioMode
