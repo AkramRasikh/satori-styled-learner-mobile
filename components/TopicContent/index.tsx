@@ -62,6 +62,11 @@ const TopicContent = ({
 
   const {languageSelectedState} = useLanguageSelector();
 
+  const {openGoogleTranslateApp} = useOpenGoogleTranslate();
+
+  const handleOpenGoogle = topicSentenceTargetLang => {
+    openGoogleTranslateApp(topicSentenceTargetLang);
+  };
   const soundRef = useRef<Sound>(null);
 
   const url = getFirebaseAudioURL(topicName, languageSelectedState);
@@ -81,12 +86,6 @@ const TopicContent = ({
   const isMediaContent = origin === 'netflix' || origin === 'youtube';
 
   const soundDuration = soundRef?.current?._duration || 0;
-
-  const {openGoogleTranslateApp} = useOpenGoogleTranslate();
-
-  const handleOpenGoogle = topicSentenceTargetLang => {
-    openGoogleTranslateApp(topicSentenceTargetLang);
-  };
 
   const handleVideoMode = (switchToVideoMode: boolean) => {
     if (switchToVideoMode) {

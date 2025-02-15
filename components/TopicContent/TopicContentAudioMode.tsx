@@ -30,8 +30,8 @@ const TopicContentAudioMode = ({
   highlightTargetTextState,
   formattedData,
   hasContentToReview,
-  handleOpenGoogle,
   url,
+  handleOpenGoogle,
 }) => {
   const [masterPlay, setMasterPlay] = useState('');
   const [englishOnly, setEnglishOnly] = useState(false);

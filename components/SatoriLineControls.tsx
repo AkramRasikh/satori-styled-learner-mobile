@@ -20,6 +20,7 @@ const SatoriLineControls = ({
   setShowMatchedTranslation,
   showMatchedTranslation,
   handleOpenGoogle,
+  setIsSettingsOpenState,
 }) => {
   const hasSentenceBreakdown = topicSentence?.vocab;
   const matchedWords = topicSentence?.matchedWords.length > 0;
@@ -39,6 +40,9 @@ const SatoriLineControls = ({
           flexDirection: 'row',
           gap: 15,
         }}>
+        <TouchableOpacity onPress={() => setIsSettingsOpenState(false)}>
+          <Icon source="menu-open" size={20} />
+        </TouchableOpacity>
         <TouchableOpacity onPress={() => setShowEng(!showEng)}>
           <Text>🇬🇧</Text>
         </TouchableOpacity>

@@ -1,13 +1,13 @@
 import React, {useEffect, useState} from 'react';
 import Clipboard from '@react-native-clipboard/clipboard';
-import {Text, View} from 'react-native';
+import {Text, TouchableOpacity, View} from 'react-native';
 import HighlightTextZone from './HighlightTextZone';
 import SatoriLineControls from './SatoriLineControls';
 import SatoriLineSRS from './SatoriLineSRS';
 import SentenceBreakdown from './SentenceBreakdown';
 import {getHexCode} from '../utils/get-hex-code';
 import useLanguageSelector from '../context/LanguageSelector/useLanguageSelector';
-import {ActivityIndicator} from 'react-native-paper';
+import {ActivityIndicator, Icon} from 'react-native-paper';
 import DifficultSentenceMappedWords from './DifficultSentence/DifficultSentenceMappedWords';
 import {checkOverlap} from '../utils/check-word-overlap';
 import TextSegmentContainer from './TextSegmentContainer';
@@ -40,6 +40,7 @@ const SatoriLine = ({
   const [showSentenceBreakdown, setShowSentenceBreakdown] = useState(false);
   const [showMatchedTranslation, setShowMatchedTranslation] = useState(false);
   const [isLoadingState, setIsLoadingState] = useState(false);
+  const [isSettingsOpenState, setIsSettingsOpenState] = useState(false);
   const [safeTextState, setSafeTextState] = useState();
 
   const {languageSelectedState} = useLanguageSelector();
@@ -153,26 +154,48 @@ const SatoriLine = ({
           color: hasBeenMarkedAsDifficult ? '#8B0000' : 'black',
           fontSize: 20,
         }}>
-        <SatoriLineControls
-          handlePlayThisLine={handlePlayThisLine}
-          isPlaying={isPlaying}
-          focusThisSentence={focusThisSentence}
-          copySentence={copySentence}
-          openReviewPortal={openReviewPortal}
-          topicSentence={topicSentence}
-          setShowEng={setShowEng}
-          showEng={showEng}
-          setShowNotes={setShowNotes}
-          showNotes={showNotes}
-          highlightMode={highlightMode}
-          setHighlightMode={setHighlightMode}
-          showSentenceBreakdown={showSentenceBreakdown}
-          setShowSentenceBreakdown={setShowSentenceBreakdown}
-          getSentenceBreakdown={getSentenceBreakdown}
-          setShowMatchedTranslation={setShowMatchedTranslation}
-          showMatchedTranslation={showMatchedTranslation}
-          handleOpenGoogle={handleOpenGoogle}
-        />
+        <View>
+          {isSettingsOpenState && (
+            <SatoriLineControls
+              handlePlayThisLine={handlePlayThisLine}
+              isPlaying={isPlaying}
+              focusThisSentence={focusThisSentence}
+              copySentence={copySentence}
+              openReviewPortal={openReviewPortal}
+              topicSentence={topicSentence}
+              setShowEng={setShowEng}
+              showEng={showEng}
+              setShowNotes={setShowNotes}
+              showNotes={showNotes}
+              highlightMode={highlightMode}
+              setHighlightMode={setHighlightMode}
+              showSentenceBreakdown={showSentenceBreakdown}
+              setShowSentenceBreakdown={setShowSentenceBreakdown}
+              getSentenceBreakdown={getSentenceBreakdown}
+              setShowMatchedTranslation={setShowMatchedTranslation}
+              showMatchedTranslation={showMatchedTranslation}
+              handleOpenGoogle={handleOpenGoogle}
+              setIsSettingsOpenState={setIsSettingsOpenState}
+            />
+          )}
+          {!isSettingsOpenState && (
+            <View
+              style={{
+                width: '100%',
+                marginBottom: highlightMode ? 3 : 0,
+                display: 'flex',
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+              }}>
+              <TouchableOpacity onPress={() => setIsSettingsOpenState(true)}>
+                <Icon source="menu" size={20} />
+              </TouchableOpacity>
+              <TouchableOpacity onPress={handlePlayThisLine}>
+                <Text>{isPlaying && focusThisSentence ? '⏸' : '▶️'}</Text>
+              </TouchableOpacity>
+            </View>
+          )}
+        </View>
         {englishOnly ? null : highlightMode ? (
           <HighlightTextZone
             id={id}
