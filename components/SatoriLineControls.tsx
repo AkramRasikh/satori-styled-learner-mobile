@@ -21,10 +21,9 @@ const SatoriLineControls = ({
   showMatchedTranslation,
   handleOpenGoogle,
   setIsSettingsOpenState,
+  matchedWords,
+  hasSentenceBreakdown,
 }) => {
-  const hasSentenceBreakdown = topicSentence?.vocab;
-  const matchedWords = topicSentence?.matchedWords.length > 0;
-
   return (
     <View
       style={{

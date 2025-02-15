@@ -47,6 +47,8 @@ const SatoriLine = ({
 
   const targetRef = useRef(null);
 
+  const matchedWords = topicSentence?.matchedWords.length > 0;
+  const hasSentenceBreakdown = topicSentence?.vocab;
   useEffect(() => {
     if (isAutoScrollingMode && scrollViewRef && focusThisSentence) {
       targetRef.current?.measureLayout(scrollViewRef.current, (_, y) => {
@@ -129,14 +131,28 @@ const SatoriLine = ({
         (i, index) => ({...i, colorIndex: index}),
       );
       return (
-        <TextSegmentContainer
-          textSegments={textSegments}
-          wordsInOverlapCheck={wordsInOverlapCheck}
-          matchedWordListState={matchedWordsWithColors}
-        />
+        <TouchableOpacity
+          onLongPress={() =>
+            setShowMatchedTranslation(!showMatchedTranslation)
+          }>
+          <TextSegmentContainer
+            textSegments={textSegments}
+            wordsInOverlapCheck={wordsInOverlapCheck}
+            matchedWordListState={matchedWordsWithColors}
+          />
+        </TouchableOpacity>
       );
     } else {
-      return topicSentence.safeText;
+      return (
+        <TouchableOpacity
+          onLongPress={
+            matchedWords
+              ? () => setShowMatchedTranslation(!showMatchedTranslation)
+              : () => {}
+          }>
+          {topicSentence.safeText}
+        </TouchableOpacity>
+      );
     }
   };
 
@@ -193,6 +209,8 @@ const SatoriLine = ({
               showMatchedTranslation={showMatchedTranslation}
               handleOpenGoogle={handleOpenGoogleFunc}
               setIsSettingsOpenState={setIsSettingsOpenState}
+              matchedWords={matchedWords}
+              hasSentenceBreakdown={hasSentenceBreakdown}
             />
           )}
           {!isSettingsOpenState && (
