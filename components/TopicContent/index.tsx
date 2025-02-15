@@ -88,32 +88,13 @@ const TopicContent = ({
   const soundDuration = soundRef?.current?._duration || 0;
 
   const handleVideoMode = (switchToVideoMode: boolean) => {
-    if (switchToVideoMode) {
-      setIsVideoModeState(true);
-      setSecondsToSentencesMapState(
-        mapSentenceIdsToSeconds({
-          content,
-          duration: soundDuration,
-          isVideoModeState: true,
-          realStartTime,
-        }),
-      );
-    } else {
-      setIsVideoModeState(false);
-      setSecondsToSentencesMapState(
-        mapSentenceIdsToSeconds({
-          content,
-          duration: soundDuration,
-          isVideoModeState: false,
-          realStartTime,
-        }),
-      );
-    }
+    setIsVideoModeState(switchToVideoMode);
   };
 
-  //check
+  // check
   useEffect(() => {
     if (targetSentenceId && !isLoaded) {
+      console.log('## setHighlightTargetTextState');
       setHighlightTargetTextState(targetSentenceId);
     }
   }, [targetSentenceId, isLoaded]);
@@ -131,7 +112,6 @@ const TopicContent = ({
   useSetSecondsToSentenceIds({
     content,
     soundDuration,
-    secondsToSentencesMapState,
     setSecondsToSentencesMapState,
     isVideoModeState,
     realStartTime,

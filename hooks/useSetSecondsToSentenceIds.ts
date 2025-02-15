@@ -7,7 +7,7 @@ export const mapSentenceIdsToSeconds = ({
   realStartTime,
 }) => {
   if (!content || !duration) {
-    return null;
+    return [];
   }
   const arrOfSecondsMappedIds: string[] = isVideoModeState
     ? Array.from({length: realStartTime}, () => 'placeholderId')
@@ -36,34 +36,20 @@ export const mapSentenceIdsToSeconds = ({
 const useSetSecondsToSentenceIds = ({
   content,
   soundDuration,
-  secondsToSentencesMapState,
   setSecondsToSentencesMapState,
   isVideoModeState,
   realStartTime,
 }) => {
   useEffect(() => {
-    const hasFormattedContent = content.length;
-    if (
-      soundDuration &&
-      hasFormattedContent > 0 &&
-      secondsToSentencesMapState?.length === 0
-    ) {
-      const mappedIds = mapSentenceIdsToSeconds({
+    setSecondsToSentencesMapState(
+      mapSentenceIdsToSeconds({
         content,
         duration: soundDuration,
         isVideoModeState,
         realStartTime,
-      }) as string[];
-      setSecondsToSentencesMapState(mappedIds);
-    }
-  }, [
-    realStartTime,
-    isVideoModeState,
-    soundDuration,
-    secondsToSentencesMapState,
-    content,
-    setSecondsToSentencesMapState,
-  ]);
+      }),
+    );
+  }, [isVideoModeState, realStartTime, soundDuration]);
 };
 
 export default useSetSecondsToSentenceIds;

@@ -184,7 +184,6 @@ const SatoriLine = ({
         selectable={true}
         style={{
           backgroundColor: focusThisSentence ? 'yellow' : 'transparent',
-          color: hasBeenMarkedAsDifficult ? '#8B0000' : 'black',
           fontSize: 20,
         }}>
         <View>
@@ -222,8 +221,23 @@ const SatoriLine = ({
                 flexDirection: 'row',
                 justifyContent: 'space-between',
               }}>
-              <TouchableOpacity onPress={() => setIsSettingsOpenState(true)}>
-                <Icon source="menu" size={20} color={MD2Colors.amber800} />
+              <TouchableOpacity
+                onPress={() => setIsSettingsOpenState(true)}
+                style={{
+                  backgroundColor: hasBeenMarkedAsDifficult
+                    ? MD2Colors.red600
+                    : 'transparent',
+                  borderRadius: 5,
+                }}>
+                <Icon
+                  source="menu"
+                  size={20}
+                  color={
+                    hasBeenMarkedAsDifficult
+                      ? MD2Colors.grey100
+                      : MD2Colors.amber800
+                  }
+                />
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={handlePlayThisLine}

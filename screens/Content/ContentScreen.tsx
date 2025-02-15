@@ -20,7 +20,6 @@ import useFormatUnderlyingWords, {
 } from '../../hooks/useFormatUnderlyingWords';
 import TextSegment from '../../components/TextSegment';
 import useHighlightWordToWordBank from '../../hooks/useHighlightWordToWordBank';
-import useInitTopicWordList from '../../hooks/useInitTopicWordList';
 
 const ContentScreen = () => {
   const route = useRoute();
@@ -126,11 +125,6 @@ const ContentScreen = () => {
     setIsMounted(true);
   }, []);
 
-  useInitTopicWordList({
-    targetLanguageLoadedWords,
-    setInitTargetLanguageWordsList,
-  });
-
   const getThisSentenceData = (state, sentenceId) =>
     state.find(sentence => sentence.id === sentenceId);
 
@@ -180,7 +174,10 @@ const ContentScreen = () => {
       contentIndex: selectedTopicIndex,
     });
     if (thisUpdatedContent) {
-      setSelectedContentState(thisUpdatedContent);
+      setSelectedContentState({
+        ...thisUpdatedContent,
+        content: selectedContentState.content,
+      });
     }
   };
 
@@ -202,15 +199,14 @@ const ContentScreen = () => {
     });
 
     if (updatedContent) {
-      const updatedSelectedContent = selectedContentState.content.map(item => {
-        return {
-          ...item,
-          reviewData: removeReview ? null : nextDueCard,
-        };
-      });
       setSelectedContentState({
         ...selectedContentState,
-        content: updatedSelectedContent,
+        content: selectedContentState.content.map(item => {
+          return {
+            ...item,
+            reviewData: removeReview ? null : nextDueCard,
+          };
+        }),
       });
     }
   };
@@ -242,7 +238,10 @@ const ContentScreen = () => {
       contentIndex: selectedTopicIndex,
     });
     if (thisUpdatedContent) {
-      setSelectedContentState(thisUpdatedContent);
+      setSelectedContentState({
+        ...thisUpdatedContent,
+        content: selectedContentState.content,
+      });
     }
   };
 
