@@ -8,7 +8,6 @@ import {
   srsRetentionKeyTypes,
 } from '../../../srs-algo';
 import Clipboard from '@react-native-clipboard/clipboard';
-import useOpenGoogleTranslate from '../../../hooks/useOpenGoogleTranslate';
 import useAnimation from '../../../hooks/useAnimation';
 
 export const DifficultSentenceContext = createContext(null);
@@ -16,6 +15,7 @@ export const DifficultSentenceContext = createContext(null);
 export const DifficultSentenceProvider = ({
   updateSentenceData,
   sentence,
+  openGoogleTranslateApp,
   children,
 }: PropsWithChildren<{}>) => {
   const [matchedWordListState, setMatchedWordListState] = useState([]);
@@ -27,8 +27,6 @@ export const DifficultSentenceProvider = ({
     fadeAnim,
     scaleAnim,
   });
-
-  const {openGoogleTranslateApp} = useOpenGoogleTranslate();
 
   const reviewData = sentence?.reviewData;
   const isAdhoc = sentence?.isAdhoc;

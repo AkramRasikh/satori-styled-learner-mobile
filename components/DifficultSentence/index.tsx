@@ -16,10 +16,12 @@ const DifficultSentenceComponent = ({
   setSentenceBeingHighlightedState,
   handleSelectWord,
   handleWordUpdate,
+  openGoogleTranslateApp,
 }) => {
   return (
     <DifficultSentenceProvider
       updateSentenceData={updateSentenceData}
+      openGoogleTranslateApp={openGoogleTranslateApp}
       sentence={sentence}>
       <DifficultSentenceContainer
         setSliceArrState={setSliceArrState}

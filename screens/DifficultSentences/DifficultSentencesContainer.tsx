@@ -11,6 +11,7 @@ import DifficultSentencesWordNavigator from './DifficultSentencesWordNavigator';
 import DifficultSentencesSegmentHeader from './DifficultSentencesSegmentHeader';
 import DifficultSentenceComponent from '../../components/DifficultSentence';
 import {countArrayOccurrencesToObj} from '../../utils/count-array-occurrences-to-obj';
+import useOpenGoogleTranslate from '../../hooks/useOpenGoogleTranslate';
 
 const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
   const [toggleableSentencesState, setToggleableSentencesState] = useState([]);
@@ -93,6 +94,8 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
     updateWordData(wordData);
     setSelectedDueCardState(null);
   };
+
+  const {openGoogleTranslateApp} = useOpenGoogleTranslate();
 
   const updateSentenceDataScreenLevel = ({
     isAdhoc,
@@ -236,6 +239,7 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
                 handleSelectWord={handleSelectWord}
                 handleWordUpdate={handleWordUpdate}
                 sentence={sentence}
+                openGoogleTranslateApp={openGoogleTranslateApp}
                 indexNum={index}
               />
             ))}
