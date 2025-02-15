@@ -8,7 +8,6 @@ import useTrackCurrentTimeState from '../../hooks/useTrackCurrentTimeState';
 import TopicContentAudioSection from '../TopicContentAudioSection';
 import useData from '../../context/Data/useData';
 import AnimatedModal from '../AnimatedModal';
-import useTopicContent from './context/useTopicContentSnippets';
 import useTopicContentAudio from './context/useTopicContentAudio';
 import {generateRandomId} from '../../utils/generate-random-id';
 import {TopicContentSnippetsProvider} from './context/TopicContentSnippetsProvider';

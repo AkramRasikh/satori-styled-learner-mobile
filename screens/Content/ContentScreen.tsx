@@ -9,7 +9,6 @@ import ScreenContainerComponent from '../../components/ScreenContainerComponent'
 
 import useData from '../../context/Data/useData';
 import useDifficultSentences from '../../context/DifficultSentences/useDifficultSentencesProvider';
-import {TopicContentAudioProvider} from '../../components/TopicContent/context/TopicContentAudioProvider';
 import {
   getEmptyCard,
   getNextScheduledOptions,
@@ -270,23 +269,19 @@ const ContentScreen = () => {
   return (
     <ScreenContainerComponent updatePromptState={updatePromptState}>
       <View style={{padding: 10}}>
-        <TopicContentAudioProvider
+        <TopicContent
           topicName={selectedTopic}
-          realStartTime={selectedContentState?.realStartTime}>
-          <TopicContent
-            topicName={selectedTopic}
-            loadedContent={selectedContentState}
-            updateSentenceData={updateSentenceDataFunc}
-            targetSentenceId={targetSentenceId}
-            breakdownSentenceFunc={breakdownSentenceFunc}
-            handleIsCore={handleIsCore}
-            updateTopicMetaData={updateMetaData}
-            handleBulkReviews={handleBulkReviews}
-            updateContentMetaDataIsLoadedDispatch={
-              updateContentMetaDataIsLoadedDispatch
-            }
-          />
-        </TopicContentAudioProvider>
+          loadedContent={selectedContentState}
+          updateSentenceData={updateSentenceDataFunc}
+          targetSentenceId={targetSentenceId}
+          breakdownSentenceFunc={breakdownSentenceFunc}
+          handleIsCore={handleIsCore}
+          updateTopicMetaData={updateMetaData}
+          handleBulkReviews={handleBulkReviews}
+          updateContentMetaDataIsLoadedDispatch={
+            updateContentMetaDataIsLoadedDispatch
+          }
+        />
       </View>
     </ScreenContainerComponent>
   );

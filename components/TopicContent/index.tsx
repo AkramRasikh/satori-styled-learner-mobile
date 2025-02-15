@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import useGetCombinedAudioData, {
   getFirebaseAudioURL,
 } from '../../hooks/useGetCombinedAudioData';
@@ -7,10 +7,38 @@ import useLanguageSelector from '../../context/LanguageSelector/useLanguageSelec
 import useSetSecondsToSentenceIds, {
   mapSentenceIdsToSeconds,
 } from '../../hooks/useSetSecondsToSentenceIds';
-import useTopicContentAudio from './context/useTopicContentAudio';
 import TopicContentAudioMode from './TopicContentAudioMode';
 import TopicContentVideoMode from './TopicContentVideoMode';
 import {TopicContentVideoProvider} from './context/TopicContentVideoProvider';
+import {TopicContentAudioProvider} from './context/TopicContentAudioProvider';
+import Sound from 'react-native-sound';
+import useMP3File from '../../hooks/useMP3File';
+import useLoadAudioInstance from '../../hooks/useLoadAudioInstance';
+
+const useInitAudio = ({soundRef, topicName, url}) => {
+  const {loadFile, filePath} = useMP3File(topicName);
+
+  const {triggerLoadURL, isLoaded} = useLoadAudioInstance({
+    soundRef,
+    url: filePath,
+  });
+
+  useEffect(() => {
+    if (filePath) {
+      triggerLoadURL();
+    }
+  }, [filePath]);
+
+  const handleLoad = () => {
+    loadFile(topicName, url);
+  };
+
+  useEffect(() => {
+    handleLoad();
+  }, []);
+
+  return {isLoaded};
+};
 
 const TopicContent = ({
   topicName,
@@ -26,14 +54,18 @@ const TopicContent = ({
   const [secondsToSentencesMapState, setSecondsToSentencesMapState] = useState<
     string[]
   >([]);
+  const [isVideoModeState, setIsVideoModeState] = useState(false);
 
   const [highlightTargetTextState, setHighlightTargetTextState] = useState('');
   const [audioLoadingProgress, setAudioLoadingProgress] = useState(0);
 
   const {languageSelectedState} = useLanguageSelector();
 
-  const {isLoaded, soundRef, isVideoModeState, setIsVideoModeState} =
-    useTopicContentAudio();
+  const soundRef = useRef<Sound>(null);
+
+  const url = getFirebaseAudioURL(topicName, languageSelectedState);
+
+  const {isLoaded} = useInitAudio({soundRef, topicName, url});
 
   const content = loadedContent.content;
   const origin = loadedContent.origin;
@@ -46,8 +78,6 @@ const TopicContent = ({
   );
 
   const isMediaContent = origin === 'netflix' || origin === 'youtube';
-
-  const url = getFirebaseAudioURL(topicName, languageSelectedState);
 
   const soundDuration = soundRef?.current?._duration || 0;
 
@@ -133,22 +163,28 @@ const TopicContent = ({
   }
 
   return (
-    <TopicContentAudioMode
+    <TopicContentAudioProvider
       topicName={topicName}
-      updateTopicMetaData={updateTopicMetaData}
-      updateSentenceData={updateSentenceData}
-      loadedContent={loadedContent}
-      breakdownSentenceFunc={breakdownSentenceFunc}
-      handleBulkReviews={handleBulkReviews}
-      handleIsCore={handleIsCore}
-      content={content}
-      handleVideoMode={handleVideoMode}
-      secondsToSentencesMapState={secondsToSentencesMapState}
-      highlightTargetTextState={highlightTargetTextState}
-      formattedData={content}
-      hasContentToReview={hasContentToReview}
-      url={url}
-    />
+      realStartTime={realStartTime}
+      isVideoModeState={isVideoModeState}
+      soundRef={soundRef}>
+      <TopicContentAudioMode
+        topicName={topicName}
+        updateTopicMetaData={updateTopicMetaData}
+        updateSentenceData={updateSentenceData}
+        loadedContent={loadedContent}
+        breakdownSentenceFunc={breakdownSentenceFunc}
+        handleBulkReviews={handleBulkReviews}
+        handleIsCore={handleIsCore}
+        content={content}
+        handleVideoMode={handleVideoMode}
+        secondsToSentencesMapState={secondsToSentencesMapState}
+        highlightTargetTextState={highlightTargetTextState}
+        formattedData={content}
+        hasContentToReview={hasContentToReview}
+        url={url}
+      />
+    </TopicContentAudioProvider>
   );
 };
 
