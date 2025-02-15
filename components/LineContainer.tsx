@@ -4,7 +4,7 @@ import SatoriLine from './SatoriLine';
 import {useEffect, useState} from 'react';
 import {SnippetHandlersDifficultSentence} from './MiniSnippetTimeChangeHandlers';
 import useSnippetControls from '../hooks/useSnippetControls';
-import useTopicContent from './TopicContent/context/useTopicContentSnippets';
+import useTopicContentSnippets from './TopicContent/context/useTopicContentSnippets';
 
 const OneSnippetContainer = ({
   snippet,
@@ -19,7 +19,7 @@ const OneSnippetContainer = ({
   const [adjustableDuration, setAdjustableDuration] = useState(4);
 
   const {handleAddSnippet, deleteSnippet, setSelectedSnippetsState} =
-    useTopicContent();
+    useTopicContentSnippets();
 
   const id = snippet.id;
   const sentenceId = snippet.sentenceId;

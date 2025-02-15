@@ -11,6 +11,7 @@ import AnimatedModal from '../AnimatedModal';
 import useTopicContent from './context/useTopicContentSnippets';
 import useTopicContentAudio from './context/useTopicContentAudio';
 import {generateRandomId} from '../../utils/generate-random-id';
+import {TopicContentSnippetsProvider} from './context/TopicContentSnippetsProvider';
 
 const timeDataWithinSnippet = (thisItem, currentTimeState) => {
   const pointInAudioInSnippet = currentTimeState - thisItem.startAt;
@@ -39,10 +40,10 @@ const TopicContentAudioMode = ({
   const [highlightMode, setHighlightMode] = useState(false);
   const [showReviewSectionState, setShowReviewSectionState] = useState(false);
   const [highlightedIndices, setHighlightedIndices] = useState([]);
+  const [selectedSnippetsState, setSelectedSnippetsState] = useState([]);
 
   const {saveWordFirebase} = useData();
 
-  const {selectedSnippetsState, setSelectedSnippetsState} = useTopicContent();
   const {
     handlePlayFromThisSentence,
     playFromHere,
@@ -100,7 +101,11 @@ const TopicContentAudioMode = ({
   });
 
   return (
-    <>
+    <TopicContentSnippetsProvider
+      topicName={topicName}
+      loadedContent={loadedContent}
+      selectedSnippetsState={selectedSnippetsState}
+      setSelectedSnippetsState={setSelectedSnippetsState}>
       {showReviewSectionState && (
         <AnimatedModal visible onClose={() => setShowReviewSectionState(false)}>
           <ReviewSection
@@ -162,7 +167,7 @@ const TopicContentAudioMode = ({
           setShowReviewSectionState={setShowReviewSectionState}
         />
       </View>
-    </>
+    </TopicContentSnippetsProvider>
   );
 };
 

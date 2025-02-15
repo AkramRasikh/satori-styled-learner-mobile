@@ -9,7 +9,6 @@ import ScreenContainerComponent from '../../components/ScreenContainerComponent'
 
 import useData from '../../context/Data/useData';
 import useDifficultSentences from '../../context/DifficultSentences/useDifficultSentencesProvider';
-import {TopicContentSnippetsProvider} from '../../components/TopicContent/context/TopicContentSnippetsProvider';
 import {TopicContentAudioProvider} from '../../components/TopicContent/context/TopicContentAudioProvider';
 import {
   getEmptyCard,
@@ -27,9 +26,7 @@ import useInitTopicWordList from '../../hooks/useInitTopicWordList';
 const ContentScreen = () => {
   const route = useRoute();
 
-  const [triggerSentenceIdUpdate, setTriggerSentenceIdUpdate] = useState(null);
   const [selectedContentState, setSelectedContentState] = useState(null);
-  const [selectedSnippetsState, setSelectedSnippetsState] = useState([]);
   const [initTargetLanguageWordsList, setInitTargetLanguageWordsList] =
     useState(null);
   const [updateWordList, setUpdateWordList] = useState(false);
@@ -228,7 +225,6 @@ const ContentScreen = () => {
     });
     if (updatedSelectedState) {
       setSelectedContentState(updatedSelectedState);
-      setTriggerSentenceIdUpdate(sentenceId);
       updateDifficultSentencesProvider(updatedSelectedState, sentenceId);
       return true;
     }
@@ -264,7 +260,6 @@ const ContentScreen = () => {
         ...selectedContentState,
         content: updatedSelectedState.content,
       });
-      setTriggerSentenceIdUpdate(sentenceId);
     }
   };
 
@@ -278,25 +273,19 @@ const ContentScreen = () => {
         <TopicContentAudioProvider
           topicName={selectedTopic}
           realStartTime={selectedContentState?.realStartTime}>
-          <TopicContentSnippetsProvider
+          <TopicContent
             topicName={selectedTopic}
             loadedContent={selectedContentState}
-            selectedSnippetsState={selectedSnippetsState}
-            setSelectedSnippetsState={setSelectedSnippetsState}>
-            <TopicContent
-              topicName={selectedTopic}
-              loadedContent={selectedContentState}
-              updateSentenceData={updateSentenceDataFunc}
-              targetSentenceId={targetSentenceId}
-              breakdownSentenceFunc={breakdownSentenceFunc}
-              handleIsCore={handleIsCore}
-              updateTopicMetaData={updateMetaData}
-              handleBulkReviews={handleBulkReviews}
-              updateContentMetaDataIsLoadedDispatch={
-                updateContentMetaDataIsLoadedDispatch
-              }
-            />
-          </TopicContentSnippetsProvider>
+            updateSentenceData={updateSentenceDataFunc}
+            targetSentenceId={targetSentenceId}
+            breakdownSentenceFunc={breakdownSentenceFunc}
+            handleIsCore={handleIsCore}
+            updateTopicMetaData={updateMetaData}
+            handleBulkReviews={handleBulkReviews}
+            updateContentMetaDataIsLoadedDispatch={
+              updateContentMetaDataIsLoadedDispatch
+            }
+          />
         </TopicContentAudioProvider>
       </View>
     </ScreenContainerComponent>
