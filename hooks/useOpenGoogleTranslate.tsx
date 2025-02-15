@@ -1,12 +1,19 @@
 import {Linking, Alert} from 'react-native';
+import useLanguageSelector from '../context/LanguageSelector/useLanguageSelector';
+
+const sourceLangKey = {
+  ['japanese']: 'ja',
+  ['chinese']: 'zh-Hans',
+};
 
 const useOpenGoogleTranslate = () => {
+  const {languageSelectedState} = useLanguageSelector();
   const openGoogleTranslateApp = targetLangTxtToTranslate => {
     if (!targetLangTxtToTranslate) {
       return;
     }
 
-    const sourceLang = 'ja';
+    const sourceLang = sourceLangKey[languageSelectedState];
     const targetLanguage = 'en'; // english (target language)
     const googleTranslateUrl = `googletranslate://?sl=${sourceLang}&tl=${targetLanguage}&text=${targetLangTxtToTranslate}`;
     const appStoreUrl = 'https://apps.apple.com/app/id414706506'; // Google Translate app store link

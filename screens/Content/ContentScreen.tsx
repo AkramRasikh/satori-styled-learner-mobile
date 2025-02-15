@@ -223,7 +223,13 @@ const ContentScreen = () => {
       contentIndex: selectedTopicIndex,
     });
     if (updatedSelectedState) {
-      setSelectedContentState(updatedSelectedState);
+      setSelectedContentState({
+        ...selectedContentState,
+        content: updatedSelectedState.content.map((item, index) => ({
+          ...selectedContentState.content[index],
+          ...item,
+        })),
+      });
       updateDifficultSentencesProvider(updatedSelectedState, sentenceId);
       return true;
     }
@@ -257,7 +263,10 @@ const ContentScreen = () => {
     if (updatedSelectedState) {
       setSelectedContentState({
         ...selectedContentState,
-        content: updatedSelectedState.content,
+        content: updatedSelectedState.content.map((item, index) => ({
+          ...selectedContentState.content[index],
+          ...item,
+        })),
       });
     }
   };
