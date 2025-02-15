@@ -67,6 +67,10 @@ const SatoriLine = ({
     }
   };
 
+  const handleOpenGoogleFunc = () => {
+    handleOpenGoogle(topicSentence.targetLang);
+  };
+
   const hasBeenMarkedAsDifficult =
     topicSentence?.nextReview || topicSentence?.reviewData?.due;
 
@@ -174,7 +178,7 @@ const SatoriLine = ({
               getSentenceBreakdown={getSentenceBreakdown}
               setShowMatchedTranslation={setShowMatchedTranslation}
               showMatchedTranslation={showMatchedTranslation}
-              handleOpenGoogle={handleOpenGoogle}
+              handleOpenGoogle={handleOpenGoogleFunc}
               setIsSettingsOpenState={setIsSettingsOpenState}
             />
           )}
