@@ -83,11 +83,7 @@ const SatoriLineControls = ({
         )}
       </View>
       <TouchableOpacity onPress={handlePlayThisLine}>
-        <Icon
-          source={isPlaying && focusThisSentence ? 'pause' : 'play'}
-          size={20}
-          color={isPlaying && focusThisSentence && MD2Colors.green300}
-        />
+        <Text>{isPlaying && focusThisSentence ? '⏸' : '▶️'}</Text>
       </TouchableOpacity>
     </View>
   );
