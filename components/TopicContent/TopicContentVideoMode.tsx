@@ -23,10 +23,10 @@ const TopicContentVideoMode = ({
   handleVideoMode,
   handleIsCore,
   handleBulkReviews,
-  formattedData,
   highlightTargetTextState,
   secondsToSentencesMapState,
   hasContentToReview,
+  handleOpenGoogle,
 }) => {
   const [englishOnly, setEnglishOnly] = useState(false);
   const [engMaster, setEngMaster] = useState(true);
@@ -39,7 +39,6 @@ const TopicContentVideoMode = ({
   const {saveWordFirebase} = useData();
 
   const {
-    currentTimeState,
     currentVideoTimeState,
     videoRef,
     isVideoPlaying,
@@ -52,7 +51,7 @@ const TopicContentVideoMode = ({
     playVideo,
   } = useTopicContentVideo();
 
-  const {reviewHistory, nextReview, isCore, contentIndex, hasVideo} =
+  const {reviewHistory, nextReview, isCore, contentIndex, hasVideo, content} =
     loadedContent;
 
   const masterPlay =
@@ -112,12 +111,12 @@ const TopicContentVideoMode = ({
               setEngMaster={setEngMaster}
               handleIsCore={handleIsCore}
               isCore={isCore}
-              isVideoModeState={true}
               hasVideo={hasVideo}
               handleVideoMode={handleVideoMode}
+              isVideoModeState
             />
             <LineContainer
-              formattedData={formattedData}
+              formattedData={content}
               playFromThisSentence={handlePlayFromThisSentence}
               englishOnly={englishOnly}
               highlightedIndices={highlightedIndices}
@@ -131,11 +130,12 @@ const TopicContentVideoMode = ({
               setHighlightMode={setHighlightMode}
               topicName={topicName}
               updateSentenceData={updateSentenceData}
-              currentTimeState={currentTimeState}
+              currentTimeState={currentVideoTimeState}
               playSound={playVideo}
               highlightTargetTextState={highlightTargetTextState}
               contentIndex={contentIndex}
               breakdownSentenceFunc={breakdownSentenceFunc}
+              handleOpenGoogle={handleOpenGoogle}
             />
           </ScrollView>
         </View>

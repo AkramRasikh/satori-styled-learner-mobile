@@ -14,6 +14,7 @@ import {TopicContentAudioProvider} from './context/TopicContentAudioProvider';
 import Sound from 'react-native-sound';
 import useMP3File from '../../hooks/useMP3File';
 import useLoadAudioInstance from '../../hooks/useLoadAudioInstance';
+import useOpenGoogleTranslate from '../../hooks/useOpenGoogleTranslate';
 
 const useInitAudio = ({soundRef, topicName, url}) => {
   const {loadFile, filePath} = useMP3File(topicName);
@@ -81,6 +82,12 @@ const TopicContent = ({
 
   const soundDuration = soundRef?.current?._duration || 0;
 
+  const {openGoogleTranslateApp} = useOpenGoogleTranslate();
+
+  const handleOpenGoogle = topicSentenceTargetLang => {
+    openGoogleTranslateApp(topicSentenceTargetLang);
+  };
+
   const handleVideoMode = (switchToVideoMode: boolean) => {
     if (switchToVideoMode) {
       setIsVideoModeState(true);
@@ -105,6 +112,7 @@ const TopicContent = ({
     }
   };
 
+  //check
   useEffect(() => {
     if (targetSentenceId && !isLoaded) {
       setHighlightTargetTextState(targetSentenceId);
@@ -153,10 +161,10 @@ const TopicContent = ({
           handleVideoMode={handleVideoMode}
           handleIsCore={handleIsCore}
           handleBulkReviews={handleBulkReviews}
-          formattedData={content}
           highlightTargetTextState={highlightTargetTextState}
           secondsToSentencesMapState={secondsToSentencesMapState}
           hasContentToReview={hasContentToReview}
+          handleOpenGoogle={handleOpenGoogle}
         />
       </TopicContentVideoProvider>
     );
@@ -175,13 +183,13 @@ const TopicContent = ({
         breakdownSentenceFunc={breakdownSentenceFunc}
         handleBulkReviews={handleBulkReviews}
         handleIsCore={handleIsCore}
-        content={content}
         handleVideoMode={handleVideoMode}
         secondsToSentencesMapState={secondsToSentencesMapState}
         highlightTargetTextState={highlightTargetTextState}
         formattedData={content}
         hasContentToReview={hasContentToReview}
         url={url}
+        handleOpenGoogle={handleOpenGoogle}
       />
     </TopicContentAudioProvider>
   );

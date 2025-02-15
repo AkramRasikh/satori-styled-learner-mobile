@@ -25,12 +25,12 @@ const TopicContentAudioMode = ({
   breakdownSentenceFunc,
   handleBulkReviews,
   handleIsCore,
-  content,
   handleVideoMode,
   secondsToSentencesMapState,
   highlightTargetTextState,
   formattedData,
   hasContentToReview,
+  handleOpenGoogle,
   url,
 }) => {
   const [masterPlay, setMasterPlay] = useState('');
@@ -55,7 +55,7 @@ const TopicContentAudioMode = ({
     setIsPlaying,
   } = useTopicContentAudio();
 
-  const {reviewHistory, nextReview, isCore, contentIndex, hasVideo} =
+  const {reviewHistory, nextReview, isCore, contentIndex, hasVideo, content} =
     loadedContent;
 
   const {height} = Dimensions?.get('window');
@@ -158,6 +158,7 @@ const TopicContentAudioMode = ({
             highlightTargetTextState={highlightTargetTextState}
             contentIndex={contentIndex}
             breakdownSentenceFunc={breakdownSentenceFunc}
+            handleOpenGoogle={handleOpenGoogle}
           />
         </ScrollView>
         <TopicContentAudioSection

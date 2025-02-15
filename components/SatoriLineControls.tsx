@@ -20,13 +20,8 @@ const SatoriLineControls = ({
   getSentenceBreakdown,
   setShowMatchedTranslation,
   showMatchedTranslation,
+  handleOpenGoogle,
 }) => {
-  const {openGoogleTranslateApp} = useOpenGoogleTranslate();
-
-  const handleOpenGoogle = () => {
-    openGoogleTranslateApp(topicSentence.targetLang);
-  };
-
   const hasSentenceBreakdown = topicSentence?.vocab;
   const matchedWords = topicSentence?.matchedWords.length > 0;
 

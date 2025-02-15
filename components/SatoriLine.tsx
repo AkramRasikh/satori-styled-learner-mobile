@@ -32,6 +32,7 @@ const SatoriLine = ({
   updateSentenceData,
   contentIndex,
   breakdownSentenceFunc,
+  handleOpenGoogle,
 }) => {
   const [showEng, setShowEng] = useState(false);
   const [showNotes, setShowNotes] = useState(false);
@@ -170,6 +171,7 @@ const SatoriLine = ({
           getSentenceBreakdown={getSentenceBreakdown}
           setShowMatchedTranslation={setShowMatchedTranslation}
           showMatchedTranslation={showMatchedTranslation}
+          handleOpenGoogle={handleOpenGoogle}
         />
         {englishOnly ? null : highlightMode ? (
           <HighlightTextZone

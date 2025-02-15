@@ -145,6 +145,7 @@ const LineContainer = ({
   highlightTargetTextState,
   contentIndex,
   breakdownSentenceFunc,
+  handleOpenGoogle,
 }) => {
   const {width} = Dimensions.get('window');
 
@@ -203,6 +204,7 @@ const LineContainer = ({
                   updateSentenceData={updateSentenceData}
                   contentIndex={contentIndex}
                   breakdownSentenceFunc={breakdownSentenceFunc}
+                  handleOpenGoogle={handleOpenGoogle}
                 />
               </View>
 
