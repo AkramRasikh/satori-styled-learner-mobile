@@ -269,12 +269,10 @@ const SatoriLine = ({
           style={{
             paddingTop: 5,
             width: textWidth,
+            alignItems: 'flex-end',
+            opacity: 0.5,
           }}>
-          <Text
-            selectable={true}
-            style={{color: hasBeenMarkedAsDifficult ? '#8B0000' : 'black'}}>
-            {topicSentence.baseLang}
-          </Text>
+          <Text selectable={true}>{topicSentence.baseLang}</Text>
         </View>
       ) : null}
       {showSentenceBreakdown ? (
