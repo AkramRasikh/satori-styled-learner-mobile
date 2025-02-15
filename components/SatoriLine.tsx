@@ -7,7 +7,7 @@ import SatoriLineSRS from './SatoriLineSRS';
 import SentenceBreakdown from './SentenceBreakdown';
 import {getHexCode} from '../utils/get-hex-code';
 import useLanguageSelector from '../context/LanguageSelector/useLanguageSelector';
-import {ActivityIndicator, Icon} from 'react-native-paper';
+import {ActivityIndicator, Icon, MD2Colors} from 'react-native-paper';
 import DifficultSentenceMappedWords from './DifficultSentence/DifficultSentenceMappedWords';
 import {checkOverlap} from '../utils/check-word-overlap';
 import TextSegmentContainer from './TextSegmentContainer';
@@ -188,9 +188,13 @@ const SatoriLine = ({
                 justifyContent: 'space-between',
               }}>
               <TouchableOpacity onPress={() => setIsSettingsOpenState(true)}>
-                <Icon source="menu" size={20} />
+                <Icon source="menu" size={20} color={MD2Colors.amber800} />
               </TouchableOpacity>
-              <TouchableOpacity onPress={handlePlayThisLine}>
+              <TouchableOpacity
+                onPress={handlePlayThisLine}
+                style={{
+                  marginRight: 15,
+                }}>
                 <Text>{isPlaying && focusThisSentence ? '⏸' : '▶️'}</Text>
               </TouchableOpacity>
             </View>

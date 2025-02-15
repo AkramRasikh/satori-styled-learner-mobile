@@ -38,7 +38,8 @@ const SatoriLineControls = ({
         style={{
           display: 'flex',
           flexDirection: 'row',
-          gap: 15,
+          justifyContent: 'space-between',
+          gap: 20,
         }}>
         <TouchableOpacity onPress={() => setIsSettingsOpenState(false)}>
           <Icon source="menu-open" size={20} />
@@ -86,7 +87,12 @@ const SatoriLineControls = ({
           </TouchableOpacity>
         )}
       </View>
-      <TouchableOpacity onPress={handlePlayThisLine}>
+
+      <TouchableOpacity
+        onPress={handlePlayThisLine}
+        style={{
+          marginRight: 15,
+        }}>
         <Text>{isPlaying && focusThisSentence ? '⏸' : '▶️'}</Text>
       </TouchableOpacity>
     </View>
