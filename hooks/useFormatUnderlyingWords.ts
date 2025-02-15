@@ -44,7 +44,6 @@ const useFormatUnderlyingWords = ({
 }) => {
   useEffect(() => {
     if (updateWordList) {
-      console.log('## setSelectedContentState!');
       setSelectedContentState({
         ...loadedContent,
         content: formatTextForTargetWords(
@@ -55,7 +54,7 @@ const useFormatUnderlyingWords = ({
       });
       setUpdateWordList(false);
     }
-  }, [updateWordList]);
+  }, [updateWordList, loadedContent]);
 };
 
 export default useFormatUnderlyingWords;
