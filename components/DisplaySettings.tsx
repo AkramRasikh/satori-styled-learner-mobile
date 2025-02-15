@@ -2,7 +2,7 @@ import React, {View} from 'react-native';
 import SwitchButton from './SwitchButton';
 import {Text, DefaultTheme} from 'react-native-paper';
 
-const SettingBlock = ({func, bool, text}) => {
+export const SettingBlock = ({func, bool, text}) => {
   return (
     <View>
       <Text style={{...DefaultTheme.fonts.labelMedium, alignSelf: 'center'}}>
@@ -18,16 +18,20 @@ const DisplaySettings = ({
   setEnglishOnly,
   engMaster,
   setEngMaster,
-  handleIsCore,
-  isCore,
   isVideoModeState,
   hasVideo,
   handleVideoMode,
+  isAutoScrollingMode,
+  setisAutoScrollingMode,
 }) => {
   let defaultSettingsArr = [
     {func: setEnglishOnly, bool: englishOnly, text: 'Eng only'},
     {func: setEngMaster, bool: engMaster, text: 'Eng Master'},
-    {func: handleIsCore, bool: isCore, text: 'Core'},
+    {
+      func: setisAutoScrollingMode,
+      bool: isAutoScrollingMode,
+      text: 'Auto scroll',
+    },
   ];
 
   if (hasVideo) {

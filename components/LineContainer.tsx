@@ -146,6 +146,8 @@ const LineContainer = ({
   contentIndex,
   breakdownSentenceFunc,
   handleOpenGoogle,
+  scrollViewRef,
+  isAutoScrollingMode,
 }) => {
   const {width} = Dimensions.get('window');
 
@@ -205,6 +207,8 @@ const LineContainer = ({
                   contentIndex={contentIndex}
                   breakdownSentenceFunc={breakdownSentenceFunc}
                   handleOpenGoogle={handleOpenGoogle}
+                  scrollViewRef={scrollViewRef}
+                  isAutoScrollingMode={isAutoScrollingMode}
                 />
               </View>
 

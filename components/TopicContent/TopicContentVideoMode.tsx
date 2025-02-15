@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useRef, useState} from 'react';
 import {View, Text, ScrollView, Dimensions} from 'react-native';
 import {getFirebaseVideoURL} from '../../hooks/useGetCombinedAudioData';
 import DisplaySettings from '../DisplaySettings';
@@ -32,7 +32,9 @@ const TopicContentVideoMode = ({
   const [engMaster, setEngMaster] = useState(true);
   const [highlightMode, setHighlightMode] = useState(false);
   const [showReviewSectionState, setShowReviewSectionState] = useState(false);
+  const [isAutoScrollingMode, setisAutoScrollingMode] = useState(false);
   const [highlightedIndices, setHighlightedIndices] = useState([]);
+  const scrollViewRef = useRef(null);
 
   const {languageSelectedState} = useLanguageSelector();
 
@@ -74,6 +76,8 @@ const TopicContentVideoMode = ({
             updateTopicMetaData={updateTopicMetaData}
             handleBulkReviews={handleBulkReviews}
             hasSomeReviewedSentences={hasContentToReview}
+            handleIsCore={handleIsCore}
+            isCore={isCore}
           />
         </AnimatedModal>
       )}
@@ -100,7 +104,8 @@ const TopicContentVideoMode = ({
             style={{
               maxHeight: height * 0.58,
               paddingVertical: 5,
-            }}>
+            }}
+            ref={scrollViewRef}>
             <View style={{alignSelf: 'center'}}>
               <Text>{topicName}</Text>
             </View>
@@ -109,10 +114,10 @@ const TopicContentVideoMode = ({
               setEnglishOnly={setEnglishOnly}
               engMaster={engMaster}
               setEngMaster={setEngMaster}
-              handleIsCore={handleIsCore}
-              isCore={isCore}
               hasVideo={hasVideo}
               handleVideoMode={handleVideoMode}
+              isAutoScrollingMode={isAutoScrollingMode}
+              setisAutoScrollingMode={setisAutoScrollingMode}
               isVideoModeState
             />
             <LineContainer
@@ -136,6 +141,8 @@ const TopicContentVideoMode = ({
               contentIndex={contentIndex}
               breakdownSentenceFunc={breakdownSentenceFunc}
               handleOpenGoogle={handleOpenGoogle}
+              scrollViewRef={scrollViewRef}
+              isAutoScrollingMode={isAutoScrollingMode}
             />
           </ScrollView>
         </View>

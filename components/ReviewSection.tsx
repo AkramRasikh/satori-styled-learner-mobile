@@ -3,6 +3,7 @@ import {useState} from 'react';
 import FutureDateIncrementor from './FutureDateIncrementor';
 import {isSameDay} from '../utils/check-same-date';
 import {Button, DefaultTheme, FAB, Text} from 'react-native-paper';
+import {SettingBlock} from './DisplaySettings';
 
 const getDaysLater = (today, futureDate) => {
   const futureDateObj = new Date(futureDate);
@@ -43,6 +44,8 @@ const ReviewSection = ({
   updateTopicMetaData,
   handleBulkReviews,
   hasSomeReviewedSentences,
+  handleIsCore,
+  isCore,
 }) => {
   const [futureDaysState, setFutureDaysState] = useState(3);
 
@@ -100,6 +103,7 @@ const ReviewSection = ({
         paddingBottom: 10,
         width: '100%',
       }}>
+      <SettingBlock func={handleIsCore} bool={isCore} text={'Core'} />
       <FAB
         onPress={handleBulkReviewsFunc}
         icon="clock"

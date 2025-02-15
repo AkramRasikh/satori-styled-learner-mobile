@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useRef, useState} from 'react';
 import {View, Text, ScrollView, Dimensions} from 'react-native';
 import DisplaySettings from '../DisplaySettings';
 import useAudioTextSync from '../../hooks/useAudioTextSync';
@@ -40,6 +40,9 @@ const TopicContentAudioMode = ({
   const [showReviewSectionState, setShowReviewSectionState] = useState(false);
   const [highlightedIndices, setHighlightedIndices] = useState([]);
   const [selectedSnippetsState, setSelectedSnippetsState] = useState([]);
+  const [isAutoScrollingMode, setisAutoScrollingMode] = useState(false);
+
+  const scrollViewRef = useRef(null);
 
   const {saveWordFirebase} = useData();
 
@@ -114,6 +117,8 @@ const TopicContentAudioMode = ({
             updateTopicMetaData={updateTopicMetaData}
             handleBulkReviews={handleBulkReviews}
             hasSomeReviewedSentences={hasContentToReview}
+            handleIsCore={handleIsCore}
+            isCore={isCore}
           />
         </AnimatedModal>
       )}
@@ -131,11 +136,11 @@ const TopicContentAudioMode = ({
             setEnglishOnly={setEnglishOnly}
             engMaster={engMaster}
             setEngMaster={setEngMaster}
-            handleIsCore={handleIsCore}
-            isCore={isCore}
             isVideoModeState={isVideoModeState}
             hasVideo={hasVideo}
             handleVideoMode={handleVideoMode}
+            isAutoScrollingMode={isAutoScrollingMode}
+            setisAutoScrollingMode={setisAutoScrollingMode}
           />
           <LineContainer
             formattedData={formattedData}
@@ -159,6 +164,7 @@ const TopicContentAudioMode = ({
             contentIndex={contentIndex}
             breakdownSentenceFunc={breakdownSentenceFunc}
             handleOpenGoogle={handleOpenGoogle}
+            scrollViewRef={scrollViewRef}
           />
         </ScrollView>
         <TopicContentAudioSection

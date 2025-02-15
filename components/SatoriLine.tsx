@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import Clipboard from '@react-native-clipboard/clipboard';
 import {Text, TouchableOpacity, View} from 'react-native';
 import HighlightTextZone from './HighlightTextZone';
@@ -33,6 +33,8 @@ const SatoriLine = ({
   contentIndex,
   breakdownSentenceFunc,
   handleOpenGoogle,
+  scrollViewRef,
+  isAutoScrollingMode,
 }) => {
   const [showEng, setShowEng] = useState(false);
   const [showNotes, setShowNotes] = useState(false);
@@ -42,6 +44,16 @@ const SatoriLine = ({
   const [isLoadingState, setIsLoadingState] = useState(false);
   const [isSettingsOpenState, setIsSettingsOpenState] = useState(false);
   const [safeTextState, setSafeTextState] = useState();
+
+  const targetRef = useRef(null);
+
+  useEffect(() => {
+    if (isAutoScrollingMode && scrollViewRef && focusThisSentence) {
+      targetRef.current?.measureLayout(scrollViewRef.current, (_, y) => {
+        scrollViewRef.current?.scrollTo({y: y - 100, animated: true});
+      });
+    }
+  }, [focusThisSentence, scrollViewRef, isAutoScrollingMode]);
 
   const {languageSelectedState} = useLanguageSelector();
   const getSentenceBreakdown = async () => {
@@ -140,7 +152,8 @@ const SatoriLine = ({
     <View
       style={{
         opacity: isLoadingState ? 0.5 : 1,
-      }}>
+      }}
+      ref={targetRef}>
       {isLoadingState && (
         <ActivityIndicator
           style={{
