@@ -58,6 +58,13 @@ const SatoriLine = ({
     }
   };
 
+  const handleSaveWord = async objToSave => {
+    const resBool = await saveWordFirebase(objToSave);
+    if (resBool) {
+      setSafeTextState(getThisText());
+    }
+  };
+
   const hasBeenMarkedAsDifficult =
     topicSentence?.nextReview || topicSentence?.reviewData?.due;
 
@@ -171,7 +178,7 @@ const SatoriLine = ({
             text={topicSentence.targetLang}
             highlightedIndices={highlightedIndices}
             setHighlightedIndices={setHighlightedIndices}
-            saveWordFirebase={saveWordFirebase}
+            saveWordFirebase={handleSaveWord}
             setHighlightMode={setHighlightMode}
             textWidth={textWidth}
           />

@@ -260,7 +260,10 @@ const ContentScreen = () => {
       contentIndex,
     });
     if (updatedSelectedState) {
-      setSelectedContentState(updatedSelectedState);
+      setSelectedContentState({
+        ...selectedContentState,
+        content: updatedSelectedState.content,
+      });
       setTriggerSentenceIdUpdate(sentenceId);
     }
   };
@@ -284,8 +287,6 @@ const ContentScreen = () => {
               topicName={selectedTopic}
               loadedContent={selectedContentState}
               updateSentenceData={updateSentenceDataFunc}
-              triggerSentenceIdUpdate={triggerSentenceIdUpdate}
-              setTriggerSentenceIdUpdate={setTriggerSentenceIdUpdate}
               targetSentenceId={targetSentenceId}
               breakdownSentenceFunc={breakdownSentenceFunc}
               handleIsCore={handleIsCore}
@@ -294,7 +295,6 @@ const ContentScreen = () => {
               updateContentMetaDataIsLoadedDispatch={
                 updateContentMetaDataIsLoadedDispatch
               }
-              setSelectedContentState={setSelectedContentState}
             />
           </TopicContentSnippetsProvider>
         </TopicContentAudioProvider>

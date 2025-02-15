@@ -16,15 +16,12 @@ const TopicContent = ({
   topicName,
   updateTopicMetaData,
   updateSentenceData,
-  triggerSentenceIdUpdate,
-  setTriggerSentenceIdUpdate,
   loadedContent,
   targetSentenceId,
   breakdownSentenceFunc,
   handleIsCore,
   handleBulkReviews,
   updateContentMetaDataIsLoadedDispatch,
-  setSelectedContentState,
 }) => {
   const [secondsToSentencesMapState, setSecondsToSentencesMapState] = useState<
     string[]
@@ -102,32 +99,6 @@ const TopicContent = ({
     isVideoModeState,
     realStartTime,
   });
-
-  useEffect(() => {
-    if (triggerSentenceIdUpdate) {
-      const updatedFormattedData = content.map((item, sentenceIndex) => {
-        if (triggerSentenceIdUpdate !== item.id) {
-          return item;
-        }
-        return {
-          ...item,
-          ...content[sentenceIndex],
-        };
-      });
-      setSelectedContentState({
-        ...loadedContent,
-        content: updatedFormattedData,
-      });
-      setTriggerSentenceIdUpdate(null);
-    }
-  }, [
-    topicName,
-    loadedContent,
-    triggerSentenceIdUpdate,
-    setSelectedContentState,
-    content,
-    setTriggerSentenceIdUpdate,
-  ]);
 
   if (!isLoaded && !isDurationAudioLoaded) {
     return (
