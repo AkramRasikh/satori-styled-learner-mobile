@@ -1,19 +1,12 @@
 import React, {useEffect, useState} from 'react';
-import {useSelector} from 'react-redux';
 import useGetCombinedAudioData, {
   getFirebaseAudioURL,
 } from '../../hooks/useGetCombinedAudioData';
-import useHighlightWordToWordBank from '../../hooks/useHighlightWordToWordBank';
-import useContentControls from '../../hooks/useContentControls';
-import useInitTopicWordList from '../../hooks/useInitTopicWordList';
-import useFormatUnderlyingWords from '../../hooks/useFormatUnderlyingWords';
 import TopicContentLoader from '../TopicContentLoader';
 import useLanguageSelector from '../../context/LanguageSelector/useLanguageSelector';
 import useSetSecondsToSentenceIds, {
   mapSentenceIdsToSeconds,
 } from '../../hooks/useSetSecondsToSentenceIds';
-import useData from '../../context/Data/useData';
-import TextSegment from '../TextSegment';
 import useTopicContentAudio from './context/useTopicContentAudio';
 import TopicContentAudioMode from './TopicContentAudioMode';
 import TopicContentVideoMode from './TopicContentVideoMode';
@@ -29,34 +22,31 @@ const TopicContent = ({
   targetSentenceId,
   breakdownSentenceFunc,
   handleIsCore,
-  formattedData,
-  setFormattedData,
   handleBulkReviews,
   updateContentMetaDataIsLoadedDispatch,
+  setSelectedContentState,
 }) => {
   const [secondsToSentencesMapState, setSecondsToSentencesMapState] = useState<
     string[]
   >([]);
-  const [initTargetLanguageWordsList, setInitTargetLanguageWordsList] =
-    useState(null);
+
   const [highlightTargetTextState, setHighlightTargetTextState] = useState('');
-  const [updateWordList, setUpdateWordList] = useState(false);
   const [audioLoadingProgress, setAudioLoadingProgress] = useState(0);
 
   const {languageSelectedState} = useLanguageSelector();
-  const targetLanguageLoadedWords = useSelector(state => state.words);
-
-  const {pureWords: pureWordsUnique} = useData();
 
   const {isLoaded, soundRef, isVideoModeState, setIsVideoModeState} =
     useTopicContentAudio();
 
-  const hasContentToReview = formattedData?.some(
+  const content = loadedContent.content;
+  const origin = loadedContent.origin;
+  const realStartTime = loadedContent?.realStartTime;
+  const hasAudio = loadedContent?.hasAudio;
+  const isDurationAudioLoaded = loadedContent?.isDurationAudioLoaded;
+
+  const hasContentToReview = content?.some(
     sentenceWidget => sentenceWidget?.reviewData,
   );
-
-  const {content, origin, realStartTime, hasAudio, isDurationAudioLoaded} =
-    loadedContent;
 
   const isMediaContent = origin === 'netflix' || origin === 'youtube';
 
@@ -88,27 +78,11 @@ const TopicContent = ({
     }
   };
 
-  const {underlineWordsInSentence} = useHighlightWordToWordBank({
-    pureWordsUnique,
-  });
-
   useEffect(() => {
-    if (targetSentenceId && !(!isLoaded || formattedData?.length === 0)) {
+    if (targetSentenceId && !isLoaded) {
       setHighlightTargetTextState(targetSentenceId);
     }
-  }, [targetSentenceId, isLoaded, formattedData]);
-
-  useEffect(() => {
-    if (targetLanguageLoadedWords?.length !== initTargetLanguageWordsList) {
-      setUpdateWordList(true);
-      setInitTargetLanguageWordsList(targetLanguageLoadedWords.length);
-    }
-  }, [targetLanguageLoadedWords, initTargetLanguageWordsList]);
-
-  const getSafeText = targetText => {
-    const textSegments = underlineWordsInSentence(targetText);
-    return <TextSegment textSegments={textSegments} />;
-  };
+  }, [targetSentenceId, isLoaded]);
 
   useGetCombinedAudioData({
     hasAudio,
@@ -118,26 +92,6 @@ const TopicContent = ({
     soundDuration,
     updateContentMetaDataIsLoadedDispatch,
     isDurationAudioLoaded,
-  });
-
-  const {formatTextForTargetWords} = useContentControls({
-    targetLanguageLoadedWords,
-    getSafeText,
-    topicData: content,
-  });
-
-  useInitTopicWordList({
-    targetLanguageLoadedWords,
-    setInitTargetLanguageWordsList,
-  });
-
-  useFormatUnderlyingWords({
-    setFormattedData,
-    formatTextForTargetWords,
-    formattedData,
-    content,
-    setUpdateWordList,
-    updateWordList,
   });
 
   useSetSecondsToSentenceIds({
@@ -151,7 +105,7 @@ const TopicContent = ({
 
   useEffect(() => {
     if (triggerSentenceIdUpdate) {
-      const updatedFormattedData = formattedData.map((item, sentenceIndex) => {
+      const updatedFormattedData = content.map((item, sentenceIndex) => {
         if (triggerSentenceIdUpdate !== item.id) {
           return item;
         }
@@ -160,18 +114,22 @@ const TopicContent = ({
           ...content[sentenceIndex],
         };
       });
-      setFormattedData(updatedFormattedData);
+      setSelectedContentState({
+        ...loadedContent,
+        content: updatedFormattedData,
+      });
       setTriggerSentenceIdUpdate(null);
     }
   }, [
     topicName,
+    loadedContent,
     triggerSentenceIdUpdate,
-    formattedData,
+    setSelectedContentState,
     content,
     setTriggerSentenceIdUpdate,
   ]);
 
-  if (!isLoaded || formattedData?.length === 0) {
+  if (!isLoaded && !isDurationAudioLoaded) {
     return (
       <TopicContentLoader
         audioLoadingProgress={audioLoadingProgress}
@@ -194,7 +152,7 @@ const TopicContent = ({
           handleVideoMode={handleVideoMode}
           handleIsCore={handleIsCore}
           handleBulkReviews={handleBulkReviews}
-          formattedData={formattedData}
+          formattedData={content}
           highlightTargetTextState={highlightTargetTextState}
           secondsToSentencesMapState={secondsToSentencesMapState}
           hasContentToReview={hasContentToReview}
@@ -216,7 +174,7 @@ const TopicContent = ({
       handleVideoMode={handleVideoMode}
       secondsToSentencesMapState={secondsToSentencesMapState}
       highlightTargetTextState={highlightTargetTextState}
-      formattedData={formattedData}
+      formattedData={content}
       hasContentToReview={hasContentToReview}
       url={url}
     />

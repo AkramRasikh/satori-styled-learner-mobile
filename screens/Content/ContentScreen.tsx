@@ -17,6 +17,12 @@ import {
   srsRetentionKeyTypes,
 } from '../../srs-algo';
 import {setLearningContentStateDispatch} from '../../store/contentSlice';
+import useFormatUnderlyingWords, {
+  formatTextForTargetWords,
+} from '../../hooks/useFormatUnderlyingWords';
+import TextSegment from '../../components/TextSegment';
+import useHighlightWordToWordBank from '../../hooks/useHighlightWordToWordBank';
+import useInitTopicWordList from '../../hooks/useInitTopicWordList';
 
 const ContentScreen = () => {
   const route = useRoute();
@@ -24,11 +30,15 @@ const ContentScreen = () => {
   const [triggerSentenceIdUpdate, setTriggerSentenceIdUpdate] = useState(null);
   const [selectedContentState, setSelectedContentState] = useState(null);
   const [selectedSnippetsState, setSelectedSnippetsState] = useState([]);
-  const [formattedData, setFormattedData] = useState([]);
+  const [initTargetLanguageWordsList, setInitTargetLanguageWordsList] =
+    useState(null);
+  const [updateWordList, setUpdateWordList] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
 
   const targetLanguageLoadedContentMasterState = useSelector(
     state => state.learningContent,
   );
+  const targetLanguageLoadedWords = useSelector(state => state.words);
 
   const dispatch = useDispatch();
 
@@ -38,6 +48,7 @@ const ContentScreen = () => {
     updatePromptState,
     breakdownSentence,
     sentenceReviewBulk,
+    pureWords,
   } = useData();
 
   const {
@@ -45,6 +56,16 @@ const ContentScreen = () => {
     updateDifficultSentence,
     addToSentenceToDifficultSentences,
   } = useDifficultSentences();
+
+  useEffect(() => {
+    if (
+      isMounted &&
+      targetLanguageLoadedWords?.length !== initTargetLanguageWordsList
+    ) {
+      setUpdateWordList(true);
+      setInitTargetLanguageWordsList(targetLanguageLoadedWords.length);
+    }
+  }, [targetLanguageLoadedWords, initTargetLanguageWordsList, isMounted]);
 
   const {targetSentenceId, selectedTopicIndex} = route.params;
 
@@ -54,10 +75,15 @@ const ContentScreen = () => {
   const updateContentMetaDataIsLoadedDispatch = durationsArr => {
     const updatedState = [...targetLanguageLoadedContentMasterState];
     const thisTopicData = updatedState[selectedTopicIndex];
+
+    const removedSafeText = durationsArr.map(
+      ({safeText, matchedWords, ...rest}) => rest,
+    );
+
     const newTopicState = {
       ...thisTopicData,
       isDurationAudioLoaded: true,
-      content: durationsArr,
+      content: removedSafeText,
     };
     updatedState[selectedTopicIndex] = {
       ...newTopicState,
@@ -71,11 +97,43 @@ const ContentScreen = () => {
     dispatch(setLearningContentStateDispatch(updatedState));
   };
 
+  const {underlineWordsInSentence} = useHighlightWordToWordBank({
+    pureWordsUnique: pureWords,
+  });
+
+  const getSafeText = targetText => {
+    const textSegments = underlineWordsInSentence(targetText);
+    return <TextSegment textSegments={textSegments} />;
+  };
+
+  useFormatUnderlyingWords({
+    setSelectedContentState,
+    loadedContent: selectedContentState,
+    getSafeText,
+    targetLanguageLoadedWords,
+    updateWordList,
+    setUpdateWordList,
+  });
+
   useEffect(() => {
-    setSelectedContentState(
-      targetLanguageLoadedContentMasterState[selectedTopicIndex],
-    );
+    const selectedTopicFromRedux =
+      targetLanguageLoadedContentMasterState[selectedTopicIndex];
+    setSelectedContentState({
+      ...selectedTopicFromRedux,
+      content: formatTextForTargetWords(
+        selectedTopicFromRedux.content,
+        getSafeText,
+        targetLanguageLoadedWords,
+      ),
+    });
+    setInitTargetLanguageWordsList(targetLanguageLoadedWords.length);
+    setIsMounted(true);
   }, []);
+
+  useInitTopicWordList({
+    targetLanguageLoadedWords,
+    setInitTargetLanguageWordsList,
+  });
 
   const getThisSentenceData = (state, sentenceId) =>
     state.find(sentence => sentence.id === sentenceId);
@@ -148,13 +206,16 @@ const ContentScreen = () => {
     });
 
     if (updatedContent) {
-      const updatedFormattedData = formattedData.map(item => {
+      const updatedSelectedContent = selectedContentState.content.map(item => {
         return {
           ...item,
           reviewData: removeReview ? null : nextDueCard,
         };
       });
-      setFormattedData(updatedFormattedData);
+      setSelectedContentState({
+        ...selectedContentState,
+        content: updatedSelectedContent,
+      });
     }
   };
 
@@ -228,13 +289,12 @@ const ContentScreen = () => {
               targetSentenceId={targetSentenceId}
               breakdownSentenceFunc={breakdownSentenceFunc}
               handleIsCore={handleIsCore}
-              formattedData={formattedData}
-              setFormattedData={setFormattedData}
               updateTopicMetaData={updateMetaData}
               handleBulkReviews={handleBulkReviews}
               updateContentMetaDataIsLoadedDispatch={
                 updateContentMetaDataIsLoadedDispatch
               }
+              setSelectedContentState={setSelectedContentState}
             />
           </TopicContentSnippetsProvider>
         </TopicContentAudioProvider>

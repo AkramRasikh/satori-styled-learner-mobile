@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react';
+import {useEffect} from 'react';
 import {FIREBASE_ASSETS_URL, FIREBASE_STORAGE_ID} from '@env';
 import Sound from 'react-native-sound';
 import useLanguageSelector from '../context/LanguageSelector/useLanguageSelector';
@@ -49,7 +49,7 @@ const useGetCombinedAudioData = ({
             endAt: startAt + thisDuration,
           };
         });
-        updateContentMetaDataIsLoadedDispatch?.(sortedAudios);
+        updateContentMetaDataIsLoadedDispatch(sortedAudios);
       } else {
         let endAt = 0;
 
@@ -80,10 +80,9 @@ const useGetCombinedAudioData = ({
           });
         });
         const durationsResults = await Promise.all(durationsPromises);
-        updateContentMetaDataIsLoadedDispatch?.(durationsResults);
+        updateContentMetaDataIsLoadedDispatch(durationsResults);
       }
     };
-
     if (hasAudio && !isDurationAudioLoaded) {
       fetchDurations();
     }
