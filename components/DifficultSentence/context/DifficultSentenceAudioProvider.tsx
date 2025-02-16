@@ -73,8 +73,8 @@ export const DifficultSentenceAudioProvider = ({
   }, [filePath, triggerLoadURL, isLoaded]);
 
   useEffect(() => {
-    const isFirst = indexNum === 0;
-    if (!isLoaded && isFirst && !isTriggered) {
+    const isFirst2 = indexNum === 0 || indexNum === 1;
+    if (!isLoaded && isFirst2 && !isTriggered) {
       setIsTriggered(true);
       loadFile(audioId, url);
     }
