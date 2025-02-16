@@ -24,6 +24,11 @@ import {setSnippetsStateDispatch} from '../../store/snippetsSlice';
 import {deleteWordAPI} from '../../api/delete-word';
 import {updateWordAPI} from '../../api/update-word-data';
 import {breakdownSentenceAPI} from '../../api/breakdown-sentence';
+import {
+  getEmptyCard,
+  getNextScheduledOptions,
+  srsRetentionKeyTypes,
+} from '../../srs-algo';
 
 export const DataContext = createContext(null);
 
@@ -477,12 +482,19 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
     isGoogle,
   }) => {
     try {
+      const cardDataRelativeToNow = getEmptyCard();
+      const nextScheduledOptions = getNextScheduledOptions({
+        card: cardDataRelativeToNow,
+        contentType: srsRetentionKeyTypes.vocab,
+      });
+
       const savedWord = await saveWordAPI({
         highlightedWord,
         highlightedWordSentenceId,
         contextSentence,
         isGoogle,
         language,
+        reviewData: nextScheduledOptions['1'].card,
       });
       const newWordsState = [...targetLanguageWordsState, savedWord];
       dispatch(setWordsStateDispatch(newWordsState));
