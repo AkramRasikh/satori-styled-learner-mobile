@@ -4,9 +4,7 @@ import useGetCombinedAudioData, {
 } from '../../hooks/useGetCombinedAudioData';
 import TopicContentLoader from '../TopicContentLoader';
 import useLanguageSelector from '../../context/LanguageSelector/useLanguageSelector';
-import useSetSecondsToSentenceIds, {
-  mapSentenceIdsToSeconds,
-} from '../../hooks/useSetSecondsToSentenceIds';
+import useSetSecondsToSentenceIds from '../../hooks/useSetSecondsToSentenceIds';
 import TopicContentAudioMode from './TopicContentAudioMode';
 import TopicContentVideoMode from './TopicContentVideoMode';
 import {TopicContentVideoProvider} from './context/TopicContentVideoProvider';
