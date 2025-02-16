@@ -11,6 +11,7 @@ import {ActivityIndicator, Icon, MD2Colors} from 'react-native-paper';
 import DifficultSentenceMappedWords from './DifficultSentence/DifficultSentenceMappedWords';
 import {checkOverlap} from '../utils/check-word-overlap';
 import TextSegmentContainer from './TextSegmentContainer';
+import useContentScreen from '../screens/Content/useContentScreen';
 
 const SatoriLine = ({
   id,
@@ -22,7 +23,6 @@ const SatoriLine = ({
   highlightedIndices,
   setHighlightedIndices,
   sentenceIndex,
-  saveWordFirebase,
   engMaster,
   isPlaying,
   pauseSound,
@@ -46,6 +46,8 @@ const SatoriLine = ({
   const [safeTextState, setSafeTextState] = useState();
 
   const targetRef = useRef(null);
+
+  const {handleSaveWordContentScreen, updateWordList} = useContentScreen();
 
   const matchedWords = topicSentence?.matchedWords.length > 0;
   const hasSentenceBreakdown = topicSentence?.vocab;
@@ -74,11 +76,8 @@ const SatoriLine = ({
     }
   };
 
-  const handleSaveWord = async objToSave => {
-    const resBool = await saveWordFirebase(objToSave);
-    if (resBool) {
-      setSafeTextState(getThisText());
-    }
+  const handleSaveWord = async wordToSave => {
+    await handleSaveWordContentScreen(wordToSave);
   };
 
   const handleOpenGoogleFunc = () => {
@@ -158,7 +157,12 @@ const SatoriLine = ({
 
   useEffect(() => {
     setSafeTextState(getThisText());
-  }, [showSentenceBreakdown, showMatchedTranslation, setSafeTextState]);
+  }, [
+    showSentenceBreakdown,
+    showMatchedTranslation,
+    setSafeTextState,
+    updateWordList,
+  ]);
 
   const openReviewPortal = () => {
     setShowReviewSettings(!showReviewSettings);

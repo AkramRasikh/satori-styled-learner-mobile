@@ -499,7 +499,7 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
       const newWordsState = [...targetLanguageWordsState, savedWord];
       dispatch(setWordsStateDispatch(newWordsState));
       await storeDataLocalStorage(dataStorageKeyPrefix + words, newWordsState);
-      return true;
+      return savedWord;
     } catch (error) {
       console.log('## saveWordFirebase Provider err', error);
       updatePromptFunc(`Error saving ${highlightedWord}`, 2000);

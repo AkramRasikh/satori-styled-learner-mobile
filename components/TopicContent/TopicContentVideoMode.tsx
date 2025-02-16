@@ -7,7 +7,6 @@ import ReviewSection from '../ReviewSection';
 import useLanguageSelector from '../../context/LanguageSelector/useLanguageSelector';
 import AudioToggles from '../AudioToggles';
 import VideoPlayer from '../VideoPlayer';
-import useData from '../../context/Data/useData';
 import {getGeneralTopicName} from '../../utils/get-general-topic-name';
 import AnimatedModal from '../AnimatedModal';
 import useTopicContentVideo from './context/useTopicContentVideo';
@@ -37,8 +36,6 @@ const TopicContentVideoMode = ({
   const scrollViewRef = useRef(null);
 
   const {languageSelectedState} = useLanguageSelector();
-
-  const {saveWordFirebase} = useData();
 
   const {
     currentVideoTimeState,
@@ -126,7 +123,6 @@ const TopicContentVideoMode = ({
               englishOnly={englishOnly}
               highlightedIndices={highlightedIndices}
               setHighlightedIndices={setHighlightedIndices}
-              saveWordFirebase={saveWordFirebase}
               engMaster={engMaster}
               isPlaying={isVideoPlaying}
               pauseSound={handleVideoPause}

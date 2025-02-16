@@ -130,7 +130,6 @@ const LineContainer = ({
   englishOnly,
   highlightedIndices,
   setHighlightedIndices,
-  saveWordFirebase,
   engMaster,
   isPlaying,
   pauseSound,
@@ -196,7 +195,6 @@ const LineContainer = ({
                   highlightMode={highlightMode}
                   highlightedIndices={highlightedIndices}
                   setHighlightedIndices={setHighlightedIndices}
-                  saveWordFirebase={saveWordFirebase}
                   engMaster={engMaster}
                   isPlaying={isPlaying}
                   pauseSound={pauseSound}

@@ -6,7 +6,6 @@ import LineContainer from '../LineContainer';
 import ReviewSection from '../ReviewSection';
 import useTrackCurrentTimeState from '../../hooks/useTrackCurrentTimeState';
 import TopicContentAudioSection from '../TopicContentAudioSection';
-import useData from '../../context/Data/useData';
 import AnimatedModal from '../AnimatedModal';
 import useTopicContentAudio from './context/useTopicContentAudio';
 import {generateRandomId} from '../../utils/generate-random-id';
@@ -43,8 +42,6 @@ const TopicContentAudioMode = ({
   const [isAutoScrollingMode, setisAutoScrollingMode] = useState(false);
 
   const scrollViewRef = useRef(null);
-
-  const {saveWordFirebase} = useData();
 
   const {
     handlePlayFromThisSentence,
@@ -148,7 +145,6 @@ const TopicContentAudioMode = ({
             englishOnly={englishOnly}
             highlightedIndices={highlightedIndices}
             setHighlightedIndices={setHighlightedIndices}
-            saveWordFirebase={saveWordFirebase}
             engMaster={engMaster}
             isPlaying={isPlaying}
             pauseSound={pauseSound}

@@ -20,6 +20,7 @@ import useFormatUnderlyingWords, {
 } from '../../hooks/useFormatUnderlyingWords';
 import TextSegment from '../../components/TextSegment';
 import useHighlightWordToWordBank from '../../hooks/useHighlightWordToWordBank';
+import {ContentScreenProvider} from './ContentScreenProvider';
 
 const ContentScreen = () => {
   const route = useRoute();
@@ -275,23 +276,27 @@ const ContentScreen = () => {
   }
 
   return (
-    <ScreenContainerComponent updatePromptState={updatePromptState}>
-      <View style={{padding: 10}}>
-        <TopicContent
-          topicName={selectedTopic}
-          loadedContent={selectedContentState}
-          updateSentenceData={updateSentenceDataFunc}
-          targetSentenceId={targetSentenceId}
-          breakdownSentenceFunc={breakdownSentenceFunc}
-          handleIsCore={handleIsCore}
-          updateTopicMetaData={updateMetaData}
-          handleBulkReviews={handleBulkReviews}
-          updateContentMetaDataIsLoadedDispatch={
-            updateContentMetaDataIsLoadedDispatch
-          }
-        />
-      </View>
-    </ScreenContainerComponent>
+    <ContentScreenProvider
+      setUpdateWordList={setUpdateWordList}
+      updateWordList={updateWordList}>
+      <ScreenContainerComponent updatePromptState={updatePromptState}>
+        <View style={{padding: 10}}>
+          <TopicContent
+            topicName={selectedTopic}
+            loadedContent={selectedContentState}
+            updateSentenceData={updateSentenceDataFunc}
+            targetSentenceId={targetSentenceId}
+            breakdownSentenceFunc={breakdownSentenceFunc}
+            handleIsCore={handleIsCore}
+            updateTopicMetaData={updateMetaData}
+            handleBulkReviews={handleBulkReviews}
+            updateContentMetaDataIsLoadedDispatch={
+              updateContentMetaDataIsLoadedDispatch
+            }
+          />
+        </View>
+      </ScreenContainerComponent>
+    </ContentScreenProvider>
   );
 };
 
