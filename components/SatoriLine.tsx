@@ -12,6 +12,7 @@ import DifficultSentenceMappedWords from './DifficultSentence/DifficultSentenceM
 import {checkOverlap} from '../utils/check-word-overlap';
 import TextSegmentContainer from './TextSegmentContainer';
 import useContentScreen from '../screens/Content/useContentScreen';
+import {DoubleClickButton} from './Button';
 
 const SatoriLine = ({
   id,
@@ -99,6 +100,11 @@ const SatoriLine = ({
     }
   };
 
+  const handleOnSafeTextPress = () => {
+    setIsSettingsOpenState(true);
+    setHighlightMode(true);
+  };
+
   const getThisText = () => {
     if (showSentenceBreakdown) {
       const vocabBreakDoownWithHexCode = showSentenceBreakdown
@@ -143,14 +149,15 @@ const SatoriLine = ({
       );
     } else {
       return (
-        <TouchableOpacity
+        <DoubleClickButton
           onLongPress={
             matchedWords
               ? () => setShowMatchedTranslation(!showMatchedTranslation)
               : () => {}
-          }>
+          }
+          onPress={handleOnSafeTextPress}>
           {topicSentence.safeText}
-        </TouchableOpacity>
+        </DoubleClickButton>
       );
     }
   };
