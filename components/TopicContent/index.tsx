@@ -91,10 +91,8 @@ const TopicContent = ({
     setIsVideoModeState(switchToVideoMode);
   };
 
-  // check
   useEffect(() => {
     if (targetSentenceId && !isLoaded) {
-      console.log('## setHighlightTargetTextState');
       setHighlightTargetTextState(targetSentenceId);
     }
   }, [targetSentenceId, isLoaded]);
