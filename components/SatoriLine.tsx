@@ -20,7 +20,6 @@ const SatoriLine = ({
   playFromThisSentence,
   topicSentence,
   englishOnly,
-  highlightMode,
   highlightedIndices,
   setHighlightedIndices,
   sentenceIndex,
@@ -28,7 +27,6 @@ const SatoriLine = ({
   isPlaying,
   pauseSound,
   textWidth,
-  setHighlightMode,
   topicName,
   updateSentenceData,
   contentIndex,
@@ -44,6 +42,7 @@ const SatoriLine = ({
   const [showMatchedTranslation, setShowMatchedTranslation] = useState(false);
   const [isLoadingState, setIsLoadingState] = useState(false);
   const [isSettingsOpenState, setIsSettingsOpenState] = useState(false);
+  const [highlightMode, setHighlightMode] = useState(false);
   const [safeTextState, setSafeTextState] = useState();
 
   const targetRef = useRef(null);

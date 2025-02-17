@@ -135,8 +135,6 @@ const LineContainer = ({
   pauseSound,
   snippetsLocalAndDb,
   masterPlay,
-  highlightMode,
-  setHighlightMode,
   topicName,
   updateSentenceData,
   currentTimeState,
@@ -192,14 +190,12 @@ const LineContainer = ({
                   topicSentence={topicSentence}
                   playFromThisSentence={playFromThisSentence}
                   englishOnly={englishOnly}
-                  highlightMode={highlightMode}
                   highlightedIndices={highlightedIndices}
                   setHighlightedIndices={setHighlightedIndices}
                   engMaster={engMaster}
                   isPlaying={isPlaying}
                   pauseSound={pauseSound}
                   textWidth={width * 0.9}
-                  setHighlightMode={setHighlightMode}
                   topicName={topicName}
                   updateSentenceData={updateSentenceData}
                   contentIndex={contentIndex}
