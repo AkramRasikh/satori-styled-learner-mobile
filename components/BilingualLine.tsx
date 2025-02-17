@@ -14,7 +14,7 @@ import TextSegmentContainer from './TextSegmentContainer';
 import useContentScreen from '../screens/Content/useContentScreen';
 import {DoubleClickButton} from './Button';
 
-const SatoriLine = ({
+const BilingualLine = ({
   id,
   focusThisSentence,
   playFromThisSentence,
@@ -316,4 +316,4 @@ const SatoriLine = ({
   );
 };
 
-export default SatoriLine;
+export default BilingualLine;

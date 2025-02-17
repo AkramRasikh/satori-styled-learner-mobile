@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, Text, Dimensions} from 'react-native';
-import SatoriLine from './SatoriLine';
+import BilingualLine from './BilingualLine';
 import BilingualSnippetContainer from './BilingualSnippetContainer';
 
 const BilingualTextContainer = ({
@@ -62,7 +62,7 @@ const BilingualTextContainer = ({
                 style={{
                   backgroundColor: highlightedTextState,
                 }}>
-                <SatoriLine
+                <BilingualLine
                   id={id}
                   sentenceIndex={index}
                   focusThisSentence={focusThisSentence}
