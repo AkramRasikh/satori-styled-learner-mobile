@@ -5,7 +5,7 @@ import {Snackbar} from 'react-native-paper';
 const UpdateStatusSnackBar = ({
   updatePromptState,
   setUpdatePromptState,
-  duratiom = 3000,
+  duration = 3000,
 }) => {
   const [visible, setVisible] = React.useState(true);
 
@@ -18,7 +18,7 @@ const UpdateStatusSnackBar = ({
     <View style={styles.container}>
       <Snackbar
         visible={visible}
-        duration={duratiom}
+        duration={duration}
         onDismiss={onDismissSnackbar}
         action={{
           label: 'Close',
