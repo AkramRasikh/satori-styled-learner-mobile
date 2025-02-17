@@ -10,34 +10,8 @@ import TopicContentVideoMode from './TopicContentVideoMode';
 import {TopicContentVideoProvider} from './context/TopicContentVideoProvider';
 import {TopicContentAudioProvider} from './context/TopicContentAudioProvider';
 import Sound from 'react-native-sound';
-import useMP3File from '../../hooks/useMP3File';
-import useLoadAudioInstance from '../../hooks/useLoadAudioInstance';
 import useOpenGoogleTranslate from '../../hooks/useOpenGoogleTranslate';
-
-const useInitAudio = ({soundRef, topicName, url}) => {
-  const {loadFile, filePath} = useMP3File(topicName);
-
-  const {triggerLoadURL, isLoaded} = useLoadAudioInstance({
-    soundRef,
-    url: filePath,
-  });
-
-  useEffect(() => {
-    if (filePath) {
-      triggerLoadURL();
-    }
-  }, [filePath]);
-
-  const handleLoad = () => {
-    loadFile(topicName, url);
-  };
-
-  useEffect(() => {
-    handleLoad();
-  }, []);
-
-  return {isLoaded};
-};
+import useInitAudio from '../../hooks/useInitAudio';
 
 const TopicContent = ({
   topicName,
