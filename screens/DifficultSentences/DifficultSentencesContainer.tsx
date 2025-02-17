@@ -16,8 +16,6 @@ import useHighlightWordToWordBank from '../../hooks/useHighlightWordToWordBank';
 
 const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
   const [toggleableSentencesState, setToggleableSentencesState] = useState([]);
-  const [sentenceBeingHighlightedState, setSentenceBeingHighlightedState] =
-    useState('');
   const [selectedDueCardState, setSelectedDueCardState] = useState(null);
   const [selectedGeneralTopicState, setSelectedGeneralTopicState] =
     useState('');
@@ -231,10 +229,6 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
                 key={sentence.id}
                 toggleableSentencesStateLength={toggleableSentencesStateLength}
                 updateSentenceData={updateSentenceDataScreenLevel}
-                sentenceBeingHighlightedState={sentenceBeingHighlightedState}
-                setSentenceBeingHighlightedState={
-                  setSentenceBeingHighlightedState
-                }
                 navigation={navigation}
                 sliceArrState={sliceArrState}
                 setSliceArrState={setSliceArrState}

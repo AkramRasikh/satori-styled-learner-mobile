@@ -6,17 +6,15 @@ import {Text} from 'react-native-paper';
 const DifficultSentenceTextContainer = ({
   targetLang,
   baseLang,
-  sentenceBeingHighlightedState,
-  setSentenceBeingHighlightedState,
   sentenceId,
   safeTextFunc,
   saveWordFirebase,
+  isHighlightMode,
+  setHighlightMode,
 }) => {
   const [highlightedIndices, setHighlightedIndices] = useState([]);
   const [containerWidth, setContainerWidth] = useState(0);
   const [isBlurredState, setIsBlurredState] = useState(true);
-
-  const highlightMode = sentenceId === sentenceBeingHighlightedState;
 
   const handleLayout = event => {
     setContainerWidth(event.nativeEvent.layout.width);
@@ -33,12 +31,11 @@ const DifficultSentenceTextContainer = ({
       contextSentence: targetLang,
       isGoogle,
     });
-    setSentenceBeingHighlightedState('');
   };
 
   return (
     <>
-      {highlightMode ? (
+      {isHighlightMode ? (
         <View
           onLayout={handleLayout} // Attach the onLayout event handler
         >
@@ -50,6 +47,7 @@ const DifficultSentenceTextContainer = ({
             setHighlightedIndices={setHighlightedIndices}
             saveWordFirebase={handleSaveWordToFB}
             textWidth={containerWidth}
+            setHighlightMode={setHighlightMode}
           />
         </View>
       ) : (

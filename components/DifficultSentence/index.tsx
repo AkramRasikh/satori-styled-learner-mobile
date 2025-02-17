@@ -12,8 +12,6 @@ const DifficultSentenceComponent = ({
   realCapacity,
   navigation,
   updateSentenceData,
-  sentenceBeingHighlightedState,
-  setSentenceBeingHighlightedState,
   handleSelectWord,
   handleWordUpdate,
   openGoogleTranslateApp,
@@ -32,8 +30,6 @@ const DifficultSentenceComponent = ({
         sentence={sentence}
         realCapacity={realCapacity}
         navigation={navigation}
-        sentenceBeingHighlightedState={sentenceBeingHighlightedState}
-        setSentenceBeingHighlightedState={setSentenceBeingHighlightedState}
         handleSelectWord={handleSelectWord}
         handleWordUpdate={handleWordUpdate}
         underlineWordsInSentence={underlineWordsInSentence}

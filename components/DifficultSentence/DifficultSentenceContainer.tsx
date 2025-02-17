@@ -30,13 +30,7 @@ import useDifficultSentenceContext from './context/useDifficultSentence';
 import DifficultSentenceSnippet from './DifficultSentenceSnippet';
 import {DoubleClickButton} from '../Button';
 
-const DifficultSentenceMidSection = ({
-  handleSettingHighlightmode,
-  sentenceBeingHighlightedState,
-  sentence,
-  addSnippet,
-  removeSnippet,
-}) => {
+const DifficultSentenceMidSection = ({sentence, addSnippet, removeSnippet}) => {
   const {
     isPlaying,
     setIsPlaying,
@@ -65,10 +59,7 @@ const DifficultSentenceMidSection = ({
           justifyContent: 'space-between',
           flexDirection: 'row',
         }}>
-        <DifficultSentenceTextAction
-          handleSettingHighlightmode={handleSettingHighlightmode}
-          isBeingHighlighed={sentenceBeingHighlightedState === sentence.id}
-        />
+        <DifficultSentenceTextAction />
         <View
           style={{
             backgroundColor: DefaultTheme.colors?.backdrop,
@@ -114,8 +105,6 @@ const DifficultSentenceContainer = ({
   sentence,
   navigation,
   realCapacity,
-  sentenceBeingHighlightedState,
-  setSentenceBeingHighlightedState,
   handleSelectWord,
   handleWordUpdate,
   setSliceArrState,
@@ -123,6 +112,7 @@ const DifficultSentenceContainer = ({
 }) => {
   const [showAllMatchedWordsState, setShowAllMatchedWordsState] =
     useState(false);
+  const [isHighlightMode, setHighlightMode] = useState(false);
 
   const handleShowAllMatchedWords = () => {
     setShowAllMatchedWordsState(!showAllMatchedWordsState);
@@ -163,11 +153,7 @@ const DifficultSentenceContainer = ({
   }, [numberOfWords]);
 
   const handleSettingHighlightmode = () => {
-    if (sentence.id === sentenceBeingHighlightedState) {
-      setSentenceBeingHighlightedState('');
-    } else {
-      setSentenceBeingHighlightedState(sentence.id);
-    }
+    setHighlightMode(!isHighlightMode);
   };
 
   const handleNavigation = () => {
@@ -279,11 +265,11 @@ const DifficultSentenceContainer = ({
           <DifficultSentenceTextContainer
             targetLang={sentence.targetLang}
             baseLang={sentence.baseLang}
-            sentenceBeingHighlightedState={sentenceBeingHighlightedState}
-            setSentenceBeingHighlightedState={setSentenceBeingHighlightedState}
             sentenceId={sentence.id}
             safeTextFunc={getSafeText}
             saveWordFirebase={saveWordFirebase}
+            isHighlightMode={isHighlightMode}
+            setHighlightMode={setHighlightMode}
           />
           {isDueState ? (
             <DifficultSentenceSRSToggles reviewData={sentence.reviewData} />
@@ -298,7 +284,6 @@ const DifficultSentenceContainer = ({
             indexNum={indexNum}>
             <DifficultSentenceMidSection
               handleSettingHighlightmode={handleSettingHighlightmode}
-              sentenceBeingHighlightedState={sentenceBeingHighlightedState}
               sentence={sentence}
               addSnippet={addSnippet}
               removeSnippet={removeSnippet}

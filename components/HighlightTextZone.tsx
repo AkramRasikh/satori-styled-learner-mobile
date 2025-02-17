@@ -57,6 +57,11 @@ const HighlightTextZone = ({
     }),
   ).current;
 
+  const handleClose = () => {
+    setHighlightedIndices([]);
+    setHighlightMode(false);
+  };
+
   const extractHighlightedText = (sentence, indices) => {
     if (indices?.length === 0) {
       return '';
@@ -107,7 +112,7 @@ const HighlightTextZone = ({
         isGoogle,
       });
       setHighlightedIndices([]);
-      setHighlightMode?.(false);
+      setHighlightMode(false);
     }
   };
 
@@ -150,36 +155,46 @@ const HighlightTextZone = ({
     <View {...panResponder.panHandlers}>
       <TouchableOpacity>
         <Text style={styles.text}>
-          {renderText(text)}{' '}
-          {highlightedText?.length > 0 ? (
-            <View
-              style={{
-                display: 'flex',
-                flexDirection: 'row',
-                gap: 10,
-              }}>
-              <TouchableOpacity onPress={handleCopyText}>
-                <Text>📋</Text>
-              </TouchableOpacity>
-              <TouchableOpacity onPress={handleOpenUpGoogle}>
-                <Text>📚</Text>
-              </TouchableOpacity>
-              <TouchableOpacity onPress={() => handleSaveWord(true)}>
-                <Image
-                  source={require('../assets/images/google.png')}
-                  style={{width: 16, height: 16}}
-                />
-              </TouchableOpacity>
-              <TouchableOpacity onPress={() => handleSaveWord(false)}>
-                <Image
-                  source={require('../assets/images/chatgpt.png')}
-                  style={{width: 16, height: 16}}
-                />
-              </TouchableOpacity>
-            </View>
+          {renderText(text)}
+          {highlightedText?.length === 0 ? (
+            <TouchableOpacity onPress={handleClose}>
+              <Text>❌</Text>
+            </TouchableOpacity>
           ) : null}
         </Text>
       </TouchableOpacity>
+      {highlightedText?.length > 0 ? (
+        <View
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'flex-end',
+            gap: 15,
+            marginTop: 10,
+          }}>
+          <TouchableOpacity onPress={handleClose}>
+            <Text>❌</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={handleCopyText}>
+            <Text>📋</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={handleOpenUpGoogle}>
+            <Text>📚</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => handleSaveWord(true)}>
+            <Image
+              source={require('../assets/images/google.png')}
+              style={{width: 16, height: 16}}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => handleSaveWord(false)}>
+            <Image
+              source={require('../assets/images/chatgpt.png')}
+              style={{width: 16, height: 16}}
+            />
+          </TouchableOpacity>
+        </View>
+      ) : null}
     </View>
   );
 };

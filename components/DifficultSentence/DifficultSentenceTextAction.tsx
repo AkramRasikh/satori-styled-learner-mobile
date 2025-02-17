@@ -1,19 +1,10 @@
 import React, {View} from 'react-native';
-import {DefaultTheme, IconButton, MD2Colors} from 'react-native-paper';
+import {IconButton, MD2Colors} from 'react-native-paper';
 import useDifficultSentenceContext from './context/useDifficultSentence';
 
-const DifficultSentenceTextAction = ({
-  handleSettingHighlightmode,
-  isBeingHighlighed,
-}) => {
+const DifficultSentenceTextAction = () => {
   const {handleCopyText, handleOpenUpGoogle} = useDifficultSentenceContext();
   const btnArr = [
-    {
-      icon: isBeingHighlighed ? 'close' : 'format-color-highlight',
-      onPress: handleSettingHighlightmode,
-      containerColor:
-        isBeingHighlighed && DefaultTheme.colors.tertiaryContainer,
-    },
     {
       icon: 'google-translate',
       onPress: handleOpenUpGoogle,
@@ -40,8 +31,6 @@ const DifficultSentenceTextAction = ({
             mode="outlined"
             size={15}
             onPress={btn.onPress}
-            containerColor={btn?.containerColor}
-            disabled={btn?.disabled}
             iconColor={btn?.iconColor}
           />
         );
