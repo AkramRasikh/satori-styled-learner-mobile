@@ -17,7 +17,10 @@ import {sentenceReviewBulkAPI} from '../../api/sentence-review-bulk';
 import {combineWordsAPI} from '../../api/combine-words';
 import {addSentenceContextAPI} from '../../api/add-sentence-context';
 import {addSentenceAudioAPI} from '../../api/add-sentence-audio';
-import {setLearningContentStateDispatch} from '../../store/contentSlice';
+import {
+  setLearningContentStateDispatch,
+  updateSentenceAndReturnState,
+} from '../../store/contentSlice';
 import {setWordsStateDispatch} from '../../store/wordSlice';
 import {setSentencesStateDispatch} from '../../store/sentencesSlice';
 import {setSnippetsStateDispatch} from '../../store/snippetsSlice';
@@ -246,7 +249,7 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
   }) => {
     try {
       setUpdatingSentenceState(sentenceId);
-      const resObj = isAdhoc
+      const updatedFieldFromDB = isAdhoc
         ? await handleUpdateAdhocSentenceDifficult({
             sentenceId,
             fieldToUpdate,
@@ -259,20 +262,21 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
           });
 
       if (!isAdhoc) {
-        const updatedContentState = updateLoadedContentStateAfterSentenceUpdate(
-          {
+        const updatedContentState = dispatch(
+          updateSentenceAndReturnState({
             sentenceId,
-            resObj,
+            fieldToUpdate: updatedFieldFromDB,
             contentIndex,
-          },
-        );
+          }),
+        ).learningContent;
+
         await storeDataLocalStorage(
           dataStorageKeyPrefix + content,
           updatedContentState,
         );
       }
       updatePromptFunc(`${topicName} updated!`);
-      return resObj;
+      return updatedFieldFromDB;
     } catch (error) {
       console.log('## updateSentenceData', {error});
       updatePromptFunc(`Error updating sentence for ${topicName}`);

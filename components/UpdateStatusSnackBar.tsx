@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useCallback} from 'react';
 import {View, StyleSheet} from 'react-native';
 import {Snackbar} from 'react-native-paper';
 
@@ -9,17 +9,17 @@ const UpdateStatusSnackBar = ({
 }) => {
   const [visible, setVisible] = React.useState(true);
 
-  const onDismissSnackBar = () => {
+  const onDismissSnackbar = useCallback(() => {
     setUpdatePromptState(null);
     setVisible(false);
-  };
+  }, []);
 
   return (
     <View style={styles.container}>
       <Snackbar
         visible={visible}
         duration={duratiom}
-        onDismiss={onDismissSnackBar}
+        onDismiss={onDismissSnackbar}
         action={{
           label: 'Close',
           onPress: () => {
