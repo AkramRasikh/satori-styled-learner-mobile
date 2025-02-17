@@ -123,6 +123,7 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
       sentenceId,
       fieldToUpdate,
       contentIndex,
+      isRemoveReview: isRemoveFromDifficultSentences,
     });
   };
 

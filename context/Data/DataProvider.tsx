@@ -20,6 +20,7 @@ import {addSentenceAudioAPI} from '../../api/add-sentence-audio';
 import {
   setLearningContentStateDispatch,
   updateSentenceAndReturnState,
+  updateSentenceRemoveReviewAndReturnState,
 } from '../../store/contentSlice';
 import {setWordsStateDispatch} from '../../store/wordSlice';
 import {setSentencesStateDispatch} from '../../store/sentencesSlice';
@@ -246,6 +247,7 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
     fieldToUpdate,
     isAdhoc,
     contentIndex,
+    isRemoveReview,
   }) => {
     try {
       setUpdatingSentenceState(sentenceId);
@@ -262,18 +264,32 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
           });
 
       if (!isAdhoc) {
-        const updatedContentState = dispatch(
-          updateSentenceAndReturnState({
-            sentenceId,
-            fieldToUpdate: updatedFieldFromDB,
-            contentIndex,
-          }),
-        ).learningContent;
+        if (isRemoveReview) {
+          const updatedContentState = dispatch(
+            updateSentenceRemoveReviewAndReturnState({
+              sentenceId,
+              contentIndex,
+            }),
+          ).learningContent;
 
-        await storeDataLocalStorage(
-          dataStorageKeyPrefix + content,
-          updatedContentState,
-        );
+          await storeDataLocalStorage(
+            dataStorageKeyPrefix + content,
+            updatedContentState,
+          );
+        } else {
+          const updatedContentState = dispatch(
+            updateSentenceAndReturnState({
+              sentenceId,
+              fieldToUpdate: updatedFieldFromDB,
+              contentIndex,
+            }),
+          ).learningContent;
+
+          await storeDataLocalStorage(
+            dataStorageKeyPrefix + content,
+            updatedContentState,
+          );
+        }
       }
       updatePromptFunc(`${topicName} updated!`);
       return updatedFieldFromDB;
