@@ -12,8 +12,6 @@ const SatoriLineControls = ({
   showEng,
   setShowNotes,
   showNotes,
-  highlightMode,
-  setHighlightMode,
   showSentenceBreakdown,
   setShowSentenceBreakdown,
   getSentenceBreakdown,
@@ -28,7 +26,6 @@ const SatoriLineControls = ({
     <View
       style={{
         width: '100%',
-        marginBottom: highlightMode ? 3 : 0,
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'space-between',
@@ -60,15 +57,6 @@ const SatoriLineControls = ({
             <Icon source="notebook" size={20} />
           </TouchableOpacity>
         ) : null}
-        {highlightMode ? (
-          <TouchableOpacity onPress={() => setHighlightMode(false)}>
-            <Icon source="close" size={20} color={MD3Colors.error50} />
-          </TouchableOpacity>
-        ) : (
-          <TouchableOpacity onPress={() => setHighlightMode(true)}>
-            <Icon source="format-color-highlight" size={20} />
-          </TouchableOpacity>
-        )}
         {hasSentenceBreakdown ? (
           <TouchableOpacity
             onPress={() => setShowSentenceBreakdown(!showSentenceBreakdown)}>
