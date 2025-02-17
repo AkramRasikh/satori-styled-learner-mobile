@@ -5,16 +5,9 @@ import useDifficultSentenceContext from './context/useDifficultSentence';
 const DifficultSentenceTextAction = ({
   handleSettingHighlightmode,
   isBeingHighlighed,
-  handleShowAllMatchedWords,
 }) => {
-  const {handleCopyText, handleOpenUpGoogle, matchedWordListState} =
-    useDifficultSentenceContext();
+  const {handleCopyText, handleOpenUpGoogle} = useDifficultSentenceContext();
   const btnArr = [
-    {
-      icon: 'text-search',
-      onPress: handleShowAllMatchedWords,
-      disabled: matchedWordListState.length === 0,
-    },
     {
       icon: isBeingHighlighed ? 'close' : 'format-color-highlight',
       onPress: handleSettingHighlightmode,

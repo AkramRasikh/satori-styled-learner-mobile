@@ -1,4 +1,4 @@
-import React, {View} from 'react-native';
+import React, {TouchableOpacity, View} from 'react-native';
 import {useEffect, useState} from 'react';
 import DifficultSentenceTopHeader from './DifficultSentenceTopHeader';
 import DifficultSentenceTextContainer from './DifficultSentenceTextContainer';
@@ -29,10 +29,10 @@ import {DifficultSentenceAudioProvider} from './context/DifficultSentenceAudioPr
 import AnimationContainer from '../AnimationContainer';
 import useDifficultSentenceContext from './context/useDifficultSentence';
 import DifficultSentenceSnippet from './DifficultSentenceSnippet';
+import {DoubleClickButton} from '../Button';
 
 const DifficultSentenceMidSection = ({
   handleSettingHighlightmode,
-  handleShowAllMatchedWords,
   sentenceBeingHighlightedState,
   sentence,
   addSnippet,
@@ -68,7 +68,6 @@ const DifficultSentenceMidSection = ({
         }}>
         <DifficultSentenceTextAction
           handleSettingHighlightmode={handleSettingHighlightmode}
-          handleShowAllMatchedWords={handleShowAllMatchedWords}
           isBeingHighlighed={sentenceBeingHighlightedState === sentence.id}
         />
         <View
@@ -208,7 +207,17 @@ const DifficultSentenceContainer = ({
 
   const getSafeTextDefault = (targetText: string) => {
     const textSegments = underlineWordsInSentence(targetText);
-    return <TextSegment textSegments={textSegments} />;
+    return (
+      <DoubleClickButton
+        onLongPress={
+          matchedWordListState?.length > 0
+            ? () => handleShowAllMatchedWords()
+            : () => {}
+        }
+        onPress={handleSettingHighlightmode}>
+        <TextSegment textSegments={textSegments} />
+      </DoubleClickButton>
+    );
   };
 
   const getSafeText = (targetText: string) => {
@@ -219,11 +228,13 @@ const DifficultSentenceContainer = ({
     const textSegments = underlineWordsInSentence(targetText);
     const wordsInOverlapCheck = checkOverlap(matchedWordListState);
     return (
-      <TextSegmentContainer
-        textSegments={textSegments}
-        wordsInOverlapCheck={wordsInOverlapCheck}
-        matchedWordListState={matchedWordListState}
-      />
+      <TouchableOpacity onLongPress={handleShowAllMatchedWords}>
+        <TextSegmentContainer
+          textSegments={textSegments}
+          wordsInOverlapCheck={wordsInOverlapCheck}
+          matchedWordListState={matchedWordListState}
+        />
+      </TouchableOpacity>
     );
   };
 
@@ -291,7 +302,6 @@ const DifficultSentenceContainer = ({
             indexNum={indexNum}>
             <DifficultSentenceMidSection
               handleSettingHighlightmode={handleSettingHighlightmode}
-              handleShowAllMatchedWords={handleShowAllMatchedWords}
               sentenceBeingHighlightedState={sentenceBeingHighlightedState}
               sentence={sentence}
               addSnippet={addSnippet}
