@@ -12,6 +12,7 @@ import DifficultSentencesSegmentHeader from './DifficultSentencesSegmentHeader';
 import DifficultSentenceComponent from '../../components/DifficultSentence';
 import {countArrayOccurrencesToObj} from '../../utils/count-array-occurrences-to-obj';
 import useOpenGoogleTranslate from '../../hooks/useOpenGoogleTranslate';
+import useHighlightWordToWordBank from '../../hooks/useHighlightWordToWordBank';
 
 const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
   const [toggleableSentencesState, setToggleableSentencesState] = useState([]);
@@ -28,8 +29,17 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
 
   const targetLanguageWordsState = useSelector(state => state.words);
   const numberOfWords = targetLanguageWordsState.length;
-  const {updateSentenceData, updatePromptState, deleteWord, updateWordData} =
-    useData();
+  const {
+    updateSentenceData,
+    updatePromptState,
+    deleteWord,
+    pureWords,
+    updateWordData,
+  } = useData();
+
+  const {underlineWordsInSentence} = useHighlightWordToWordBank({
+    pureWordsUnique: pureWords,
+  });
 
   const {
     difficultSentencesState,
@@ -241,6 +251,7 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
                 sentence={sentence}
                 openGoogleTranslateApp={openGoogleTranslateApp}
                 indexNum={index}
+                underlineWordsInSentence={underlineWordsInSentence}
               />
             ))}
           </View>

@@ -2,7 +2,6 @@ import React, {TouchableOpacity, View} from 'react-native';
 import {useEffect, useState} from 'react';
 import DifficultSentenceTopHeader from './DifficultSentenceTopHeader';
 import DifficultSentenceTextContainer from './DifficultSentenceTextContainer';
-import useHighlightWordToWordBank from '../../hooks/useHighlightWordToWordBank';
 import useData from '../../context/Data/useData';
 import TextSegment from '../TextSegment';
 import {
@@ -120,6 +119,7 @@ const DifficultSentenceContainer = ({
   handleSelectWord,
   handleWordUpdate,
   setSliceArrState,
+  underlineWordsInSentence,
 }) => {
   const [showAllMatchedWordsState, setShowAllMatchedWordsState] =
     useState(false);
@@ -161,10 +161,6 @@ const DifficultSentenceContainer = ({
     );
     setMatchedWordListState(matchedWordList);
   }, [numberOfWords]);
-
-  const {underlineWordsInSentence} = useHighlightWordToWordBank({
-    pureWordsUnique: pureWords,
-  });
 
   const handleSettingHighlightmode = () => {
     if (sentence.id === sentenceBeingHighlightedState) {
