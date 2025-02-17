@@ -2,7 +2,7 @@ import React, {useRef, useState} from 'react';
 import {View, Text, ScrollView, Dimensions} from 'react-native';
 import {getFirebaseVideoURL} from '../../hooks/useGetCombinedAudioData';
 import DisplaySettings from '../DisplaySettings';
-import LineContainer from '../LineContainer';
+import BilingualTextContainer from '../BilingualTextContainer';
 import ReviewSection from '../ReviewSection';
 import useLanguageSelector from '../../context/LanguageSelector/useLanguageSelector';
 import AudioToggles from '../AudioToggles';
@@ -116,7 +116,7 @@ const TopicContentVideoMode = ({
               setisAutoScrollingMode={setisAutoScrollingMode}
               isVideoModeState
             />
-            <LineContainer
+            <BilingualTextContainer
               formattedData={content}
               playFromThisSentence={handlePlayFromThisSentence}
               englishOnly={englishOnly}

@@ -124,7 +124,7 @@ const OneSnippetContainer = ({
   );
 };
 
-const LineContainer = ({
+const BilingualTextContainer = ({
   formattedData,
   playFromThisSentence,
   englishOnly,
@@ -227,4 +227,4 @@ const LineContainer = ({
   );
 };
 
-export default LineContainer;
+export default BilingualTextContainer;

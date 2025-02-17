@@ -2,7 +2,7 @@ import React, {useRef, useState} from 'react';
 import {View, Text, ScrollView, Dimensions} from 'react-native';
 import DisplaySettings from '../DisplaySettings';
 import useAudioTextSync from '../../hooks/useAudioTextSync';
-import LineContainer from '../LineContainer';
+import BilingualTextContainer from '../BilingualTextContainer';
 import ReviewSection from '../ReviewSection';
 import useTrackCurrentTimeState from '../../hooks/useTrackCurrentTimeState';
 import TopicContentAudioSection from '../TopicContentAudioSection';
@@ -138,7 +138,7 @@ const TopicContentAudioMode = ({
             isAutoScrollingMode={isAutoScrollingMode}
             setisAutoScrollingMode={setisAutoScrollingMode}
           />
-          <LineContainer
+          <BilingualTextContainer
             formattedData={formattedData}
             playFromThisSentence={handlePlayFromThisSentence}
             englishOnly={englishOnly}
