@@ -143,7 +143,7 @@ const DifficultSentenceContainer = ({
     scaleAnim,
     matchedWordListState,
     setMatchedWordListState,
-    isTriggerigReview,
+    isTriggeringReview,
   } = useDifficultSentenceContext();
 
   const isLastEl = toggleableSentencesStateLength === indexNum + 1;
@@ -243,7 +243,7 @@ const DifficultSentenceContainer = ({
 
   return (
     <View>
-      {isTriggerigReview && (
+      {isTriggeringReview && (
         <ActivityIndicator
           style={{
             position: 'absolute',

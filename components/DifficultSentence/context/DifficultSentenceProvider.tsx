@@ -19,7 +19,7 @@ export const DifficultSentenceProvider = ({
   children,
 }: PropsWithChildren<{}>) => {
   const [matchedWordListState, setMatchedWordListState] = useState([]);
-  const [isTriggerigReview, setIsTriggerigReview] = useState(false);
+  const [isTriggeringReview, setIsTriggeringReview] = useState(false);
 
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const scaleAnim = useRef(new Animated.Value(0.8)).current;
@@ -58,7 +58,7 @@ export const DifficultSentenceProvider = ({
 
   const handleDeleteContent = async () => {
     try {
-      setIsTriggerigReview(true);
+      setIsTriggeringReview(true);
       await collapseAnimation();
       updateSentenceData({
         isAdhoc: sentence?.isAdhoc,
@@ -73,7 +73,7 @@ export const DifficultSentenceProvider = ({
       });
     } catch (error) {
     } finally {
-      setIsTriggerigReview(false);
+      setIsTriggeringReview(false);
     }
   };
 
@@ -83,7 +83,7 @@ export const DifficultSentenceProvider = ({
 
   const handleNextReview = async difficulty => {
     try {
-      setIsTriggerigReview(true);
+      setIsTriggeringReview(true);
       const nextScheduledOptions = getNextScheduledOptions({
         card: cardDataRelativeToNow,
         contentType: srsRetentionKeyTypes.sentences,
@@ -102,7 +102,7 @@ export const DifficultSentenceProvider = ({
       });
     } catch (error) {
     } finally {
-      setIsTriggerigReview(true);
+      setIsTriggeringReview(true);
     }
   };
 
@@ -121,7 +121,7 @@ export const DifficultSentenceProvider = ({
         handleOpenUpGoogle,
         matchedWordListState,
         setMatchedWordListState,
-        isTriggerigReview,
+        isTriggeringReview,
       }}>
       {children}
     </DifficultSentenceContext.Provider>
