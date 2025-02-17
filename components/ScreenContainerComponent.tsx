@@ -1,12 +1,11 @@
 import React from 'react';
 import {SafeAreaView} from 'react-native';
 import UpdateStatusSnackBar from './UpdateStatusSnackBar';
+import useData from '../context/Data/useData';
 
-const ScreenContainerComponent = ({
-  updatePromptState,
-  marginBottom = 0,
-  children,
-}) => {
+const ScreenContainerComponent = ({marginBottom = 0, children}) => {
+  const {updatePromptState, setUpdatePromptState} = useData();
+
   return (
     <SafeAreaView
       style={{
@@ -16,7 +15,10 @@ const ScreenContainerComponent = ({
       }}>
       {children}
       {updatePromptState && (
-        <UpdateStatusSnackBar updatePromptState={updatePromptState} />
+        <UpdateStatusSnackBar
+          updatePromptState={updatePromptState}
+          setUpdatePromptState={setUpdatePromptState}
+        />
       )}
     </SafeAreaView>
   );

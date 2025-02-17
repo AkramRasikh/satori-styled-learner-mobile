@@ -100,9 +100,8 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
     return updatedState;
   };
 
-  const updatePromptFunc = (promptText, time) => {
+  const updatePromptFunc = promptText => {
     setUpdatePromptState(promptText);
-    setTimeout(() => setUpdatePromptState(''), time);
   };
 
   const updateContentMetaData = async ({
@@ -129,11 +128,11 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
           dataStorageKeyPrefix + content,
           updatedState,
         );
-        updatePromptFunc(`${topicName} updated!`, 2000);
+        updatePromptFunc(`${topicName} updated!`);
         return newTopicState;
       }
     } catch (error) {
-      updatePromptFunc(`Error updating ${topicName}!`, 1000);
+      updatePromptFunc(`Error updating ${topicName}!`);
     }
   };
 
@@ -143,7 +142,7 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
       const combineWordsRes = await combineWordsAPI({inputWords, language});
       setCombineWordsListState(combineWordsRes);
     } catch (error) {
-      updatePromptFunc('Error combining words', 1000);
+      updatePromptFunc('Error combining words');
     } finally {
       setTimeout(() => setLoadingCombineSentences(false), 2000);
     }
@@ -175,11 +174,11 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
           dataStorageKeyPrefix + content,
           updatedState,
         );
-        updatePromptFunc(`${topicName} updated!`, 2000);
+        updatePromptFunc(`${topicName} updated!`);
         return newTopicState;
       }
     } catch (error) {
-      updatePromptFunc(`Error updating ${topicName}!`, 1000);
+      updatePromptFunc(`Error updating ${topicName}!`);
     }
   };
 
@@ -198,7 +197,7 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
         ...res,
       };
     } catch (error) {
-      updatePromptFunc('Error saving updating adhoc sentence', 2000);
+      updatePromptFunc('Error saving updating adhoc sentence');
     }
   };
 
@@ -228,11 +227,11 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
         updatedContentState,
       );
 
-      updatePromptFunc(`${topicName} updated!`, 2000);
+      updatePromptFunc(`${topicName} updated!`);
       return updatedContentState[contentIndex];
     } catch (error) {
       console.log('## breakdownSentence', {error});
-      updatePromptFunc(`Error updating sentence for ${topicName}`, 2000);
+      updatePromptFunc(`Error updating sentence for ${topicName}`);
     } finally {
       setUpdatingSentenceState('');
     }
@@ -272,11 +271,11 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
           updatedContentState,
         );
       }
-      updatePromptFunc(`${topicName} updated!`, 2000);
+      updatePromptFunc(`${topicName} updated!`);
       return resObj;
     } catch (error) {
       console.log('## updateSentenceData', {error});
-      updatePromptFunc(`Error updating sentence for ${topicName}`, 2000);
+      updatePromptFunc(`Error updating sentence for ${topicName}`);
     } finally {
       setUpdatingSentenceState('');
     }
@@ -287,7 +286,7 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
       const res = await addSentenceAudioAPI({language, id, sentence});
       return res;
     } catch (error) {
-      updatePromptFunc(`Error getting audio for  ${sentence}`, 2000);
+      updatePromptFunc(`Error getting audio for  ${sentence}`);
     }
   };
 
@@ -300,7 +299,7 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
       const contextIds = contextWordsAddedResponse.map(item => item.id);
       return contextIds;
     } catch (error) {
-      updatePromptFunc('Error adding context data', 2000);
+      updatePromptFunc('Error adding context data');
     }
   };
 
@@ -344,11 +343,11 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
         dataStorageKeyPrefix + content,
         updatedContentState,
       );
-      updatePromptFunc(`${topicName} updated!`, 2000);
+      updatePromptFunc(`${topicName} updated!`);
       return updatedContentState[contentIndex];
     } catch (error) {
       console.log('## updateSentenceViaContent', {error});
-      updatePromptFunc(`Error updating sentence for ${topicName}`, 2000);
+      updatePromptFunc(`Error updating sentence for ${topicName}`);
     } finally {
       setUpdatingSentenceState('');
     }
@@ -400,7 +399,7 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
       );
       return snippetDataFromAPI;
     } catch (error) {
-      updatePromptFunc('❌☠️ Error adding snippet', 2000);
+      updatePromptFunc('❌☠️ Error adding snippet');
     }
   };
 
@@ -471,7 +470,7 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
       return deletedSnippetId;
     } catch (error) {
       console.log('## error removeSnippet (DataProvider.tsx)');
-      updatePromptFunc('Error removing snippet', 2000);
+      updatePromptFunc('Error removing snippet');
     }
   };
 
@@ -502,7 +501,7 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
       return savedWord;
     } catch (error) {
       console.log('## saveWordFirebase Provider err', error);
-      updatePromptFunc(`Error saving ${highlightedWord}`, 2000);
+      updatePromptFunc(`Error saving ${highlightedWord}`);
     }
   };
 
@@ -583,7 +582,6 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
         dataProviderIsLoading,
         provdiderError,
         updateSentenceData,
-        updatePromptState,
         addAdhocSentenceFunc,
         isAdhocDataLoading,
         addSnippet,
@@ -607,6 +605,8 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
         updateMetaDataState,
         breakdownSentence,
         fetchData,
+        setUpdatePromptState,
+        updatePromptState,
       }}>
       {children}
     </DataContext.Provider>

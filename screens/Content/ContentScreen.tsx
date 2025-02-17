@@ -41,7 +41,6 @@ const ContentScreen = () => {
   const {
     updateSentenceViaContent,
     updateContentMetaData,
-    updatePromptState,
     breakdownSentence,
     sentenceReviewBulk,
     pureWords,
@@ -279,7 +278,7 @@ const ContentScreen = () => {
     <ContentScreenProvider
       setUpdateWordList={setUpdateWordList}
       updateWordList={updateWordList}>
-      <ScreenContainerComponent updatePromptState={updatePromptState}>
+      <ScreenContainerComponent>
         <View style={{padding: 10}}>
           <TopicContent
             topicName={selectedTopic}

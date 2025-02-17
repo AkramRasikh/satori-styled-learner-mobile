@@ -124,7 +124,7 @@ function WordStudyContainer(): React.JSX.Element {
   const slicedArr = dueCardsState.slice(0, sliceArrState);
 
   return (
-    <ScreenContainerComponent updatePromptState={updatePromptState}>
+    <ScreenContainerComponent>
       <ScrollView
         ref={scrollViewRef}
         contentInsetAdjustmentBehavior="automatic"

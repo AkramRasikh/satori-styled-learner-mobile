@@ -29,13 +29,7 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
 
   const targetLanguageWordsState = useSelector(state => state.words);
   const numberOfWords = targetLanguageWordsState.length;
-  const {
-    updateSentenceData,
-    updatePromptState,
-    deleteWord,
-    pureWords,
-    updateWordData,
-  } = useData();
+  const {updateSentenceData, deleteWord, pureWords, updateWordData} = useData();
 
   const {underlineWordsInSentence} = useHighlightWordToWordBank({
     pureWordsUnique: pureWords,
@@ -200,9 +194,7 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
   const toggleableSentencesStateLength = slicedRenderedSentenceArr.length;
 
   return (
-    <ScreenContainerComponent
-      updatePromptState={updatePromptState}
-      marginBottom={30}>
+    <ScreenContainerComponent marginBottom={30}>
       <View style={{padding: 10, paddingBottom: 70}}>
         {selectedDueCardState && (
           <WordModalDifficultSentence
