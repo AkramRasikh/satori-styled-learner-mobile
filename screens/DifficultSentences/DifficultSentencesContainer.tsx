@@ -101,7 +101,7 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
 
   const {openGoogleTranslateApp} = useOpenGoogleTranslate();
 
-  const updateSentenceDataScreenLevel = ({
+  const updateSentenceDataScreenLevel = async ({
     isAdhoc,
     topicName,
     sentenceId,
@@ -117,7 +117,7 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
       updateDifficultSentence({sentenceId, updateDataRes: fieldToUpdate});
     }
 
-    updateSentenceData({
+    await updateSentenceData({
       isAdhoc,
       topicName,
       sentenceId,

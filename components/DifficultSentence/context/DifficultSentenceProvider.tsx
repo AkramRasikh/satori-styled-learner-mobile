@@ -90,7 +90,7 @@ export const DifficultSentenceProvider = ({
       });
       const nextReviewData = nextScheduledOptions[difficulty].card;
       await collapseAnimation();
-      updateSentenceData({
+      await updateSentenceData({
         isAdhoc,
         topicName: sentence.topic,
         sentenceId: sentence.id,
