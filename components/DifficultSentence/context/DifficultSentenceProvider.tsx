@@ -19,6 +19,7 @@ export const DifficultSentenceProvider = ({
   children,
 }: PropsWithChildren<{}>) => {
   const [matchedWordListState, setMatchedWordListState] = useState([]);
+  const [isTriggerigReview, setIsTriggerigReview] = useState(false);
 
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const scaleAnim = useRef(new Animated.Value(0.8)).current;
@@ -56,18 +57,24 @@ export const DifficultSentenceProvider = ({
   };
 
   const handleDeleteContent = async () => {
-    await collapseAnimation();
-    updateSentenceData({
-      isAdhoc: sentence?.isAdhoc,
-      topicName: sentence.topic,
-      sentenceId: sentence.id,
-      fieldToUpdate: {
-        reviewData: null,
-        nextReview: null,
-        reviewHistory: null,
-      },
-      contentIndex: sentence?.contentIndex,
-    });
+    try {
+      setIsTriggerigReview(true);
+      await collapseAnimation();
+      updateSentenceData({
+        isAdhoc: sentence?.isAdhoc,
+        topicName: sentence.topic,
+        sentenceId: sentence.id,
+        fieldToUpdate: {
+          reviewData: null,
+          nextReview: null,
+          reviewHistory: null,
+        },
+        contentIndex: sentence?.contentIndex,
+      });
+    } catch (error) {
+    } finally {
+      setIsTriggerigReview(false);
+    }
   };
 
   const handleOpenUpGoogle = () => {
@@ -75,22 +82,28 @@ export const DifficultSentenceProvider = ({
   };
 
   const handleNextReview = async difficulty => {
-    const nextScheduledOptions = getNextScheduledOptions({
-      card: cardDataRelativeToNow,
-      contentType: srsRetentionKeyTypes.sentences,
-    });
-    const nextReviewData = nextScheduledOptions[difficulty].card;
-    await collapseAnimation();
-    updateSentenceData({
-      isAdhoc,
-      topicName: sentence.topic,
-      sentenceId: sentence.id,
-      fieldToUpdate: {
-        reviewData: nextReviewData,
-        ...getShouldRemoveLegacyFields(),
-      },
-      contentIndex: sentence.contentIndex,
-    });
+    try {
+      setIsTriggerigReview(true);
+      const nextScheduledOptions = getNextScheduledOptions({
+        card: cardDataRelativeToNow,
+        contentType: srsRetentionKeyTypes.sentences,
+      });
+      const nextReviewData = nextScheduledOptions[difficulty].card;
+      await collapseAnimation();
+      updateSentenceData({
+        isAdhoc,
+        topicName: sentence.topic,
+        sentenceId: sentence.id,
+        fieldToUpdate: {
+          reviewData: nextReviewData,
+          ...getShouldRemoveLegacyFields(),
+        },
+        contentIndex: sentence.contentIndex,
+      });
+    } catch (error) {
+    } finally {
+      setIsTriggerigReview(true);
+    }
   };
 
   const handleCopyText = () => {
@@ -108,6 +121,7 @@ export const DifficultSentenceProvider = ({
         handleOpenUpGoogle,
         matchedWordListState,
         setMatchedWordListState,
+        isTriggerigReview,
       }}>
       {children}
     </DifficultSentenceContext.Provider>
