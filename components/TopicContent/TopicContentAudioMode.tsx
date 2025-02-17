@@ -39,7 +39,7 @@ const TopicContentAudioMode = ({
   const [showReviewSectionState, setShowReviewSectionState] = useState(false);
   const [highlightedIndices, setHighlightedIndices] = useState([]);
   const [selectedSnippetsState, setSelectedSnippetsState] = useState([]);
-  const [isAutoScrollingMode, setisAutoScrollingMode] = useState(false);
+  const [isAutoScrollingMode, setisAutoScrollingMode] = useState(true);
 
   const scrollViewRef = useRef(null);
 

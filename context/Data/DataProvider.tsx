@@ -38,7 +38,7 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
   const [loadingCombineSentences, setLoadingCombineSentences] = useState(false);
   const [provdiderError, setProvdiderError] = useState(null);
   const [updatePromptState, setUpdatePromptState] = useState('');
-  const [isAdhocDataLoading, setIsAdhocDataLoading] = useState(false);
+  const [isAdhocDataLoading, setIsAdhocDataLoading] = useState(true);
   const [combineWordsListState, setCombineWordsListState] = useState([]);
   const [updateMetaDataState, setUpdateMetaDataState] = useState(0);
   const adhocTargetLanguageSentencesState = useSelector(
