@@ -60,13 +60,6 @@ const DifficultSentenceMidSection = ({sentence, addSnippet, removeSnippet}) => {
           flexDirection: 'row',
         }}>
         <DifficultSentenceTextAction />
-        <View
-          style={{
-            backgroundColor: DefaultTheme.colors?.backdrop,
-            width: 1,
-            borderRadius: 5,
-          }}
-        />
         <DifficultSentenceAudioControls
           sentence={sentence}
           handleLoad={handleLoad}

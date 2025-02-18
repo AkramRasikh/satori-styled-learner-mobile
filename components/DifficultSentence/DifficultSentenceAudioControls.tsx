@@ -59,24 +59,19 @@ const DifficultSentenceAudioControls = ({
   ];
 
   return (
-    <View
-      style={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        flexDirection: 'row',
-      }}>
+    <>
       {btnArr.map((btn, index) => {
         return (
           <IconButton
             key={index}
             icon={btn.icon}
             mode="outlined"
-            size={15}
+            size={20}
             onPress={btn.onPress}
           />
         );
       })}
-    </View>
+    </>
   );
 };
 
