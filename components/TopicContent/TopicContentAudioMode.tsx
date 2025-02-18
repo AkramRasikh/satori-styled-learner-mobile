@@ -123,7 +123,8 @@ const TopicContentAudioMode = ({
           contentInsetAdjustmentBehavior="automatic"
           style={{
             maxHeight: height * 0.8,
-          }}>
+          }}
+          ref={scrollViewRef}>
           <View style={{alignSelf: 'center'}}>
             <Text>{topicName}</Text>
           </View>
@@ -158,6 +159,7 @@ const TopicContentAudioMode = ({
             breakdownSentenceFunc={breakdownSentenceFunc}
             handleOpenGoogle={handleOpenGoogle}
             scrollViewRef={scrollViewRef}
+            isAutoScrollingMode={isAutoScrollingMode}
           />
         </ScrollView>
         <TopicContentAudioSection

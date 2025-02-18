@@ -52,12 +52,17 @@ const BilingualLine = ({
   const matchedWords = topicSentence?.matchedWords.length > 0;
   const hasSentenceBreakdown = topicSentence?.vocab;
   useEffect(() => {
-    if (isAutoScrollingMode && scrollViewRef && focusThisSentence) {
+    if (
+      isAutoScrollingMode &&
+      scrollViewRef?.current &&
+      focusThisSentence &&
+      targetRef?.current
+    ) {
       targetRef.current?.measureLayout(scrollViewRef.current, (_, y) => {
         scrollViewRef.current?.scrollTo({y: y - 100, animated: true});
       });
     }
-  }, [focusThisSentence, scrollViewRef, isAutoScrollingMode]);
+  }, [focusThisSentence, scrollViewRef, isAutoScrollingMode, targetRef]);
 
   const {languageSelectedState} = useLanguageSelector();
   const getSentenceBreakdown = async () => {
