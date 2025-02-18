@@ -284,7 +284,6 @@ const DifficultSentenceContainer = ({
             sentence={sentence}
             indexNum={indexNum}>
             <DifficultSentenceMidSection
-              handleSettingHighlightmode={handleSettingHighlightmode}
               sentence={sentence}
               addSnippet={addSnippet}
               removeSnippet={removeSnippet}
