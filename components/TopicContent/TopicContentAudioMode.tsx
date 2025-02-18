@@ -11,6 +11,8 @@ import useTopicContentAudio from './context/useTopicContentAudio';
 import {generateRandomId} from '../../utils/generate-random-id';
 import {TopicContentSnippetsProvider} from './context/TopicContentSnippetsProvider';
 
+const {height} = Dimensions?.get('window');
+
 const timeDataWithinSnippet = (thisItem, currentTimeState) => {
   const pointInAudioInSnippet = currentTimeState - thisItem.startAt;
   return pointInAudioInSnippet;
@@ -57,7 +59,6 @@ const TopicContentAudioMode = ({
   const {reviewHistory, nextReview, isCore, contentIndex, hasVideo, content} =
     loadedContent;
 
-  const {height} = Dimensions?.get('window');
   const soundDuration = soundRef?.current?._duration || 0;
 
   const initSnippet = () => {
