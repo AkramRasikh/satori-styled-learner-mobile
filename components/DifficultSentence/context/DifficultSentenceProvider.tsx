@@ -20,6 +20,7 @@ export const DifficultSentenceProvider = ({
 }: PropsWithChildren<{}>) => {
   const [matchedWordListState, setMatchedWordListState] = useState([]);
   const [isTriggeringReview, setIsTriggeringReview] = useState(false);
+  const [showSentenceBreakDown, setShowSentenceBreakDown] = useState(false);
 
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const scaleAnim = useRef(new Animated.Value(0.8)).current;
@@ -37,6 +38,9 @@ export const DifficultSentenceProvider = ({
   const nextReview = sentence?.nextReview;
   const reviewHistory = sentence?.reviewHistory;
 
+  const hasSentenceBreakdown = sentence?.vocab;
+  const revealSentenceBreakdown = showSentenceBreakDown && hasSentenceBreakdown;
+
   const hasLegacyReviewSystem = !reviewData?.due && nextReview;
 
   const cardDataRelativeToNow = getCardDataRelativeToNow({
@@ -45,6 +49,10 @@ export const DifficultSentenceProvider = ({
     nextReview,
     reviewHistory,
   });
+
+  const handleSentenceBreakDownState = () => {
+    setShowSentenceBreakDown(!showSentenceBreakDown);
+  };
 
   const getShouldRemoveLegacyFields = () => {
     if (hasLegacyReviewSystem) {
@@ -122,6 +130,9 @@ export const DifficultSentenceProvider = ({
         matchedWordListState,
         setMatchedWordListState,
         isTriggeringReview,
+        handleSentenceBreakDownState,
+        revealSentenceBreakdown,
+        hasSentenceBreakdown,
       }}>
       {children}
     </DifficultSentenceContext.Provider>

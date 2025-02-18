@@ -29,6 +29,7 @@ import AnimationContainer from '../AnimationContainer';
 import useDifficultSentenceContext from './context/useDifficultSentence';
 import DifficultSentenceSnippet from './DifficultSentenceSnippet';
 import {DoubleClickButton} from '../Button';
+import SentenceBreakdown from '../SentenceBreakdown';
 
 const DifficultSentenceMidSection = ({sentence, addSnippet, removeSnippet}) => {
   const {
@@ -126,6 +127,7 @@ const DifficultSentenceContainer = ({
     matchedWordListState,
     setMatchedWordListState,
     isTriggeringReview,
+    revealSentenceBreakdown,
   } = useDifficultSentenceContext();
 
   const isLastEl = toggleableSentencesStateLength === indexNum + 1;
@@ -270,6 +272,12 @@ const DifficultSentenceContainer = ({
             <View style={{alignSelf: 'center'}}>
               <Text style={DefaultTheme.fonts.bodyMedium}>{text}</Text>
             </View>
+          )}
+          {revealSentenceBreakdown && (
+            <SentenceBreakdown
+              vocab={sentence.vocab}
+              sentenceStructure={sentence.sentenceStructure}
+            />
           )}
 
           <DifficultSentenceAudioProvider

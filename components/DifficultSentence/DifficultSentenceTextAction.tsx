@@ -3,7 +3,12 @@ import {IconButton, MD2Colors} from 'react-native-paper';
 import useDifficultSentenceContext from './context/useDifficultSentence';
 
 const DifficultSentenceTextAction = () => {
-  const {handleCopyText, handleOpenUpGoogle} = useDifficultSentenceContext();
+  const {
+    handleCopyText,
+    handleOpenUpGoogle,
+    handleSentenceBreakDownState,
+    hasSentenceBreakdown,
+  } = useDifficultSentenceContext();
   const btnArr = [
     {
       icon: 'google-translate',
@@ -13,6 +18,11 @@ const DifficultSentenceTextAction = () => {
     {
       icon: 'content-copy',
       onPress: handleCopyText,
+    },
+    {
+      icon: 'glasses',
+      onPress: handleSentenceBreakDownState,
+      disabled: !hasSentenceBreakdown,
     },
   ];
 
@@ -27,6 +37,7 @@ const DifficultSentenceTextAction = () => {
             size={20}
             onPress={btn.onPress}
             iconColor={btn?.iconColor}
+            disabled={btn?.disabled}
           />
         );
       })}
