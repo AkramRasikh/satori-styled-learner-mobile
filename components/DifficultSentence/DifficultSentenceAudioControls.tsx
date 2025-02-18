@@ -1,4 +1,4 @@
-import React, {View} from 'react-native';
+import React from 'react-native';
 import {IconButton} from 'react-native-paper';
 
 import useMainAudioControls from '../../hooks/useMainAudioControls';

@@ -1,4 +1,4 @@
-import React, {View} from 'react-native';
+import React from 'react-native';
 import {IconButton, MD2Colors} from 'react-native-paper';
 import useDifficultSentenceContext from './context/useDifficultSentence';
 
