@@ -86,15 +86,6 @@ const TopicContentVideoMode = ({
             onProgressHandler={setCurrentVideoTimeState}
             setVideoDuration={setVideoDurationState}
           />
-          <View>
-            <AudioToggles
-              isPlaying={isVideoPlaying}
-              playSound={playVideo}
-              seekHandler={seekHandler}
-              progress={progress}
-              setShowReviewSectionState={setShowReviewSectionState}
-            />
-          </View>
           <ScrollView
             contentInsetAdjustmentBehavior="automatic"
             style={{
@@ -138,6 +129,13 @@ const TopicContentVideoMode = ({
               isAutoScrollingMode={isAutoScrollingMode}
             />
           </ScrollView>
+          <AudioToggles
+            isPlaying={isVideoPlaying}
+            playSound={playVideo}
+            seekHandler={seekHandler}
+            progress={progress}
+            setShowReviewSectionState={setShowReviewSectionState}
+          />
         </View>
       </View>
     </>
