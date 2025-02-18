@@ -82,6 +82,8 @@ const BilingualLine = ({
   };
 
   const handleSaveWord = async wordToSave => {
+    setShowReviewSettings(false);
+    setIsSettingsOpenState(false);
     await handleSaveWordContentScreen(wordToSave);
   };
 
@@ -301,6 +303,7 @@ const BilingualLine = ({
           updateSentenceData={updateSentenceData}
           setShowReviewSettings={setShowReviewSettings}
           contentIndex={contentIndex}
+          setIsSettingsOpenState={setIsSettingsOpenState}
         />
       ) : null}
       {showMatchedTranslation &&

@@ -10,6 +10,7 @@ const SatoriLineSRS = ({
   sentence,
   updateSentenceData,
   setShowReviewSettings,
+  setIsSettingsOpenState,
   contentIndex,
 }) => {
   const timeNow = new Date();
@@ -42,10 +43,10 @@ const SatoriLineSRS = ({
     return {};
   };
 
-  const handleClose = async () => {
-    setShowReviewSettings(true);
-
-    const hasBeenUpdated = await updateSentenceData({
+  const handleDeleteReview = async () => {
+    setShowReviewSettings(false);
+    setIsSettingsOpenState(false);
+    await updateSentenceData({
       isAdhoc,
       topicName: sentence.topic,
       sentenceId: sentence.id,
@@ -55,16 +56,14 @@ const SatoriLineSRS = ({
       },
       contentIndex: contentIndex ?? sentence.contentIndex,
     });
-
-    if (hasBeenUpdated) {
-      setShowReviewSettings(false);
-    }
   };
 
   const handleNextReview = async difficulty => {
     const nextReviewData = nextScheduledOptions[difficulty].card;
 
-    const hasBeenUpdated = await updateSentenceData({
+    setShowReviewSettings(false);
+    setIsSettingsOpenState(false);
+    await updateSentenceData({
       isAdhoc,
       topicName: sentence.topic,
       sentenceId: sentence.id,
@@ -74,10 +73,6 @@ const SatoriLineSRS = ({
       },
       contentIndex: contentIndex ?? sentence.contentIndex,
     });
-
-    if (hasBeenUpdated) {
-      setShowReviewSettings(false);
-    }
   };
 
   return (
@@ -107,7 +102,7 @@ const SatoriLineSRS = ({
           easyText={easyText}
         />
       )}
-      {hasDueDate && <DeleteButton onPress={handleClose} size={15} />}
+      {hasDueDate && <DeleteButton onPress={handleDeleteReview} size={15} />}
     </View>
   );
 };
