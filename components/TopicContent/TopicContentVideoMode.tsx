@@ -30,7 +30,7 @@ const TopicContentVideoMode = ({
   const [englishOnly, setEnglishOnly] = useState(false);
   const [engMaster, setEngMaster] = useState(true);
   const [showReviewSectionState, setShowReviewSectionState] = useState(false);
-  const [isAutoScrollingMode, setisAutoScrollingMode] = useState(false);
+  const [isAutoScrollingMode, setisAutoScrollingMode] = useState(true);
   const [highlightedIndices, setHighlightedIndices] = useState([]);
   const scrollViewRef = useRef(null);
 
