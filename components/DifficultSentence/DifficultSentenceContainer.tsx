@@ -30,6 +30,7 @@ import useDifficultSentenceContext from './context/useDifficultSentence';
 import DifficultSentenceSnippet from './DifficultSentenceSnippet';
 import {DoubleClickButton} from '../Button';
 import SentenceBreakdown from '../SentenceBreakdown';
+import {getHexCode} from '../../utils/get-hex-code';
 
 const DifficultSentenceMidSection = ({sentence, addSnippet, removeSnippet}) => {
   const {
@@ -198,7 +199,25 @@ const DifficultSentenceContainer = ({
   };
 
   const getSafeText = (targetText: string) => {
-    if (!showAllMatchedWordsState) {
+    if (revealSentenceBreakdown) {
+      const vocabBreakDoownWithHexCode = revealSentenceBreakdown
+        ? sentence.vocab.map((i, index) => {
+            return {
+              ...i,
+              color: getHexCode(index),
+            };
+          })
+        : null;
+      return (
+        <Text style={{fontSize: 20}}>
+          {vocabBreakDoownWithHexCode.map((nestedSegment, index) => (
+            <Text key={index} style={{color: nestedSegment.color}}>
+              {nestedSegment.surfaceForm}
+            </Text>
+          ))}
+        </Text>
+      );
+    } else if (!showAllMatchedWordsState) {
       return getSafeTextDefault(sentence.targetLang);
     }
 
