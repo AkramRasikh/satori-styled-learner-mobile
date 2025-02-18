@@ -13,6 +13,9 @@ import DifficultSentenceComponent from '../../components/DifficultSentence';
 import {countArrayOccurrencesToObj} from '../../utils/count-array-occurrences-to-obj';
 import useOpenGoogleTranslate from '../../hooks/useOpenGoogleTranslate';
 import useHighlightWordToWordBank from '../../hooks/useHighlightWordToWordBank';
+import LanguageSelection from '../home/components/LanguageSelection';
+import useLanguageSelector from '../../context/LanguageSelector/useLanguageSelector';
+import {ActivityIndicator, MD2Colors} from 'react-native-paper';
 
 const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
   const [toggleableSentencesState, setToggleableSentencesState] = useState([]);
@@ -23,15 +26,29 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
     useState(null);
   const [sliceArrState, setSliceArrState] = useState(10);
   const [isShowDueOnly, setIsShowDueOnly] = useState(true);
-  const [isMountedState, setIsMountedState] = useState(true);
+  const [isMountedState, setIsMountedState] = useState(false);
+  const [isLanguageLoading, setIsLanguageLoading] = useState(false);
 
   const targetLanguageWordsState = useSelector(state => state.words);
   const numberOfWords = targetLanguageWordsState.length;
-  const {updateSentenceData, deleteWord, pureWords, updateWordData} = useData();
+  const {updateSentenceData, deleteWord, pureWords, fetchData, updateWordData} =
+    useData();
+
+  const {setLanguageSelectedState} = useLanguageSelector();
 
   const {underlineWordsInSentence} = useHighlightWordToWordBank({
     pureWordsUnique: pureWords,
   });
+
+  const defaultScreenState = () => {
+    setToggleableSentencesState([]);
+    setSelectedDueCardState(null);
+    setSelectedGeneralTopicState('');
+    setGeneralTopicsAvailableState(null);
+    setSliceArrState(10);
+    setIsShowDueOnly(true);
+    setIsMountedState(true);
+  };
 
   const {
     difficultSentencesState,
@@ -176,6 +193,18 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
     isMountedState,
   ]);
 
+  const handleLanguageSelection = async selectedLanguage => {
+    try {
+      setIsLanguageLoading(true);
+      defaultScreenState();
+      await fetchData(selectedLanguage);
+      setLanguageSelectedState(selectedLanguage);
+    } catch (error) {
+    } finally {
+      setIsLanguageLoading(false);
+    }
+  };
+
   useEffect(() => {
     setIsMountedState(true);
     showDueInit(difficultSentencesState);
@@ -194,7 +223,25 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
 
   return (
     <ScreenContainerComponent marginBottom={30}>
-      <View style={{padding: 10, paddingBottom: 70}}>
+      {isLanguageLoading && (
+        <ActivityIndicator
+          animating={true}
+          color={MD2Colors.amber300}
+          size="large"
+          style={{
+            position: 'absolute',
+            top: '40%',
+            alignSelf: 'center',
+          }}
+        />
+      )}
+      <LanguageSelection handleLanguageSelection={handleLanguageSelection} />
+      <View
+        style={{
+          padding: 10,
+          paddingBottom: 70,
+          opacity: isLanguageLoading ? 0.5 : 1,
+        }}>
         {selectedDueCardState && (
           <WordModalDifficultSentence
             visible={selectedDueCardState}
