@@ -295,6 +295,7 @@ const BilingualLine = ({
             saveWordFirebase={handleSaveWord}
             setHighlightMode={setHighlightMode}
             textWidth={textWidth}
+            setIsSettingsOpenState={setIsSettingsOpenState}
           />
         ) : (
           safeTextState

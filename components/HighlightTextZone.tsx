@@ -19,6 +19,7 @@ const HighlightTextZone = ({
   saveWordFirebase,
   setHighlightMode,
   textWidth,
+  setIsSettingsOpenState,
 }) => {
   const startRef = useRef(null);
   const [initialLineLocationY, setInitialLineLocationY] = useState(null);
@@ -60,6 +61,7 @@ const HighlightTextZone = ({
   const handleClose = () => {
     setHighlightedIndices([]);
     setHighlightMode(false);
+    setIsSettingsOpenState?.();
   };
 
   const extractHighlightedText = (sentence, indices) => {
