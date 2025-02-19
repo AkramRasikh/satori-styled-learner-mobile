@@ -5,6 +5,7 @@ import {srsCalculationAndText} from '../utils/srs/srs-calculation-and-text';
 import useAnimation from '../hooks/useAnimation';
 import {useRef} from 'react';
 import AnimationContainer from './AnimationContainer';
+import {DeleteButton} from './Button';
 
 const BilingualTextSwipeSRS = ({
   setShowQuickReviewState,
@@ -105,12 +106,14 @@ const BilingualTextSwipeSRS = ({
           {hardText}
         </Button>
       )}
-      {hasDueDate && (
-        <TouchableOpacity onPress={handleDeleteReview}>
-          <Text>🗑️</Text>
-        </TouchableOpacity>
-      )}
-      <IconButton onPress={handleClose} icon="close" iconColor="red" />
+      {hasDueDate && <DeleteButton onPress={handleDeleteReview} size={15} />}
+      <IconButton
+        onPress={handleClose}
+        icon="close"
+        iconColor="red"
+        containerColor="pink"
+        size={15}
+      />
     </AnimationContainer>
   );
 };
