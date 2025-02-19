@@ -1,7 +1,10 @@
-import React, {View, TouchableOpacity} from 'react-native';
+import React, {TouchableOpacity, Animated} from 'react-native';
 import {Button, DefaultTheme, IconButton, Text} from 'react-native-paper';
 import {getDueDate, srsRetentionKeyTypes} from '../srs-algo';
 import {srsCalculationAndText} from '../utils/srs/srs-calculation-and-text';
+import useAnimation from '../hooks/useAnimation';
+import {useRef} from 'react';
+import AnimationContainer from './AnimationContainer';
 
 const BilingualTextSwipeSRS = ({
   setShowQuickReviewState,
@@ -24,6 +27,14 @@ const BilingualTextSwipeSRS = ({
     reviewData,
     contentType: srsRetentionKeyTypes.sentences,
     timeNow,
+  });
+
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+  const scaleAnim = useRef(new Animated.Value(0.8)).current;
+
+  const {collapseAnimation} = useAnimation({
+    fadeAnim,
+    scaleAnim,
   });
 
   const getShouldRemoveLegacyFields = () => {
@@ -65,9 +76,16 @@ const BilingualTextSwipeSRS = ({
     });
   };
 
+  const handleClose = async () => {
+    await collapseAnimation();
+    setShowQuickReviewState(false);
+  };
+
   return (
-    <View
-      style={{
+    <AnimationContainer
+      fadeAnim={fadeAnim}
+      scaleAnim={scaleAnim}
+      styles={{
         width: '20%',
         alignItems: 'center',
         display: 'flex',
@@ -92,12 +110,8 @@ const BilingualTextSwipeSRS = ({
           <Text>🗑️</Text>
         </TouchableOpacity>
       )}
-      <IconButton
-        onPress={() => setShowQuickReviewState(false)}
-        icon="close"
-        iconColor="red"
-      />
-    </View>
+      <IconButton onPress={handleClose} icon="close" iconColor="red" />
+    </AnimationContainer>
   );
 };
 
