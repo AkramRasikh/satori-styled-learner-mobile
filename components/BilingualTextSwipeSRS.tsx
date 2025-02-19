@@ -1,5 +1,5 @@
-import React, {TouchableOpacity, Animated} from 'react-native';
-import {Button, DefaultTheme, IconButton, Text} from 'react-native-paper';
+import React, {Animated} from 'react-native';
+import {Button, DefaultTheme, IconButton} from 'react-native-paper';
 import {getDueDate, srsRetentionKeyTypes} from '../srs-algo';
 import {srsCalculationAndText} from '../utils/srs/srs-calculation-and-text';
 import useAnimation from '../hooks/useAnimation';
