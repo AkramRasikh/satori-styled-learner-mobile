@@ -62,7 +62,7 @@ const BilingualLine = ({
       },
       onPanResponderMove: (_, gestureState) => {
         swipeDistance.current += gestureState.dx; // Accumulate swipe distance
-        if (swipeDistance.current < -150) {
+        if (swipeDistance.current < -150 && !highlightMode) {
           setShowQuickReviewState(true); // Set state when 50px threshold is reached
           swipeDistance.current = 0; // Reset to prevent multiple triggers
         }
@@ -199,10 +199,11 @@ const BilingualLine = ({
   const openReviewPortal = () => {
     setShowReviewSettings(!showReviewSettings);
   };
+  const spreadHandler = highlightMode ? {} : panResponder.panHandlers;
 
   return (
     <View
-      {...panResponder.panHandlers}
+      {...spreadHandler}
       style={{
         opacity: isLoadingState ? 0.5 : 1,
       }}
