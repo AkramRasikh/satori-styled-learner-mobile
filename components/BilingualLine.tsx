@@ -7,12 +7,13 @@ import SatoriLineSRS from './SatoriLineSRS';
 import SentenceBreakdown from './SentenceBreakdown';
 import {getHexCode} from '../utils/get-hex-code';
 import useLanguageSelector from '../context/LanguageSelector/useLanguageSelector';
-import {ActivityIndicator, Icon, MD2Colors} from 'react-native-paper';
+import {ActivityIndicator} from 'react-native-paper';
 import DifficultSentenceMappedWords from './DifficultSentence/DifficultSentenceMappedWords';
 import {checkOverlap} from '../utils/check-word-overlap';
 import TextSegmentContainer from './TextSegmentContainer';
 import useContentScreen from '../screens/Content/useContentScreen';
 import {DoubleClickButton} from './Button';
+import BilingualLineSettings from './BilingualLineSettings';
 
 const BilingualLine = ({
   id,
@@ -249,40 +250,14 @@ const BilingualLine = ({
             />
           )}
           {!isSettingsOpenState && (
-            <View
-              style={{
-                width: '100%',
-                marginBottom: highlightMode ? 3 : 0,
-                display: 'flex',
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-              }}>
-              <TouchableOpacity
-                onPress={() => setIsSettingsOpenState(true)}
-                style={{
-                  backgroundColor: hasBeenMarkedAsDifficult
-                    ? MD2Colors.red600
-                    : 'transparent',
-                  borderRadius: 5,
-                }}>
-                <Icon
-                  source="menu"
-                  size={20}
-                  color={
-                    hasBeenMarkedAsDifficult
-                      ? MD2Colors.grey100
-                      : MD2Colors.amber800
-                  }
-                />
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={handlePlayThisLine}
-                style={{
-                  marginRight: 15,
-                }}>
-                <Text>{isPlaying && focusThisSentence ? '⏸' : '▶️'}</Text>
-              </TouchableOpacity>
-            </View>
+            <BilingualLineSettings
+              highlightMode={highlightMode}
+              setIsSettingsOpenState={setIsSettingsOpenState}
+              hasBeenMarkedAsDifficult={hasBeenMarkedAsDifficult}
+              handlePlayThisLine={handlePlayThisLine}
+              isPlaying={isPlaying}
+              focusThisSentence={focusThisSentence}
+            />
           )}
         </View>
         {englishOnly ? null : highlightMode ? (
