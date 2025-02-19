@@ -4,6 +4,7 @@ import FutureDateIncrementor from './FutureDateIncrementor';
 import {isSameDay} from '../utils/check-same-date';
 import {Button, DefaultTheme, FAB, Text} from 'react-native-paper';
 import {SettingBlock} from './DisplaySettings';
+import AreYouSurePrompt from './AreYouSurePrompt';
 
 const getDaysLater = (today, futureDate) => {
   const futureDateObj = new Date(futureDate);
@@ -48,6 +49,7 @@ const ReviewSection = ({
   isCore,
 }) => {
   const [futureDaysState, setFutureDaysState] = useState(3);
+  const [areYouSureState, setAreYouSureState] = useState(false);
 
   const today = new Date();
 
@@ -65,7 +67,12 @@ const ReviewSection = ({
   };
 
   const handleBulkReviewsFunc = () => {
-    handleBulkReviews({removeReview: hasSomeReviewedSentences});
+    setAreYouSureState(!areYouSureState);
+  };
+
+  const handleAreYouSureBulk = async () => {
+    await handleBulkReviews({removeReview: hasSomeReviewedSentences});
+    setAreYouSureState(false);
   };
 
   const setNextReviewDate = () => {
@@ -106,11 +113,20 @@ const ReviewSection = ({
       <SettingBlock func={handleIsCore} bool={isCore} text={'Core'} />
       <FAB
         onPress={handleBulkReviewsFunc}
+        variant={hasSomeReviewedSentences ? 'tertiary' : 'primary'}
         icon="clock"
         label={
-          hasSomeReviewedSentences ? 'Remove all reviews' : 'Bulk add reviews'
+          hasSomeReviewedSentences ? ' Remove all reviews' : 'Bulk add reviews'
         }
       />
+      {areYouSureState && (
+        <AreYouSurePrompt
+          yesText="Yes"
+          yesOnPress={handleAreYouSureBulk}
+          noText="No"
+          noOnPress={() => setAreYouSureState(false)}
+        />
+      )}
       <View>
         <Text style={DefaultTheme.fonts.bodyMedium}>{nextReviewText}</Text>
       </View>
