@@ -1,6 +1,6 @@
 import React, {useEffect, useRef, useState} from 'react';
 import Clipboard from '@react-native-clipboard/clipboard';
-import {Text, TouchableOpacity, View} from 'react-native';
+import {Text, TouchableOpacity, View, PanResponder} from 'react-native';
 import HighlightTextZone from './HighlightTextZone';
 import SatoriLineControls from './SatoriLineControls';
 import SatoriLineSRS from './SatoriLineSRS';
@@ -34,6 +34,7 @@ const BilingualLine = ({
   handleOpenGoogle,
   scrollViewRef,
   isAutoScrollingMode,
+  setShowQuickReviewState,
 }) => {
   const [showEng, setShowEng] = useState(false);
   const [showNotes, setShowNotes] = useState(false);
@@ -46,11 +47,29 @@ const BilingualLine = ({
   const [safeTextState, setSafeTextState] = useState();
 
   const targetRef = useRef(null);
+  const swipeDistance = useRef(0);
 
   const {handleSaveWordContentScreen, updateWordList} = useContentScreen();
 
   const matchedWords = topicSentence?.matchedWords.length > 0;
   const hasSentenceBreakdown = topicSentence?.vocab;
+
+  const panResponder = useRef(
+    PanResponder.create({
+      onMoveShouldSetPanResponder: (_, gestureState) => {
+        swipeDistance.current = 0;
+        return Math.abs(gestureState.dx) > 5;
+      },
+      onPanResponderMove: (_, gestureState) => {
+        swipeDistance.current += gestureState.dx; // Accumulate swipe distance
+        if (swipeDistance.current < -150) {
+          setShowQuickReviewState(true); // Set state when 50px threshold is reached
+          swipeDistance.current = 0; // Reset to prevent multiple triggers
+        }
+      },
+    }),
+  ).current;
+
   useEffect(() => {
     if (
       isAutoScrollingMode &&
@@ -183,6 +202,7 @@ const BilingualLine = ({
 
   return (
     <View
+      {...panResponder.panHandlers}
       style={{
         opacity: isLoadingState ? 0.5 : 1,
       }}
