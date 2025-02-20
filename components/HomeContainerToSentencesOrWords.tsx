@@ -6,6 +6,7 @@ import useDifficultSentences from '../context/DifficultSentences/useDifficultSen
 export const languageEmojiKey = {
   japanese: '🇯🇵',
   chinese: '🇨🇳',
+  arabic: '🇸🇩',
 };
 
 const HomeContainerToSentencesOrWords = ({navigation}) => {
