@@ -295,6 +295,7 @@ const DifficultSentenceContainer = ({
           {revealSentenceBreakdown && (
             <SentenceBreakdown
               vocab={sentence.vocab}
+              meaning={sentence.meaning}
               sentenceStructure={sentence.sentenceStructure}
             />
           )}

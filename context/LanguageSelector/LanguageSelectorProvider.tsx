@@ -5,6 +5,7 @@ export const LanguageSelectorContext = createContext(null);
 export enum LanguageEnum {
   Chinese = 'chinese',
   Japanese = 'japanese',
+  Arabic = 'arabic',
 }
 
 export const LanguageSelectorProvider = ({children}: PropsWithChildren<{}>) => {
@@ -16,7 +17,11 @@ export const LanguageSelectorProvider = ({children}: PropsWithChildren<{}>) => {
       value={{
         languageSelectedState,
         setLanguageSelectedState,
-        languagesAvailable: [LanguageEnum.Chinese, LanguageEnum.Japanese],
+        languagesAvailable: [
+          LanguageEnum.Chinese,
+          LanguageEnum.Japanese,
+          LanguageEnum.Arabic,
+        ],
       }}>
       {children}
     </LanguageSelectorContext.Provider>

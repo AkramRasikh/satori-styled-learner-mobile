@@ -290,6 +290,7 @@ const BilingualLine = ({
       {showSentenceBreakdown ? (
         <SentenceBreakdown
           vocab={topicSentence.vocab}
+          meaning={topicSentence.meaning}
           sentenceStructure={topicSentence.sentenceStructure}
         />
       ) : null}

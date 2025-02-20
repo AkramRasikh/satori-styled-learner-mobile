@@ -148,6 +148,7 @@ const BilingualTextContainer = ({
 
           return (
             <BilingualTextContainerWithQuickReviewWrapper
+              key={index}
               topicSentence={topicSentence}
               masterPlay={masterPlay}
               highlightTargetTextState={highlightTargetTextState}

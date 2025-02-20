@@ -1,9 +1,11 @@
 import {Linking, Alert} from 'react-native';
 import useLanguageSelector from '../context/LanguageSelector/useLanguageSelector';
+import {LanguageEnum} from '../context/LanguageSelector/LanguageSelectorProvider';
 
 const sourceLangKey = {
-  ['japanese']: 'ja',
-  ['chinese']: 'zh-Hans',
+  [LanguageEnum.Japanese]: 'ja',
+  [LanguageEnum.Chinese]: 'zh-Hans',
+  [LanguageEnum.Arabic]: 'ar',
 };
 
 const useOpenGoogleTranslate = () => {
