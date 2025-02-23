@@ -14,8 +14,6 @@ export const SettingBlock = ({func, bool, text}) => {
 };
 
 const DisplaySettings = ({
-  englishOnly,
-  setEnglishOnly,
   engMaster,
   setEngMaster,
   isVideoModeState,
@@ -25,7 +23,6 @@ const DisplaySettings = ({
   setisAutoScrollingMode,
 }) => {
   let defaultSettingsArr = [
-    {func: setEnglishOnly, bool: englishOnly, text: 'Eng only'},
     {func: setEngMaster, bool: engMaster, text: 'Eng Master'},
     {
       func: setisAutoScrollingMode,

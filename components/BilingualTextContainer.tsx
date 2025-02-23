@@ -14,7 +14,6 @@ const BilingualTextContainerWithQuickReviewWrapper = ({
   snippetsLocalAndDb,
   index,
   playFromThisSentence,
-  englishOnly,
   highlightedIndices,
   setHighlightedIndices,
   engMaster,
@@ -70,7 +69,6 @@ const BilingualTextContainerWithQuickReviewWrapper = ({
             focusThisSentence={focusThisSentence}
             topicSentence={topicSentence}
             playFromThisSentence={playFromThisSentence}
-            englishOnly={englishOnly}
             highlightedIndices={highlightedIndices}
             setHighlightedIndices={setHighlightedIndices}
             engMaster={engMaster}
@@ -117,7 +115,6 @@ const BilingualTextContainerWithQuickReviewWrapper = ({
 const BilingualTextContainer = ({
   formattedData,
   playFromThisSentence,
-  englishOnly,
   highlightedIndices,
   setHighlightedIndices,
   engMaster,
@@ -155,7 +152,6 @@ const BilingualTextContainer = ({
               snippetsLocalAndDb={snippetsLocalAndDb}
               index={index}
               playFromThisSentence={playFromThisSentence}
-              englishOnly={englishOnly}
               highlightedIndices={highlightedIndices}
               setHighlightedIndices={setHighlightedIndices}
               engMaster={engMaster}

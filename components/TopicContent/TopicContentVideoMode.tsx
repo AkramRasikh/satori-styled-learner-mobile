@@ -27,7 +27,6 @@ const TopicContentVideoMode = ({
   hasContentToReview,
   handleOpenGoogle,
 }) => {
-  const [englishOnly, setEnglishOnly] = useState(false);
   const [engMaster, setEngMaster] = useState(true);
   const [showReviewSectionState, setShowReviewSectionState] = useState(false);
   const [isAutoScrollingMode, setisAutoScrollingMode] = useState(true);
@@ -97,8 +96,6 @@ const TopicContentVideoMode = ({
               <Text>{topicName}</Text>
             </View>
             <DisplaySettings
-              englishOnly={englishOnly}
-              setEnglishOnly={setEnglishOnly}
               engMaster={engMaster}
               setEngMaster={setEngMaster}
               hasVideo={hasVideo}
@@ -110,7 +107,6 @@ const TopicContentVideoMode = ({
             <BilingualTextContainer
               formattedData={content}
               playFromThisSentence={handlePlayFromThisSentence}
-              englishOnly={englishOnly}
               highlightedIndices={highlightedIndices}
               setHighlightedIndices={setHighlightedIndices}
               engMaster={engMaster}

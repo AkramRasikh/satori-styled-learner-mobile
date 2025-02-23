@@ -20,7 +20,6 @@ const BilingualLine = ({
   focusThisSentence,
   playFromThisSentence,
   topicSentence,
-  englishOnly,
   highlightedIndices,
   setHighlightedIndices,
   sentenceIndex,
@@ -127,6 +126,7 @@ const BilingualLine = ({
   };
 
   const handleOnSafeTextPress = () => {
+    setShowMatchedTranslation(false);
     setIsSettingsOpenState(true);
     setHighlightMode(true);
   };
@@ -162,16 +162,15 @@ const BilingualLine = ({
         (i, index) => ({...i, colorIndex: index}),
       );
       return (
-        <TouchableOpacity
-          onLongPress={() =>
-            setShowMatchedTranslation(!showMatchedTranslation)
-          }>
+        <DoubleClickButton
+          onLongPress={() => setShowMatchedTranslation(!showMatchedTranslation)}
+          onPress={handleOnSafeTextPress}>
           <TextSegmentContainer
             textSegments={textSegments}
             wordsInOverlapCheck={wordsInOverlapCheck}
             matchedWordListState={matchedWordsWithColors}
           />
-        </TouchableOpacity>
+        </DoubleClickButton>
       );
     } else {
       return (
@@ -260,7 +259,7 @@ const BilingualLine = ({
             />
           )}
         </View>
-        {englishOnly ? null : highlightMode ? (
+        {highlightMode ? (
           <HighlightTextZone
             id={id}
             sentenceIndex={sentenceIndex}
@@ -276,7 +275,7 @@ const BilingualLine = ({
           safeTextState
         )}
       </Text>
-      {showEng || englishOnly || engMaster ? (
+      {showEng || engMaster ? (
         <View
           style={{
             paddingTop: 5,
