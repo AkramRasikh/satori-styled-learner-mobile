@@ -54,8 +54,17 @@ const BilingualLine = ({
   const swipeDistance = useRef(0);
 
   const handleQuickGoogleTranslate = async text => {
-    const result = await translateText({text, language: languageSelectedState});
-    setQuickTranslationArr(prev => [...prev, result]);
+    try {
+      setIsLoadingState(true);
+      const result = await translateText({
+        text,
+        language: languageSelectedState,
+      });
+      setQuickTranslationArr(prev => [...prev, result]);
+    } catch (error) {
+    } finally {
+      setIsLoadingState(false);
+    }
   };
 
   const {handleSaveWordContentScreen, updateWordList} = useContentScreen();
@@ -209,6 +218,8 @@ const BilingualLine = ({
   };
   const spreadHandler = highlightMode ? {} : panResponder.panHandlers;
 
+  const hasQuickTranslation =
+    isSettingsOpenState && quickTranslationArr.length > 0;
   return (
     <View
       {...spreadHandler}
@@ -284,16 +295,21 @@ const BilingualLine = ({
           safeTextState
         )}
       </Text>
-      {isSettingsOpenState &&
-        quickTranslationArr.map((item, key) => {
-          return (
-            <View key={key}>
-              <Text>
-                {item.text} {item.translation}
-              </Text>
-            </View>
-          );
-        })}
+      {hasQuickTranslation && (
+        <View style={{gap: 5, marginVertical: 5}}>
+          {quickTranslationArr.map((item, key) => {
+            const countNumber = key + 1 + ') ';
+            return (
+              <View key={key}>
+                <Text>
+                  {countNumber}
+                  {item.text}, {item.transliteration}, {item.translation}
+                </Text>
+              </View>
+            );
+          })}
+        </View>
+      )}
       {showEng || engMaster ? (
         <View
           style={{

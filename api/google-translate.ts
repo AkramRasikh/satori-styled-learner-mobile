@@ -15,7 +15,11 @@ export async function translateText({text, language}) {
     }
 
     const data = await response.json();
-    return {text, translation: data.translation};
+    return {
+      text,
+      translation: data.translation,
+      transliteration: data.transliteration,
+    };
   } catch (error) {
     console.error('Error translating text:', error);
     return null;
