@@ -1,6 +1,6 @@
 import React, {useEffect, useRef, useState} from 'react';
 import Clipboard from '@react-native-clipboard/clipboard';
-import {Text, TouchableOpacity, View, PanResponder} from 'react-native';
+import {Text, PanResponder, View} from 'react-native';
 import HighlightTextZone from './HighlightTextZone';
 import SatoriLineControls from './SatoriLineControls';
 import SatoriLineSRS from './SatoriLineSRS';
@@ -14,6 +14,7 @@ import TextSegmentContainer from './TextSegmentContainer';
 import useContentScreen from '../screens/Content/useContentScreen';
 import {DoubleClickButton} from './Button';
 import BilingualLineSettings from './BilingualLineSettings';
+import {translateText} from '../api/google-translate';
 
 const BilingualLine = ({
   id,
@@ -45,9 +46,17 @@ const BilingualLine = ({
   const [isSettingsOpenState, setIsSettingsOpenState] = useState(false);
   const [highlightMode, setHighlightMode] = useState(false);
   const [safeTextState, setSafeTextState] = useState();
+  const [quickTranslationArr, setQuickTranslationArr] = useState([]);
+
+  const {languageSelectedState} = useLanguageSelector();
 
   const targetRef = useRef(null);
   const swipeDistance = useRef(0);
+
+  const handleQuickGoogleTranslate = async text => {
+    const result = await translateText({text, language: languageSelectedState});
+    setQuickTranslationArr(prev => [...prev, result]);
+  };
 
   const {handleSaveWordContentScreen, updateWordList} = useContentScreen();
 
@@ -83,7 +92,6 @@ const BilingualLine = ({
     }
   }, [focusThisSentence, scrollViewRef, isAutoScrollingMode, targetRef]);
 
-  const {languageSelectedState} = useLanguageSelector();
   const getSentenceBreakdown = async () => {
     setIsLoadingState(true);
     try {
@@ -270,11 +278,22 @@ const BilingualLine = ({
             setHighlightMode={setHighlightMode}
             textWidth={textWidth}
             setIsSettingsOpenState={setIsSettingsOpenState}
+            handleQuickGoogleTranslate={handleQuickGoogleTranslate}
           />
         ) : (
           safeTextState
         )}
       </Text>
+      {isSettingsOpenState &&
+        quickTranslationArr.map((item, key) => {
+          return (
+            <View key={key}>
+              <Text>
+                {item.text} {item.translation}
+              </Text>
+            </View>
+          );
+        })}
       {showEng || engMaster ? (
         <View
           style={{

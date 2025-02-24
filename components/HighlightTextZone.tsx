@@ -20,6 +20,7 @@ const HighlightTextZone = ({
   setHighlightMode,
   textWidth,
   setIsSettingsOpenState,
+  handleQuickGoogleTranslate,
 }) => {
   const startRef = useRef(null);
   const [initialLineLocationY, setInitialLineLocationY] = useState(null);
@@ -183,6 +184,14 @@ const HighlightTextZone = ({
           <TouchableOpacity onPress={handleOpenUpGoogle}>
             <Text>📚</Text>
           </TouchableOpacity>
+          {handleQuickGoogleTranslate && (
+            <TouchableOpacity
+              onPress={async () =>
+                await handleQuickGoogleTranslate(highlightedText)
+              }>
+              <Text>💨</Text>
+            </TouchableOpacity>
+          )}
           <TouchableOpacity onPress={() => handleSaveWord(true)}>
             <Image
               source={require('../assets/images/google.png')}
