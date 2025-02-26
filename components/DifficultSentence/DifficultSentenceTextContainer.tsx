@@ -11,6 +11,7 @@ const DifficultSentenceTextContainer = ({
   saveWordFirebase,
   isHighlightMode,
   setHighlightMode,
+  handleQuickGoogleTranslate,
 }) => {
   const [highlightedIndices, setHighlightedIndices] = useState([]);
   const [containerWidth, setContainerWidth] = useState(0);
@@ -48,6 +49,7 @@ const DifficultSentenceTextContainer = ({
             saveWordFirebase={handleSaveWordToFB}
             textWidth={containerWidth}
             setHighlightMode={setHighlightMode}
+            handleQuickGoogleTranslate={handleQuickGoogleTranslate}
           />
         </View>
       ) : (

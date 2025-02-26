@@ -31,6 +31,8 @@ import DifficultSentenceSnippet from './DifficultSentenceSnippet';
 import {DoubleClickButton} from '../Button';
 import SentenceBreakdown from '../SentenceBreakdown';
 import {getHexCode} from '../../utils/get-hex-code';
+import {translateText} from '../../api/google-translate';
+import useLanguageSelector from '../../context/LanguageSelector/useLanguageSelector';
 
 const DifficultSentenceMidSection = ({sentence, addSnippet, removeSnippet}) => {
   const {
@@ -129,7 +131,11 @@ const DifficultSentenceContainer = ({
     setMatchedWordListState,
     isTriggeringReview,
     revealSentenceBreakdown,
+    quickTranslationArr,
+    setQuickTranslationArr,
   } = useDifficultSentenceContext();
+
+  const {languageSelectedState} = useLanguageSelector();
 
   const isLastEl = toggleableSentencesStateLength === indexNum + 1;
   const isFirst = 0 === indexNum;
@@ -137,6 +143,16 @@ const DifficultSentenceContainer = ({
   const numberOfWords = pureWords.length;
 
   const moreToLoad = sliceArrState === indexNum + 1 && !isLastInTotalOrder;
+
+  const hasQuickTranslation = quickTranslationArr.length > 0;
+
+  const handleQuickGoogleTranslate = async text => {
+    const result = await translateText({
+      text,
+      language: languageSelectedState,
+    });
+    setQuickTranslationArr(prev => [...prev, result]);
+  };
 
   useEffect(() => {
     const matchedWordList = getThisSentencesWordList(sentence.targetLang).map(
@@ -284,12 +300,28 @@ const DifficultSentenceContainer = ({
             saveWordFirebase={saveWordFirebase}
             isHighlightMode={isHighlightMode}
             setHighlightMode={setHighlightMode}
+            handleQuickGoogleTranslate={handleQuickGoogleTranslate}
           />
           {isDueState ? (
             <DifficultSentenceSRSToggles reviewData={sentence.reviewData} />
           ) : (
             <View style={{alignSelf: 'center'}}>
               <Text style={DefaultTheme.fonts.bodyMedium}>{text}</Text>
+            </View>
+          )}
+          {hasQuickTranslation && (
+            <View style={{gap: 5, marginVertical: 5}}>
+              {quickTranslationArr.map((item, key) => {
+                const countNumber = key + 1 + ') ';
+                return (
+                  <View key={key}>
+                    <Text>
+                      {countNumber}
+                      {item.text}, {item.transliteration}, {item.translation}
+                    </Text>
+                  </View>
+                );
+              })}
             </View>
           )}
           {revealSentenceBreakdown && (

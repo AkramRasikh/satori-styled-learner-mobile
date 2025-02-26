@@ -21,6 +21,7 @@ export const DifficultSentenceProvider = ({
   const [matchedWordListState, setMatchedWordListState] = useState([]);
   const [isTriggeringReview, setIsTriggeringReview] = useState(false);
   const [showSentenceBreakDown, setShowSentenceBreakDown] = useState(false);
+  const [quickTranslationArr, setQuickTranslationArr] = useState([]);
 
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const scaleAnim = useRef(new Animated.Value(0.8)).current;
@@ -133,6 +134,8 @@ export const DifficultSentenceProvider = ({
         handleSentenceBreakDownState,
         revealSentenceBreakdown,
         hasSentenceBreakdown,
+        quickTranslationArr,
+        setQuickTranslationArr,
       }}>
       {children}
     </DifficultSentenceContext.Provider>
