@@ -18,10 +18,12 @@ const HighlightTextZone = ({
   sentenceIndex,
   saveWordFirebase,
   setHighlightMode,
-  textWidth,
   setIsSettingsOpenState,
   handleQuickGoogleTranslate,
 }) => {
+  const textWidthRef = useRef(0);
+  const textHeightRef = useRef(0);
+
   const startRef = useRef(null);
   const [initialLineLocationY, setInitialLineLocationY] = useState(null);
   const {openGoogleTranslateApp} = useOpenGoogleTranslate();
@@ -34,8 +36,8 @@ const HighlightTextZone = ({
       onMoveShouldSetPanResponder: () => true,
       onPanResponderGrant: evt => {
         if (evt.nativeEvent.locationY && evt.nativeEvent.locationX) {
-          const numberOfLines = Math.floor(evt.nativeEvent.locationY / 24);
-          const linesToMoreWidth = numberOfLines * textWidth * 0.9;
+          const currentLine = Math.floor(evt.nativeEvent.locationY / 24);
+          const linesToMoreWidth = currentLine * textWidthRef.current;
           setInitialLineLocationY(evt.nativeEvent.locationY);
           const currentIndex = calculateIndexX(
             evt.nativeEvent.locationX + linesToMoreWidth,
@@ -46,10 +48,11 @@ const HighlightTextZone = ({
       },
       onPanResponderMove: evt => {
         if (evt.nativeEvent.locationY && evt.nativeEvent.locationX) {
-          const numberOfLines = Math.floor(
+          const currentLine = Math.floor(
             (evt.nativeEvent.locationY - initialLineLocationY) / 24,
           );
-          const linesToMoreWidth = numberOfLines * textWidth * 0.9;
+          const linesToMoreWidth = currentLine * textWidthRef.current;
+
           const currentIndex = calculateIndexX(
             evt.nativeEvent.locationX + linesToMoreWidth,
           );
@@ -157,7 +160,13 @@ const HighlightTextZone = ({
   return (
     <View {...panResponder.panHandlers}>
       <TouchableOpacity>
-        <Text style={styles.text}>
+        <Text
+          style={styles.text}
+          onLayout={event => {
+            const {width, height} = event.nativeEvent.layout;
+            textWidthRef.current = width;
+            textHeightRef.current = height;
+          }}>
           {renderText(text)}
           {highlightedText?.length === 0 ? (
             <TouchableOpacity onPress={handleClose}>
