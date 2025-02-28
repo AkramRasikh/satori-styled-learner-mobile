@@ -1,4 +1,10 @@
-import React, {createContext, PropsWithChildren, useState} from 'react';
+import React, {
+  createContext,
+  PropsWithChildren,
+  useEffect,
+  useState,
+} from 'react';
+import {useNavigation} from '@react-navigation/native';
 import useData from '../../context/Data/useData';
 
 export const ContentScreenContext = createContext(null);
@@ -11,6 +17,14 @@ export const ContentScreenProvider = ({
   const {saveWordFirebase} = useData();
   const [updateWordSentence, setUpdateWordSentence] = useState(false);
   const [highlightStateArr, setHighlightedStateArr] = useState([]);
+  const navigation = useNavigation();
+  const enableScroll = highlightStateArr.length === 0;
+
+  useEffect(() => {
+    navigation.setOptions({
+      gestureEnabled: enableScroll,
+    });
+  }, [enableScroll, navigation]);
 
   const handleSaveWordContentScreen = async wordToSave => {
     try {
@@ -32,7 +46,7 @@ export const ContentScreenProvider = ({
         updateWordList,
         setHighlightedStateArr,
         highlightStateArr,
-        enableScroll: highlightStateArr.length === 0,
+        enableScroll,
       }}>
       {children}
     </ContentScreenContext.Provider>
