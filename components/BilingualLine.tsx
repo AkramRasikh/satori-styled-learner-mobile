@@ -67,7 +67,21 @@ const BilingualLine = ({
     }
   };
 
-  const {handleSaveWordContentScreen, updateWordList} = useContentScreen();
+  const {
+    handleSaveWordContentScreen,
+    updateWordList,
+    setHighlightedStateArr,
+    highlightStateArr,
+  } = useContentScreen();
+
+  const onHighlightedMount = () => {
+    const updated = [...highlightStateArr, id];
+    setHighlightedStateArr(updated);
+  };
+  const onHighlightedUnMount = () => {
+    const updated = highlightStateArr.filter(item => item !== id);
+    setHighlightedStateArr(updated);
+  };
 
   const matchedWords = topicSentence?.matchedWords.length > 0;
   const hasSentenceBreakdown = topicSentence?.vocab;
@@ -287,9 +301,10 @@ const BilingualLine = ({
             setHighlightedIndices={setHighlightedIndices}
             saveWordFirebase={handleSaveWord}
             setHighlightMode={setHighlightMode}
-            textWidth={textWidth}
             setIsSettingsOpenState={setIsSettingsOpenState}
             handleQuickGoogleTranslate={handleQuickGoogleTranslate}
+            onHighlightedMount={onHighlightedMount}
+            onHighlightedUnMount={onHighlightedUnMount}
           />
         ) : (
           safeTextState

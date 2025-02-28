@@ -10,6 +10,7 @@ export const ContentScreenProvider = ({
 }: PropsWithChildren<{}>) => {
   const {saveWordFirebase} = useData();
   const [updateWordSentence, setUpdateWordSentence] = useState(false);
+  const [highlightStateArr, setHighlightedStateArr] = useState([]);
 
   const handleSaveWordContentScreen = async wordToSave => {
     try {
@@ -29,6 +30,9 @@ export const ContentScreenProvider = ({
         handleSaveWordContentScreen,
         updateWordSentence,
         updateWordList,
+        setHighlightedStateArr,
+        highlightStateArr,
+        enableScroll: highlightStateArr.length === 0,
       }}>
       {children}
     </ContentScreenContext.Provider>

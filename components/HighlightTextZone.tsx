@@ -1,5 +1,5 @@
 import Clipboard from '@react-native-clipboard/clipboard';
-import React, {useState, useRef} from 'react';
+import React, {useState, useRef, useEffect} from 'react';
 import {
   StyleSheet,
   Text,
@@ -20,12 +20,16 @@ const HighlightTextZone = ({
   setHighlightMode,
   setIsSettingsOpenState,
   handleQuickGoogleTranslate,
+  onHighlightedMount,
+  onHighlightedUnMount,
 }) => {
   const textWidthRef = useRef(0);
   const textHeightRef = useRef(0);
+  // const highlightContainerRef = useRef(null);
 
   const startRef = useRef(null);
   const [initialLineLocationY, setInitialLineLocationY] = useState(null);
+  // const [charArrWidthState, setCharArrWidthState] = useState([]);
   const {openGoogleTranslateApp} = useOpenGoogleTranslate();
 
   const sentencePrefix = sentenceIndex + '-';
@@ -61,6 +65,14 @@ const HighlightTextZone = ({
       },
     }),
   ).current;
+
+  useEffect(() => {
+    onHighlightedMount?.();
+
+    return () => {
+      onHighlightedUnMount?.();
+    };
+  }, []);
 
   const handleClose = () => {
     setHighlightedIndices([]);
@@ -144,13 +156,36 @@ const HighlightTextZone = ({
     const splitText = text.split('');
 
     return splitText.map((char, index) => {
+      const isHighlightedChar = highlightedIndices.includes(
+        sentencePrefix + index,
+      );
+      // const isLast = splitText.length === index + 1;
       return (
         <Text
-          key={index}
-          style={
-            highlightedIndices.includes(sentencePrefix + index) &&
-            styles.highlight
-          }>
+          style={{
+            fontSize: 20,
+            lineHeight: 24,
+            backgroundColor: isHighlightedChar ? '#add8e6' : 'transparent',
+          }}
+          // onTextLayout={event => {
+          //   const thisCharWidth = event.nativeEvent.lines[0].width;
+
+          //   if (charArrWidthState.length < index) {
+          //     const updatedChar = [...charArrWidthState, thisCharWidth];
+          //     setCharArrWidthState(updatedChar);
+          //     if (isLast) {
+          //       setCulminativeWidthState(
+          //         updatedChar.map(
+          //           (
+          //             sum => num =>
+          //               (sum += num)
+          //           )(0),
+          //         ),
+          //       );
+          //     }
+          //   }
+          // }}
+        >
           {char}
         </Text>
       );
@@ -158,23 +193,23 @@ const HighlightTextZone = ({
   };
 
   return (
-    <View {...panResponder.panHandlers}>
-      <TouchableOpacity>
-        <Text
-          style={styles.text}
-          onLayout={event => {
-            const {width, height} = event.nativeEvent.layout;
-            textWidthRef.current = width;
-            textHeightRef.current = height;
-          }}>
-          {renderText(text)}
-          {highlightedText?.length === 0 ? (
-            <TouchableOpacity onPress={handleClose}>
-              <Text>❌</Text>
-            </TouchableOpacity>
-          ) : null}
-        </Text>
-      </TouchableOpacity>
+    <View>
+      <Text
+        {...panResponder.panHandlers}
+        // ref={highlightContainerRef}
+        style={styles.text}
+        onLayout={event => {
+          const {width, height} = event.nativeEvent.layout;
+          textWidthRef.current = width;
+          textHeightRef.current = height;
+        }}>
+        {renderText(text)}
+        {highlightedText?.length === 0 ? (
+          <TouchableOpacity onPress={handleClose}>
+            <Text>❌</Text>
+          </TouchableOpacity>
+        ) : null}
+      </Text>
       {highlightedText?.length > 0 ? (
         <View
           style={{
@@ -226,11 +261,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     color: '#00008B',
-  },
-  highlight: {
-    fontSize: 20,
-    lineHeight: 24,
-    backgroundColor: '#add8e6',
   },
 });
 

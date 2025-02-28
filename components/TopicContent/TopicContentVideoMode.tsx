@@ -10,6 +10,7 @@ import VideoPlayer from '../VideoPlayer';
 import {getGeneralTopicName} from '../../utils/get-general-topic-name';
 import AnimatedModal from '../AnimatedModal';
 import useTopicContentVideo from './context/useTopicContentVideo';
+import useContentScreen from '../../screens/Content/useContentScreen';
 
 const {height} = Dimensions?.get('window');
 
@@ -34,6 +35,7 @@ const TopicContentVideoMode = ({
   const scrollViewRef = useRef(null);
 
   const {languageSelectedState} = useLanguageSelector();
+  const {enableScroll} = useContentScreen();
 
   const {
     currentVideoTimeState,
@@ -91,7 +93,8 @@ const TopicContentVideoMode = ({
               maxHeight: height * 0.58,
               paddingVertical: 5,
             }}
-            ref={scrollViewRef}>
+            ref={scrollViewRef}
+            scrollEnabled={enableScroll}>
             <View style={{alignSelf: 'center'}}>
               <Text>{topicName}</Text>
             </View>

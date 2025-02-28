@@ -10,6 +10,7 @@ import AnimatedModal from '../AnimatedModal';
 import useTopicContentAudio from './context/useTopicContentAudio';
 import {generateRandomId} from '../../utils/generate-random-id';
 import {TopicContentSnippetsProvider} from './context/TopicContentSnippetsProvider';
+import useContentScreen from '../../screens/Content/useContentScreen';
 
 const {height} = Dimensions?.get('window');
 
@@ -42,6 +43,8 @@ const TopicContentAudioMode = ({
   const [isAutoScrollingMode, setisAutoScrollingMode] = useState(true);
 
   const scrollViewRef = useRef(null);
+
+  const {enableScroll} = useContentScreen();
 
   const {
     handlePlayFromThisSentence,
@@ -124,7 +127,8 @@ const TopicContentAudioMode = ({
           style={{
             maxHeight: height * 0.8,
           }}
-          ref={scrollViewRef}>
+          ref={scrollViewRef}
+          scrollEnabled={enableScroll}>
           <View style={{alignSelf: 'center'}}>
             <Text>{topicName}</Text>
           </View>
