@@ -8,8 +8,11 @@ import {
   PanResponder,
   Image,
   TouchableWithoutFeedback,
+  Dimensions,
 } from 'react-native';
 import useOpenGoogleTranslate from '../hooks/useOpenGoogleTranslate';
+
+const dimensionalWidth = Dimensions.get('window').width;
 
 const HighlightTextZone = ({
   id,
@@ -150,14 +153,20 @@ const HighlightTextZone = ({
     let result = [];
     let currentLine = -1;
     let lineStartWidth = 0;
+    let additionalInitSpace =
+      arrOfWidths.current[0] +
+      (dimensionalWidth - highlightContainerRef.current.width);
     lineIndex.forEach((line, index) => {
       if (line !== currentLine) {
         result.push([]);
         currentLine = line;
         lineStartWidth = culminativeWidths[index];
+        additionalInitSpace = arrOfWidths.current[index];
       }
 
-      result[result.length - 1].push(culminativeWidths[index] - lineStartWidth);
+      result[result.length - 1].push(
+        culminativeWidths[index] - lineStartWidth + additionalInitSpace,
+      );
     });
 
     groupedArrays.current = result;
