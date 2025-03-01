@@ -223,6 +223,21 @@ const HighlightTextZone = ({
 
   return (
     <View>
+      {highlightedIndices?.length > 0 ? (
+        <View
+          style={{
+            position: 'absolute',
+            bottom: 100,
+            backgroundColor: '#FFFFC5',
+            shadowColor: '#000',
+            shadowOffset: {width: 0, height: 2},
+            shadowOpacity: 0.25,
+            shadowRadius: 4,
+            alignSelf: 'center',
+          }}>
+          <Text style={{fontSize: 20}}>{getHighlightedText()}</Text>
+        </View>
+      ) : null}
       <View
         {...panResponder.panHandlers}
         ref={highlightContainerRef}
