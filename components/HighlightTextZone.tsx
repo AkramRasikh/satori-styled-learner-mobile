@@ -1,5 +1,5 @@
 import Clipboard from '@react-native-clipboard/clipboard';
-import React, {useState, useRef, useEffect} from 'react';
+import React, {useRef} from 'react';
 import {
   StyleSheet,
   Text,
@@ -91,6 +91,12 @@ const HighlightTextZone = ({
     PanResponder.create({
       onStartShouldSetPanResponder: () => true,
       onMoveShouldSetPanResponder: () => true,
+      onPanResponderRelease: () => {
+        onHighlightedUnMount?.();
+      },
+      onPanResponderGrant: () => {
+        onHighlightedMount?.();
+      },
       onPanResponderMove: evt => {
         const pageY = evt.nativeEvent.pageY;
         const movingPageX = evt.nativeEvent.pageX;
@@ -108,14 +114,6 @@ const HighlightTextZone = ({
       },
     }),
   ).current;
-
-  useEffect(() => {
-    onHighlightedMount?.();
-
-    return () => {
-      onHighlightedUnMount?.();
-    };
-  }, []);
 
   const handleClose = () => {
     setHighlightedIndices([]);
