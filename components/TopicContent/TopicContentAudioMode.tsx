@@ -38,7 +38,6 @@ const TopicContentAudioMode = ({
   const [masterPlay, setMasterPlay] = useState('');
   const [engMaster, setEngMaster] = useState(true);
   const [showReviewSectionState, setShowReviewSectionState] = useState(false);
-  const [highlightedIndices, setHighlightedIndices] = useState([]);
   const [selectedSnippetsState, setSelectedSnippetsState] = useState([]);
   const [isAutoScrollingMode, setisAutoScrollingMode] = useState(true);
 
@@ -144,8 +143,6 @@ const TopicContentAudioMode = ({
           <BilingualTextContainer
             formattedData={formattedData}
             playFromThisSentence={handlePlayFromThisSentence}
-            highlightedIndices={highlightedIndices}
-            setHighlightedIndices={setHighlightedIndices}
             engMaster={engMaster}
             isPlaying={isPlaying}
             pauseSound={pauseSound}

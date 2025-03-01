@@ -14,8 +14,6 @@ const BilingualTextContainerWithQuickReviewWrapper = ({
   snippetsLocalAndDb,
   index,
   playFromThisSentence,
-  highlightedIndices,
-  setHighlightedIndices,
   engMaster,
   isPlaying,
   pauseSound,
@@ -65,12 +63,9 @@ const BilingualTextContainerWithQuickReviewWrapper = ({
           }}>
           <BilingualLine
             id={id}
-            sentenceIndex={index}
             focusThisSentence={focusThisSentence}
             topicSentence={topicSentence}
             playFromThisSentence={playFromThisSentence}
-            highlightedIndices={highlightedIndices}
-            setHighlightedIndices={setHighlightedIndices}
             engMaster={engMaster}
             isPlaying={isPlaying}
             pauseSound={pauseSound}
@@ -115,8 +110,6 @@ const BilingualTextContainerWithQuickReviewWrapper = ({
 const BilingualTextContainer = ({
   formattedData,
   playFromThisSentence,
-  highlightedIndices,
-  setHighlightedIndices,
   engMaster,
   isPlaying,
   pauseSound,
@@ -152,8 +145,6 @@ const BilingualTextContainer = ({
               snippetsLocalAndDb={snippetsLocalAndDb}
               index={index}
               playFromThisSentence={playFromThisSentence}
-              highlightedIndices={highlightedIndices}
-              setHighlightedIndices={setHighlightedIndices}
               engMaster={engMaster}
               isPlaying={isPlaying}
               pauseSound={pauseSound}

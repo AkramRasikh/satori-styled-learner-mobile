@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   PanResponder,
   Image,
+  TouchableWithoutFeedback,
 } from 'react-native';
 import useOpenGoogleTranslate from '../hooks/useOpenGoogleTranslate';
 
@@ -15,7 +16,6 @@ const HighlightTextZone = ({
   text,
   highlightedIndices,
   setHighlightedIndices,
-  sentenceIndex,
   saveWordFirebase,
   setHighlightMode,
   setIsSettingsOpenState,
@@ -23,45 +23,85 @@ const HighlightTextZone = ({
   onHighlightedMount,
   onHighlightedUnMount,
 }) => {
-  const textWidthRef = useRef(0);
-  const textHeightRef = useRef(0);
-  // const highlightContainerRef = useRef(null);
-
-  const startRef = useRef(null);
-  const [initialLineLocationY, setInitialLineLocationY] = useState(null);
-  // const [charArrWidthState, setCharArrWidthState] = useState([]);
+  const highlightContainerRef = useRef(null);
+  const culminativeWidthState = useRef([]);
+  const lineIndex = useRef([]);
+  const arrOfWidths = useRef([]);
+  const onInitPressed = useRef(null);
+  const groupedArrays = useRef([]);
   const {openGoogleTranslateApp} = useOpenGoogleTranslate();
 
-  const sentencePrefix = sentenceIndex + '-';
+  const getFlattenedKey = (subarrayKey, index) => {
+    let cumulativeLength = 0;
+    for (let i = 0; i < subarrayKey; i++) {
+      cumulativeLength += groupedArrays.current[i].length;
+    }
+
+    return cumulativeLength + index;
+  };
+
+  const getHighlightedText = () => {
+    if (highlightedIndices.length === 0) {
+      return '';
+    }
+    let targetText = '';
+
+    text.split('').forEach((char, index) => {
+      const isInHighlighted = highlightedIndices.includes(index);
+
+      if (isInHighlighted) {
+        targetText = targetText + char;
+      }
+    });
+
+    return targetText;
+  };
+
+  const createArrayBetween = startEndArr => {
+    const [start, end] = startEndArr;
+
+    const result = [];
+    for (let i = start; i <= end; i++) {
+      result.push(i);
+    }
+    return result;
+  };
+
+  const getIndexFromGroupedArr = (subarrayKey, pageX) => {
+    const subarray = groupedArrays.current[subarrayKey];
+    const index = subarray.findIndex(value => value >= pageX);
+
+    if (index === -1) {
+      return null;
+    }
+
+    const flattenedKey = getFlattenedKey(subarrayKey, index);
+
+    setHighlightedIndices(
+      createArrayBetween(
+        [onInitPressed.current, flattenedKey].sort((a, b) => a - b),
+      ),
+    );
+  };
 
   const panResponder = useRef(
     PanResponder.create({
       onStartShouldSetPanResponder: () => true,
       onMoveShouldSetPanResponder: () => true,
-      onPanResponderGrant: evt => {
-        if (evt.nativeEvent.locationY && evt.nativeEvent.locationX) {
-          const currentLine = Math.floor(evt.nativeEvent.locationY / 24);
-          const linesToMoreWidth = currentLine * textWidthRef.current;
-          setInitialLineLocationY(evt.nativeEvent.locationY);
-          const currentIndex = calculateIndexX(
-            evt.nativeEvent.locationX + linesToMoreWidth,
-          );
-          startRef.current = currentIndex;
-          setHighlightedIndices([sentencePrefix + startRef.current]);
-        }
-      },
       onPanResponderMove: evt => {
-        if (evt.nativeEvent.locationY && evt.nativeEvent.locationX) {
-          const currentLine = Math.floor(
-            (evt.nativeEvent.locationY - initialLineLocationY) / 24,
-          );
-          const linesToMoreWidth = currentLine * textWidthRef.current;
+        const pageY = evt.nativeEvent.pageY;
+        const movingPageX = evt.nativeEvent.pageX;
 
-          const currentIndex = calculateIndexX(
-            evt.nativeEvent.locationX + linesToMoreWidth,
-          );
-          updateHighlightedIndices(sentencePrefix + currentIndex);
-        }
+        highlightContainerRef?.current.measure(
+          (x, y, width, height, pageX, initPageY) => {
+            const line = Math.floor((pageY - initPageY) / 24);
+            const maxLines = height / 24;
+
+            const passedLines =
+              line >= maxLines ? maxLines - 1 : line < 0 ? 0 : line;
+            getIndexFromGroupedArr(passedLines, movingPageX);
+          },
+        );
       },
     }),
   ).current;
@@ -80,49 +120,21 @@ const HighlightTextZone = ({
     setIsSettingsOpenState?.();
   };
 
-  const extractHighlightedText = (sentence, indices) => {
-    if (indices?.length === 0) {
-      return '';
-    }
-    const chars = sentence.split('');
-    const [firstCharacter] = indices[0].split('-');
-    const isThisSentenceHighlighted = Number(firstCharacter) === sentenceIndex;
-    if (!isThisSentenceHighlighted) {
-      return '';
-    }
-
-    const mappedIndices = indices
-      .map(index => {
-        const [_, indexKey] = index.split('-');
-        return chars[indexKey];
-      })
-      .join('');
-
-    return mappedIndices;
-  };
-
-  const highlightedText = extractHighlightedText(text, highlightedIndices);
-
   const handleOpenUpGoogle = () => {
-    openGoogleTranslateApp(highlightedText || text);
-  };
-
-  // Estimate the character index based on the x-coordinate
-  const calculateIndexX = x => {
-    // Adjust this value based on actual character width in your font
-    const charWidth = 20;
-    return Math.floor(x / charWidth);
+    openGoogleTranslateApp(getHighlightedText() || text);
   };
 
   const handleCopyText = () => {
-    if (highlightedText?.length > 0) {
+    const highlightedText = getHighlightedText();
+    if (highlightedText) {
       Clipboard.setString(highlightedText);
       setHighlightedIndices([]);
     }
   };
 
   const handleSaveWord = isGoogle => {
-    if (highlightedText?.length > 0) {
+    const highlightedText = getHighlightedText();
+    if (highlightedText) {
       saveWordFirebase({
         highlightedWord: highlightedText,
         highlightedWordSentenceId: id,
@@ -134,84 +146,90 @@ const HighlightTextZone = ({
     }
   };
 
-  // Update the highlighted indices based on the drag range
-  const updateHighlightedIndices = currentIndex => {
-    const [firstCharacter, secondCharacter] = currentIndex?.split('-');
-
-    const isThisSentenceHighlighted = Number(firstCharacter) === sentenceIndex;
-
-    if (startRef.current !== null && isThisSentenceHighlighted) {
-      const startIndex = Math.min(startRef.current, secondCharacter);
-      const endIndex = Math.max(startRef.current, secondCharacter);
-      const indices = [];
-      for (let i = startIndex; i <= endIndex; i++) {
-        indices.push(sentenceIndex + '-' + i);
+  const groupByLine = (lineIndex, culminativeWidths) => {
+    let result = [];
+    let currentLine = -1;
+    let lineStartWidth = 0;
+    lineIndex.forEach((line, index) => {
+      if (line !== currentLine) {
+        result.push([]);
+        currentLine = line;
+        lineStartWidth = culminativeWidths[index];
       }
-      setHighlightedIndices(indices);
-    }
+
+      result[result.length - 1].push(culminativeWidths[index] - lineStartWidth);
+    });
+
+    groupedArrays.current = result;
   };
 
   // Render the text with highlighting
   const renderText = text => {
     const splitText = text.split('');
 
-    return splitText.map((char, index) => {
-      const isHighlightedChar = highlightedIndices.includes(
-        sentencePrefix + index,
-      );
-      // const isLast = splitText.length === index + 1;
-      return (
-        <Text
-          key={index}
-          style={{
-            fontSize: 20,
-            lineHeight: 24,
-            backgroundColor: isHighlightedChar ? '#add8e6' : 'transparent',
-          }}
-          // onTextLayout={event => {
-          //   const thisCharWidth = event.nativeEvent.lines[0].width;
+    let arr = [];
 
-          //   if (charArrWidthState.length < index) {
-          //     const updatedChar = [...charArrWidthState, thisCharWidth];
-          //     setCharArrWidthState(updatedChar);
-          //     if (isLast) {
-          //       setCulminativeWidthState(
-          //         updatedChar.map(
-          //           (
-          //             sum => num =>
-          //               (sum += num)
-          //           )(0),
-          //         ),
-          //       );
-          //     }
-          //   }
-          // }}
-        >
-          {char}
-        </Text>
+    return splitText.map((char, index) => {
+      const isHighlightedChar = highlightedIndices.includes(index);
+      const isLast = splitText.length === index + 1;
+      return (
+        <TouchableWithoutFeedback
+          key={index}
+          onPressIn={() => {
+            onInitPressed.current = index;
+            setHighlightedIndices([index]);
+          }}>
+          <Text
+            style={{
+              fontSize: 20,
+              lineHeight: 24,
+              backgroundColor: isHighlightedChar ? '#add8e6' : 'transparent',
+            }}
+            onLayout={eee => {
+              const thisCharY = eee.nativeEvent.layout.y;
+              const thisCharWidth = eee.nativeEvent.layout.width;
+              const thisLineNumber = thisCharY / 24;
+
+              if (lineIndex.current.length <= index) {
+                lineIndex.current.push(thisLineNumber);
+                arr.push(thisCharWidth);
+                arrOfWidths.current.push(thisCharWidth);
+              }
+
+              if (isLast) {
+                culminativeWidthState.current = arr.map(
+                  (
+                    sum => num =>
+                      (sum += num)
+                  )(0),
+                );
+
+                groupByLine(lineIndex.current, culminativeWidthState.current);
+              }
+            }}>
+            {char}
+          </Text>
+        </TouchableWithoutFeedback>
       );
     });
   };
 
   return (
     <View>
-      <Text
+      <View
         {...panResponder.panHandlers}
-        // ref={highlightContainerRef}
-        style={styles.text}
-        onLayout={event => {
-          const {width, height} = event.nativeEvent.layout;
-          textWidthRef.current = width;
-          textHeightRef.current = height;
-        }}>
+        ref={highlightContainerRef}
+        style={styles.text}>
         {renderText(text)}
-        {highlightedText?.length === 0 ? (
+      </View>
+      <View>
+        {highlightedIndices?.length === 0 ? (
           <TouchableOpacity onPress={handleClose}>
             <Text>❌</Text>
           </TouchableOpacity>
         ) : null}
-      </Text>
-      {highlightedText?.length > 0 ? (
+      </View>
+      {highlightedIndices?.length > 0 ? (
         <View
           style={{
             display: 'flex',
@@ -232,7 +250,7 @@ const HighlightTextZone = ({
           {handleQuickGoogleTranslate && (
             <TouchableOpacity
               onPress={async () =>
-                await handleQuickGoogleTranslate(highlightedText)
+                await handleQuickGoogleTranslate(getHighlightedText())
               }>
               <Text>💨</Text>
             </TouchableOpacity>

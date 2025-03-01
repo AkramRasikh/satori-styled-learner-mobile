@@ -14,12 +14,7 @@ const DifficultSentenceTextContainer = ({
   handleQuickGoogleTranslate,
 }) => {
   const [highlightedIndices, setHighlightedIndices] = useState([]);
-  const [containerWidth, setContainerWidth] = useState(0);
   const [isBlurredState, setIsBlurredState] = useState(true);
-
-  const handleLayout = event => {
-    setContainerWidth(event.nativeEvent.layout.width);
-  };
 
   const handleSaveWordToFB = ({
     highlightedWord,
@@ -37,17 +32,13 @@ const DifficultSentenceTextContainer = ({
   return (
     <>
       {isHighlightMode ? (
-        <View
-          onLayout={handleLayout} // Attach the onLayout event handler
-        >
+        <View>
           <HighlightTextZone
             id={sentenceId}
-            sentenceIndex={0}
             text={targetLang}
             highlightedIndices={highlightedIndices}
             setHighlightedIndices={setHighlightedIndices}
             saveWordFirebase={handleSaveWordToFB}
-            textWidth={containerWidth}
             setHighlightMode={setHighlightMode}
             handleQuickGoogleTranslate={handleQuickGoogleTranslate}
           />

@@ -31,7 +31,6 @@ const TopicContentVideoMode = ({
   const [engMaster, setEngMaster] = useState(true);
   const [showReviewSectionState, setShowReviewSectionState] = useState(false);
   const [isAutoScrollingMode, setisAutoScrollingMode] = useState(true);
-  const [highlightedIndices, setHighlightedIndices] = useState([]);
   const scrollViewRef = useRef(null);
 
   const {languageSelectedState} = useLanguageSelector();
@@ -110,8 +109,6 @@ const TopicContentVideoMode = ({
             <BilingualTextContainer
               formattedData={content}
               playFromThisSentence={handlePlayFromThisSentence}
-              highlightedIndices={highlightedIndices}
-              setHighlightedIndices={setHighlightedIndices}
               engMaster={engMaster}
               isPlaying={isVideoPlaying}
               pauseSound={handleVideoPause}

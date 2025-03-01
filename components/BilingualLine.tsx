@@ -21,9 +21,6 @@ const BilingualLine = ({
   focusThisSentence,
   playFromThisSentence,
   topicSentence,
-  highlightedIndices,
-  setHighlightedIndices,
-  sentenceIndex,
   engMaster,
   isPlaying,
   pauseSound,
@@ -47,6 +44,7 @@ const BilingualLine = ({
   const [highlightMode, setHighlightMode] = useState(false);
   const [safeTextState, setSafeTextState] = useState();
   const [quickTranslationArr, setQuickTranslationArr] = useState([]);
+  const [highlightedIndices, setHighlightedIndices] = useState([]);
 
   const {languageSelectedState} = useLanguageSelector();
 
@@ -295,7 +293,6 @@ const BilingualLine = ({
         {highlightMode ? (
           <HighlightTextZone
             id={id}
-            sentenceIndex={sentenceIndex}
             text={topicSentence.targetLang}
             highlightedIndices={highlightedIndices}
             setHighlightedIndices={setHighlightedIndices}
