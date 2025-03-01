@@ -294,7 +294,6 @@ const BilingualLine = ({
           <HighlightTextZone
             id={id}
             text={topicSentence.targetLang}
-            // text={'Hello my name is Akram'}
             highlightedIndices={highlightedIndices}
             setHighlightedIndices={setHighlightedIndices}
             saveWordFirebase={handleSaveWord}
