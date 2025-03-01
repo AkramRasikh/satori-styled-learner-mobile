@@ -241,7 +241,15 @@ const HighlightTextZone = ({
       <View
         {...panResponder.panHandlers}
         ref={highlightContainerRef}
-        style={styles.text}>
+        style={
+          (styles.text,
+          {
+            width: '100%',
+            display: 'flex',
+            flexDirection: 'row',
+            flexWrap: 'wrap',
+          })
+        }>
         {renderText(text)}
       </View>
       <View>
