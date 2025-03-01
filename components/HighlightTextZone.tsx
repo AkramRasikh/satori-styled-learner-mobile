@@ -162,6 +162,7 @@ const HighlightTextZone = ({
       // const isLast = splitText.length === index + 1;
       return (
         <Text
+          key={index}
           style={{
             fontSize: 20,
             lineHeight: 24,
