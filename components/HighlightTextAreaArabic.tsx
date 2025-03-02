@@ -28,7 +28,7 @@ const HighlightTextAreaArabic = ({
   const groupedArrays = useRef([]);
   const matrixLinesIndex = useRef([]);
 
-  const splitText = text.split(/(\s+)/);
+  const splitText = text.split(/([\s.]+)/);
 
   const panResponder = useRef(
     PanResponder.create({
@@ -177,7 +177,7 @@ const HighlightTextAreaArabic = ({
     let arr = [];
 
     if (reversedArabicTextState) {
-      const splitReversed = reversedArabicTextState.split(/(\s+)/);
+      const splitReversed = reversedArabicTextState.split(/([\s.]+)/);
       return splitReversed.map((char, index) => {
         const isHighlightedChar = highlightedIndices.includes(index);
         const isLast = splitReversed.length === index + 1;

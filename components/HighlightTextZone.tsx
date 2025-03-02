@@ -35,7 +35,7 @@ const HighlightTextZone = ({
     }
     let targetText = '';
 
-    reversedArabicTextState.split(/(\s+)/).forEach((char, index) => {
+    reversedArabicTextState.split(/([\s.]+)/).forEach((char, index) => {
       const isInHighlighted = highlightedIndices.includes(index);
 
       if (isInHighlighted) {
@@ -55,7 +55,7 @@ const HighlightTextZone = ({
     }
     let targetText = '';
 
-    const splitText = isArabic ? text.split(/(\s+)/) : text.split('');
+    const splitText = isArabic ? text.split(/([\s.]+)/) : text.split('');
     splitText.forEach((char, index) => {
       const isInHighlighted = highlightedIndices.includes(index);
 
