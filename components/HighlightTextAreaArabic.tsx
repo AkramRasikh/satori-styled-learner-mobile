@@ -275,7 +275,6 @@ const HighlightTextAreaArabic = ({
             display: 'flex',
             flexDirection: 'row',
             flexWrap: 'wrap',
-            width: '100%',
           }}>
           {renderText()}
         </View>

@@ -102,7 +102,10 @@ const HighlightTextZone = ({
   return (
     <View>
       {highlightedIndices?.length > 0 ? (
-        <HighlightTextHover getHighlightedText={getHighlightedText} />
+        <HighlightTextHover
+          getHighlightedText={getHighlightedText}
+          handleQuickGoogleTranslate={handleQuickGoogleTranslate}
+        />
       ) : null}
       {isArabic ? (
         <HighlightTextAreaArabic
