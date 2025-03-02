@@ -47,6 +47,9 @@ const HighlightTextZone = ({
   };
 
   const getHighlightedText = () => {
+    if (isArabic) {
+      return getHighlightedTextArabic();
+    }
     if (highlightedIndices.length === 0) {
       return '';
     }
@@ -99,11 +102,7 @@ const HighlightTextZone = ({
   return (
     <View>
       {highlightedIndices?.length > 0 ? (
-        <HighlightTextHover
-          getHighlightedText={
-            isArabic ? getHighlightedTextArabic : getHighlightedText
-          }
-        />
+        <HighlightTextHover getHighlightedText={getHighlightedText} />
       ) : null}
       {isArabic ? (
         <HighlightTextAreaArabic

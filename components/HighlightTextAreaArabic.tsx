@@ -58,6 +58,25 @@ const HighlightTextAreaArabic = ({
     }),
   ).current;
 
+  useEffect(() => {
+    if (highlightContainerRef.current) {
+      setTimeout(
+        () =>
+          highlightContainerRef.current.measure(
+            (x, y, width, height, pageX, pageY) => {
+              const line = Math.floor((pageY - pageY) / 24);
+              const maxLines = height / 24;
+
+              const passedLines =
+                line >= maxLines ? maxLines - 1 : line < 0 ? 0 : line;
+              getIndexFromGroupedArr(passedLines, 0);
+            },
+          ),
+        0,
+      );
+    }
+  }, [highlightContainerRef]);
+
   const createArrayBetween = startEndArr => {
     const [start, end] = startEndArr;
 

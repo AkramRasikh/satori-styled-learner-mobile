@@ -249,11 +249,9 @@ const BilingualLine = ({
           }}
         />
       )}
-      <Text
-        selectable={true}
+      <View
         style={{
           backgroundColor: focusThisSentence ? 'yellow' : 'transparent',
-          fontSize: 20,
         }}>
         <View>
           {isSettingsOpenState && (
@@ -306,7 +304,7 @@ const BilingualLine = ({
         ) : (
           safeTextState
         )}
-      </Text>
+      </View>
       {hasQuickTranslation && (
         <View style={{gap: 5, marginVertical: 5}}>
           {quickTranslationArr.map((item, key) => {
