@@ -2,10 +2,7 @@ import React, {Image, TouchableOpacity, View} from 'react-native';
 import {Text} from 'react-native-paper';
 
 const HighlightTextActions = ({
-  getHighlightedText,
   handleSaveWord,
-  handleQuickGoogleTranslate,
-  handleClose,
   handleCopyText,
   handleOpenUpGoogle,
 }) => (
@@ -17,23 +14,12 @@ const HighlightTextActions = ({
       gap: 15,
       marginTop: 10,
     }}>
-    <TouchableOpacity onPress={handleClose}>
-      <Text>❌</Text>
-    </TouchableOpacity>
     <TouchableOpacity onPress={handleCopyText}>
       <Text>📋</Text>
     </TouchableOpacity>
     <TouchableOpacity onPress={handleOpenUpGoogle}>
       <Text>📚</Text>
     </TouchableOpacity>
-    {handleQuickGoogleTranslate && (
-      <TouchableOpacity
-        onPress={async () =>
-          await handleQuickGoogleTranslate(getHighlightedText())
-        }>
-        <Text>💨</Text>
-      </TouchableOpacity>
-    )}
     <TouchableOpacity onPress={() => handleSaveWord(true)}>
       <Image
         source={require('../assets/images/google.png')}

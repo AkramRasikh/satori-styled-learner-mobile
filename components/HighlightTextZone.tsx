@@ -20,6 +20,7 @@ const HighlightTextZone = ({
   handleQuickGoogleTranslate,
   onHighlightedMount,
   onHighlightedUnMount,
+  isFirst,
 }) => {
   const [reversedArabicTextState, setReversedArabicTextState] = useState('');
 
@@ -105,6 +106,8 @@ const HighlightTextZone = ({
         <HighlightTextHover
           getHighlightedText={getHighlightedText}
           handleQuickGoogleTranslate={handleQuickGoogleTranslate}
+          handleClose={handleClose}
+          isFirst={isFirst}
         />
       ) : null}
       {isArabic ? (
@@ -130,10 +133,7 @@ const HighlightTextZone = ({
       )}
       {highlightedIndices?.length > 0 ? (
         <HighlightTextActions
-          getHighlightedText={getHighlightedText}
           handleSaveWord={handleSaveWord}
-          handleQuickGoogleTranslate={handleQuickGoogleTranslate}
-          handleClose={handleClose}
           handleCopyText={handleCopyText}
           handleOpenUpGoogle={handleOpenUpGoogle}
         />

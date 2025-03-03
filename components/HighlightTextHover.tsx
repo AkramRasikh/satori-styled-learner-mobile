@@ -1,15 +1,17 @@
 import React, {TouchableOpacity, View} from 'react-native';
-import {Text} from 'react-native-paper';
+import {Divider, Text} from 'react-native-paper';
 
 const HighlightTextHover = ({
   getHighlightedText,
   handleQuickGoogleTranslate,
+  handleClose,
+  isFirst,
 }) => {
   return (
     <View
       style={{
         position: 'absolute',
-        bottom: 100,
+        bottom: isFirst ? 55 : 75,
         backgroundColor: '#FFFFC5',
         shadowColor: '#000',
         shadowOffset: {width: 0, height: 2},
@@ -23,13 +25,24 @@ const HighlightTextHover = ({
         borderRadius: 10,
       }}>
       <Text style={{fontSize: 20}}>{getHighlightedText()}</Text>
-      <TouchableOpacity
-        style={{alignContent: 'center', alignItems: 'center'}}
-        onPress={async () =>
-          await handleQuickGoogleTranslate(getHighlightedText())
-        }>
-        <Text>💨</Text>
-      </TouchableOpacity>
+      <Divider />
+      <View
+        style={{
+          display: 'flex',
+          flexDirection: 'row',
+          alignSelf: 'center',
+          gap: 10,
+        }}>
+        <TouchableOpacity
+          onPress={async () =>
+            await handleQuickGoogleTranslate(getHighlightedText())
+          }>
+          <Text>💨</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => handleClose()}>
+          <Text>❌</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };

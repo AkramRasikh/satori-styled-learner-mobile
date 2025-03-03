@@ -181,7 +181,11 @@ const HighlightTextArea = ({
         {renderText(text)}
       </View>
 
-      <View>
+      <View
+        style={{
+          alignItems: 'flex-end',
+          marginRight: 15,
+        }}>
         {highlightedIndices?.length === 0 ? (
           <TouchableOpacity onPress={handleClose}>
             <Text>❌</Text>
