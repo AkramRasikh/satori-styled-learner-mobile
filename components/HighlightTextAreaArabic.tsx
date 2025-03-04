@@ -83,29 +83,35 @@ const HighlightTextAreaArabic = ({
   const createArrayBetween = startEndArr => {
     const [start, end] = startEndArr;
 
-    const {sameArr, startArrayIndex, endArrayIndex, squashedSubSectionArrays} =
-      areStartAndEndInDifferentArrays(start, end, matrixLinesIndex.current);
+    if (reversedStateWorking.current) {
+      const {
+        sameArr,
+        startArrayIndex,
+        endArrayIndex,
+        squashedSubSectionArrays,
+      } = areStartAndEndInDifferentArrays(start, end, matrixLinesIndex.current);
 
-    if (sameArr) {
-      const result = [];
-      for (let i = start; i <= end; i++) {
-        result.push(i);
+      if (sameArr) {
+        const result = [];
+        for (let i = start; i <= end; i++) {
+          result.push(i);
+        }
+
+        return result;
+      } else if (startArrayIndex !== -1 && endArrayIndex !== -1) {
+        const filterInitialLine = matrixLinesIndex.current[
+          startArrayIndex
+        ].filter(item => item <= start);
+        const filterlastLine = matrixLinesIndex.current[endArrayIndex].filter(
+          item => item >= end,
+        );
+
+        return [
+          ...filterInitialLine,
+          ...squashedSubSectionArrays,
+          ...filterlastLine,
+        ];
       }
-
-      return result;
-    } else if (startArrayIndex !== -1 && endArrayIndex !== -1) {
-      const filterInitialLine = matrixLinesIndex.current[
-        startArrayIndex
-      ].filter(item => item <= start);
-      const filterlastLine = matrixLinesIndex.current[endArrayIndex].filter(
-        item => item >= end,
-      );
-
-      return [
-        ...filterInitialLine,
-        ...squashedSubSectionArrays,
-        ...filterlastLine,
-      ];
     }
 
     const result = [];
@@ -332,7 +338,10 @@ const HighlightTextAreaArabic = ({
 
   return (
     <View>
-      <View>
+      <View
+        style={{
+          marginRight: 10,
+        }}>
         <View
           {...panResponder.panHandlers}
           ref={highlightContainerRef}
