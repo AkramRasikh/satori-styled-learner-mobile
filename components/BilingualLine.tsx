@@ -15,6 +15,7 @@ import useContentScreen from '../screens/Content/useContentScreen';
 import {DoubleClickButton} from './Button';
 import BilingualLineSettings from './BilingualLineSettings';
 import {translateText} from '../api/google-translate';
+import {LanguageEnum} from '../context/LanguageSelector/LanguageSelectorProvider';
 
 const BilingualLine = ({
   id,
@@ -48,6 +49,8 @@ const BilingualLine = ({
   const [highlightedIndices, setHighlightedIndices] = useState([]);
 
   const {languageSelectedState} = useLanguageSelector();
+
+  const isArabic = languageSelectedState === LanguageEnum.Arabic;
 
   const targetRef = useRef(null);
   const swipeDistance = useRef(0);
@@ -304,7 +307,13 @@ const BilingualLine = ({
             isFirst={isFirst}
           />
         ) : (
-          safeTextState
+          <View
+            style={{
+              alignItems: isArabic ? 'flex-end' : 'flex-start',
+              marginRight: 10,
+            }}>
+            {safeTextState}
+          </View>
         )}
       </View>
       {hasQuickTranslation && (
