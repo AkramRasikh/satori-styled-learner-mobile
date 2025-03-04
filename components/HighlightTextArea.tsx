@@ -176,6 +176,7 @@ const HighlightTextArea = ({
             display: 'flex',
             flexDirection: 'row',
             flexWrap: 'wrap',
+            shadowOpacity: 0.25,
           })
         }>
         {renderText(text)}
