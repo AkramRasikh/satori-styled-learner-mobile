@@ -6,7 +6,7 @@ import {
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
-import {Text} from 'react-native-paper';
+import {DefaultTheme, Text} from 'react-native-paper';
 
 const dimensionalWidth = Dimensions.get('window').width;
 
@@ -264,6 +264,7 @@ const HighlightTextAreaArabic = ({
                 fontSize: 20,
                 lineHeight: 24,
                 backgroundColor: isHighlightedChar ? '#add8e6' : 'transparent',
+                color: DefaultTheme.colors.tertiary,
               }}
               onLayout={eee => {
                 const thisCharY = eee.nativeEvent.layout.y;
