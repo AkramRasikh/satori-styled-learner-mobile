@@ -27,6 +27,9 @@ const HighlightTextAreaArabic = ({
   const onInitPressed = useRef(null);
   const groupedArrays = useRef([]);
   const matrixLinesIndex = useRef([]);
+  const reversedStateWorking = useRef(null);
+
+  reversedStateWorking.current = Boolean(reversedArabicTextState);
 
   const splitText = text.split(/([\s.]+)/);
 
@@ -80,11 +83,73 @@ const HighlightTextAreaArabic = ({
   const createArrayBetween = startEndArr => {
     const [start, end] = startEndArr;
 
+    const {sameArr, startArrayIndex, endArrayIndex, squashedSubSectionArrays} =
+      areStartAndEndInDifferentArrays(start, end, matrixLinesIndex.current);
+
+    if (sameArr) {
+      const result = [];
+      for (let i = start; i <= end; i++) {
+        result.push(i);
+      }
+
+      return result;
+    } else if (startArrayIndex !== -1 && endArrayIndex !== -1) {
+      const filterInitialLine = matrixLinesIndex.current[
+        startArrayIndex
+      ].filter(item => item <= start);
+      const filterlastLine = matrixLinesIndex.current[endArrayIndex].filter(
+        item => item >= end,
+      );
+
+      return [
+        ...filterInitialLine,
+        ...squashedSubSectionArrays,
+        ...filterlastLine,
+      ];
+    }
+
     const result = [];
     for (let i = start; i <= end; i++) {
       result.push(i);
     }
     return result;
+  };
+
+  const areStartAndEndInDifferentArrays = (start, end, matrix) => {
+    let startArrayIndex = -1;
+    let endArrayIndex = -1;
+
+    // Iterate through the matrix to find the indices of the arrays containing start and end
+    for (let i = 0; i < matrix.length; i++) {
+      if (matrix[i].includes(start)) {
+        startArrayIndex = i;
+      }
+      if (matrix[i].includes(end)) {
+        endArrayIndex = i;
+      }
+    }
+
+    const sameArr =
+      startArrayIndex !== -1 &&
+      endArrayIndex !== -1 &&
+      startArrayIndex === endArrayIndex;
+
+    let squashedSubSectionArrays = [];
+    if (!sameArr && startArrayIndex !== -1 && endArrayIndex !== -1) {
+      const startIndex = Math.min(startArrayIndex, endArrayIndex) + 1;
+      const endIndex = Math.max(startArrayIndex, endArrayIndex) - 1;
+
+      for (let i = startIndex; i <= endIndex; i++) {
+        squashedSubSectionArrays = squashedSubSectionArrays.concat(matrix[i]);
+      }
+    }
+
+    return {
+      sameArr,
+      startArrayIndex,
+      endArrayIndex,
+      squashedSubSectionArrays,
+    };
   };
 
   const getFlattenedKey = (subarrayKey, index) => {
