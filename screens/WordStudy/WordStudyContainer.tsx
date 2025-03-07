@@ -1,6 +1,7 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {useSelector} from 'react-redux';
 import {ScrollView, View} from 'react-native';
+import {Button, Text} from 'react-native-paper';
 import useFormatWordsToStudy from '../../hooks/useFormatWordsToStudy';
 import {makeArrayUnique} from '../../hooks/useHighlightWordToWordBank';
 import SelectedCategoriesWordsSection from '../../components/SelectedCategoriesSection';
@@ -39,6 +40,8 @@ function WordStudyContainer(): React.JSX.Element {
     selectedTopic,
     setSelectedTopic,
     updatePromptState,
+    combineWordsListState,
+    setCombineWordsListState,
   } = useWordData();
 
   useFormatWordsToStudy({
@@ -78,6 +81,10 @@ function WordStudyContainer(): React.JSX.Element {
     } catch (error) {
       console.log('## Error handleDeleteWordFlashCard', {error});
     }
+  };
+
+  const handleExportListToAI = isChatGpt => {
+    console.log('## combineWordsListState', combineWordsListState);
   };
 
   const isDueCheck = (wordData, todayDateObj) => {
@@ -125,6 +132,32 @@ function WordStudyContainer(): React.JSX.Element {
 
   return (
     <ScreenContainerComponent>
+      {combineWordsListState?.length ? (
+        <View
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            width: '100%',
+            padding: 10,
+            alignItems: 'center',
+            flexWrap: 'wrap',
+          }}>
+          <Text>
+            {combineWordsListState.map(
+              (item, index) => index + 1 + ') ' + item.word,
+            )}
+          </Text>
+          <Button
+            onPress={() => {
+              setCombineWordsListState([]);
+            }}>
+            Clear
+          </Button>
+          <Button onPress={() => handleExportListToAI(true)}>ChatGPT</Button>
+          <Button>DeepSeek</Button>
+        </View>
+      ) : null}
       <ScrollView
         ref={scrollViewRef}
         contentInsetAdjustmentBehavior="automatic"

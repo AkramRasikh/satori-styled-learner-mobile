@@ -7,6 +7,7 @@ const SRSTogglesScaled = ({
   hardText,
   goodText,
   easyText,
+  fontSize = 12,
 }) => {
   const btnsArr = [
     {
@@ -38,7 +39,7 @@ const SRSTogglesScaled = ({
             mode="outlined"
             textColor={DefaultTheme.colors.onSurface}
             labelStyle={{
-              fontSize: 12,
+              fontSize,
             }}>
             {btn.text}
           </Button>

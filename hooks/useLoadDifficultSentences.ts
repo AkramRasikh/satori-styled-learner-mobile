@@ -41,7 +41,9 @@ const useLoadDifficultSentences = () => {
 
     adhocTargetLanguageSentencesState.forEach(contentWidget => {
       const thisTopic = contentWidget?.topic || 'sentence-helper';
-      const isSentenceHelper = contentWidget?.matchedWords?.length > 0;
+      const isSentenceHelper =
+        contentWidget?.matchedWords?.length > 0 ||
+        contentWidget?.matchedWordsId?.length > 0;
       const isCore = contentWidget?.isCore;
       const nextReview =
         contentWidget?.nextReview || contentWidget?.reviewData?.due;

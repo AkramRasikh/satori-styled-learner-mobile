@@ -14,15 +14,19 @@ const FlashCardSRSToggles = ({
   baseForm,
   deleteWord,
   collapseAnimation,
+  definition,
 }) => {
   const [showAreYouSureSectionState, setShowAreYouSureSectionState] =
     useState(false);
   const timeNow = new Date();
   const hasDueDate = reviewData?.due ? new Date(reviewData?.due) : null; // check if due yet
 
-  const {updateWordData} = useWordData();
+  const {updateWordData, combineWordsListState, setCombineWordsListState} =
+    useWordData();
 
   const hasDueDateInFuture = new Date(hasDueDate) > timeNow;
+
+  const isInCombineWordList = combineWordsListState?.some(i => i.id === id);
 
   const {nextScheduledOptions, againText, hardText, goodText, easyText} =
     srsCalculationAndText({
@@ -59,10 +63,11 @@ const FlashCardSRSToggles = ({
         style={{
           display: 'flex',
           flexDirection: 'row',
-          gap: 10,
+          gap: 5,
           marginVertical: 5,
           alignItems: 'center',
           alignSelf: 'center',
+          flexWrap: 'wrap',
         }}>
         {hasDueDateInFuture ? (
           <View
@@ -80,6 +85,31 @@ const FlashCardSRSToggles = ({
             hardText={hardText}
             goodText={goodText}
             easyText={easyText}
+            fontSize={10}
+          />
+        )}
+        {isInCombineWordList ? (
+          <IconButton
+            icon="minus"
+            containerColor={MD3Colors.error30}
+            iconColor={MD2Colors.white}
+            size={20}
+            onPress={() => {
+              setCombineWordsListState(prev => prev.filter(i => i.id !== id));
+            }}
+          />
+        ) : (
+          <IconButton
+            icon="plus"
+            containerColor={MD3Colors.tertiary60}
+            iconColor={MD2Colors.white}
+            size={20}
+            onPress={() =>
+              setCombineWordsListState(prev => [
+                ...prev,
+                {id, word: baseForm, definition},
+              ])
+            }
           />
         )}
         <IconButton

@@ -66,6 +66,7 @@ const FlashCard = ({
   const isCardDue = wordData?.isCardDue;
   const cardReviewButNotDue = !isCardDue && wordData?.reviewData?.due;
   const freshCard = !cardReviewButNotDue && !isCardDue;
+  const definition = wordData.definition;
 
   const moreToLoad = sliceArrState === index + 1 && !isLastInTotalOrder;
 
@@ -135,6 +136,7 @@ const FlashCard = ({
               baseForm={baseForm}
               deleteWord={handleDeleteWordWithAnimation}
               collapseAnimation={collapseAnimationWithState}
+              definition={definition}
             />
           </FlashCardBodyContainer>
           {moreToLoad && (

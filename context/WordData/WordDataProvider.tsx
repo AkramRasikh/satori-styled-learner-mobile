@@ -14,6 +14,7 @@ export const WordDataProvider = ({children}: PropsWithChildren<{}>) => {
   const [wordStudyState, setWordStudyState] = useState([]);
   const [dueCardsState, setDueCardsState] = useState([]);
   const [updatePromptState, setUpdatePromptState] = useState('');
+  const [combineWordsListState, setCombineWordsListState] = useState([]);
   const [selectedTopic, setSelectedTopic] = useState('');
   const dispatch = useDispatch();
   const {languageSelectedState: language} = useLanguageSelector();
@@ -106,6 +107,8 @@ export const WordDataProvider = ({children}: PropsWithChildren<{}>) => {
         setDueCardsState,
         selectedTopic,
         setSelectedTopic,
+        combineWordsListState,
+        setCombineWordsListState,
       }}>
       {children}
     </WordDataContext.Provider>
