@@ -11,6 +11,7 @@ import ScreenContainerComponent from '../../components/ScreenContainerComponent'
 import WordStudyHeader from './WordStudyHeader';
 import useLanguageSelector from '../../context/LanguageSelector/useLanguageSelector';
 import useData from '../../context/Data/useData';
+import useDifficultSentences from '../../context/DifficultSentences/useDifficultSentencesProvider';
 
 function WordStudyContainer(): React.JSX.Element {
   const [tagsState, setTagsState] = useState<string[]>([]);
@@ -43,10 +44,11 @@ function WordStudyContainer(): React.JSX.Element {
     setDueCardsState,
     selectedTopic,
     setSelectedTopic,
-    updatePromptState,
     combineWordsListState,
     setCombineWordsListState,
   } = useWordData();
+
+  const {setDifficultSentencesState} = useDifficultSentences();
 
   useFormatWordsToStudy({
     targetLanguageWordsState,
@@ -90,7 +92,10 @@ function WordStudyContainer(): React.JSX.Element {
   const handleExportListToAI = async () => {
     try {
       setLoadingCombineSentences(true);
-      await combineWords({inputWords: combineWordsListState});
+      const combinedSentencesRes = await combineWords({
+        inputWords: combineWordsListState,
+      });
+      setDifficultSentencesState(prev => [...prev, ...combinedSentencesRes]);
     } catch (error) {
       console.log('## Error combining!', error);
     } finally {

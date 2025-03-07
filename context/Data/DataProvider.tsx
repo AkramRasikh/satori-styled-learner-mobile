@@ -152,6 +152,12 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
       ];
       dispatch(setSentencesStateDispatch(updatedAdhocSentencesState));
       updatePromptFunc(`Added ${combineWordsSentencesRes.length} sentences!`);
+      return combineWordsSentencesRes.map(item => ({
+        ...item,
+        isSentenceHelper: true,
+        isAdhoc: true,
+        generalTopic: 'sentence-helper',
+      }));
     } catch (error) {
       updatePromptFunc('Error combining words');
     } finally {
