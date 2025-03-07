@@ -53,6 +53,7 @@ const useLoadDifficultSentences = () => {
           isSentenceHelper: isSentenceHelper,
           isCore,
           isAdhoc: true,
+          generalTopic: 'sentence-helper',
           ...contentWidget,
         });
       }
