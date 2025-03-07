@@ -145,13 +145,23 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
         inputWords,
         language,
       });
-      console.log('## combineWordsSentencesRes', combineWordsSentencesRes);
       const updatedAdhocSentencesState = [
         ...adhocTargetLanguageSentencesState,
         combineWordsSentencesRes,
       ];
       dispatch(setSentencesStateDispatch(updatedAdhocSentencesState));
-      updatePromptFunc(`Added ${combineWordsSentencesRes.length} sentences!`);
+      const wordsForBanner = inputWords.map((item, index) => {
+        const word = item.word;
+        if (index === inputWords.length) {
+          return word;
+        }
+        return `${word}, `;
+      });
+      updatePromptFunc(
+        `Added ${wordsForBanner.join('')} in ${
+          combineWordsSentencesRes.length
+        } sentences!`,
+      );
       return combineWordsSentencesRes.map(item => ({
         ...item,
         isSentenceHelper: true,
