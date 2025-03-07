@@ -10,6 +10,7 @@ import useWordData from '../../context/WordData/useWordData';
 import ScreenContainerComponent from '../../components/ScreenContainerComponent';
 import WordStudyHeader from './WordStudyHeader';
 import useLanguageSelector from '../../context/LanguageSelector/useLanguageSelector';
+import useData from '../../context/Data/useData';
 
 function WordStudyContainer(): React.JSX.Element {
   const [tagsState, setTagsState] = useState<string[]>([]);
@@ -18,6 +19,7 @@ function WordStudyContainer(): React.JSX.Element {
   const [sliceArrState, setSliceArrState] = useState(20);
   const [showCategories, setShowCategories] = useState(false);
   const [isMountedState, setIsMountedState] = useState(false);
+  const [loadingCombineSentences, setLoadingCombineSentences] = useState(false);
 
   const targetLanguageLoadedSentences = useSelector(state => state.sentences);
   const targetLanguageWordsState = useSelector(state => state.words);
@@ -30,6 +32,8 @@ function WordStudyContainer(): React.JSX.Element {
   const wordCategories = makeArrayUnique([...tagsState, ...generalTopicState]);
 
   const {languageSelectedState} = useLanguageSelector();
+
+  const {combineWords} = useData();
 
   const {
     deleteWord,
@@ -83,8 +87,15 @@ function WordStudyContainer(): React.JSX.Element {
     }
   };
 
-  const handleExportListToAI = isChatGpt => {
-    console.log('## combineWordsListState', combineWordsListState);
+  const handleExportListToAI = async () => {
+    try {
+      setLoadingCombineSentences(true);
+      await combineWords({inputWords: combineWordsListState});
+    } catch (error) {
+      console.log('## Error combining!', error);
+    } finally {
+      setLoadingCombineSentences(false);
+    }
   };
 
   const isDueCheck = (wordData, todayDateObj) => {
@@ -142,6 +153,7 @@ function WordStudyContainer(): React.JSX.Element {
             padding: 10,
             alignItems: 'center',
             flexWrap: 'wrap',
+            opacity: loadingCombineSentences ? 0.5 : 1,
           }}>
           <Text>
             {combineWordsListState.map(
@@ -154,8 +166,7 @@ function WordStudyContainer(): React.JSX.Element {
             }}>
             Clear
           </Button>
-          <Button onPress={() => handleExportListToAI(true)}>ChatGPT</Button>
-          <Button>DeepSeek</Button>
+          <Button onPress={handleExportListToAI}>DeepSeek</Button>
         </View>
       ) : null}
       <ScrollView

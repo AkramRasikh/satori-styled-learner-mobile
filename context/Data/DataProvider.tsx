@@ -39,7 +39,6 @@ export const DataContext = createContext(null);
 export const DataProvider = ({children}: PropsWithChildren<{}>) => {
   const [updatingSentenceState, setUpdatingSentenceState] = useState('');
   const [dataProviderIsLoading, setDataProviderIsLoading] = useState(true);
-  const [loadingCombineSentences, setLoadingCombineSentences] = useState(false);
   const [provdiderError, setProvdiderError] = useState(null);
   const [updatePromptState, setUpdatePromptState] = useState('');
   const [isAdhocDataLoading, setIsAdhocDataLoading] = useState(true);
@@ -142,13 +141,20 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
 
   const combineWords = async ({inputWords}) => {
     try {
-      setLoadingCombineSentences(true);
-      const combineWordsRes = await combineWordsAPI({inputWords, language});
-      setCombineWordsListState(combineWordsRes);
+      const combineWordsSentencesRes = await combineWordsAPI({
+        inputWords,
+        language,
+      });
+      console.log('## combineWordsSentencesRes', combineWordsSentencesRes);
+      const updatedAdhocSentencesState = [
+        ...adhocTargetLanguageSentencesState,
+        combineWordsSentencesRes,
+      ];
+      dispatch(setSentencesStateDispatch(updatedAdhocSentencesState));
+      updatePromptFunc(`Added ${combineWordsSentencesRes.length} sentences!`);
     } catch (error) {
       updatePromptFunc('Error combining words');
     } finally {
-      setTimeout(() => setLoadingCombineSentences(false), 2000);
     }
   };
 
@@ -616,7 +622,6 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
         sentenceReviewBulk,
         combineWordsListState,
         combineWords,
-        loadingCombineSentences,
         setCombineWordsListState,
         addSentenceContext,
         getSentenceAudio,
