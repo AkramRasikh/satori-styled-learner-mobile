@@ -34,7 +34,6 @@ const BilingualLine = ({
   scrollViewRef,
   isAutoScrollingMode,
   setShowQuickReviewState,
-  isFirst,
 }) => {
   const [showEng, setShowEng] = useState(false);
   const [showNotes, setShowNotes] = useState(false);
@@ -304,7 +303,6 @@ const BilingualLine = ({
             handleQuickGoogleTranslate={handleQuickGoogleTranslate}
             onHighlightedMount={onHighlightedMount}
             onHighlightedUnMount={onHighlightedUnMount}
-            isFirst={isFirst}
           />
         ) : (
           <View

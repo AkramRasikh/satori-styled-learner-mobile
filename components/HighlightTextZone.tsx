@@ -20,7 +20,6 @@ const HighlightTextZone = ({
   handleQuickGoogleTranslate,
   onHighlightedMount,
   onHighlightedUnMount,
-  isFirst,
 }) => {
   const [reversedArabicTextState, setReversedArabicTextState] = useState('');
 
@@ -101,44 +100,47 @@ const HighlightTextZone = ({
   };
 
   return (
-    <View>
+    <>
       {highlightedIndices?.length > 0 ? (
-        <HighlightTextHover
-          getHighlightedText={getHighlightedText}
-          handleQuickGoogleTranslate={handleQuickGoogleTranslate}
-          handleClose={handleClose}
-          isFirst={isFirst}
-        />
+        <View>
+          <HighlightTextHover
+            getHighlightedText={getHighlightedText}
+            handleQuickGoogleTranslate={handleQuickGoogleTranslate}
+            handleClose={handleClose}
+          />
+        </View>
       ) : null}
-      {isArabic ? (
-        <HighlightTextAreaArabic
-          onHighlightedMount={onHighlightedMount}
-          onHighlightedUnMount={onHighlightedUnMount}
-          setHighlightedIndices={setHighlightedIndices}
-          highlightedIndices={highlightedIndices}
-          handleClose={handleClose}
-          reversedArabicTextState={reversedArabicTextState}
-          setReversedArabicTextState={setReversedArabicTextState}
-          text={text}
-        />
-      ) : (
-        <HighlightTextArea
-          onHighlightedMount={onHighlightedMount}
-          onHighlightedUnMount={onHighlightedUnMount}
-          setHighlightedIndices={setHighlightedIndices}
-          highlightedIndices={highlightedIndices}
-          handleClose={handleClose}
-          text={text}
-        />
-      )}
-      {highlightedIndices?.length > 0 ? (
-        <HighlightTextActions
-          handleSaveWord={handleSaveWord}
-          handleCopyText={handleCopyText}
-          handleOpenUpGoogle={handleOpenUpGoogle}
-        />
-      ) : null}
-    </View>
+      <View>
+        {isArabic ? (
+          <HighlightTextAreaArabic
+            onHighlightedMount={onHighlightedMount}
+            onHighlightedUnMount={onHighlightedUnMount}
+            setHighlightedIndices={setHighlightedIndices}
+            highlightedIndices={highlightedIndices}
+            handleClose={handleClose}
+            reversedArabicTextState={reversedArabicTextState}
+            setReversedArabicTextState={setReversedArabicTextState}
+            text={text}
+          />
+        ) : (
+          <HighlightTextArea
+            onHighlightedMount={onHighlightedMount}
+            onHighlightedUnMount={onHighlightedUnMount}
+            setHighlightedIndices={setHighlightedIndices}
+            highlightedIndices={highlightedIndices}
+            handleClose={handleClose}
+            text={text}
+          />
+        )}
+        {highlightedIndices?.length > 0 ? (
+          <HighlightTextActions
+            handleSaveWord={handleSaveWord}
+            handleCopyText={handleCopyText}
+            handleOpenUpGoogle={handleOpenUpGoogle}
+          />
+        ) : null}
+      </View>
+    </>
   );
 };
 

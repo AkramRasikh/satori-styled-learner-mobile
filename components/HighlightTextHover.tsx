@@ -5,13 +5,12 @@ const HighlightTextHover = ({
   getHighlightedText,
   handleQuickGoogleTranslate,
   handleClose,
-  isFirst,
 }) => {
   return (
     <View
       style={{
         position: 'absolute',
-        bottom: isFirst ? 55 : 75,
+        bottom: 2,
         backgroundColor: '#FFFFC5',
         shadowColor: '#000',
         shadowOffset: {width: 0, height: 2},

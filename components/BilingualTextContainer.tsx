@@ -78,7 +78,6 @@ const BilingualTextContainerWithQuickReviewWrapper = ({
             scrollViewRef={scrollViewRef}
             isAutoScrollingMode={isAutoScrollingMode}
             setShowQuickReviewState={setShowQuickReviewState}
-            isFirst={index === 0}
           />
         </View>
         {showQuickReviewState && (
