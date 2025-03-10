@@ -23,7 +23,11 @@ import {
   updateSentenceRemoveReviewAndReturnState,
 } from '../../store/contentSlice';
 import {setWordsStateDispatch} from '../../store/wordSlice';
-import {setSentencesStateDispatch} from '../../store/sentencesSlice';
+import {
+  setSentencesStateDispatch,
+  updateAdhocSentenceAndReturnState,
+  updateAdhocSentenceRemoveReviewAndReturnState,
+} from '../../store/sentencesSlice';
 import {setSnippetsStateDispatch} from '../../store/snippetsSlice';
 import {deleteWordAPI} from '../../api/delete-word';
 import {updateWordAPI} from '../../api/update-word-data';
@@ -310,6 +314,33 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
           await storeDataLocalStorage(
             dataStorageKeyPrefix + content,
             updatedContentState,
+          );
+        }
+      } else {
+        if (isRemoveReview) {
+          const updatedSentencesState = dispatch(
+            updateAdhocSentenceRemoveReviewAndReturnState({
+              sentenceId,
+            }),
+          ).sentences;
+
+          await storeDataLocalStorage(
+            dataStorageKeyPrefix + adhocSentences,
+            updatedSentencesState,
+          );
+        } else {
+          const updatedSentencesState = dispatch(
+            updateAdhocSentenceAndReturnState({
+              sentenceId,
+              fieldToUpdate: updatedFieldFromDB,
+            }),
+          ).sentences;
+
+          console.log('## updatedSentencesState', updatedSentencesState);
+
+          await storeDataLocalStorage(
+            dataStorageKeyPrefix + adhocSentences,
+            updatedSentencesState,
           );
         }
       }

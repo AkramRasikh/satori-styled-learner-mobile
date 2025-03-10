@@ -123,8 +123,7 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
     fieldToUpdate,
     contentIndex,
   }) => {
-    const isRemoveFromDifficultSentences =
-      !isAdhoc && fieldToUpdate?.nextReview === null;
+    const isRemoveFromDifficultSentences = fieldToUpdate?.nextReview === null;
 
     if (isRemoveFromDifficultSentences) {
       removeDifficultSentenceFromState(sentenceId);
