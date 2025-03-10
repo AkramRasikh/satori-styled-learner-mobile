@@ -1,4 +1,4 @@
-import React, {TouchableOpacity, View} from 'react-native';
+import React, {View} from 'react-native';
 import {useEffect, useState} from 'react';
 import DifficultSentenceTopHeader from './DifficultSentenceTopHeader';
 import DifficultSentenceTextContainer from './DifficultSentenceTextContainer';
