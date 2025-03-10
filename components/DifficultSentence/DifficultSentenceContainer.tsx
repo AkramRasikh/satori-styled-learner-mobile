@@ -240,13 +240,15 @@ const DifficultSentenceContainer = ({
     const textSegments = underlineWordsInSentence(targetText);
     const wordsInOverlapCheck = checkOverlap(matchedWordListState);
     return (
-      <TouchableOpacity onLongPress={handleShowAllMatchedWords}>
+      <DoubleClickButton
+        onLongPress={handleShowAllMatchedWords}
+        onPress={handleSettingHighlightmode}>
         <TextSegmentContainer
           textSegments={textSegments}
           wordsInOverlapCheck={wordsInOverlapCheck}
           matchedWordListState={matchedWordListState}
         />
-      </TouchableOpacity>
+      </DoubleClickButton>
     );
   };
 
