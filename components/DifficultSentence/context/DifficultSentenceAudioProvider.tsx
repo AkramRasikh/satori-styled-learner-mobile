@@ -106,6 +106,7 @@ export const DifficultSentenceAudioProvider = ({
         soundRef,
         miniSnippets,
         setMiniSnippets,
+        setCurrentTimeState,
       }}>
       {children}
     </DifficultSentenceAudioContext.Provider>

@@ -46,6 +46,7 @@ const DifficultSentenceMidSection = ({sentence, addSnippet, removeSnippet}) => {
     soundDuration,
     handleLoad,
     handleSnippet,
+    setCurrentTimeState,
   } = useDifficultSentenceAudio();
 
   const hasSnippets = isLoaded && miniSnippets.length > 0;
@@ -88,6 +89,7 @@ const DifficultSentenceMidSection = ({sentence, addSnippet, removeSnippet}) => {
               addSnippet={addSnippet}
               removeSnippet={removeSnippet}
               setMiniSnippets={setMiniSnippets}
+              setCurrentTimeState={setCurrentTimeState}
             />
           );
         })}

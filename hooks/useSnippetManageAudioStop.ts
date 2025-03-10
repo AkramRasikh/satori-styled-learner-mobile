@@ -7,6 +7,7 @@ const useSnippetManageAudioStop = ({
   startTime,
   duration,
   currentTime,
+  setCurrentTimeState,
 }) => {
   useEffect(() => {
     if (currentTime) {
@@ -15,9 +16,22 @@ const useSnippetManageAudioStop = ({
         soundRef.current.stop(() => {
           setIsPlaying(false);
         });
+        soundRef.current.setCurrentTime(startTime);
+        soundRef.current.getCurrentTime(currentTime => {
+          setCurrentTimeState(currentTime);
+          setIsPlaying(false);
+        });
       }
     }
-  }, [currentTime, soundRef, setIsPlaying, startTime, duration, isPlaying]);
+  }, [
+    currentTime,
+    soundRef,
+    setCurrentTimeState,
+    setIsPlaying,
+    startTime,
+    duration,
+    isPlaying,
+  ]);
 };
 
 export default useSnippetManageAudioStop;

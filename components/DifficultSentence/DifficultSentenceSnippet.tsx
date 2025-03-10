@@ -18,6 +18,7 @@ const DifficultSentenceSnippet = ({
   addSnippet,
   removeSnippet,
   setMiniSnippets,
+  setCurrentTimeState,
 }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [adjustableStartTime, setAdjustableStartTime] = useState(undefined);
@@ -109,6 +110,7 @@ const DifficultSentenceSnippet = ({
     startTime: isSaved ? getStartTime() : adjustableStartTime,
     duration: isSaved ? snippet.duration : adjustableDuration,
     currentTime: currentTimeState,
+    setCurrentTimeState,
   });
 
   return (
