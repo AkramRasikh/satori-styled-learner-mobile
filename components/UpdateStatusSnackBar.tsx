@@ -5,7 +5,7 @@ import {Snackbar} from 'react-native-paper';
 const UpdateStatusSnackBar = ({
   updatePromptState,
   setUpdatePromptState,
-  duration = 3000,
+  duration = 1500,
 }) => {
   const [visible, setVisible] = React.useState(true);
 

@@ -178,7 +178,7 @@ function WordStudyContainer(): React.JSX.Element {
       <ScrollView
         ref={scrollViewRef}
         contentInsetAdjustmentBehavior="automatic"
-        style={{padding: 10}}>
+        contentContainerStyle={{padding: 10}}>
         <WordStudyHeader
           setShowDueCardsState={setShowDueCardsState}
           setShowCategories={setShowCategories}
