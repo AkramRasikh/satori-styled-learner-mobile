@@ -153,7 +153,7 @@ const BilingualLine = ({
     if (isPlaying && focusThisSentence) {
       pauseSound();
     } else {
-      playFromThisSentence(topicSentence.startAt);
+      playFromThisSentence(topicSentence.startAt || topicSentence.time);
     }
   };
 

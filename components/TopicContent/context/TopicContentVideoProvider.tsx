@@ -49,7 +49,7 @@ export const TopicContentVideoProvider = ({
   };
 
   const handlePlayFromThisSentence = playFromHere => {
-    jumpToAudioPoint(realStartTime + playFromHere);
+    jumpToAudioPoint(realStartTime + (playFromHere || 0)); // fix playFromHere
     if (!isVideoPlaying) {
       playVideo();
     }
