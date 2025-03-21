@@ -166,6 +166,10 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
           combineWordsSentencesRes.length
         } sentences!`,
       );
+      await storeDataLocalStorage(
+        dataStorageKeyPrefix + adhocSentences,
+        updatedAdhocSentencesState,
+      ); // saving to adhoc or sentences?
       return combineWordsSentencesRes.map(item => ({
         ...item,
         isSentenceHelper: true,
@@ -335,8 +339,6 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
               fieldToUpdate: updatedFieldFromDB,
             }),
           ).sentences;
-
-          console.log('## updatedSentencesState', updatedSentencesState);
 
           await storeDataLocalStorage(
             dataStorageKeyPrefix + adhocSentences,
