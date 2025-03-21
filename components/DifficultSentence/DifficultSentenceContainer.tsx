@@ -108,6 +108,8 @@ const DifficultSentenceContainer = ({
   handleWordUpdate,
   setSliceArrState,
   underlineWordsInSentence,
+  combineWordsListState,
+  setCombineWordsListState,
 }) => {
   const [showAllMatchedWordsState, setShowAllMatchedWordsState] =
     useState(false);
@@ -355,6 +357,8 @@ const DifficultSentenceContainer = ({
                   deleteWord={deleteWord}
                   handleUpdateWordFinal={handleUpdateWordFinal}
                   indexNum={index}
+                  combineWordsListState={combineWordsListState}
+                  setCombineWordsListState={setCombineWordsListState}
                 />
               );
             })}

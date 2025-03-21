@@ -16,6 +16,7 @@ import useHighlightWordToWordBank from '../../hooks/useHighlightWordToWordBank';
 import LanguageSelection from '../home/components/LanguageSelection';
 import useLanguageSelector from '../../context/LanguageSelector/useLanguageSelector';
 import {ActivityIndicator, MD2Colors} from 'react-native-paper';
+import CombineSentencesContainer from '../../components/CombineSentencesContainer';
 
 const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
   const [toggleableSentencesState, setToggleableSentencesState] = useState([]);
@@ -33,6 +34,12 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
   const numberOfWords = targetLanguageWordsState.length;
   const {updateSentenceData, deleteWord, pureWords, fetchData, updateWordData} =
     useData();
+
+  const {
+    handleCombineSentences,
+    combineWordsListState,
+    setCombineWordsListState,
+  } = useDifficultSentences();
 
   const {setLanguageSelectedState} = useLanguageSelector();
 
@@ -141,6 +148,16 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
     });
   };
 
+  const handleExportListToAI = async () => {
+    try {
+      setIsLanguageLoading(true);
+      await handleCombineSentences();
+    } catch (error) {
+    } finally {
+      setIsLanguageLoading(false);
+    }
+  };
+
   const handleSelectWord = selectingWord => {
     const mostUpToDateWord = targetLanguageWordsState.find(
       i => i.id === selectingWord.id,
@@ -222,6 +239,14 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
 
   return (
     <ScreenContainerComponent marginBottom={30}>
+      {combineWordsListState?.length ? (
+        <CombineSentencesContainer
+          combineWordsListState={combineWordsListState}
+          setCombineWordsListState={setCombineWordsListState}
+          handleExportListToAI={handleExportListToAI}
+          isLoading={isLanguageLoading}
+        />
+      ) : null}
       {isLanguageLoading && (
         <ActivityIndicator
           animating={true}
@@ -285,6 +310,8 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
                 openGoogleTranslateApp={openGoogleTranslateApp}
                 indexNum={index}
                 underlineWordsInSentence={underlineWordsInSentence}
+                combineWordsListState={combineWordsListState}
+                setCombineWordsListState={setCombineWordsListState}
               />
             ))}
           </View>

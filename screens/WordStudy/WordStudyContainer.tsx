@@ -1,7 +1,6 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {useSelector} from 'react-redux';
 import {ScrollView, View} from 'react-native';
-import {Button, Text} from 'react-native-paper';
 import useFormatWordsToStudy from '../../hooks/useFormatWordsToStudy';
 import {makeArrayUnique} from '../../hooks/useHighlightWordToWordBank';
 import SelectedCategoriesWordsSection from '../../components/SelectedCategoriesSection';
@@ -12,6 +11,7 @@ import WordStudyHeader from './WordStudyHeader';
 import useLanguageSelector from '../../context/LanguageSelector/useLanguageSelector';
 import useData from '../../context/Data/useData';
 import useDifficultSentences from '../../context/DifficultSentences/useDifficultSentencesProvider';
+import CombineSentencesContainer from '../../components/CombineSentencesContainer';
 
 function WordStudyContainer(): React.JSX.Element {
   const [tagsState, setTagsState] = useState<string[]>([]);
@@ -150,30 +150,12 @@ function WordStudyContainer(): React.JSX.Element {
   return (
     <ScreenContainerComponent>
       {combineWordsListState?.length ? (
-        <View
-          style={{
-            display: 'flex',
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            width: '100%',
-            padding: 10,
-            alignItems: 'center',
-            flexWrap: 'wrap',
-            opacity: loadingCombineSentences ? 0.5 : 1,
-          }}>
-          <Text>
-            {combineWordsListState.map(
-              (item, index) => index + 1 + ') ' + item.word,
-            )}
-          </Text>
-          <Button
-            onPress={() => {
-              setCombineWordsListState([]);
-            }}>
-            Clear
-          </Button>
-          <Button onPress={handleExportListToAI}>DeepSeek</Button>
-        </View>
+        <CombineSentencesContainer
+          combineWordsListState={combineWordsListState}
+          setCombineWordsListState={setCombineWordsListState}
+          handleExportListToAI={handleExportListToAI}
+          isLoading={loadingCombineSentences}
+        />
       ) : null}
       <ScrollView
         ref={scrollViewRef}

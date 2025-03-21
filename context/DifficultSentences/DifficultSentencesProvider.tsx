@@ -6,6 +6,7 @@ import React, {
 } from 'react';
 import useLoadDifficultSentences from '../../hooks/useLoadDifficultSentences';
 import useLanguageSelector from '../LanguageSelector/useLanguageSelector';
+import useData from '../Data/useData';
 
 export const DifficultSentencesContext = createContext(null);
 
@@ -17,6 +18,23 @@ export const DifficultSentencesProvider = ({
     difficultSentencesHasBeenSetState,
     setDifficultSentencesHasBeenSetState,
   ] = useState(false);
+  const [combineWordsListState, setCombineWordsListState] = useState([]);
+
+  const {combineWords} = useData();
+
+  const handleCombineSentences = async () => {
+    try {
+      const combinedSentencesRes = await combineWords({
+        inputWords: combineWordsListState,
+      });
+      console.log('## combinedSentencesRes', combinedSentencesRes);
+
+      setDifficultSentencesState(prev => [...prev, ...combinedSentencesRes]);
+      setCombineWordsListState([]);
+    } catch (error) {
+      console.log('## Error combining!', error);
+    }
+  };
 
   const {getAllDataReady} = useLoadDifficultSentences();
 
@@ -78,6 +96,9 @@ export const DifficultSentencesProvider = ({
         updateDifficultSentence,
         addToSentenceToDifficultSentences,
         refreshDifficultSentencesInfo,
+        handleCombineSentences,
+        combineWordsListState,
+        setCombineWordsListState,
       }}>
       {children}
     </DifficultSentencesContext.Provider>

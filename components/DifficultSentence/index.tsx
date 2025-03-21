@@ -16,6 +16,8 @@ const DifficultSentenceComponent = ({
   handleWordUpdate,
   openGoogleTranslateApp,
   underlineWordsInSentence,
+  combineWordsListState,
+  setCombineWordsListState,
 }) => {
   return (
     <DifficultSentenceProvider
@@ -33,6 +35,8 @@ const DifficultSentenceComponent = ({
         handleSelectWord={handleSelectWord}
         handleWordUpdate={handleWordUpdate}
         underlineWordsInSentence={underlineWordsInSentence}
+        combineWordsListState={combineWordsListState}
+        setCombineWordsListState={setCombineWordsListState}
       />
     </DifficultSentenceProvider>
   );

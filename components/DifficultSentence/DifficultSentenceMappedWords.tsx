@@ -1,7 +1,13 @@
 import React, {TouchableOpacity, View} from 'react-native';
 import {SRSTogglesQuickComprehensiveDiffSentencesWords} from '../SRSToggles';
 import {getHexCode} from '../../utils/get-hex-code';
-import {DefaultTheme, Text} from 'react-native-paper';
+import {
+  DefaultTheme,
+  IconButton,
+  MD2Colors,
+  MD3Colors,
+  Text,
+} from 'react-native-paper';
 
 const seperatedWords = word => {
   const surfaceForm = word.surfaceForm;
@@ -19,9 +25,14 @@ const DifficultSentenceMappedWords = ({
   handleUpdateWordFinal,
   indexNum,
   overrideReview,
+  combineWordsListState,
+  setCombineWordsListState,
 }) => {
   const noReview = !item?.reviewData;
   const matchedWordText = `${seperatedWords(item)} ${noReview ? '🆕' : ''}`;
+  const isInCombineWordList = combineWordsListState?.some(
+    i => i.id === item.id,
+  );
 
   const numberText = `(${indexNum + 1}) `;
   return (
@@ -48,6 +59,42 @@ const DifficultSentenceMappedWords = ({
           deleteWord={deleteWord}
           updateWordData={handleUpdateWordFinal}
         />
+      )}
+      {setCombineWordsListState && (
+        <>
+          {isInCombineWordList ? (
+            <IconButton
+              icon="minus"
+              containerColor={MD3Colors.error30}
+              iconColor={MD2Colors.white}
+              size={20}
+              onPress={() => {
+                setCombineWordsListState(prev =>
+                  prev.filter(i => i.id !== item.id),
+                );
+              }}
+            />
+          ) : (
+            setCombineWordsListState && (
+              <IconButton
+                icon="plus"
+                containerColor={MD3Colors.tertiary60}
+                iconColor={MD2Colors.white}
+                size={20}
+                onPress={() =>
+                  setCombineWordsListState(prev => [
+                    ...prev,
+                    {
+                      id: item.id,
+                      word: item.baseForm,
+                      definition: item.definition,
+                    },
+                  ])
+                }
+              />
+            )
+          )}
+        </>
       )}
     </View>
   );
