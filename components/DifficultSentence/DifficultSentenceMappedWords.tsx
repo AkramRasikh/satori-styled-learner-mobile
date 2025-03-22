@@ -76,7 +76,7 @@ const DifficultSentenceMappedWords = ({
               icon="minus"
               containerColor={MD3Colors.error30}
               iconColor={MD2Colors.white}
-              size={20}
+              size={10}
               onPress={() => {
                 setCombineWordsListState(prev =>
                   prev.filter(i => i.id !== item.id),
@@ -89,7 +89,7 @@ const DifficultSentenceMappedWords = ({
                 icon="plus"
                 containerColor={MD3Colors.tertiary60}
                 iconColor={MD2Colors.white}
-                size={20}
+                size={10}
                 onPress={() =>
                   setCombineWordsListState(prev => [
                     ...prev,
