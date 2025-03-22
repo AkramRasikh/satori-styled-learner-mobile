@@ -11,6 +11,7 @@ import {getGeneralTopicName} from '../../utils/get-general-topic-name';
 import AnimatedModal from '../AnimatedModal';
 import useTopicContentVideo from './context/useTopicContentVideo';
 import useContentScreen from '../../screens/Content/useContentScreen';
+import WordModalDifficultSentence from '../WordModalDifficultSentence';
 
 const {height} = Dimensions?.get('window');
 
@@ -34,7 +35,12 @@ const TopicContentVideoMode = ({
   const scrollViewRef = useRef(null);
 
   const {languageSelectedState} = useLanguageSelector();
-  const {enableScroll} = useContentScreen();
+  const {
+    enableScroll,
+    selectedDueCardState,
+    setSelectedDueCardState,
+    handleDeleteWord,
+  } = useContentScreen();
 
   const {
     currentVideoTimeState,
@@ -106,6 +112,14 @@ const TopicContentVideoMode = ({
               setisAutoScrollingMode={setisAutoScrollingMode}
               isVideoModeState
             />
+            {selectedDueCardState && (
+              <WordModalDifficultSentence
+                visible={selectedDueCardState}
+                onClose={() => setSelectedDueCardState(null)}
+                deleteWord={() => handleDeleteWord(selectedDueCardState)}
+                updateWordData={() => {}}
+              />
+            )}
             <BilingualTextContainer
               formattedData={content}
               playFromThisSentence={handlePlayFromThisSentence}

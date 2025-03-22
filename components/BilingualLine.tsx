@@ -16,6 +16,7 @@ import {DoubleClickButton} from './Button';
 import BilingualLineSettings from './BilingualLineSettings';
 import {translateText} from '../api/google-translate';
 import {LanguageEnum} from '../context/LanguageSelector/LanguageSelectorProvider';
+import useData from '../context/Data/useData';
 
 const BilingualLine = ({
   id,
@@ -48,6 +49,7 @@ const BilingualLine = ({
   const [highlightedIndices, setHighlightedIndices] = useState([]);
 
   const {languageSelectedState} = useLanguageSelector();
+  const {deleteWord} = useData();
 
   const isArabic = languageSelectedState === LanguageEnum.Arabic;
 
@@ -73,6 +75,7 @@ const BilingualLine = ({
     updateWordList,
     setHighlightedStateArr,
     highlightStateArr,
+    handleSelectWord,
   } = useContentScreen();
 
   const onHighlightedMount = () => {
@@ -363,8 +366,8 @@ const BilingualLine = ({
             <DifficultSentenceMappedWords
               key={index}
               item={item}
-              handleSelectWord={() => {}}
-              deleteWord={() => {}}
+              handleSelectWord={handleSelectWord}
+              deleteWord={deleteWord}
               handleUpdateWordFinal={() => {}}
               indexNum={index}
               overrideReview

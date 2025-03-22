@@ -64,9 +64,7 @@ const DifficultSentenceMappedWords = ({
             {numberText}
           </Text>
           {matchedWordText}
-          <Text style={{fontStyle: 'italic'}}>
-            Contexts: {item.contexts.length}
-          </Text>
+          <Text style={{fontStyle: 'italic'}}>({item.contexts.length})</Text>
         </Text>
       </TouchableOpacity>
       {noReview && !overrideReview && (
