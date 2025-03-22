@@ -35,11 +35,20 @@ const DifficultSentenceMappedWords = ({
   );
 
   const numberText = `(${indexNum + 1}) `;
+
+  const addFlexContainer = {
+    display: setCombineWordsListState && 'flex',
+    flexDirection: setCombineWordsListState && 'row',
+    justifyContent: setCombineWordsListState && 'space-between',
+    alignItems: setCombineWordsListState && 'center',
+  };
+
   return (
     <View
       style={{
         paddingTop: 5,
         gap: 5,
+        ...addFlexContainer,
       }}>
       <TouchableOpacity onPress={() => handleSelectWord(item)}>
         <Text style={DefaultTheme.fonts.bodyLarge}>
