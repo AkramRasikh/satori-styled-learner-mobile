@@ -50,7 +50,11 @@ const DifficultSentenceMappedWords = ({
         gap: 5,
         ...addFlexContainer,
       }}>
-      <TouchableOpacity onPress={() => handleSelectWord(item)}>
+      <TouchableOpacity
+        onPress={() => handleSelectWord(item)}
+        style={{
+          maxWidth: '80%',
+        }}>
         <Text style={DefaultTheme.fonts.bodyLarge}>
           <Text
             style={{
@@ -60,6 +64,9 @@ const DifficultSentenceMappedWords = ({
             {numberText}
           </Text>
           {matchedWordText}
+          <Text style={{fontStyle: 'italic'}}>
+            Contexts: {item.contexts.length}
+          </Text>
         </Text>
       </TouchableOpacity>
       {noReview && !overrideReview && (
@@ -70,7 +77,7 @@ const DifficultSentenceMappedWords = ({
         />
       )}
       {setCombineWordsListState && (
-        <>
+        <View style={{}}>
           {isInCombineWordList ? (
             <IconButton
               icon="minus"
@@ -103,7 +110,7 @@ const DifficultSentenceMappedWords = ({
               />
             )
           )}
-        </>
+        </View>
       )}
     </View>
   );
