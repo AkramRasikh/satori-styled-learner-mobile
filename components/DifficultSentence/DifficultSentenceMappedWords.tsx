@@ -21,12 +21,12 @@ const seperatedWords = word => {
 const DifficultSentenceMappedWords = ({
   item,
   handleSelectWord,
-  deleteWord,
-  handleUpdateWordFinal,
   indexNum,
-  overrideReview,
   combineWordsListState,
   setCombineWordsListState,
+  deleteWord,
+  overrideReview,
+  handleUpdateWordFinal,
 }) => {
   const noReview = !item?.reviewData;
   const matchedWordText = `${seperatedWords(item)} ${noReview ? '🆕' : ''}`;
@@ -67,13 +67,13 @@ const DifficultSentenceMappedWords = ({
           <Text style={{fontStyle: 'italic'}}>({item.contexts.length})</Text>
         </Text>
       </TouchableOpacity>
-      {noReview && !overrideReview && (
+      {/* {noReview && !overrideReview && (
         <SRSTogglesQuickComprehensiveDiffSentencesWords
           wordData={item}
           deleteWord={deleteWord}
           updateWordData={handleUpdateWordFinal}
         />
-      )}
+      )} */}
       {setCombineWordsListState && (
         <View style={{}}>
           {isInCombineWordList ? (

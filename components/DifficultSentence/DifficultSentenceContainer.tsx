@@ -110,6 +110,7 @@ const DifficultSentenceContainer = ({
   underlineWordsInSentence,
   combineWordsListState,
   setCombineWordsListState,
+  nextAudioIsTheSameUrl,
 }) => {
   const [showAllMatchedWordsState, setShowAllMatchedWordsState] =
     useState(false);
@@ -340,7 +341,8 @@ const DifficultSentenceContainer = ({
 
           <DifficultSentenceAudioProvider
             sentence={sentence}
-            indexNum={indexNum}>
+            indexNum={indexNum}
+            nextAudioIsTheSameUrl={nextAudioIsTheSameUrl}>
             <DifficultSentenceMidSection
               sentence={sentence}
               addSnippet={addSnippet}

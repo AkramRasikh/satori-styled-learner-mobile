@@ -27,8 +27,6 @@ export const DifficultSentencesProvider = ({
       const combinedSentencesRes = await combineWords({
         inputWords: combineWordsListState,
       });
-      console.log('## combinedSentencesRes', combinedSentencesRes);
-
       setDifficultSentencesState(prev => [...prev, ...combinedSentencesRes]);
       setCombineWordsListState([]);
     } catch (error) {

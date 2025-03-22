@@ -12,6 +12,7 @@ export const DifficultSentenceAudioContext = createContext(null);
 export const DifficultSentenceAudioProvider = ({
   sentence,
   indexNum,
+  nextAudioIsTheSameUrl,
   children,
 }: PropsWithChildren<{}>) => {
   const [currentTimeState, setCurrentTimeState] = useState(0);
@@ -37,6 +38,8 @@ export const DifficultSentenceAudioProvider = ({
   const {triggerLoadURL, isLoaded} = useLoadAudioInstance({
     soundRef,
     url: filePath,
+    nextAudioIsTheSameUrl,
+    setIsPlaying,
   });
 
   useEffect(() => {

@@ -18,6 +18,7 @@ const DifficultSentenceComponent = ({
   underlineWordsInSentence,
   combineWordsListState,
   setCombineWordsListState,
+  nextAudioIsTheSameUrl,
 }) => {
   return (
     <DifficultSentenceProvider
@@ -37,6 +38,7 @@ const DifficultSentenceComponent = ({
         underlineWordsInSentence={underlineWordsInSentence}
         combineWordsListState={combineWordsListState}
         setCombineWordsListState={setCombineWordsListState}
+        nextAudioIsTheSameUrl={nextAudioIsTheSameUrl}
       />
     </DifficultSentenceProvider>
   );

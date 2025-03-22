@@ -28,6 +28,7 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
   const [sliceArrState, setSliceArrState] = useState(10);
   const [isShowDueOnly, setIsShowDueOnly] = useState(true);
   const [isMountedState, setIsMountedState] = useState(false);
+  const [loadingCombineSentences, setLoadingCombineSentences] = useState(false);
   const [isLanguageLoading, setIsLanguageLoading] = useState(false);
 
   const targetLanguageWordsState = useSelector(state => state.words);
@@ -150,11 +151,11 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
 
   const handleExportListToAI = async () => {
     try {
-      setIsLanguageLoading(true);
+      setLoadingCombineSentences(true);
       await handleCombineSentences();
     } catch (error) {
     } finally {
-      setIsLanguageLoading(false);
+      setLoadingCombineSentences(true);
     }
   };
 
@@ -244,7 +245,7 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
           combineWordsListState={combineWordsListState}
           setCombineWordsListState={setCombineWordsListState}
           handleExportListToAI={handleExportListToAI}
-          isLoading={isLanguageLoading}
+          isLoading={loadingCombineSentences}
         />
       ) : null}
       {isLanguageLoading && (
@@ -295,25 +296,33 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
             numberOfWords={numberOfWords}
           />
           <View style={{marginTop: 10}}>
-            {slicedRenderedSentenceArr.map((sentence, index) => (
-              <DifficultSentenceComponent
-                key={sentence.id}
-                toggleableSentencesStateLength={toggleableSentencesStateLength}
-                updateSentenceData={updateSentenceDataScreenLevel}
-                navigation={navigation}
-                sliceArrState={sliceArrState}
-                setSliceArrState={setSliceArrState}
-                realCapacity={realCapacity}
-                handleSelectWord={handleSelectWord}
-                handleWordUpdate={handleWordUpdate}
-                sentence={sentence}
-                openGoogleTranslateApp={openGoogleTranslateApp}
-                indexNum={index}
-                underlineWordsInSentence={underlineWordsInSentence}
-                combineWordsListState={combineWordsListState}
-                setCombineWordsListState={setCombineWordsListState}
-              />
-            ))}
+            {slicedRenderedSentenceArr.map((sentence, index) => {
+              const nextAudioIsTheSameUrl =
+                sentence.isMediaContent &&
+                sentence.topic === slicedRenderedSentenceArr[index + 1]?.topic;
+              return (
+                <DifficultSentenceComponent
+                  key={sentence.id}
+                  toggleableSentencesStateLength={
+                    toggleableSentencesStateLength
+                  }
+                  updateSentenceData={updateSentenceDataScreenLevel}
+                  navigation={navigation}
+                  sliceArrState={sliceArrState}
+                  setSliceArrState={setSliceArrState}
+                  realCapacity={realCapacity}
+                  handleSelectWord={handleSelectWord}
+                  handleWordUpdate={handleWordUpdate}
+                  sentence={sentence}
+                  openGoogleTranslateApp={openGoogleTranslateApp}
+                  indexNum={index}
+                  underlineWordsInSentence={underlineWordsInSentence}
+                  combineWordsListState={combineWordsListState}
+                  setCombineWordsListState={setCombineWordsListState}
+                  nextAudioIsTheSameUrl={nextAudioIsTheSameUrl}
+                />
+              );
+            })}
           </View>
         </ScrollView>
       </View>

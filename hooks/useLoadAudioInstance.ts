@@ -1,7 +1,12 @@
 import {useEffect, useState} from 'react';
 import Sound from 'react-native-sound';
 
-const useLoadAudioInstance = ({soundRef, url}) => {
+const useLoadAudioInstance = ({
+  soundRef,
+  url,
+  nextAudioIsTheSameUrl,
+  setIsPlaying,
+}) => {
   const [triggerHook, setTriggerHook] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
 
@@ -40,7 +45,13 @@ const useLoadAudioInstance = ({soundRef, url}) => {
 
     return () => {
       if (soundRef.current) {
-        soundRef.current.release();
+        if (nextAudioIsTheSameUrl) {
+          soundRef.current.stop(() => {
+            setIsPlaying(false);
+          });
+        } else {
+          soundRef.current.release();
+        }
       }
     };
   }, [triggerHook, soundRef]);

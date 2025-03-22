@@ -1,5 +1,5 @@
 import React, {View} from 'react-native';
-import {Button, Text} from 'react-native-paper';
+import {ActivityIndicator, Button, Text} from 'react-native-paper';
 
 const CombineSentencesContainer = ({
   combineWordsListState,
@@ -18,6 +18,19 @@ const CombineSentencesContainer = ({
       flexWrap: 'wrap',
       opacity: isLoading ? 0.5 : 1,
     }}>
+    {isLoading && (
+      <ActivityIndicator
+        style={{
+          position: 'absolute',
+          top: '30%',
+          zIndex: 100,
+          alignSelf: 'center',
+          alignContent: 'center',
+          alignItems: 'center',
+          width: '100%',
+        }}
+      />
+    )}
     <Text>
       {combineWordsListState.map((item, index) => index + 1 + ') ' + item.word)}
     </Text>
