@@ -1,12 +1,12 @@
 import {adhocSentences, content, snippets, words, sentences} from '../refs';
-import {BACKEND_ENDPOINT} from '@env';
+import {GET_ON_ALL_LOAD_URL} from '@env';
 import {
   getLocalStorageData,
   storeDataLocalStorage,
 } from '../helper-functions/local-storage-utils';
 
 const loadAllContent = async ({language}) => {
-  const url = BACKEND_ENDPOINT + '/on-load-data';
+  const url = GET_ON_ALL_LOAD_URL;
 
   try {
     const response = await fetch(url, {
