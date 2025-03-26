@@ -1,4 +1,4 @@
-import React, {useRef} from 'react';
+import React, {useEffect, useRef} from 'react';
 import {
   Dimensions,
   PanResponder,
@@ -53,6 +53,12 @@ const HighlightTextArea = ({
       },
     }),
   ).current;
+
+  useEffect(() => {
+    return () => {
+      onHighlightedUnMount?.(); // not sure if i still need the other
+    };
+  }, []);
 
   const createArrayBetween = startEndArr => {
     const [start, end] = startEndArr;

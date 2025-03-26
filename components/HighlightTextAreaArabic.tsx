@@ -80,6 +80,12 @@ const HighlightTextAreaArabic = ({
     }
   }, [highlightContainerRef]);
 
+  useEffect(() => {
+    return () => {
+      onHighlightedUnMount?.(); // not sure if i still need the other
+    };
+  }, []);
+
   const createArrayBetween = startEndArr => {
     const [start, end] = startEndArr;
 
