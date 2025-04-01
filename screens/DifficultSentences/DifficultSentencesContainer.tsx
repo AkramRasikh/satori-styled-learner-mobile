@@ -18,6 +18,12 @@ import useLanguageSelector from '../../context/LanguageSelector/useLanguageSelec
 import {ActivityIndicator, MD2Colors} from 'react-native-paper';
 import CombineSentencesContainer from '../../components/CombineSentencesContainer';
 
+const sortFilteredOrder = (a, b) => {
+  if (!a.topic) return 1; // Push objects without a topic to the end
+  if (!b.topic) return -1; // Keep objects with topics at the front
+  return a.topic.localeCompare(b.topic, undefined, {numeric: true});
+};
+
 const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
   const [toggleableSentencesState, setToggleableSentencesState] = useState([]);
   const [selectedDueCardState, setSelectedDueCardState] = useState(null);
@@ -92,7 +98,7 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
           countArrayOccurrencesToObj(toggleableSentenceTopics),
         );
       }
-      setToggleableSentencesState(filteredForDueOnly);
+      setToggleableSentencesState(filteredForDueOnly.sort(sortFilteredOrder));
     } else {
       const generalTopicsCollectively = [];
       difficultSentencesState.forEach(sentence => {
@@ -100,7 +106,9 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
           generalTopicsCollectively.push(sentence.generalTopic);
         }
       });
-      setToggleableSentencesState(difficultSentencesState);
+      setToggleableSentencesState(
+        difficultSentencesState.sort(sortFilteredOrder),
+      );
       if (generalTopicsCollectively.length > 0) {
         setGeneralTopicsAvailableState(
           countArrayOccurrencesToObj(generalTopicsCollectively),
@@ -198,7 +206,9 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
           (!selectedGeneralTopicState || thisTopic) && timeCheckEligibility
         );
       });
-      setToggleableSentencesState(updatedToggleStateWithSelectedTopic);
+      setToggleableSentencesState(
+        updatedToggleStateWithSelectedTopic.sort(sortFilteredOrder),
+      );
       setGeneralTopicsAvailableState(
         countArrayOccurrencesToObj(toggleableSentenceTopics),
       );
