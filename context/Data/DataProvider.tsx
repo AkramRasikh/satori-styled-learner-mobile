@@ -61,6 +61,7 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
   const {languageSelectedState: language} = useLanguageSelector();
   const dataStorageKeyPrefix = `${language}-data-`;
 
+  const wordsFromSentences = [];
   const getPureWords = () => {
     let pureWords = [];
 
@@ -73,6 +74,19 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
       }
     });
 
+    adhocTargetLanguageSentencesState?.forEach(sentence => {
+      if (sentence?.matchedWordsSurface) {
+        sentence?.matchedWordsSurface.forEach((item, index) => {
+          if (item && !pureWords.includes(item)) {
+            pureWords.push(item);
+            wordsFromSentences.push({
+              wordId: sentence?.matchedWordsId[index],
+              word: item,
+            });
+          }
+        });
+      }
+    });
     const pureWordsUnique =
       pureWords?.length > 0 ? makeArrayUnique(pureWords) : [];
     return pureWordsUnique;
@@ -609,6 +623,30 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
           indexEnd: indexOfSurfaceForm + surfaceForm.length,
         });
         return;
+      }
+    });
+
+    wordsFromSentences.forEach(item => {
+      const isAlreadyInSentence = matchedWordsData.some(
+        matchedWord =>
+          item.word === matchedWord.baseForm ||
+          item.word === matchedWord.surfaceForm,
+      );
+
+      if (sentence.includes(item.word) && !isAlreadyInSentence) {
+        const thisWordsData = targetLanguageWordsState.find(
+          word => item.wordId === word.id,
+        );
+
+        if (thisWordsData) {
+          const indexOfSurfaceForm = sentence.indexOf(item.word);
+          matchedWordsData.push({
+            ...thisWordsData,
+            baseForm: item.word,
+            indexStart: indexOfSurfaceForm,
+            indexEnd: indexOfSurfaceForm + item.word.length,
+          });
+        }
       }
     });
 
