@@ -26,6 +26,8 @@ const BilingualTextContainerWithQuickReviewWrapper = ({
   isAutoScrollingMode,
   playSound,
   currentTimeState,
+  dueSentences,
+  showOnlyReviewState,
 }) => {
   const [showQuickReviewState, setShowQuickReviewState] = useState(false);
 
@@ -37,74 +39,82 @@ const BilingualTextContainerWithQuickReviewWrapper = ({
     item => id === item.sentenceId,
   );
 
+  const isThisDue = dueSentences?.includes(id);
   const isHighlightedText = highlightTargetTextState === id;
   const highlightedTextState = isHighlightedText
     ? 'orange'
     : focusThisSentence
     ? 'yellow'
+    : isThisDue
+    ? '#FFD580'
     : 'transparent';
 
-  return (
-    <View
-      style={{
-        marginBottom: 10,
-        paddingTop: firstEl ? 10 : 0,
-      }}
-      key={id}>
+  if (!dueSentences || isThisDue || !showOnlyReviewState) {
+    return (
       <View
         style={{
-          display: 'flex',
-          flexDirection: 'row',
-        }}>
+          marginBottom: 10,
+          paddingTop: firstEl ? 10 : 0,
+        }}
+        key={id}>
         <View
           style={{
-            backgroundColor: highlightedTextState,
-            width: showQuickReviewState ? '80%' : 'auto',
+            display: 'flex',
+            flexDirection: 'row',
           }}>
-          <BilingualLine
-            id={id}
-            focusThisSentence={focusThisSentence}
-            topicSentence={topicSentence}
-            playFromThisSentence={playFromThisSentence}
-            engMaster={engMaster}
-            isPlaying={isPlaying}
-            pauseSound={pauseSound}
-            textWidth={showQuickReviewState ? width * 0.75 : width * 0.9}
-            topicName={topicName}
-            updateSentenceData={updateSentenceData}
-            contentIndex={contentIndex}
-            breakdownSentenceFunc={breakdownSentenceFunc}
-            handleOpenGoogle={handleOpenGoogle}
-            scrollViewRef={scrollViewRef}
-            isAutoScrollingMode={isAutoScrollingMode}
-            setShowQuickReviewState={setShowQuickReviewState}
-          />
+          <View
+            style={{
+              backgroundColor: highlightedTextState,
+              width: showQuickReviewState ? '80%' : 'auto',
+            }}>
+            <BilingualLine
+              id={id}
+              focusThisSentence={focusThisSentence}
+              topicSentence={topicSentence}
+              playFromThisSentence={playFromThisSentence}
+              engMaster={engMaster}
+              isPlaying={isPlaying}
+              pauseSound={pauseSound}
+              textWidth={showQuickReviewState ? width * 0.75 : width * 0.9}
+              topicName={topicName}
+              updateSentenceData={updateSentenceData}
+              contentIndex={contentIndex}
+              breakdownSentenceFunc={breakdownSentenceFunc}
+              handleOpenGoogle={handleOpenGoogle}
+              scrollViewRef={scrollViewRef}
+              isAutoScrollingMode={isAutoScrollingMode}
+              setShowQuickReviewState={setShowQuickReviewState}
+              dueSentences={dueSentences}
+              showOnlyReviewState={showOnlyReviewState}
+              indexNum={index + 1}
+            />
+          </View>
+          {showQuickReviewState && (
+            <BilingualTextSwipeSRS
+              setShowQuickReviewState={setShowQuickReviewState}
+              sentence={topicSentence}
+              updateSentenceData={updateSentenceData}
+              contentIndex={contentIndex}
+            />
+          )}
         </View>
-        {showQuickReviewState && (
-          <BilingualTextSwipeSRS
-            setShowQuickReviewState={setShowQuickReviewState}
-            sentence={topicSentence}
-            updateSentenceData={updateSentenceData}
-            contentIndex={contentIndex}
-          />
-        )}
-      </View>
 
-      {thisSnippets?.map((snippetData, index) => {
-        return (
-          <BilingualSnippetContainer
-            key={index}
-            snippet={snippetData}
-            playSound={playSound}
-            pauseSound={pauseSound}
-            isPlaying={isPlaying}
-            currentTimeState={currentTimeState}
-            indexList={index}
-          />
-        );
-      })}
-    </View>
-  );
+        {thisSnippets?.map((snippetData, index) => {
+          return (
+            <BilingualSnippetContainer
+              key={index}
+              snippet={snippetData}
+              playSound={playSound}
+              pauseSound={pauseSound}
+              isPlaying={isPlaying}
+              currentTimeState={currentTimeState}
+              indexList={index}
+            />
+          );
+        })}
+      </View>
+    );
+  }
 };
 
 const BilingualTextContainer = ({
@@ -125,6 +135,8 @@ const BilingualTextContainer = ({
   handleOpenGoogle,
   scrollViewRef,
   isAutoScrollingMode,
+  dueSentences,
+  showOnlyReviewState,
 }) => {
   return (
     <View
@@ -157,6 +169,8 @@ const BilingualTextContainer = ({
               isAutoScrollingMode={isAutoScrollingMode}
               playSound={playSound}
               currentTimeState={currentTimeState}
+              dueSentences={dueSentences}
+              showOnlyReviewState={showOnlyReviewState}
             />
           );
         })}

@@ -21,6 +21,9 @@ const DisplaySettings = ({
   handleVideoMode,
   isAutoScrollingMode,
   setisAutoScrollingMode,
+  showOnlyReviewState,
+  setShowOnlyReviewState,
+  dueSentences,
 }) => {
   let defaultSettingsArr = [
     {func: setEngMaster, bool: engMaster, text: 'Eng Master'},
@@ -36,6 +39,14 @@ const DisplaySettings = ({
       func: handleVideoMode,
       bool: isVideoModeState,
       text: '🎥',
+    });
+  }
+
+  if (dueSentences) {
+    defaultSettingsArr.push({
+      func: setShowOnlyReviewState,
+      bool: showOnlyReviewState,
+      text: 'fitler',
     });
   }
 

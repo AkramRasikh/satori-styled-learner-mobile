@@ -184,6 +184,17 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
     setSelectedDueCardState(null);
   };
 
+  const getThisTopicsDueSentences = topic => {
+    const ids = [];
+    toggleableSentencesState.forEach(item => {
+      if (item.topic === topic) {
+        ids.push(item.id);
+      }
+    });
+
+    return ids;
+  };
+
   useEffect(() => {
     if (isMountedState) {
       const todayDateObj = new Date();
@@ -330,6 +341,7 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
                   combineWordsListState={combineWordsListState}
                   setCombineWordsListState={setCombineWordsListState}
                   nextAudioIsTheSameUrl={nextAudioIsTheSameUrl}
+                  getThisTopicsDueSentences={getThisTopicsDueSentences}
                 />
               );
             })}

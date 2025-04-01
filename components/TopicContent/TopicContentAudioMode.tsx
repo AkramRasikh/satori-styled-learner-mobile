@@ -1,4 +1,4 @@
-import React, {useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {View, Text, ScrollView, Dimensions} from 'react-native';
 import DisplaySettings from '../DisplaySettings';
 import useAudioTextSync from '../../hooks/useAudioTextSync';
@@ -35,9 +35,11 @@ const TopicContentAudioMode = ({
   hasContentToReview,
   url,
   handleOpenGoogle,
+  dueSentences,
 }) => {
   const [masterPlay, setMasterPlay] = useState('');
   const [engMaster, setEngMaster] = useState(true);
+  const [showOnlyReviewState, setShowOnlyReviewState] = useState(false);
   const [showReviewSectionState, setShowReviewSectionState] = useState(false);
   const [selectedSnippetsState, setSelectedSnippetsState] = useState([]);
   const [isAutoScrollingMode, setisAutoScrollingMode] = useState(true);
@@ -95,6 +97,12 @@ const TopicContentAudioMode = ({
     setIsPlaying(false);
   };
 
+  useEffect(() => {
+    if (dueSentences) {
+      setShowOnlyReviewState(true);
+    }
+  }, [dueSentences]);
+
   useTrackCurrentTimeState({
     soundRef,
     setCurrentTimeState,
@@ -145,6 +153,9 @@ const TopicContentAudioMode = ({
             handleVideoMode={handleVideoMode}
             isAutoScrollingMode={isAutoScrollingMode}
             setisAutoScrollingMode={setisAutoScrollingMode}
+            showOnlyReviewState={showOnlyReviewState}
+            setShowOnlyReviewState={setShowOnlyReviewState}
+            dueSentences={dueSentences}
           />
           {selectedDueCardState && (
             <WordModalDifficultSentence
@@ -172,6 +183,8 @@ const TopicContentAudioMode = ({
             handleOpenGoogle={handleOpenGoogle}
             scrollViewRef={scrollViewRef}
             isAutoScrollingMode={isAutoScrollingMode}
+            dueSentences={dueSentences}
+            showOnlyReviewState={showOnlyReviewState}
           />
         </ScrollView>
         <TopicContentAudioSection

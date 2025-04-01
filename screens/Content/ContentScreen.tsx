@@ -62,7 +62,7 @@ const ContentScreen = () => {
     }
   }, [targetLanguageLoadedWords, initTargetLanguageWordsList, isMounted]);
 
-  const {targetSentenceId, selectedTopicIndex} = route.params;
+  const {targetSentenceId, selectedTopicIndex, dueSentences} = route.params;
 
   const selectedTopic =
     targetLanguageLoadedContentMasterState[selectedTopicIndex].title;
@@ -292,6 +292,7 @@ const ContentScreen = () => {
             updateContentMetaDataIsLoadedDispatch={
               updateContentMetaDataIsLoadedDispatch
             }
+            dueSentences={dueSentences}
           />
         </View>
       </ScreenContainerComponent>

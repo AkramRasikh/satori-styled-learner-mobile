@@ -23,6 +23,7 @@ const TopicContent = ({
   handleIsCore,
   handleBulkReviews,
   updateContentMetaDataIsLoadedDispatch,
+  dueSentences,
 }) => {
   const [secondsToSentencesMapState, setSecondsToSentencesMapState] = useState<
     string[]
@@ -139,6 +140,7 @@ const TopicContent = ({
         hasContentToReview={hasContentToReview}
         url={url}
         handleOpenGoogle={handleOpenGoogle}
+        dueSentences={dueSentences}
       />
     </TopicContentAudioProvider>
   );

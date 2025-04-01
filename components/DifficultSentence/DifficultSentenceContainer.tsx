@@ -111,6 +111,7 @@ const DifficultSentenceContainer = ({
   combineWordsListState,
   setCombineWordsListState,
   nextAudioIsTheSameUrl,
+  getThisTopicsDueSentences,
 }) => {
   const [showAllMatchedWordsState, setShowAllMatchedWordsState] =
     useState(false);
@@ -176,9 +177,11 @@ const DifficultSentenceContainer = ({
   const handleNavigation = () => {
     const isSentenceHelper = sentence?.isSentenceHelper;
     if (!isSentenceHelper) {
+      const dueSentences = getThisTopicsDueSentences(sentence.topic);
       navigation.navigate('ContentScreen', {
         selectedTopicIndex: sentence.contentIndex,
         targetSentenceId: sentence.id,
+        dueSentences: dueSentences,
       });
     }
   };

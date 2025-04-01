@@ -19,6 +19,7 @@ const DifficultSentenceComponent = ({
   combineWordsListState,
   setCombineWordsListState,
   nextAudioIsTheSameUrl,
+  getThisTopicsDueSentences,
 }) => {
   return (
     <DifficultSentenceProvider
@@ -39,6 +40,7 @@ const DifficultSentenceComponent = ({
         combineWordsListState={combineWordsListState}
         setCombineWordsListState={setCombineWordsListState}
         nextAudioIsTheSameUrl={nextAudioIsTheSameUrl}
+        getThisTopicsDueSentences={getThisTopicsDueSentences}
       />
     </DifficultSentenceProvider>
   );

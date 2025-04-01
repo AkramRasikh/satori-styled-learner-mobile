@@ -35,6 +35,9 @@ const BilingualLine = ({
   scrollViewRef,
   isAutoScrollingMode,
   setShowQuickReviewState,
+  dueSentences,
+  showOnlyReviewState,
+  indexNum,
 }) => {
   const [showEng, setShowEng] = useState(false);
   const [showNotes, setShowNotes] = useState(false);
@@ -55,6 +58,12 @@ const BilingualLine = ({
 
   const targetRef = useRef(null);
   const swipeDistance = useRef(0);
+
+  useEffect(() => {
+    if (dueSentences?.includes(id)) {
+      setShowReviewSettings(true);
+    }
+  }, [dueSentences]);
 
   const handleQuickGoogleTranslate = async text => {
     try {
@@ -259,30 +268,40 @@ const BilingualLine = ({
         style={{
           backgroundColor: focusThisSentence ? 'yellow' : 'transparent',
         }}>
-        <View>
-          {isSettingsOpenState && (
-            <SatoriLineControls
-              handlePlayThisLine={handlePlayThisLine}
-              isPlaying={isPlaying}
-              focusThisSentence={focusThisSentence}
-              copySentence={copySentence}
-              openReviewPortal={openReviewPortal}
-              topicSentence={topicSentence}
-              setShowEng={setShowEng}
-              showEng={showEng}
-              setShowNotes={setShowNotes}
-              showNotes={showNotes}
-              showSentenceBreakdown={showSentenceBreakdown}
-              setShowSentenceBreakdown={setShowSentenceBreakdown}
-              getSentenceBreakdown={getSentenceBreakdown}
-              setShowMatchedTranslation={setShowMatchedTranslation}
-              showMatchedTranslation={showMatchedTranslation}
-              handleOpenGoogle={handleOpenGoogleFunc}
-              setIsSettingsOpenState={setIsSettingsOpenState}
-              matchedWords={matchedWords}
-              hasSentenceBreakdown={hasSentenceBreakdown}
-            />
-          )}
+        <View style={{display: 'flex', flexDirection: 'row', width: 'auto'}}>
+          <View>
+            {showOnlyReviewState && (
+              <View
+                style={{
+                  marginRight: 5,
+                }}>
+                <Text>{indexNum}) </Text>
+              </View>
+            )}
+            {isSettingsOpenState && (
+              <SatoriLineControls
+                handlePlayThisLine={handlePlayThisLine}
+                isPlaying={isPlaying}
+                focusThisSentence={focusThisSentence}
+                copySentence={copySentence}
+                openReviewPortal={openReviewPortal}
+                topicSentence={topicSentence}
+                setShowEng={setShowEng}
+                showEng={showEng}
+                setShowNotes={setShowNotes}
+                showNotes={showNotes}
+                showSentenceBreakdown={showSentenceBreakdown}
+                setShowSentenceBreakdown={setShowSentenceBreakdown}
+                getSentenceBreakdown={getSentenceBreakdown}
+                setShowMatchedTranslation={setShowMatchedTranslation}
+                showMatchedTranslation={showMatchedTranslation}
+                handleOpenGoogle={handleOpenGoogleFunc}
+                setIsSettingsOpenState={setIsSettingsOpenState}
+                matchedWords={matchedWords}
+                hasSentenceBreakdown={hasSentenceBreakdown}
+              />
+            )}
+          </View>
           {!isSettingsOpenState && (
             <BilingualLineSettings
               highlightMode={highlightMode}
