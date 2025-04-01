@@ -277,7 +277,8 @@ const ContentScreen = () => {
   return (
     <ContentScreenProvider
       setUpdateWordList={setUpdateWordList}
-      updateWordList={updateWordList}>
+      updateWordList={updateWordList}
+      dueSentences={dueSentences}>
       <ScreenContainerComponent>
         <View style={{padding: 10}}>
           <TopicContent
@@ -292,7 +293,6 @@ const ContentScreen = () => {
             updateContentMetaDataIsLoadedDispatch={
               updateContentMetaDataIsLoadedDispatch
             }
-            dueSentences={dueSentences}
           />
         </View>
       </ScreenContainerComponent>

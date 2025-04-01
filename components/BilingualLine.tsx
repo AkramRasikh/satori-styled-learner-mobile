@@ -85,7 +85,19 @@ const BilingualLine = ({
     setHighlightedStateArr,
     highlightStateArr,
     handleSelectWord,
+    dueSentencesState,
+    setDueSentencesState,
   } = useContentScreen();
+
+  const handleUpdateSentenceFinal = arg => {
+    if (dueSentencesState && dueSentencesState?.includes(id)) {
+      const updatedDueSentencesState = dueSentencesState.filter(
+        itemId => itemId !== id,
+      );
+      setDueSentencesState(updatedDueSentencesState);
+    }
+    updateSentenceData(arg);
+  };
 
   const onHighlightedMount = () => {
     const updated = [...highlightStateArr, id];
@@ -268,51 +280,51 @@ const BilingualLine = ({
         style={{
           backgroundColor: focusThisSentence ? 'yellow' : 'transparent',
         }}>
-        <View style={{display: 'flex', flexDirection: 'row', width: 'auto'}}>
-          <View>
-            {showOnlyReviewState && (
-              <View
-                style={{
-                  marginRight: 5,
-                }}>
-                <Text>{indexNum}) </Text>
-              </View>
-            )}
-            {isSettingsOpenState && (
-              <SatoriLineControls
-                handlePlayThisLine={handlePlayThisLine}
-                isPlaying={isPlaying}
-                focusThisSentence={focusThisSentence}
-                copySentence={copySentence}
-                openReviewPortal={openReviewPortal}
-                topicSentence={topicSentence}
-                setShowEng={setShowEng}
-                showEng={showEng}
-                setShowNotes={setShowNotes}
-                showNotes={showNotes}
-                showSentenceBreakdown={showSentenceBreakdown}
-                setShowSentenceBreakdown={setShowSentenceBreakdown}
-                getSentenceBreakdown={getSentenceBreakdown}
-                setShowMatchedTranslation={setShowMatchedTranslation}
-                showMatchedTranslation={showMatchedTranslation}
-                handleOpenGoogle={handleOpenGoogleFunc}
-                setIsSettingsOpenState={setIsSettingsOpenState}
-                matchedWords={matchedWords}
-                hasSentenceBreakdown={hasSentenceBreakdown}
-              />
-            )}
+        {showOnlyReviewState && (
+          <View
+            style={{
+              margin: 5,
+            }}>
+            <Text>{indexNum}) </Text>
           </View>
-          {!isSettingsOpenState && (
-            <BilingualLineSettings
-              highlightMode={highlightMode}
-              setIsSettingsOpenState={setIsSettingsOpenState}
-              hasBeenMarkedAsDifficult={hasBeenMarkedAsDifficult}
+        )}
+
+        <View>
+          {isSettingsOpenState && (
+            <SatoriLineControls
               handlePlayThisLine={handlePlayThisLine}
               isPlaying={isPlaying}
               focusThisSentence={focusThisSentence}
+              copySentence={copySentence}
+              openReviewPortal={openReviewPortal}
+              topicSentence={topicSentence}
+              setShowEng={setShowEng}
+              showEng={showEng}
+              setShowNotes={setShowNotes}
+              showNotes={showNotes}
+              showSentenceBreakdown={showSentenceBreakdown}
+              setShowSentenceBreakdown={setShowSentenceBreakdown}
+              getSentenceBreakdown={getSentenceBreakdown}
+              setShowMatchedTranslation={setShowMatchedTranslation}
+              showMatchedTranslation={showMatchedTranslation}
+              handleOpenGoogle={handleOpenGoogleFunc}
+              setIsSettingsOpenState={setIsSettingsOpenState}
+              matchedWords={matchedWords}
+              hasSentenceBreakdown={hasSentenceBreakdown}
             />
           )}
         </View>
+        {!isSettingsOpenState && (
+          <BilingualLineSettings
+            highlightMode={highlightMode}
+            setIsSettingsOpenState={setIsSettingsOpenState}
+            hasBeenMarkedAsDifficult={hasBeenMarkedAsDifficult}
+            handlePlayThisLine={handlePlayThisLine}
+            isPlaying={isPlaying}
+            focusThisSentence={focusThisSentence}
+          />
+        )}
+
         {highlightMode ? (
           <HighlightTextZone
             id={id}
@@ -373,7 +385,7 @@ const BilingualLine = ({
       {showReviewSettings ? (
         <SatoriLineSRS
           sentence={topicSentence}
-          updateSentenceData={updateSentenceData}
+          updateSentenceData={handleUpdateSentenceFinal}
           setShowReviewSettings={setShowReviewSettings}
           contentIndex={contentIndex}
           setIsSettingsOpenState={setIsSettingsOpenState}

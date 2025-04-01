@@ -35,7 +35,6 @@ const TopicContentAudioMode = ({
   hasContentToReview,
   url,
   handleOpenGoogle,
-  dueSentences,
 }) => {
   const [masterPlay, setMasterPlay] = useState('');
   const [engMaster, setEngMaster] = useState(true);
@@ -51,6 +50,7 @@ const TopicContentAudioMode = ({
     selectedDueCardState,
     setSelectedDueCardState,
     handleDeleteWord,
+    dueSentencesState,
   } = useContentScreen();
 
   const {
@@ -98,10 +98,10 @@ const TopicContentAudioMode = ({
   };
 
   useEffect(() => {
-    if (dueSentences) {
+    if (dueSentencesState) {
       setShowOnlyReviewState(true);
     }
-  }, [dueSentences]);
+  }, [dueSentencesState]);
 
   useTrackCurrentTimeState({
     soundRef,
@@ -155,7 +155,7 @@ const TopicContentAudioMode = ({
             setisAutoScrollingMode={setisAutoScrollingMode}
             showOnlyReviewState={showOnlyReviewState}
             setShowOnlyReviewState={setShowOnlyReviewState}
-            dueSentences={dueSentences}
+            dueSentences={dueSentencesState}
           />
           {selectedDueCardState && (
             <WordModalDifficultSentence
@@ -183,7 +183,7 @@ const TopicContentAudioMode = ({
             handleOpenGoogle={handleOpenGoogle}
             scrollViewRef={scrollViewRef}
             isAutoScrollingMode={isAutoScrollingMode}
-            dueSentences={dueSentences}
+            dueSentences={dueSentencesState}
             showOnlyReviewState={showOnlyReviewState}
           />
         </ScrollView>

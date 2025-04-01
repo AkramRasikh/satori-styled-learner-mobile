@@ -13,12 +13,14 @@ export const ContentScreenContext = createContext(null);
 export const ContentScreenProvider = ({
   setUpdateWordList,
   updateWordList,
+  dueSentences,
   children,
 }: PropsWithChildren<{}>) => {
   const {saveWordFirebase, deleteWord} = useData();
   const [updateWordSentence, setUpdateWordSentence] = useState(false);
   const [highlightStateArr, setHighlightedStateArr] = useState([]);
   const [selectedDueCardState, setSelectedDueCardState] = useState(null);
+  const [dueSentencesState, setDueSentencesState] = useState(null);
 
   const targetLanguageWordsState = useSelector(state => state.words);
 
@@ -30,6 +32,10 @@ export const ContentScreenProvider = ({
       gestureEnabled: enableScroll,
     });
   }, [enableScroll, navigation]);
+
+  useEffect(() => {
+    setDueSentencesState(dueSentences);
+  }, [dueSentences]);
 
   const handleSaveWordContentScreen = async wordToSave => {
     try {
@@ -73,6 +79,8 @@ export const ContentScreenProvider = ({
         selectedDueCardState,
         setSelectedDueCardState,
         handleDeleteWord,
+        dueSentencesState,
+        setDueSentencesState,
       }}>
       {children}
     </ContentScreenContext.Provider>
