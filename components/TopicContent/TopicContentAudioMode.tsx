@@ -101,7 +101,7 @@ const TopicContentAudioMode = ({
     if (dueSentencesState) {
       setShowOnlyReviewState(true);
     }
-  }, [dueSentencesState]);
+  }, []);
 
   useTrackCurrentTimeState({
     soundRef,
