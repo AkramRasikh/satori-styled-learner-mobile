@@ -37,6 +37,7 @@ import {
   getNextScheduledOptions,
   srsRetentionKeyTypes,
 } from '../../srs-algo';
+import addAdhocSentenceTTSAPI from '../../api/add-adhoc-sentence-tts';
 
 export const DataContext = createContext(null);
 
@@ -154,6 +155,24 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
       }
     } catch (error) {
       updatePromptFunc(`Error updating ${topicName}!`);
+    }
+  };
+
+  const addAdhocSentences = async params => {
+    try {
+      const adhocSentencesRes = await addAdhocSentenceTTSAPI(params);
+      const updatedAdhocSentencesState = [
+        ...adhocTargetLanguageSentencesState,
+        adhocSentencesRes,
+      ];
+      dispatch(setSentencesStateDispatch(updatedAdhocSentencesState));
+      updatePromptFunc(`Added ${adhocSentencesRes.length} sentences!`);
+      await storeDataLocalStorage(
+        dataStorageKeyPrefix + adhocSentences,
+        updatedAdhocSentencesState,
+      ); // saving to adhoc or sentences?
+    } catch (error) {
+      updatePromptFunc('Error creating adhoc sentences words');
     }
   };
 
@@ -719,6 +738,7 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
         fetchData,
         setUpdatePromptState,
         updatePromptState,
+        addAdhocSentences,
       }}>
       {children}
     </DataContext.Provider>

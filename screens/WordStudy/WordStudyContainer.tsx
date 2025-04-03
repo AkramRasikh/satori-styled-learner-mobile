@@ -12,11 +12,15 @@ import useLanguageSelector from '../../context/LanguageSelector/useLanguageSelec
 import useData from '../../context/Data/useData';
 import useDifficultSentences from '../../context/DifficultSentences/useDifficultSentencesProvider';
 import CombineSentencesContainer from '../../components/CombineSentencesContainer';
+import {FAB} from 'react-native-paper';
+import AddSentenceContainer from '../../components/AddSentenceContainer';
 
 function WordStudyContainer(): React.JSX.Element {
   const [tagsState, setTagsState] = useState<string[]>([]);
   const [generalTopicState, setGeneralTopicState] = useState<string[]>([]);
   const [showDueCardsState, setShowDueCardsState] = useState<boolean>(true);
+  const [showAddSentenceState, setShowAddSentenceState] =
+    useState<boolean>(false);
   const [sliceArrState, setSliceArrState] = useState(20);
   const [showCategories, setShowCategories] = useState(false);
   const [isMountedState, setIsMountedState] = useState(false);
@@ -149,6 +153,19 @@ function WordStudyContainer(): React.JSX.Element {
 
   return (
     <ScreenContainerComponent>
+      {showAddSentenceState ? (
+        <AddSentenceContainer
+          setShowAddSentenceState={setShowAddSentenceState}
+        />
+      ) : (
+        <View style={{padding: 10}}>
+          <FAB
+            label="Add sentence"
+            size="small"
+            onPress={() => setShowAddSentenceState(!showAddSentenceState)}
+          />
+        </View>
+      )}
       {combineWordsListState?.length ? (
         <CombineSentencesContainer
           combineWordsListState={combineWordsListState}
