@@ -17,6 +17,7 @@ import LanguageSelection from '../home/components/LanguageSelection';
 import useLanguageSelector from '../../context/LanguageSelector/useLanguageSelector';
 import {ActivityIndicator, MD2Colors} from 'react-native-paper';
 import CombineSentencesContainer from '../../components/CombineSentencesContainer';
+import {sortObjByKeys} from '../../utils/sort-obj-by-keys';
 
 const sortFilteredOrder = (a, b) => {
   if (!a.topic) return 1; // Push objects without a topic to the end
@@ -99,7 +100,7 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
         );
       }
       setToggleableSentencesState(
-        filteredForDueOnly.sort(sortFilteredOrder).slice(0, 4),
+        filteredForDueOnly.sort(sortFilteredOrder).slice(0, 3),
       );
     } else {
       const generalTopicsCollectively = [];
@@ -109,7 +110,7 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
         }
       });
       setToggleableSentencesState(
-        difficultSentencesState.sort(sortFilteredOrder).slice(0, 4),
+        difficultSentencesState.sort(sortFilteredOrder).slice(0, 3),
       );
       if (generalTopicsCollectively.length > 0) {
         setGeneralTopicsAvailableState(
@@ -165,7 +166,7 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
       await handleCombineSentences();
     } catch (error) {
     } finally {
-      setLoadingCombineSentences(true);
+      setLoadingCombineSentences(false);
     }
   };
 
@@ -198,34 +199,31 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
   };
 
   useEffect(() => {
-    if (isMountedState) {
-      const todayDateObj = new Date();
+    if (!isMountedState) return;
 
-      const toggleableSentenceTopics = [];
+    const today = new Date();
+    const topicCount = {};
+    const filteredSentences = [];
 
-      const updatedToggleStateWithSelectedTopic = [
-        ...difficultSentencesState,
-      ].filter(i => {
-        const thisTopic =
-          !selectedGeneralTopicState ||
-          i.generalTopic === selectedGeneralTopicState;
-        const timeCheckEligibility =
-          !isShowDueOnly || isDueCheck(i, todayDateObj);
-        if (timeCheckEligibility) {
-          toggleableSentenceTopics.push(i.generalTopic);
-        }
+    for (const sentence of difficultSentencesState) {
+      const matchesTopic =
+        !selectedGeneralTopicState ||
+        sentence.generalTopic === selectedGeneralTopicState;
 
-        return (
-          (!selectedGeneralTopicState || thisTopic) && timeCheckEligibility
-        );
-      });
-      setToggleableSentencesState(
-        updatedToggleStateWithSelectedTopic.sort(sortFilteredOrder).slice(0, 4),
-      );
-      setGeneralTopicsAvailableState(
-        countArrayOccurrencesToObj(toggleableSentenceTopics),
-      );
+      const isEligible = !isShowDueOnly || isDueCheck(sentence, today);
+
+      if (matchesTopic && isEligible) {
+        filteredSentences.push(sentence);
+        topicCount[sentence.generalTopic] =
+          (topicCount[sentence.generalTopic] || 0) + 1;
+      }
     }
+
+    setToggleableSentencesState(
+      filteredSentences.sort(sortFilteredOrder).slice(0, 3),
+    );
+
+    setGeneralTopicsAvailableState(sortObjByKeys(topicCount));
   }, [
     difficultSentencesState,
     selectedGeneralTopicState,
