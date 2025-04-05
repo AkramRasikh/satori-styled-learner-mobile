@@ -83,39 +83,41 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
   };
 
   const showDueInit = () => {
-    const todayDateObj = new Date();
-    const toggleableSentenceTopics = [];
-    const filteredForDueOnly = [...difficultSentencesState].filter(sentence => {
-      const isCurrentlyDue = isDueCheck(sentence, todayDateObj);
+    const today = new Date();
+    const dueSentences = [];
+    const dueTopicCount = {};
 
-      if (sentence.generalTopic && isCurrentlyDue) {
-        toggleableSentenceTopics.push(sentence.generalTopic);
-      }
-      return isCurrentlyDue;
-    });
-    if (filteredForDueOnly?.length > 0) {
-      if (toggleableSentenceTopics.length > 0) {
-        setGeneralTopicsAvailableState(
-          countArrayOccurrencesToObj(toggleableSentenceTopics),
-        );
-      }
-      setToggleableSentencesState(
-        filteredForDueOnly.sort(sortFilteredOrder).slice(0, 3),
-      );
-    } else {
-      const generalTopicsCollectively = [];
-      difficultSentencesState.forEach(sentence => {
+    for (const sentence of difficultSentencesState) {
+      if (isDueCheck(sentence, today)) {
+        dueSentences.push(sentence);
         if (sentence.generalTopic) {
-          generalTopicsCollectively.push(sentence.generalTopic);
+          dueTopicCount[sentence.generalTopic] =
+            (dueTopicCount[sentence.generalTopic] || 0) + 1;
         }
-      });
+      }
+    }
+
+    if (dueSentences.length > 0) {
+      setToggleableSentencesState(
+        dueSentences.sort(sortFilteredOrder).slice(0, 3),
+      );
+      if (Object.keys(dueTopicCount).length > 0) {
+        setGeneralTopicsAvailableState(sortObjByKeys(dueTopicCount));
+      }
+    } else {
+      const fallbackTopicCount = {};
+      for (const sentence of difficultSentencesState) {
+        if (sentence.generalTopic) {
+          fallbackTopicCount[sentence.generalTopic] =
+            (fallbackTopicCount[sentence.generalTopic] || 0) + 1;
+        }
+      }
+
       setToggleableSentencesState(
         difficultSentencesState.sort(sortFilteredOrder).slice(0, 3),
       );
-      if (generalTopicsCollectively.length > 0) {
-        setGeneralTopicsAvailableState(
-          countArrayOccurrencesToObj(generalTopicsCollectively),
-        );
+      if (Object.keys(fallbackTopicCount).length > 0) {
+        setGeneralTopicsAvailableState(sortObjByKeys(fallbackTopicCount));
       }
     }
   };
