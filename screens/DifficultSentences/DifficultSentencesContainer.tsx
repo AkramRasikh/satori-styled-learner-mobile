@@ -98,7 +98,9 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
           countArrayOccurrencesToObj(toggleableSentenceTopics),
         );
       }
-      setToggleableSentencesState(filteredForDueOnly.sort(sortFilteredOrder));
+      setToggleableSentencesState(
+        filteredForDueOnly.sort(sortFilteredOrder).slice(0, 5),
+      );
     } else {
       const generalTopicsCollectively = [];
       difficultSentencesState.forEach(sentence => {
@@ -107,7 +109,7 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
         }
       });
       setToggleableSentencesState(
-        difficultSentencesState.sort(sortFilteredOrder),
+        difficultSentencesState.sort(sortFilteredOrder).slice(0, 5),
       );
       if (generalTopicsCollectively.length > 0) {
         setGeneralTopicsAvailableState(
@@ -218,7 +220,7 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
         );
       });
       setToggleableSentencesState(
-        updatedToggleStateWithSelectedTopic.sort(sortFilteredOrder),
+        updatedToggleStateWithSelectedTopic.sort(sortFilteredOrder).slice(0, 5),
       );
       setGeneralTopicsAvailableState(
         countArrayOccurrencesToObj(toggleableSentenceTopics),
