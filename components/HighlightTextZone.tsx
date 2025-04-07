@@ -1,13 +1,64 @@
 import Clipboard from '@react-native-clipboard/clipboard';
 import React, {useState} from 'react';
 import {View} from 'react-native';
-import useOpenGoogleTranslate from '../hooks/useOpenGoogleTranslate';
+// import useOpenGoogleTranslate from '../hooks/useOpenGoogleTranslate';
 import HighlightTextActions from './HighlightTextActions';
 import HighlightTextHover from './HighlightTextHover';
 import HighlightTextArea from './HighlightTextArea';
 import HighlightTextAreaArabic from './HighlightTextAreaArabic';
 import useLanguageSelector from '../context/LanguageSelector/useLanguageSelector';
 import {LanguageEnum} from '../context/LanguageSelector/LanguageSelectorProvider';
+import {
+  ActivityIndicator,
+  Button,
+  Checkbox,
+  MD3Colors,
+  Text,
+  TextInput,
+} from 'react-native-paper';
+import useData from '../context/Data/useData';
+
+const GrammarTextInputContainer = ({
+  grammarTextInput,
+  setGrammarTextInput,
+  includeVariations,
+  setIncludeVariations,
+  handleSubmitGrammarCheck,
+  isSubtleDiff,
+  setIsSubtleDiff,
+}) => (
+  <View style={{marginVertical: 10}}>
+    <TextInput
+      label="Context"
+      value={grammarTextInput}
+      onChangeText={setGrammarTextInput}
+      mode="outlined"
+    />
+    <View
+      style={{
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginVertical: 15,
+      }}>
+      <Checkbox.Android
+        status={includeVariations ? 'checked' : 'unchecked'}
+        onPress={() => setIncludeVariations(!includeVariations)}
+      />
+      <Text style={{marginLeft: 5}}>Include variations</Text>
+      <Checkbox.Android
+        status={isSubtleDiff ? 'checked' : 'unchecked'}
+        onPress={() => setIsSubtleDiff(!isSubtleDiff)}
+      />
+      <Text style={{marginLeft: 5}}>Subtle diff</Text>
+    </View>
+    <Button
+      onPress={handleSubmitGrammarCheck}
+      mode="outlined"
+      textColor={MD3Colors.error50}>
+      Get similar grammar examples
+    </Button>
+  </View>
+);
 
 const HighlightTextZone = ({
   id,
@@ -22,8 +73,15 @@ const HighlightTextZone = ({
   onHighlightedUnMount,
 }) => {
   const [reversedArabicTextState, setReversedArabicTextState] = useState('');
+  const [isLoadingState, setisLoadingState] = useState(false);
+  const [openGrammarTextState, setOpenGrammarTextState] = useState(false);
+  const [grammarTextInput, setGrammarTextInput] = useState('');
+  const [includeVariations, setIncludeVariations] = useState(false);
+  const [isSubtleDiff, setIsSubtleDiff] = useState(false);
 
-  const {openGoogleTranslateApp} = useOpenGoogleTranslate();
+  const {addAdhocGrammar} = useData();
+
+  // const {openGoogleTranslateApp} = useOpenGoogleTranslate();
 
   const {languageSelectedState} = useLanguageSelector();
 
@@ -73,8 +131,36 @@ const HighlightTextZone = ({
     setIsSettingsOpenState?.();
   };
 
-  const handleOpenUpGoogle = () => {
-    openGoogleTranslateApp(getHighlightedText() || text);
+  // const handleOpenUpGoogle = () => {
+  //   openGoogleTranslateApp(getHighlightedText() || text);
+  // };
+
+  const handleSubmitGrammarCheck = async () => {
+    console.log('## handleSubmitGrammarCheck', {
+      language: languageSelectedState,
+      baseSentence: text,
+      context: grammarTextInput,
+      grammarSection: getHighlightedText() || '',
+      includeVariations,
+      isSubtleDiff,
+    });
+
+    try {
+      setisLoadingState(true);
+      await addAdhocGrammar({
+        language: languageSelectedState,
+        baseSentence: text,
+        context: grammarTextInput,
+        grammarSection: getHighlightedText() || '',
+        includeVariations,
+        isSubtleDiff,
+      });
+    } catch (error) {
+      console.log('## handleSubmitGrammarCheck error', error);
+    } finally {
+      setHighlightMode(false);
+      setisLoadingState(false);
+    }
   };
 
   const handleCopyText = () => {
@@ -83,6 +169,10 @@ const HighlightTextZone = ({
       Clipboard.setString(highlightedText);
       setHighlightedIndices([]);
     }
+  };
+
+  const handleGetGrammarExamples = () => {
+    setOpenGrammarTextState(!openGrammarTextState);
   };
 
   const handleSaveWord = isGoogle => {
@@ -101,6 +191,16 @@ const HighlightTextZone = ({
 
   return (
     <>
+      {isLoadingState && (
+        <ActivityIndicator
+          style={{
+            position: 'absolute',
+            alignSelf: 'center',
+            top: '30%',
+            zIndex: 100,
+          }}
+        />
+      )}
       {highlightedIndices?.length > 0 ? (
         <View>
           <HighlightTextHover
@@ -136,9 +236,20 @@ const HighlightTextZone = ({
           <HighlightTextActions
             handleSaveWord={handleSaveWord}
             handleCopyText={handleCopyText}
-            handleOpenUpGoogle={handleOpenUpGoogle}
+            handleGetGrammarExamples={handleGetGrammarExamples}
           />
         ) : null}
+        {openGrammarTextState && (
+          <GrammarTextInputContainer
+            grammarTextInput={grammarTextInput}
+            setGrammarTextInput={setGrammarTextInput}
+            includeVariations={includeVariations}
+            setIncludeVariations={setIncludeVariations}
+            handleSubmitGrammarCheck={handleSubmitGrammarCheck}
+            isSubtleDiff={isSubtleDiff}
+            setIsSubtleDiff={setIsSubtleDiff}
+          />
+        )}
       </View>
     </>
   );

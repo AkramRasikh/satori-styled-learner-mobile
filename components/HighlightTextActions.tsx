@@ -4,7 +4,7 @@ import {Text} from 'react-native-paper';
 const HighlightTextActions = ({
   handleSaveWord,
   handleCopyText,
-  handleOpenUpGoogle,
+  handleGetGrammarExamples,
 }) => (
   <View
     style={{
@@ -17,8 +17,8 @@ const HighlightTextActions = ({
     <TouchableOpacity onPress={handleCopyText}>
       <Text>📋</Text>
     </TouchableOpacity>
-    <TouchableOpacity onPress={handleOpenUpGoogle}>
-      <Text>📚</Text>
+    <TouchableOpacity onPress={handleGetGrammarExamples}>
+      <Text>🧩</Text>
     </TouchableOpacity>
     <TouchableOpacity onPress={() => handleSaveWord(true)}>
       <Image
