@@ -311,6 +311,7 @@ const DifficultSentenceContainer = ({
             isHighlightMode={isHighlightMode}
             setHighlightMode={setHighlightMode}
             handleQuickGoogleTranslate={handleQuickGoogleTranslate}
+            notes={sentence.notes}
           />
           {isDueState ? (
             <DifficultSentenceSRSToggles reviewData={sentence.reviewData} />

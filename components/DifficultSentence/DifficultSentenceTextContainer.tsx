@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {TouchableOpacity, View} from 'react-native';
 import HighlightTextZone from '../HighlightTextZone';
-import {Text} from 'react-native-paper';
+import {Divider, Text} from 'react-native-paper';
 
 const DifficultSentenceTextContainer = ({
   targetLang,
@@ -12,9 +12,11 @@ const DifficultSentenceTextContainer = ({
   isHighlightMode,
   setHighlightMode,
   handleQuickGoogleTranslate,
+  notes,
 }) => {
   const [highlightedIndices, setHighlightedIndices] = useState([]);
   const [isBlurredState, setIsBlurredState] = useState(true);
+  const [isBlurredNotesState, setIsBlurredNotesState] = useState(true);
 
   const handleSaveWordToFB = ({
     highlightedWord,
@@ -59,6 +61,24 @@ const DifficultSentenceTextContainer = ({
           {baseLang}
         </Text>
       </TouchableOpacity>
+      <Divider />
+      {notes && (
+        <View>
+          <TouchableOpacity
+            style={{
+              opacity: isBlurredNotesState ? 0.1 : 1,
+              alignItems: isBlurredNotesState ? 'flex-end' : 'flex-start',
+            }}
+            onLongPress={() => setIsBlurredNotesState(!isBlurredNotesState)}>
+            <Text
+              style={{
+                fontSize: isBlurredNotesState ? 10 : 12,
+              }}>
+              NOTES: {notes}
+            </Text>
+          </TouchableOpacity>
+        </View>
+      )}
     </>
   );
 };
