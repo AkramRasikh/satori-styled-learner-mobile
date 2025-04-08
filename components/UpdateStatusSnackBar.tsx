@@ -1,11 +1,12 @@
 import React, {useCallback} from 'react';
-import {View, StyleSheet} from 'react-native';
+import {View} from 'react-native';
 import {Snackbar} from 'react-native-paper';
 
 const UpdateStatusSnackBar = ({
   updatePromptState,
   setUpdatePromptState,
   duration = 1500,
+  bottom = 130,
 }) => {
   const [visible, setVisible] = React.useState(true);
 
@@ -15,7 +16,11 @@ const UpdateStatusSnackBar = ({
   }, []);
 
   return (
-    <View style={styles.container}>
+    <View
+      style={{
+        position: 'static',
+        bottom,
+      }}>
       <Snackbar
         visible={visible}
         duration={duration}
@@ -31,12 +36,5 @@ const UpdateStatusSnackBar = ({
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    position: 'static',
-    bottom: 40,
-  },
-});
 
 export default UpdateStatusSnackBar;

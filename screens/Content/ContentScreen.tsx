@@ -279,7 +279,7 @@ const ContentScreen = () => {
       setUpdateWordList={setUpdateWordList}
       updateWordList={updateWordList}
       dueSentences={dueSentences}>
-      <ScreenContainerComponent>
+      <ScreenContainerComponent bottom={40}>
         <View style={{padding: 10}}>
           <TopicContent
             topicName={selectedTopic}
