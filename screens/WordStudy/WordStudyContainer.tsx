@@ -38,7 +38,7 @@ function WordStudyContainer(): React.JSX.Element {
 
   const {languageSelectedState} = useLanguageSelector();
 
-  const {combineWords} = useData();
+  const {combineWords, handleAdhocMinimalPair} = useData();
 
   const {
     deleteWord,
@@ -106,6 +106,23 @@ function WordStudyContainer(): React.JSX.Element {
     } finally {
       setLoadingCombineSentences(false);
     }
+  };
+
+  const handleAdhocMinimalPairFunc = async ({inputWord, mode}) => {
+    const res = await handleAdhocMinimalPair({inputWord, mode});
+    const sentenceIds = res.map(item => item.id);
+    const updatedDueCardsState = dueCardsState.map(item => {
+      if (item.id === inputWord.id) {
+        console.log('## updated in here???');
+        return {
+          ...item,
+          contexts: [...item.contexts, sentenceIds],
+          contextData: [...item.contextData, ...res],
+        };
+      }
+      return item;
+    });
+    setShowDueCardsState(updatedDueCardsState);
   };
 
   const isDueCheck = (wordData, todayDateObj) => {
@@ -210,6 +227,7 @@ function WordStudyContainer(): React.JSX.Element {
             sliceArrState={sliceArrState}
             realCapacity={realCapacity}
             scrollViewRef={scrollViewRef}
+            handleAdhocMinimalPairFunc={handleAdhocMinimalPairFunc}
           />
         </View>
       </ScrollView>

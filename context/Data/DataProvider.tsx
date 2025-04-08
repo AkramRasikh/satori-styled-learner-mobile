@@ -39,6 +39,7 @@ import {
 } from '../../srs-algo';
 import addAdhocSentenceTTSAPI from '../../api/add-adhoc-sentence-tts';
 import addAdhocGrammarTTSAPI from '../../api/add-adhoc-grammar-tts';
+import {addAdhocWordMinimalPairAPI} from '../../api/add-adhoc-word-minimal-pair';
 
 export const DataContext = createContext(null);
 
@@ -690,6 +691,38 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
 
     return matchedWordsData;
   };
+
+  const handleAdhocMinimalPair = async ({inputWord, mode}) => {
+    try {
+      const adhocMinimalPairingRes = await addAdhocWordMinimalPairAPI({
+        inputWord,
+        language,
+        isMeaning: mode,
+      });
+      const updatedAdhocSentencesState = [
+        ...adhocTargetLanguageSentencesState,
+        adhocMinimalPairingRes,
+      ];
+      dispatch(setSentencesStateDispatch(updatedAdhocSentencesState));
+      updatePromptFunc(
+        `Added ${inputWord.word} in ${adhocMinimalPairingRes.length} sentences!`,
+      );
+      await storeDataLocalStorage(
+        dataStorageKeyPrefix + adhocSentences,
+        updatedAdhocSentencesState,
+      ); // saving to adhoc or sentences?
+      return adhocMinimalPairingRes.map(item => ({
+        ...item,
+        isSentenceHelper: true,
+        isAdhoc: true,
+        generalTopic: 'sentence-helper',
+      }));
+    } catch (error) {
+      updatePromptFunc('Error creating adhoc mininmal pairing words');
+    } finally {
+    }
+  };
+
   const fetchData = async selectedLanguage => {
     try {
       const allStudyDataRes = await getAllData({
@@ -759,6 +792,7 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
         updatePromptState,
         addAdhocSentences,
         addAdhocGrammar,
+        handleAdhocMinimalPair,
       }}>
       {children}
     </DataContext.Provider>

@@ -9,6 +9,7 @@ const FlashcardsWordsSection = ({
   sliceArrState,
   realCapacity,
   scrollViewRef,
+  handleAdhocMinimalPairFunc,
 }) => {
   const [selectedDueCardState, setSelectedDueCardState] = useState();
 
@@ -24,6 +25,7 @@ const FlashcardsWordsSection = ({
         selectedDueCardState={selectedDueCardState}
         setSelectedDueCardState={setSelectedDueCardState}
         scrollViewRef={scrollViewRef}
+        handleAdhocMinimalPairFunc={handleAdhocMinimalPairFunc}
       />
     </FlashCardProvider>
   ));

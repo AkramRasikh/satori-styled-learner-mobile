@@ -1,6 +1,12 @@
 import React, {useRef, useState} from 'react';
-import {Animated} from 'react-native';
-import {Divider} from 'react-native-paper';
+import {Animated, View} from 'react-native';
+import {
+  ActivityIndicator,
+  Button,
+  Divider,
+  IconButton,
+  MD2Colors,
+} from 'react-native-paper';
 import useAnimation from '../../hooks/useAnimation';
 import FlashCardLoadingSpinner from './FlashCardLoadingSpinner';
 import FlashCardTopSection from './FlashCardTopSection';
@@ -41,8 +47,11 @@ const FlashCard = ({
   selectedDueCardState,
   setSelectedDueCardState,
   scrollViewRef,
+  handleAdhocMinimalPairFunc,
 }) => {
   const [isCollapsingState, setIsCollapsingState] = useState(false);
+  const [isOpenWordOptionsState, setIsOpenWordOptionsState] = useState(false);
+  const [isLoadingState, setIsLoadingState] = useState(false);
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const scaleAnim = useRef(new Animated.Value(0.8)).current;
   const fadeAnimNestedModal = useRef(new Animated.Value(0)).current;
@@ -78,6 +87,19 @@ const FlashCard = ({
       setTimeout(resolve, 100);
     });
     setSelectedDueCardState(null);
+  };
+
+  const handleAdhocWord = async mode => {
+    try {
+      setIsLoadingState(true);
+      await handleAdhocMinimalPairFunc({
+        inputWord: {id: wordData.id, word: baseForm, definition},
+        mode,
+      });
+    } catch (error) {
+    } finally {
+      setIsLoadingState(false);
+    }
   };
 
   const collapseAnimationWithState = async () => {
@@ -138,6 +160,68 @@ const FlashCard = ({
               collapseAnimation={collapseAnimationWithState}
               definition={definition}
             />
+            <IconButton
+              icon="dots-vertical"
+              containerColor="grey"
+              iconColor="white"
+              onPress={() => setIsOpenWordOptionsState(!isOpenWordOptionsState)}
+            />
+            {isOpenWordOptionsState && (
+              <View>
+                {isLoadingState && (
+                  <ActivityIndicator
+                    style={{
+                      position: 'absolute',
+                      alignSelf: 'center',
+                      top: '30%',
+                      zIndex: 100,
+                    }}
+                  />
+                )}
+                <View
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    flexWrap: 'wrap',
+                    gap: 10,
+                    opacity: isLoadingState ? 0.5 : 1,
+                  }}>
+                  <Button
+                    mode="elevated"
+                    buttonColor="yellow"
+                    disabled={isLoadingState}
+                    onPress={() => handleAdhocWord('any')}>
+                    any
+                  </Button>
+                  <Button
+                    mode="elevated"
+                    disabled={isLoadingState}
+                    onPress={() => handleAdhocWord('antonym')}>
+                    antonym
+                  </Button>
+                  <Button
+                    mode="elevated"
+                    disabled={isLoadingState}
+                    onPress={() => handleAdhocWord('synonym')}>
+                    synonym
+                  </Button>
+                  <Button
+                    mode="elevated"
+                    disabled={isLoadingState}
+                    onPress={() => handleAdhocWord('functional')}>
+                    functional
+                  </Button>
+                  <Button
+                    buttonColor={MD2Colors.lightBlue300}
+                    mode="elevated"
+                    disabled={isLoadingState}
+                    onPress={() => handleAdhocWord('')}>
+                    sound 🎶
+                  </Button>
+                </View>
+              </View>
+            )}
           </FlashCardBodyContainer>
           {moreToLoad && (
             <FlashCardLoadMoreBtn
