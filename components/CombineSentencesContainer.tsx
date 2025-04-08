@@ -1,5 +1,32 @@
 import React, {View} from 'react-native';
-import {ActivityIndicator, Button, Text} from 'react-native-paper';
+import {
+  ActivityIndicator,
+  Button,
+  IconButton,
+  MD2Colors,
+  MD3Colors,
+  Text,
+} from 'react-native-paper';
+
+const CombineSentenceWord = ({indexNum, item, setCombineWordsListState}) => (
+  <View
+    style={{
+      display: 'flex',
+      flexDirection: 'row',
+      alignItems: 'center',
+    }}>
+    <Text>{indexNum + 1 + ') ' + item.word}</Text>
+    <IconButton
+      icon="minus"
+      containerColor={MD3Colors.error30}
+      iconColor={MD2Colors.white}
+      size={8}
+      onPress={() => {
+        setCombineWordsListState(prev => prev.filter(i => i.id !== item.id));
+      }}
+    />
+  </View>
+);
 
 const CombineSentencesContainer = ({
   combineWordsListState,
@@ -32,7 +59,13 @@ const CombineSentencesContainer = ({
       />
     )}
     <Text>
-      {combineWordsListState.map((item, index) => index + 1 + ') ' + item.word)}
+      {combineWordsListState.map((item, index) => (
+        <CombineSentenceWord
+          setCombineWordsListState={setCombineWordsListState}
+          indexNum={index}
+          item={item}
+        />
+      ))}
     </Text>
     <Button
       onPress={() => {
