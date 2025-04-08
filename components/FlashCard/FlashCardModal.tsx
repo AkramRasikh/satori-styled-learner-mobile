@@ -128,10 +128,11 @@ export const FlashCardContent = ({
 
   return (
     <View style={[styles.modalContainer]}>
-      {arr.map(item => {
+      {arr.map((item, index) => {
         return (
           <FlashCardLineContainer
             id={id}
+            key={index}
             label={item.label}
             value={item.value}
             property={item.property}
