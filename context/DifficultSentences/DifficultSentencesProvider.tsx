@@ -29,6 +29,7 @@ export const DifficultSentencesProvider = ({
       });
       setDifficultSentencesState(prev => [...prev, ...combinedSentencesRes]);
       setCombineWordsListState([]);
+      refreshDifficultSentencesInfo(); // check if
     } catch (error) {
       console.log('## Error combining!', error);
     }

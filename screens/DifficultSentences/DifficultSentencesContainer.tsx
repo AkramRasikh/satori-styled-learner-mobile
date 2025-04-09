@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {useSelector} from 'react-redux';
 import {ScrollView, View} from 'react-native';
+import {useRoute} from '@react-navigation/native';
 import LoadingScreen from '../../components/LoadingScreen';
 import ScreenContainerComponent from '../../components/ScreenContainerComponent';
 import useData from '../../context/Data/useData';
@@ -46,7 +47,19 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
     handleCombineSentences,
     combineWordsListState,
     setCombineWordsListState,
+    refreshDifficultSentencesInfo,
   } = useDifficultSentences();
+
+  const route = useRoute();
+
+  const {refreshState} = route.params;
+
+  useEffect(() => {
+    if (refreshState) {
+      // account for state update when transitioning between pages
+      refreshDifficultSentencesInfo();
+    }
+  }, [refreshState]);
 
   const {setLanguageSelectedState} = useLanguageSelector();
 

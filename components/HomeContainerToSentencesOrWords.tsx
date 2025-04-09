@@ -22,7 +22,11 @@ const HomeContainerToSentencesOrWords = ({navigation}) => {
       }}>
       <Button
         mode="elevated"
-        onPress={() => navigation.navigate('DifficultSentences')}
+        onPress={() =>
+          navigation.navigate('DifficultSentences', {
+            refreshState: true,
+          })
+        }
         style={{
           flex: 1,
         }}>

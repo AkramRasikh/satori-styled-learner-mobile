@@ -204,7 +204,7 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
       });
       const updatedAdhocSentencesState = [
         ...adhocTargetLanguageSentencesState,
-        combineWordsSentencesRes,
+        ...combineWordsSentencesRes,
       ];
       dispatch(setSentencesStateDispatch(updatedAdhocSentencesState));
       const wordsForBanner = inputWords.map((item, index) => {
@@ -701,7 +701,7 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
       });
       const updatedAdhocSentencesState = [
         ...adhocTargetLanguageSentencesState,
-        adhocMinimalPairingRes,
+        ...adhocMinimalPairingRes,
       ];
       dispatch(setSentencesStateDispatch(updatedAdhocSentencesState));
       updatePromptFunc(
