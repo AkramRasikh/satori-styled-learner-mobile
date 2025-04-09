@@ -21,7 +21,7 @@ function WordStudyContainer(): React.JSX.Element {
   const [showDueCardsState, setShowDueCardsState] = useState<boolean>(true);
   const [showAddSentenceState, setShowAddSentenceState] =
     useState<boolean>(false);
-  const [sliceArrState, setSliceArrState] = useState(20);
+  const [sliceArrState, setSliceArrState] = useState(10);
   const [showCategories, setShowCategories] = useState(false);
   const [isMountedState, setIsMountedState] = useState(false);
   const [loadingCombineSentences, setLoadingCombineSentences] = useState(false);
