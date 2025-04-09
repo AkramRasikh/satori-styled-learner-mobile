@@ -113,7 +113,6 @@ function WordStudyContainer(): React.JSX.Element {
     const sentenceIds = res.map(item => item.id);
     const updatedDueCardsState = dueCardsState.map(item => {
       if (item.id === inputWord.id) {
-        console.log('## updated in here???');
         return {
           ...item,
           contexts: [...item.contexts, sentenceIds],
