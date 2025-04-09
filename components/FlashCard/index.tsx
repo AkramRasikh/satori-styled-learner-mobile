@@ -142,6 +142,8 @@ const FlashCard = ({
               freshCard={freshCard}
               isSelectedWord={isSelectedWord}
               handleCloseModal={handleCloseModal}
+              setIsOpenWordOptionsState={setIsOpenWordOptionsState}
+              isOpenWordOptionsState={isOpenWordOptionsState}
             />
             <Divider bold />
             {isSelectedWord && (
@@ -159,12 +161,6 @@ const FlashCard = ({
               deleteWord={handleDeleteWordWithAnimation}
               collapseAnimation={collapseAnimationWithState}
               definition={definition}
-            />
-            <IconButton
-              icon="dots-vertical"
-              containerColor="grey"
-              iconColor="white"
-              onPress={() => setIsOpenWordOptionsState(!isOpenWordOptionsState)}
             />
             {isOpenWordOptionsState && (
               <View>
