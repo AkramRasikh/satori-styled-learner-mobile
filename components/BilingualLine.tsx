@@ -87,6 +87,8 @@ const BilingualLine = ({
     handleSelectWord,
     dueSentencesState,
     setDueSentencesState,
+    combineWordsListState,
+    setCombineWordsListState,
   } = useContentScreen();
 
   const handleUpdateSentenceFinal = arg => {
@@ -401,6 +403,8 @@ const BilingualLine = ({
               deleteWord={deleteWord}
               handleUpdateWordFinal={() => {}}
               indexNum={index}
+              combineWordsListState={combineWordsListState}
+              setCombineWordsListState={setCombineWordsListState}
               overrideReview
             />
           );

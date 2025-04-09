@@ -12,6 +12,7 @@ import {generateRandomId} from '../../utils/generate-random-id';
 import {TopicContentSnippetsProvider} from './context/TopicContentSnippetsProvider';
 import useContentScreen from '../../screens/Content/useContentScreen';
 import WordModalDifficultSentence from '../WordModalDifficultSentence';
+import CombineSentencesContainer from '../CombineSentencesContainer';
 
 const {height} = Dimensions?.get('window');
 
@@ -42,6 +43,7 @@ const TopicContentAudioMode = ({
   const [showReviewSectionState, setShowReviewSectionState] = useState(false);
   const [selectedSnippetsState, setSelectedSnippetsState] = useState([]);
   const [isAutoScrollingMode, setisAutoScrollingMode] = useState(true);
+  const [viewHeight, setViewHeight] = useState(0);
 
   const scrollViewRef = useRef(null);
 
@@ -51,6 +53,10 @@ const TopicContentAudioMode = ({
     setSelectedDueCardState,
     handleDeleteWord,
     dueSentencesState,
+    combineWordsListState,
+    setCombineWordsListState,
+    handleExportListToAI,
+    loadingCombineSentences,
   } = useContentScreen();
 
   const {
@@ -69,6 +75,11 @@ const TopicContentAudioMode = ({
     loadedContent;
 
   const soundDuration = soundRef?.current?._duration || 0;
+
+  const handleLayout = event => {
+    const {height} = event.nativeEvent.layout;
+    setViewHeight(height);
+  };
 
   const initSnippet = () => {
     const isText = true;
@@ -135,10 +146,22 @@ const TopicContentAudioMode = ({
         </AnimatedModal>
       )}
       <View>
+        {combineWordsListState?.length > 0 && (
+          <View onLayout={handleLayout}>
+            <CombineSentencesContainer
+              combineWordsListState={combineWordsListState}
+              setCombineWordsListState={setCombineWordsListState}
+              handleExportListToAI={handleExportListToAI}
+              isLoading={loadingCombineSentences}
+            />
+          </View>
+        )}
         <ScrollView
           contentInsetAdjustmentBehavior="automatic"
           style={{
-            maxHeight: height * 0.8,
+            maxHeight:
+              height * 0.8 -
+              (combineWordsListState.length > 0 ? viewHeight : 0),
           }}
           ref={scrollViewRef}
           scrollEnabled={enableScroll}>

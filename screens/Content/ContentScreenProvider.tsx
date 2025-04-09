@@ -21,6 +21,8 @@ export const ContentScreenProvider = ({
   const [highlightStateArr, setHighlightedStateArr] = useState([]);
   const [selectedDueCardState, setSelectedDueCardState] = useState(null);
   const [dueSentencesState, setDueSentencesState] = useState(null);
+  const [combineWordsListState, setCombineWordsListState] = useState([]);
+  const [loadingCombineSentences, setLoadingCombineSentences] = useState(false);
 
   const targetLanguageWordsState = useSelector(state => state.words);
 
@@ -36,6 +38,21 @@ export const ContentScreenProvider = ({
   useEffect(() => {
     setDueSentencesState(dueSentences);
   }, [dueSentences]);
+
+  const handleExportListToAI = async () => {
+    try {
+      setLoadingCombineSentences(true);
+      await combineWords({
+        // const combinedSentencesRes = await combineWords({
+        inputWords: combineWordsListState,
+      });
+      setCombineWordsListState([]);
+    } catch (error) {
+      console.log('## Error combining!', error);
+    } finally {
+      setLoadingCombineSentences(false);
+    }
+  };
 
   const handleSaveWordContentScreen = async wordToSave => {
     try {
@@ -81,6 +98,10 @@ export const ContentScreenProvider = ({
         handleDeleteWord,
         dueSentencesState,
         setDueSentencesState,
+        combineWordsListState,
+        setCombineWordsListState,
+        handleExportListToAI,
+        loadingCombineSentences,
       }}>
       {children}
     </ContentScreenContext.Provider>

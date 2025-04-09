@@ -1,5 +1,4 @@
 import React, {TouchableOpacity, View} from 'react-native';
-import {SRSTogglesQuickComprehensiveDiffSentencesWords} from '../SRSToggles';
 import {getHexCode} from '../../utils/get-hex-code';
 import {
   DefaultTheme,

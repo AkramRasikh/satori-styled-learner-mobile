@@ -99,7 +99,7 @@ function WordStudyContainer(): React.JSX.Element {
       const combinedSentencesRes = await combineWords({
         inputWords: combineWordsListState,
       });
-      setDifficultSentencesState(prev => [...prev, ...combinedSentencesRes]);
+      setDifficultSentencesState(prev => [...prev, ...combinedSentencesRes]); // check this
       setCombineWordsListState([]);
     } catch (error) {
       console.log('## Error combining!', error);

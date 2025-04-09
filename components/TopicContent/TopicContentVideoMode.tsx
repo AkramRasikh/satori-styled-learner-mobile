@@ -12,6 +12,7 @@ import AnimatedModal from '../AnimatedModal';
 import useTopicContentVideo from './context/useTopicContentVideo';
 import useContentScreen from '../../screens/Content/useContentScreen';
 import WordModalDifficultSentence from '../WordModalDifficultSentence';
+import CombineSentencesContainer from '../CombineSentencesContainer';
 
 const {height} = Dimensions?.get('window');
 
@@ -33,6 +34,7 @@ const TopicContentVideoMode = ({
   const [showReviewSectionState, setShowReviewSectionState] = useState(false);
   const [isAutoScrollingMode, setisAutoScrollingMode] = useState(true);
   const scrollViewRef = useRef(null);
+  const [viewHeight, setViewHeight] = useState(0);
 
   const {languageSelectedState} = useLanguageSelector();
   const {
@@ -40,6 +42,10 @@ const TopicContentVideoMode = ({
     selectedDueCardState,
     setSelectedDueCardState,
     handleDeleteWord,
+    combineWordsListState,
+    setCombineWordsListState,
+    handleExportListToAI,
+    loadingCombineSentences,
   } = useContentScreen();
 
   const {
@@ -54,6 +60,11 @@ const TopicContentVideoMode = ({
     setVideoDurationState,
     playVideo,
   } = useTopicContentVideo();
+
+  const handleLayout = event => {
+    const {height} = event.nativeEvent.layout;
+    setViewHeight(height);
+  };
 
   const {reviewHistory, nextReview, isCore, contentIndex, hasVideo, content} =
     loadedContent;
@@ -84,6 +95,16 @@ const TopicContentVideoMode = ({
         </AnimatedModal>
       )}
       <View>
+        {combineWordsListState?.length > 0 && (
+          <View onLayout={handleLayout}>
+            <CombineSentencesContainer
+              combineWordsListState={combineWordsListState}
+              setCombineWordsListState={setCombineWordsListState}
+              handleExportListToAI={handleExportListToAI}
+              isLoading={loadingCombineSentences}
+            />
+          </View>
+        )}
         <View>
           <VideoPlayer
             url={videoUrl}
@@ -95,7 +116,9 @@ const TopicContentVideoMode = ({
           <ScrollView
             contentInsetAdjustmentBehavior="automatic"
             style={{
-              maxHeight: height * 0.58,
+              maxHeight:
+                height * 0.58 -
+                (combineWordsListState.length > 0 ? viewHeight : 0),
               paddingVertical: 5,
             }}
             ref={scrollViewRef}
