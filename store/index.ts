@@ -11,6 +11,10 @@ const store = configureStore({
     sentences: sentencesReducer,
     snippets: snippetsReducer,
   },
+  middleware: getDefaultMiddleware =>
+    getDefaultMiddleware({
+      serializableCheck: false, // 👈 disables the warning
+    }),
 });
 
 export default store;

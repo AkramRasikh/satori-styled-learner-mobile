@@ -274,6 +274,15 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
   );
   const toggleableSentencesStateLength = slicedRenderedSentenceArr.length;
 
+  const dueLength = selectedGeneralTopicState
+    ? generalTopicsAvailableState[selectedGeneralTopicState]
+    : generalTopicsAvailableState
+    ? Object.values(generalTopicsAvailableState).reduce(
+        (acc, val) => acc + val,
+        0,
+      )
+    : 0;
+
   return (
     <ScreenContainerComponent>
       {combineWordsListState?.length ? (
@@ -312,7 +321,7 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
           />
         )}
         <DifficultSentencesSegmentHeader
-          dueLength={toggleableSentencesState.length}
+          dueLength={dueLength}
           allLength={difficultSentencesState.length}
           isShowDueOnly={isShowDueOnly}
           setIsShowDueOnly={setIsShowDueOnly}
