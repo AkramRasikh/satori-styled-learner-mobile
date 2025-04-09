@@ -7,18 +7,20 @@ import useLanguageSelector from '../LanguageSelector/useLanguageSelector';
 import {storeDataLocalStorage} from '../../helper-functions/local-storage-utils';
 import {words} from '../../refs';
 import {setWordsStateDispatch} from '../../store/wordSlice';
+import useData from '../Data/useData';
 
 export const WordDataContext = createContext(null);
 
 export const WordDataProvider = ({children}: PropsWithChildren<{}>) => {
   const [wordStudyState, setWordStudyState] = useState([]);
   const [dueCardsState, setDueCardsState] = useState([]);
-  const [updatePromptState, setUpdatePromptState] = useState('');
   const [combineWordsListState, setCombineWordsListState] = useState([]);
   const [selectedTopic, setSelectedTopic] = useState('');
   const dispatch = useDispatch();
   const {languageSelectedState: language} = useLanguageSelector();
   const dataStorageKeyPrefix = `${language}-data-`;
+
+  const {setUpdatePromptState, updatePromptState} = useData();
 
   const targetLanguageWordsState = useSelector(state => state.words);
 
