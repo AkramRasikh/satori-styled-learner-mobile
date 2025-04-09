@@ -215,6 +215,8 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
 
       if (matchesTopic && isEligible) {
         filteredSentences.push(sentence);
+      }
+      if (isEligible) {
         topicCount[sentence.generalTopic] =
           (topicCount[sentence.generalTopic] || 0) + 1;
       }
