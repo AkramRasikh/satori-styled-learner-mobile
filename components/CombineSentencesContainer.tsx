@@ -1,7 +1,6 @@
 import React, {View} from 'react-native';
 import {
   ActivityIndicator,
-  Button,
   IconButton,
   MD2Colors,
   MD3Colors,
@@ -68,13 +67,31 @@ const CombineSentencesContainer = ({
         />
       ))}
     </Text>
-    <Button
-      onPress={() => {
-        setCombineWordsListState([]);
+    <View
+      style={{
+        gap: 10,
+        display: 'flex',
+        flexDirection: 'row',
       }}>
-      Clear
-    </Button>
-    <Button onPress={handleExportListToAI}>DeepSeek</Button>
+      <IconButton
+        icon="delete-sweep"
+        mode="outlined"
+        containerColor={MD2Colors.red100}
+        size={20}
+        onPress={() => {
+          setCombineWordsListState([]);
+        }}
+      />
+      <IconButton
+        icon="rocket-launch-outline"
+        mode="outlined"
+        size={20}
+        containerColor={MD2Colors.blue200}
+        iconColor={MD2Colors.white}
+        borderless
+        onPress={handleExportListToAI}
+      />
+    </View>
   </View>
 );
 
