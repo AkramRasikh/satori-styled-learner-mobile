@@ -169,7 +169,7 @@ function WordStudyContainer(): React.JSX.Element {
   const slicedArr = dueCardsState.slice(0, sliceArrState);
 
   return (
-    <ScreenContainerComponent bottom={50}>
+    <ScreenContainerComponent>
       {showAddSentenceState ? (
         <AddSentenceContainer
           setShowAddSentenceState={setShowAddSentenceState}

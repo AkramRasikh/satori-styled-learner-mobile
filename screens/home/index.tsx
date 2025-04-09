@@ -79,7 +79,7 @@ const Home = ({navigation}): React.JSX.Element => {
   };
 
   return (
-    <ScreenContainerComponent marginBottom={30} bottom={-40}>
+    <ScreenContainerComponent>
       <ScrollView
         contentInsetAdjustmentBehavior="automatic"
         style={{

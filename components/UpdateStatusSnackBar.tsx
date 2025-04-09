@@ -6,7 +6,6 @@ const UpdateStatusSnackBar = ({
   updatePromptState,
   setUpdatePromptState,
   duration = 1500,
-  bottom = 130,
 }) => {
   const [visible, setVisible] = React.useState(true);
 
@@ -18,8 +17,12 @@ const UpdateStatusSnackBar = ({
   return (
     <View
       style={{
-        position: 'static',
-        bottom,
+        position: 'absolute',
+        zIndex: 9999, // works on iOS
+        elevation: 10, // works on Android
+        bottom: 70,
+        left: 20,
+        right: 20,
       }}>
       <Snackbar
         visible={visible}

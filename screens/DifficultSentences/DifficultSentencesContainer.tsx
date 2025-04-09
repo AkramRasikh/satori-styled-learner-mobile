@@ -275,7 +275,7 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
   const toggleableSentencesStateLength = slicedRenderedSentenceArr.length;
 
   return (
-    <ScreenContainerComponent marginBottom={30}>
+    <ScreenContainerComponent>
       {combineWordsListState?.length ? (
         <CombineSentencesContainer
           combineWordsListState={combineWordsListState}
