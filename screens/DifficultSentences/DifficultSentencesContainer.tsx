@@ -10,7 +10,6 @@ import DifficultSentencesTopics from './DifficultSentencesTopics';
 import DifficultSentencesWordNavigator from './DifficultSentencesWordNavigator';
 import DifficultSentencesSegmentHeader from './DifficultSentencesSegmentHeader';
 import DifficultSentenceComponent from '../../components/DifficultSentence';
-import {countArrayOccurrencesToObj} from '../../utils/count-array-occurrences-to-obj';
 import useOpenGoogleTranslate from '../../hooks/useOpenGoogleTranslate';
 import useHighlightWordToWordBank from '../../hooks/useHighlightWordToWordBank';
 import LanguageSelection from '../home/components/LanguageSelection';
@@ -246,8 +245,22 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
   };
 
   useEffect(() => {
+    if (
+      difficultSentencesState.length > 0 &&
+      toggleableSentencesState?.length === 0 &&
+      selectedGeneralTopicState
+    ) {
+      setSelectedGeneralTopicState('');
+    }
+  }, [
+    difficultSentencesState,
+    toggleableSentencesState,
+    selectedGeneralTopicState,
+  ]);
+
+  useEffect(() => {
     setIsMountedState(true);
-    showDueInit(difficultSentencesState);
+    showDueInit();
   }, []);
 
   if (difficultSentencesState.length === 0) {

@@ -88,7 +88,7 @@ export const DifficultSentencesProvider = ({
   return (
     <DifficultSentencesContext.Provider
       value={{
-        difficultSentencesState,
+        difficultSentencesState: difficultSentencesState.slice(0, 30),
         setDifficultSentencesState,
         removeDifficultSentenceFromState,
         updateDifficultSentence,
