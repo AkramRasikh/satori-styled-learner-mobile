@@ -61,6 +61,7 @@ const CombineSentencesContainer = ({
     <Text>
       {combineWordsListState.map((item, index) => (
         <CombineSentenceWord
+          key={index}
           setCombineWordsListState={setCombineWordsListState}
           indexNum={index}
           item={item}
