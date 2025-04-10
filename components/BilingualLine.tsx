@@ -189,6 +189,8 @@ const BilingualLine = ({
     setHighlightMode(true);
   };
 
+  const handleSaveWordInBreakdown = async () => {};
+
   const getThisText = () => {
     if (showSentenceBreakdown) {
       const vocabBreakDoownWithHexCode = showSentenceBreakdown
@@ -387,6 +389,8 @@ const BilingualLine = ({
           vocab={topicSentence.vocab}
           meaning={topicSentence.meaning}
           sentenceStructure={topicSentence.sentenceStructure}
+          textSegments={topicSentence.safeText.props.textSegments}
+          handleSaveWordInBreakdown={handleSaveWordInBreakdown}
         />
       ) : null}
       {showNotes ? <Text>{topicSentence.notes}</Text> : null}

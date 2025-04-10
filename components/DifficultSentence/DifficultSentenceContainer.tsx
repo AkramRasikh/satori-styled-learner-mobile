@@ -186,6 +186,8 @@ const DifficultSentenceContainer = ({
     }
   };
 
+  const handleSaveWordInBreakdown = async () => {};
+
   const thisSentenceIsLoading = updatingSentenceState === sentence.id;
   const showMatchedWordsKey =
     matchedWordListState?.length > 0 && showAllMatchedWordsState;
@@ -206,9 +208,9 @@ const DifficultSentenceContainer = ({
       nextReview: sentence.reviewData.due,
     }),
   );
+  const textSegments = underlineWordsInSentence(sentence.targetLang);
 
-  const getSafeTextDefault = (targetText: string) => {
-    const textSegments = underlineWordsInSentence(targetText);
+  const getSafeTextDefault = () => {
     return (
       <DoubleClickButton
         onLongPress={
@@ -234,18 +236,22 @@ const DifficultSentenceContainer = ({
         : null;
       return (
         <Text style={{fontSize: 20}}>
-          {vocabBreakDoownWithHexCode.map((nestedSegment, index) => (
-            <Text key={index} style={{color: nestedSegment.color}}>
-              {nestedSegment.surfaceForm}
-            </Text>
-          ))}
+          {vocabBreakDoownWithHexCode.map((nestedSegment, index) => {
+            const isLast = vocabBreakDoownWithHexCode.length === index + 1;
+
+            return (
+              <Text key={index} style={{color: nestedSegment.color}}>
+                {nestedSegment.surfaceForm}
+                {!isLast && ' '}
+              </Text>
+            );
+          })}
         </Text>
       );
     } else if (!showAllMatchedWordsState) {
       return getSafeTextDefault(sentence.targetLang);
     }
 
-    const textSegments = underlineWordsInSentence(targetText);
     const wordsInOverlapCheck = checkOverlap(matchedWordListState);
     return (
       <DoubleClickButton
@@ -340,6 +346,8 @@ const DifficultSentenceContainer = ({
               vocab={sentence.vocab}
               meaning={sentence.meaning}
               sentenceStructure={sentence.sentenceStructure}
+              handleSaveWordInBreakdown={handleSaveWordInBreakdown}
+              textSegments={textSegments}
             />
           )}
 
