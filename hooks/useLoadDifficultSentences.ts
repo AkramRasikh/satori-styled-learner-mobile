@@ -20,7 +20,7 @@ const useLoadDifficultSentences = () => {
         contentWidget.origin === 'netflix' ||
         contentWidget.origin === 'youtube';
       const content = contentWidget.content;
-      content.forEach(sentenceInContent => {
+      content.forEach((sentenceInContent, index) => {
         if (
           sentenceInContent?.nextReview ||
           sentenceInContent?.reviewData?.due
@@ -28,6 +28,7 @@ const useLoadDifficultSentences = () => {
           const thisGeneralTopicsName = getGeneralTopicName(thisTopic);
 
           difficultSentences.push({
+            sentenceIndex: index,
             topic: thisTopic,
             isCore,
             isMediaContent,

@@ -22,7 +22,24 @@ import {sortObjByKeys} from '../../utils/sort-obj-by-keys';
 const sortFilteredOrder = (a, b) => {
   if (!a.topic) return 1; // Push objects without a topic to the end
   if (!b.topic) return -1; // Keep objects with topics at the front
-  return a.topic.localeCompare(b.topic, undefined, {numeric: true});
+  const topicComparison = a.topic.localeCompare(b.topic, undefined, {
+    numeric: true,
+  });
+  if (topicComparison !== 0) {
+    return topicComparison;
+  }
+
+  // At this point, topics are equal — check sentenceIndex
+  if (a.sentenceIndex != null && b.sentenceIndex != null) {
+    return a.sentenceIndex - b.sentenceIndex;
+  }
+
+  // If only one has sentenceIndex, it comes first
+  if (a.sentenceIndex != null) return -1;
+  if (b.sentenceIndex != null) return 1;
+
+  // Neither has sentenceIndex — maintain current order
+  return 0;
 };
 
 const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
