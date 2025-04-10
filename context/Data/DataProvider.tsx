@@ -183,7 +183,7 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
       const adhocSentencesRes = await addAdhocGrammarTTSAPI(params);
       const updatedAdhocSentencesState = [
         ...adhocTargetLanguageSentencesState,
-        adhocSentencesRes,
+        ...adhocSentencesRes,
       ];
       dispatch(setSentencesStateDispatch(updatedAdhocSentencesState));
       updatePromptFunc(`Added ${adhocSentencesRes.length} sentences!`);
