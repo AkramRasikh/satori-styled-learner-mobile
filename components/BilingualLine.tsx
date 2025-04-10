@@ -201,11 +201,17 @@ const BilingualLine = ({
         : null;
       return (
         <Text>
-          {vocabBreakDoownWithHexCode.map((nestedSegment, index) => (
-            <Text key={index} style={{color: nestedSegment.color}}>
-              {nestedSegment.surfaceForm}
-            </Text>
-          ))}
+          {vocabBreakDoownWithHexCode.map((nestedSegment, index) => {
+            const isLast = vocabBreakDoownWithHexCode.length === index + 1;
+            return (
+              <Text
+                key={index}
+                style={{color: nestedSegment.color, fontSize: 20}}>
+                {nestedSegment.surfaceForm}
+                {!isLast && ' '}
+              </Text>
+            );
+          })}
         </Text>
       );
     } else if (showMatchedTranslation) {
