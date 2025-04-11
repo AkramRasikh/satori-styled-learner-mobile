@@ -300,11 +300,6 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
   }
 
   const realCapacity = toggleableSentencesState.length;
-  const slicedRenderedSentenceArr = toggleableSentencesState.slice(
-    0,
-    sliceArrState,
-  );
-  const toggleableSentencesStateLength = slicedRenderedSentenceArr.length;
 
   const dueLength = selectedGeneralTopicState
     ? generalTopicsAvailableState[selectedGeneralTopicState]
@@ -373,16 +368,14 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
             numberOfWords={numberOfWords}
           />
           <View style={{marginTop: 10}}>
-            {slicedRenderedSentenceArr.map((sentence, index) => {
+            {toggleableSentencesState.map((sentence, index) => {
               const nextAudioIsTheSameUrl =
                 sentence.isMediaContent &&
-                sentence.topic === slicedRenderedSentenceArr[index + 1]?.topic;
+                sentence.topic === toggleableSentencesState[index + 1]?.topic;
               return (
                 <DifficultSentenceComponent
                   key={sentence.id}
-                  toggleableSentencesStateLength={
-                    toggleableSentencesStateLength
-                  }
+                  toggleableSentencesStateLength={realCapacity}
                   updateSentenceData={updateSentenceDataScreenLevel}
                   navigation={navigation}
                   sliceArrState={sliceArrState}
