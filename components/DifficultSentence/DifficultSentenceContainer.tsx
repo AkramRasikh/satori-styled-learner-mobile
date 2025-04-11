@@ -191,7 +191,13 @@ const DifficultSentenceContainer = ({
     meaning,
     isGoogle,
   }) => {
-    console.log('## handleSaveWordInBreakdown', surfaceForm, meaning);
+    await saveWordFirebase({
+      highlightedWord: surfaceForm,
+      highlightedWordSentenceId: sentence.id,
+      contextSentence: sentence.targetLang,
+      meaning,
+      isGoogle,
+    });
   };
 
   const thisSentenceIsLoading = updatingSentenceState === sentence.id;
