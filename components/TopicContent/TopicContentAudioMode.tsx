@@ -57,6 +57,8 @@ const TopicContentAudioMode = ({
     setCombineWordsListState,
     handleExportListToAI,
     loadingCombineSentences,
+    combineSentenceContext,
+    setCombineSentenceContext,
   } = useContentScreen();
 
   const {
@@ -153,6 +155,8 @@ const TopicContentAudioMode = ({
               setCombineWordsListState={setCombineWordsListState}
               handleExportListToAI={handleExportListToAI}
               isLoading={loadingCombineSentences}
+              combineSentenceContext={combineSentenceContext}
+              setCombineSentenceContext={setCombineSentenceContext}
             />
           </View>
         )}

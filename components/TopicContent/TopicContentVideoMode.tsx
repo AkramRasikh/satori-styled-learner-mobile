@@ -46,6 +46,8 @@ const TopicContentVideoMode = ({
     setCombineWordsListState,
     handleExportListToAI,
     loadingCombineSentences,
+    combineSentenceContext,
+    setCombineSentenceContext,
   } = useContentScreen();
 
   const {
@@ -102,6 +104,8 @@ const TopicContentVideoMode = ({
               setCombineWordsListState={setCombineWordsListState}
               handleExportListToAI={handleExportListToAI}
               isLoading={loadingCombineSentences}
+              combineSentenceContext={combineSentenceContext}
+              setCombineSentenceContext={setCombineSentenceContext}
             />
           </View>
         )}

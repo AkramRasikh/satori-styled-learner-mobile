@@ -25,6 +25,7 @@ function WordStudyContainer(): React.JSX.Element {
   const [showCategories, setShowCategories] = useState(false);
   const [isMountedState, setIsMountedState] = useState(false);
   const [loadingCombineSentences, setLoadingCombineSentences] = useState(false);
+  const [combineSentenceContext, setCombineSentenceContext] = useState('');
 
   const targetLanguageLoadedSentences = useSelector(state => state.sentences);
   const targetLanguageWordsState = useSelector(state => state.words);
@@ -98,7 +99,9 @@ function WordStudyContainer(): React.JSX.Element {
       setLoadingCombineSentences(true);
       const combinedSentencesRes = await combineWords({
         inputWords: combineWordsListState,
+        myCombinedSentence: combineSentenceContext,
       });
+      setCombineSentenceContext('');
       setDifficultSentencesState(prev => [...prev, ...combinedSentencesRes]); // check this
       setCombineWordsListState([]);
     } catch (error) {
@@ -188,6 +191,8 @@ function WordStudyContainer(): React.JSX.Element {
           setCombineWordsListState={setCombineWordsListState}
           handleExportListToAI={handleExportListToAI}
           isLoading={loadingCombineSentences}
+          combineSentenceContext={combineSentenceContext}
+          setCombineSentenceContext={setCombineSentenceContext}
         />
       ) : null}
       <ScrollView

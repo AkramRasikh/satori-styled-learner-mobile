@@ -196,11 +196,12 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
     }
   };
 
-  const combineWords = async ({inputWords}) => {
+  const combineWords = async ({inputWords, myCombinedSentence}) => {
     try {
       const combineWordsSentencesRes = await combineWordsAPI({
         inputWords,
         language,
+        myCombinedSentence,
       });
       const updatedAdhocSentencesState = [
         ...adhocTargetLanguageSentencesState,

@@ -23,6 +23,7 @@ export const ContentScreenProvider = ({
   const [dueSentencesState, setDueSentencesState] = useState(null);
   const [combineWordsListState, setCombineWordsListState] = useState([]);
   const [loadingCombineSentences, setLoadingCombineSentences] = useState(false);
+  const [combineSentenceContext, setCombineSentenceContext] = useState('');
 
   const targetLanguageWordsState = useSelector(state => state.words);
 
@@ -43,10 +44,11 @@ export const ContentScreenProvider = ({
     try {
       setLoadingCombineSentences(true);
       await combineWords({
-        // const combinedSentencesRes = await combineWords({
+        myCombinedSentence: combineSentenceContext,
         inputWords: combineWordsListState,
       });
       setCombineWordsListState([]);
+      setCombineSentenceContext('');
     } catch (error) {
       console.log('## Error combining!', error);
     } finally {
@@ -102,6 +104,8 @@ export const ContentScreenProvider = ({
         setCombineWordsListState,
         handleExportListToAI,
         loadingCombineSentences,
+        combineSentenceContext,
+        setCombineSentenceContext,
       }}>
       {children}
     </ContentScreenContext.Provider>

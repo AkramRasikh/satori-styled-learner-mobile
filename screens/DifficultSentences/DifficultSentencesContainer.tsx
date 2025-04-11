@@ -65,6 +65,8 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
     combineWordsListState,
     setCombineWordsListState,
     refreshDifficultSentencesInfo,
+    combineSentenceContext,
+    setCombineSentenceContext,
   } = useDifficultSentences();
 
   const route = useRoute();
@@ -318,6 +320,8 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
           setCombineWordsListState={setCombineWordsListState}
           handleExportListToAI={handleExportListToAI}
           isLoading={loadingCombineSentences}
+          combineSentenceContext={combineSentenceContext}
+          setCombineSentenceContext={setCombineSentenceContext}
         />
       ) : null}
       {isLanguageLoading && (

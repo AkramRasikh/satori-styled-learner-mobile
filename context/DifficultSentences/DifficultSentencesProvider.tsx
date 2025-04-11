@@ -19,6 +19,7 @@ export const DifficultSentencesProvider = ({
     setDifficultSentencesHasBeenSetState,
   ] = useState(false);
   const [combineWordsListState, setCombineWordsListState] = useState([]);
+  const [combineSentenceContext, setCombineSentenceContext] = useState('');
 
   const {combineWords} = useData();
 
@@ -26,7 +27,9 @@ export const DifficultSentencesProvider = ({
     try {
       const combinedSentencesRes = await combineWords({
         inputWords: combineWordsListState,
+        myCombinedSentence: combineSentenceContext,
       });
+      setCombineSentenceContext('');
       setDifficultSentencesState(prev => [...prev, ...combinedSentencesRes]);
       setCombineWordsListState([]);
       refreshDifficultSentencesInfo(); // check if
@@ -98,6 +101,8 @@ export const DifficultSentencesProvider = ({
         handleCombineSentences,
         combineWordsListState,
         setCombineWordsListState,
+        combineSentenceContext,
+        setCombineSentenceContext,
       }}>
       {children}
     </DifficultSentencesContext.Provider>
