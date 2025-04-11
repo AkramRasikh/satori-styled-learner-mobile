@@ -209,6 +209,18 @@ const FlashCard = ({
                     functional
                   </Button>
                   <Button
+                    mode="elevated"
+                    disabled={isLoadingState}
+                    onPress={() => handleAdhocWord('trivia')}>
+                    trivia
+                  </Button>
+                  <Button
+                    mode="elevated"
+                    disabled={isLoadingState}
+                    onPress={() => handleAdhocWord('rhyme')}>
+                    rhyme
+                  </Button>
+                  <Button
                     buttonColor={MD2Colors.lightBlue300}
                     mode="elevated"
                     disabled={isLoadingState}
