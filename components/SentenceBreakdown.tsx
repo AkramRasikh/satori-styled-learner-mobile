@@ -1,7 +1,7 @@
 import React, {Image, TouchableOpacity, View} from 'react-native';
 import {Divider, Text} from 'react-native-paper';
 import {getHexCode} from '../utils/get-hex-code';
-import {useEffect, useState} from 'react';
+import {Fragment, useEffect, useState} from 'react';
 
 const SentenceBreakdown = ({
   vocab,
@@ -32,9 +32,8 @@ const SentenceBreakdown = ({
         const listNumber = index + 1 + ') ';
         const isLast = index + 1 === vocab.length;
         return (
-          <>
+          <Fragment key={index}>
             <View
-              key={index}
               style={{
                 display: 'flex',
                 gap: 10,
@@ -60,14 +59,26 @@ const SentenceBreakdown = ({
                     gap: 15,
                   }}>
                   <TouchableOpacity
-                    onPress={() => handleSaveWordInBreakdown(true)}>
+                    onPress={async () =>
+                      await handleSaveWordInBreakdown({
+                        surfaceForm,
+                        meaning,
+                        isGoogle: true,
+                      })
+                    }>
                     <Image
                       source={require('../assets/images/google.png')}
                       style={{width: 16, height: 16}}
                     />
                   </TouchableOpacity>
                   <TouchableOpacity
-                    onPress={() => handleSaveWordInBreakdown(false)}>
+                    onPress={async () =>
+                      await handleSaveWordInBreakdown({
+                        surfaceForm,
+                        meaning,
+                        isGoogle: false,
+                      })
+                    }>
                     <Image
                       source={require('../assets/images/chatgpt.png')}
                       style={{width: 16, height: 16}}
@@ -77,7 +88,7 @@ const SentenceBreakdown = ({
               )}
             </View>
             {!isLast && <Divider />}
-          </>
+          </Fragment>
         );
       })}
       <Text>{sentenceStructure}</Text>

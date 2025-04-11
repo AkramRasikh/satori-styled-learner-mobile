@@ -189,7 +189,22 @@ const BilingualLine = ({
     setHighlightMode(true);
   };
 
-  const handleSaveWordInBreakdown = async () => {};
+  const handleSaveWordInBreakdown = async ({
+    surfaceForm,
+    meaning,
+    isGoogle,
+  }) => {
+    setShowReviewSettings(false);
+    setIsSettingsOpenState(false);
+    // await handleSaveWordContentScreen(wordToSave);
+    await handleSaveWordContentScreen({
+      highlightedWord: surfaceForm,
+      highlightedWordSentenceId: id,
+      contextSentence: topicSentence.targetLang,
+      meaning,
+      isGoogle,
+    });
+  };
 
   const getThisText = () => {
     if (showSentenceBreakdown) {

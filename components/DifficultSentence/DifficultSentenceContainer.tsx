@@ -186,7 +186,13 @@ const DifficultSentenceContainer = ({
     }
   };
 
-  const handleSaveWordInBreakdown = async () => {};
+  const handleSaveWordInBreakdown = async ({
+    surfaceForm,
+    meaning,
+    isGoogle,
+  }) => {
+    console.log('## handleSaveWordInBreakdown', surfaceForm, meaning);
+  };
 
   const thisSentenceIsLoading = updatingSentenceState === sentence.id;
   const showMatchedWordsKey =

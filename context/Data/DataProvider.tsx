@@ -607,6 +607,7 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
     highlightedWordSentenceId,
     contextSentence,
     isGoogle,
+    meaning,
   }) => {
     try {
       const cardDataRelativeToNow = getEmptyCard();
@@ -622,6 +623,7 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
         isGoogle,
         language,
         reviewData: nextScheduledOptions['1'].card,
+        meaning,
       });
       const newWordsState = [...targetLanguageWordsState, savedWord];
       dispatch(setWordsStateDispatch(newWordsState));
