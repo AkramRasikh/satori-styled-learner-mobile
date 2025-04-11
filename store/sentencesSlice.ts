@@ -16,13 +16,10 @@ const sentencesSlice = createSlice({
     },
     updateAdhocSentenceRemoveReviewStateDispatch: (state, action) => {
       const {sentenceId} = action.payload;
-      state.map(item => {
-        if (item.id === sentenceId) {
-          const {reviewData, ...rest} = item;
-          return rest;
-        }
-        return item;
-      });
+      const item = state.find(item => item.id === sentenceId);
+      if (item) {
+        delete item?.reviewData;
+      }
     },
   },
 });
