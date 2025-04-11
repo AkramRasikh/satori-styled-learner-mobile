@@ -2,6 +2,7 @@ import {BACKEND_ENDPOINT} from '@env';
 
 interface CombineWordsAPIProps {
   language: string;
+  myCombinedSentence?: string;
   inputWords: {
     word: string;
     wordDefinition: string;
@@ -12,6 +13,7 @@ interface CombineWordsAPIProps {
 export const combineWordsAPI = async ({
   language,
   inputWords,
+  myCombinedSentence,
 }: CombineWordsAPIProps) => {
   const baseUrl = BACKEND_ENDPOINT;
 
@@ -21,7 +23,7 @@ export const combineWordsAPI = async ({
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({language, inputWords}),
+      body: JSON.stringify({language, inputWords, myCombinedSentence}),
     });
 
     const res = await response.json();
