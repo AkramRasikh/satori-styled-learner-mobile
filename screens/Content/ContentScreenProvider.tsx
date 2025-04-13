@@ -30,6 +30,8 @@ export const ContentScreenProvider = ({
   const navigation = useNavigation();
   const enableScroll = highlightStateArr.length === 0;
 
+  const {combineWords} = useData();
+
   useEffect(() => {
     navigation.setOptions({
       gestureEnabled: enableScroll,
