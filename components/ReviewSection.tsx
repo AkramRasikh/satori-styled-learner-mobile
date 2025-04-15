@@ -58,6 +58,8 @@ const ReviewSection = ({
 }) => {
   const [futureDaysState, setFutureDaysState] = useState(3);
   const [areYouSureState, setAreYouSureState] = useState(false);
+  const [areYouSureBreakdownState, setAreYouSureBreakdownState] =
+    useState(false);
 
   const today = new Date();
 
@@ -77,7 +79,14 @@ const ReviewSection = ({
   const handleBulkReviewsFunc = () => {
     setAreYouSureState(!areYouSureState);
   };
+  const handleBulkBreakdownFunc = () => {
+    setAreYouSureBreakdownState(!areYouSureBreakdownState);
+  };
 
+  const handleAreYouSureBulkBreakdown = async () => {
+    await handleBreakdownAllSentences();
+    setAreYouSureBreakdownState(false);
+  };
   const handleAreYouSureBulk = async () => {
     await handleBulkReviews({removeReview: hasSomeReviewedSentences});
     setAreYouSureState(false);
@@ -138,18 +147,26 @@ const ReviewSection = ({
           hasSomeReviewedSentences ? ' Remove all reviews' : 'Bulk add reviews'
         }
       />
-      <FAB
-        onPress={handleBreakdownAllSentences}
-        variant={hasSomeReviewedSentences ? 'tertiary' : 'primary'}
-        icon="clock"
-        label={'Bulk breakdown'}
-      />
       {areYouSureState && (
         <AreYouSurePrompt
           yesText="Yes"
           yesOnPress={handleAreYouSureBulk}
           noText="No"
           noOnPress={() => setAreYouSureState(false)}
+        />
+      )}
+      <FAB
+        onPress={handleBulkBreakdownFunc}
+        variant={'tertiary'}
+        icon="hammer"
+        label={'Bulk breakdown'}
+      />
+      {areYouSureBreakdownState && (
+        <AreYouSurePrompt
+          yesText="Yes"
+          yesOnPress={handleAreYouSureBulkBreakdown}
+          noText="No"
+          noOnPress={() => setAreYouSureBreakdownState(false)}
         />
       )}
       <View>

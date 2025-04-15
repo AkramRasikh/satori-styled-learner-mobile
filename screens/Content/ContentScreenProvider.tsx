@@ -51,9 +51,9 @@ export const ContentScreenProvider = ({
   const handleBreakdownAllSentences = async () => {
     try {
       setIsLoadingReviewSectionState(true);
-      const sentencesToBreakdown = content.filter(
-        item => !(item?.vocab || item?.sentenceStructure),
-      );
+      const sentencesToBreakdown = content
+        .filter(item => !(item?.vocab || item?.sentenceStructure))
+        .slice(0, 9);
 
       if (sentencesToBreakdown?.length > 0) {
         await breakdownAllSentences({
