@@ -245,6 +245,16 @@ const ContentScreen = () => {
     }
   };
 
+  const updateContentState = content => {
+    setSelectedContentState({
+      ...selectedContentState,
+      content: content.map((item, index) => ({
+        ...selectedContentState.content[index],
+        ...item,
+      })),
+    });
+  };
+
   const breakdownSentenceFunc = async ({
     topicName,
     sentenceId,
@@ -281,7 +291,8 @@ const ContentScreen = () => {
       dueSentences={dueSentences}
       content={selectedContentState.content}
       topicName={selectedContentState.title}
-      contentIndex={selectedContentState.contentIndex}>
+      contentIndex={selectedContentState.contentIndex}
+      updateContentState={updateContentState}>
       <ScreenContainerComponent>
         <View style={{padding: 10}}>
           <TopicContent

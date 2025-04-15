@@ -17,6 +17,7 @@ export const ContentScreenProvider = ({
   content,
   topicName,
   contentIndex,
+  updateContentState,
   children,
 }: PropsWithChildren<{}>) => {
   const {saveWordFirebase, deleteWord, breakdownAllSentences} = useData();
@@ -48,6 +49,7 @@ export const ContentScreenProvider = ({
     setDueSentencesState(dueSentences);
   }, [dueSentences]);
 
+  // move this to contentprovider container
   const handleBreakdownAllSentences = async () => {
     try {
       setIsLoadingReviewSectionState(true);
@@ -56,7 +58,7 @@ export const ContentScreenProvider = ({
         .slice(0, 9);
 
       if (sentencesToBreakdown?.length > 0) {
-        await breakdownAllSentences({
+        const result = await breakdownAllSentences({
           topicName,
           sentences: sentencesToBreakdown.map(item => ({
             id: item.id,
@@ -64,6 +66,9 @@ export const ContentScreenProvider = ({
           })),
           contentIndex,
         });
+        if (result.content) {
+          updateContentState(result.content);
+        }
       } else {
         setIsLoadingReviewSectionState(false);
       }
