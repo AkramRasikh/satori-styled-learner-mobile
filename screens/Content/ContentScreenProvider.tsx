@@ -14,9 +14,13 @@ export const ContentScreenProvider = ({
   setUpdateWordList,
   updateWordList,
   dueSentences,
+  content,
+  topicName,
+  contentIndex,
   children,
 }: PropsWithChildren<{}>) => {
-  const {saveWordFirebase, deleteWord} = useData();
+  const {saveWordFirebase, deleteWord, breakdownAllSentences} = useData();
+
   const [updateWordSentence, setUpdateWordSentence] = useState(false);
   const [highlightStateArr, setHighlightedStateArr] = useState([]);
   const [selectedDueCardState, setSelectedDueCardState] = useState(null);
@@ -24,6 +28,8 @@ export const ContentScreenProvider = ({
   const [combineWordsListState, setCombineWordsListState] = useState([]);
   const [loadingCombineSentences, setLoadingCombineSentences] = useState(false);
   const [combineSentenceContext, setCombineSentenceContext] = useState('');
+  const [isLoadingReviewSectionState, setIsLoadingReviewSectionState] =
+    useState(false);
 
   const targetLanguageWordsState = useSelector(state => state.words);
 
@@ -41,6 +47,31 @@ export const ContentScreenProvider = ({
   useEffect(() => {
     setDueSentencesState(dueSentences);
   }, [dueSentences]);
+
+  const handleBreakdownAllSentences = async () => {
+    try {
+      setIsLoadingReviewSectionState(true);
+      const sentencesToBreakdown = content.filter(
+        item => !(item?.vocab || item?.sentenceStructure),
+      );
+
+      if (sentencesToBreakdown?.length > 0) {
+        await breakdownAllSentences({
+          topicName,
+          sentences: sentencesToBreakdown.map(item => ({
+            id: item.id,
+            targetLang: item.targetLang,
+          })),
+          contentIndex,
+        });
+      } else {
+        setIsLoadingReviewSectionState(false);
+      }
+    } catch (error) {
+    } finally {
+      setIsLoadingReviewSectionState(false);
+    }
+  };
 
   const handleExportListToAI = async () => {
     try {
@@ -108,6 +139,8 @@ export const ContentScreenProvider = ({
         loadingCombineSentences,
         combineSentenceContext,
         setCombineSentenceContext,
+        handleBreakdownAllSentences,
+        isLoadingReviewSectionState,
       }}>
       {children}
     </ContentScreenContext.Provider>

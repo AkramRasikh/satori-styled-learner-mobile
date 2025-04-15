@@ -40,6 +40,7 @@ import {
 import addAdhocSentenceTTSAPI from '../../api/add-adhoc-sentence-tts';
 import addAdhocGrammarTTSAPI from '../../api/add-adhoc-grammar-tts';
 import {addAdhocWordMinimalPairAPI} from '../../api/add-adhoc-word-minimal-pair';
+import {breakdownAllSentencesAPI} from '../../api/breakdown-all-sentences';
 
 export const DataContext = createContext(null);
 
@@ -110,6 +111,34 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
         return {
           ...sentenceData,
           ...resObj,
+        };
+      }
+      return sentenceData;
+    });
+
+    updatedState[contentIndex] = {
+      ...thisTopicData,
+      content: updatedContent,
+    };
+
+    dispatch(setLearningContentStateDispatch(updatedState));
+    return updatedState;
+  };
+
+  const updateAllLoadedContentStateAfterSentenceUpdate = ({
+    resObjArr,
+    contentIndex,
+  }) => {
+    // Look at how its reflected in the content section
+    const updatedState = [...targetLanguageLoadedContentMasterState];
+    const thisTopicData = updatedState[contentIndex];
+
+    const updatedContent = thisTopicData.content.map(sentenceData => {
+      const thisItemInResObj = resObjArr.find(i => i.id === sentenceData.id);
+      if (thisItemInResObj) {
+        return {
+          ...sentenceData,
+          ...thisItemInResObj,
         };
       }
       return sentenceData;
@@ -322,6 +351,35 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
       updatePromptFunc(`Error updating sentence for ${topicName}`);
     } finally {
       setUpdatingSentenceState('');
+    }
+  };
+  const breakdownAllSentences = async ({
+    topicName,
+    sentences,
+    contentIndex,
+  }) => {
+    try {
+      const resObjArr = await breakdownAllSentencesAPI({
+        topicName,
+        sentences,
+        language,
+      });
+
+      const updatedContentState =
+        updateAllLoadedContentStateAfterSentenceUpdate({
+          resObjArr,
+          contentIndex,
+        });
+      await storeDataLocalStorage(
+        dataStorageKeyPrefix + content,
+        updatedContentState,
+      );
+
+      updatePromptFunc(`${topicName} updated!`);
+      return updatedContentState[contentIndex];
+    } catch (error) {
+      console.log('## breakdownAllSentences', {error});
+      updatePromptFunc(`Error updating sentence for ${topicName}`);
     }
   };
 
@@ -796,6 +854,7 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
         addAdhocSentences,
         addAdhocGrammar,
         handleAdhocMinimalPair,
+        breakdownAllSentences,
       }}>
       {children}
     </DataContext.Provider>

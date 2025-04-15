@@ -48,6 +48,8 @@ const TopicContentVideoMode = ({
     loadingCombineSentences,
     combineSentenceContext,
     setCombineSentenceContext,
+    handleBreakdownAllSentences,
+    isLoadingReviewSectionState,
   } = useContentScreen();
 
   const {
@@ -93,6 +95,8 @@ const TopicContentVideoMode = ({
             hasSomeReviewedSentences={hasContentToReview}
             handleIsCore={handleIsCore}
             isCore={isCore}
+            handleBreakdownAllSentences={handleBreakdownAllSentences}
+            isLoadingReviewSectionState={isLoadingReviewSectionState}
           />
         </AnimatedModal>
       )}

@@ -278,7 +278,10 @@ const ContentScreen = () => {
     <ContentScreenProvider
       setUpdateWordList={setUpdateWordList}
       updateWordList={updateWordList}
-      dueSentences={dueSentences}>
+      dueSentences={dueSentences}
+      content={selectedContentState.content}
+      topicName={selectedContentState.title}
+      contentIndex={selectedContentState.contentIndex}>
       <ScreenContainerComponent>
         <View style={{padding: 10}}>
           <TopicContent

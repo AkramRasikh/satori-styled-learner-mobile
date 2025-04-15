@@ -59,6 +59,8 @@ const TopicContentAudioMode = ({
     loadingCombineSentences,
     combineSentenceContext,
     setCombineSentenceContext,
+    handleBreakdownAllSentences,
+    isLoadingReviewSectionState,
   } = useContentScreen();
 
   const {
@@ -144,6 +146,8 @@ const TopicContentAudioMode = ({
             hasSomeReviewedSentences={hasContentToReview}
             handleIsCore={handleIsCore}
             isCore={isCore}
+            handleBreakdownAllSentences={handleBreakdownAllSentences}
+            isLoadingReviewSectionState={isLoadingReviewSectionState}
           />
         </AnimatedModal>
       )}
