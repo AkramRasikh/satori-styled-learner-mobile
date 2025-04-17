@@ -8,6 +8,7 @@ import {
   HelperText,
   IconButton,
   ActivityIndicator,
+  Divider,
 } from 'react-native-paper';
 import useData from '../context/Data/useData';
 import useLanguageSelector from '../context/LanguageSelector/useLanguageSelector';
@@ -62,23 +63,36 @@ const AddSentenceContainer = ({setShowAddSentenceState}) => {
           }}
         />
       )}
-      <View style={styles.switchContainer}>
-        <Button
-          mode={mode === 'inquiry' ? 'contained' : 'outlined'}
-          onPress={() => setMode('inquiry')}
-          style={styles.pillButton}
-          labelStyle={styles.pillButtonLabel}>
-          Inquiry
-        </Button>
-        <Button
-          mode={mode === 'translation' ? 'contained' : 'outlined'}
-          onPress={() => setMode('translation')}
-          style={styles.pillButton}
-          labelStyle={styles.pillButtonLabel}>
-          Translation
-        </Button>
+      <View
+        style={{
+          display: 'flex',
+          flexDirection: 'row',
+          marginBottom: 20,
+          alignSelf: 'center',
+          alignItems: 'center',
+        }}>
+        <View style={styles.switchContainer}>
+          <Button
+            mode={mode === 'inquiry' ? 'contained' : 'outlined'}
+            onPress={() => setMode('inquiry')}
+            style={styles.pillButton}
+            labelStyle={styles.pillButtonLabel}>
+            Inquiry
+          </Button>
+          <Button
+            mode={mode === 'translation' ? 'contained' : 'outlined'}
+            onPress={() => setMode('translation')}
+            style={styles.pillButton}
+            labelStyle={styles.pillButtonLabel}>
+            Translation
+          </Button>
+        </View>
+        <IconButton
+          onPress={() => setShowAddSentenceState(false)}
+          icon="close"
+          containerColor="grey"
+        />
       </View>
-
       <View style={styles.formContainer}>
         {mode === 'inquiry' ? (
           <>
@@ -137,18 +151,8 @@ const AddSentenceContainer = ({setShowAddSentenceState}) => {
           disabled={mode === 'inquiry' ? !inquiry : !sentence}>
           Submit
         </Button>
-        <View
-          style={{
-            display: 'flex',
-            alignContent: 'center',
-            alignItems: 'center',
-          }}>
-          <IconButton
-            onPress={() => setShowAddSentenceState(false)}
-            icon="close"
-          />
-        </View>
       </View>
+      <Divider />
     </View>
   );
 };
@@ -160,7 +164,6 @@ const styles = StyleSheet.create({
   switchContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
-    marginBottom: 20,
   },
   pillButton: {
     borderRadius: 20,

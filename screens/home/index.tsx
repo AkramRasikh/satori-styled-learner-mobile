@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
-import {ScrollView} from 'react-native';
-import {Divider} from 'react-native-paper';
+import {ScrollView, View} from 'react-native';
+import {Divider, FAB} from 'react-native-paper';
 import {useSelector} from 'react-redux';
 import HomeContainerToSentencesOrWords from '../../components/HomeContainerToSentencesOrWords';
 import Topics from '../../components/Topics';
@@ -14,6 +14,7 @@ import LanguageLoadingIndicator, {
 } from './components/LanguageLoadingIndicator';
 import LanguageSelection from './components/LanguageSelection';
 import ClearStorageButton from './components/ClearStorageButton';
+import AddSentenceContainer from '../../components/AddSentenceContainer';
 
 const Home = ({navigation}): React.JSX.Element => {
   const [selectedTopic, setSelectedTopic] = useState('');
@@ -22,6 +23,8 @@ const Home = ({navigation}): React.JSX.Element => {
   const [allTopicsMetaDataState, setAllTopicsMetaDataState] = useState([]);
   const [selectedGeneralTopicState, setSelectedGeneralTopicState] =
     useState('');
+  const [showAddSentenceState, setShowAddSentenceState] =
+    useState<boolean>(false);
 
   const {updateMetaDataState, fetchData} = useData();
   const {languageSelectedState, setLanguageSelectedState} =
@@ -97,8 +100,26 @@ const Home = ({navigation}): React.JSX.Element => {
               }}
             />
           )}
+
           {languageSelectedState && (
-            <HomeContainerToSentencesOrWords navigation={navigation} />
+            <>
+              <HomeContainerToSentencesOrWords navigation={navigation} />
+              {showAddSentenceState ? (
+                <AddSentenceContainer
+                  setShowAddSentenceState={setShowAddSentenceState}
+                />
+              ) : (
+                <View style={{padding: 10}}>
+                  <FAB
+                    label="Add sentence"
+                    size="small"
+                    onPress={() =>
+                      setShowAddSentenceState(!showAddSentenceState)
+                    }
+                  />
+                </View>
+              )}
+            </>
           )}
           {languageSelectedState && !selectedTopic && (
             <Topics
