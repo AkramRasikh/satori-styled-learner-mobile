@@ -353,16 +353,6 @@ const DifficultSentenceContainer = ({
               })}
             </View>
           )}
-          {revealSentenceBreakdown && (
-            <SentenceBreakdown
-              vocab={sentence.vocab}
-              meaning={sentence.meaning}
-              sentenceStructure={sentence.sentenceStructure}
-              handleSaveWordInBreakdown={handleSaveWordInBreakdown}
-              textSegments={textSegments}
-            />
-          )}
-
           <DifficultSentenceAudioProvider
             sentence={sentence}
             indexNum={indexNum}
@@ -373,6 +363,15 @@ const DifficultSentenceContainer = ({
               removeSnippet={removeSnippet}
             />
           </DifficultSentenceAudioProvider>
+          {revealSentenceBreakdown && (
+            <SentenceBreakdown
+              vocab={sentence.vocab}
+              meaning={sentence.meaning}
+              sentenceStructure={sentence.sentenceStructure}
+              handleSaveWordInBreakdown={handleSaveWordInBreakdown}
+              textSegments={textSegments}
+            />
+          )}
           {showMatchedWordsKey &&
             matchedWordListState.map((item, index) => {
               return (
