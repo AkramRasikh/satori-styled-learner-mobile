@@ -6,6 +6,8 @@ import useSoundHook from '../../../hooks/useSoundHook';
 export const TopicContentAudioContext = createContext(null);
 
 export const TopicContentAudioProvider = ({
+  secondsToSentencesMapState,
+  loadedContent,
   topicName,
   soundRef,
   children,
@@ -27,6 +29,22 @@ export const TopicContentAudioProvider = ({
 
   const handlePlayFromThisSentence = playFromHere => {
     playFromThisSentence(playFromHere);
+  };
+
+  const handlePreviousSentence = () => {
+    const currentlyPlayingId =
+      secondsToSentencesMapState[Math.floor(currentTimeState)];
+    const index = loadedContent.content.findIndex(
+      i => i.id === currentlyPlayingId,
+    );
+
+    const previousSentence = index - 1;
+    if (previousSentence >= 0) {
+      const topicSentence = loadedContent.content[previousSentence];
+      if (topicSentence) {
+        playFromThisSentence(topicSentence?.startAt || topicSentence.time);
+      }
+    }
   };
 
   const playFromHere = seconds => {
@@ -65,6 +83,7 @@ export const TopicContentAudioProvider = ({
         pauseSound,
         rewindSound,
         forwardSound,
+        handlePreviousSentence,
       }}>
       {children}
     </TopicContentAudioContext.Provider>

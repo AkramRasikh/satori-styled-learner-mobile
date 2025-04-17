@@ -15,6 +15,7 @@ const TopicContentAudioSection = ({
     forwardSound,
     isPlaying,
     currentTimeState,
+    handlePreviousSentence,
   } = useTopicContentAudio();
 
   const progressRate = currentTimeState / soundDuration || 0;
@@ -49,6 +50,11 @@ const TopicContentAudioSection = ({
           mode="contained"
           onPress={forwardSound}
           icon="fast-forward"
+        />
+        <IconButton
+          mode="contained"
+          onPress={handlePreviousSentence}
+          icon="skip-backward"
         />
         <IconButton
           mode="contained"

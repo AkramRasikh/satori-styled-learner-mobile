@@ -124,7 +124,9 @@ const TopicContent = ({
     <TopicContentAudioProvider
       topicName={topicName}
       isVideoModeState={isVideoModeState}
-      soundRef={soundRef}>
+      soundRef={soundRef}
+      secondsToSentencesMapState={secondsToSentencesMapState}
+      loadedContent={loadedContent}>
       <TopicContentAudioMode
         topicName={topicName}
         updateTopicMetaData={updateTopicMetaData}
