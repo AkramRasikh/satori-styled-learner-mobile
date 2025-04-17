@@ -57,8 +57,15 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
 
   const targetLanguageWordsState = useSelector(state => state.words);
   const numberOfWords = targetLanguageWordsState.length;
-  const {updateSentenceData, deleteWord, pureWords, fetchData, updateWordData} =
-    useData();
+
+  const {
+    sentenceReviewBulkAll,
+    updateSentenceData,
+    deleteWord,
+    pureWords,
+    fetchData,
+    updateWordData,
+  } = useData();
 
   const {
     handleCombineSentences,
@@ -220,6 +227,35 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
     setSelectedDueCardState(null);
   };
 
+  const handleLongPressTopics = async longPressedTopic => {
+    const topicsArr = [];
+    const contentIndexArr = [];
+    difficultSentencesState.forEach(i => {
+      const thisTopic = i?.topic;
+      const thisGeneralTopic = i?.generalTopic;
+      if (
+        thisGeneralTopic === longPressedTopic &&
+        !topicsArr.includes(thisTopic)
+      ) {
+        topicsArr.push(thisTopic);
+        contentIndexArr.push(i?.contentIndex);
+      }
+    });
+
+    try {
+      setIsLanguageLoading(true);
+      await sentenceReviewBulkAll({
+        topics: topicsArr,
+        generalTopic: longPressedTopic,
+        contentIndexArr,
+      });
+    } catch (error) {
+      console.log('## Error handleLongPressTopics', error);
+    } finally {
+      setIsLanguageLoading(false);
+    }
+  };
+
   const getThisTopicsDueSentences = topic => {
     const ids = [];
     toggleableSentencesState.forEach(item => {
@@ -365,6 +401,7 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
               generalTopicsAvailableState={generalTopicsAvailableState}
               handleShowThisTopicsSentences={handleShowThisTopicsSentences}
               selectedGeneralTopicState={selectedGeneralTopicState}
+              handleLongPressTopics={handleLongPressTopics}
             />
           ) : null}
           <DifficultSentencesWordNavigator

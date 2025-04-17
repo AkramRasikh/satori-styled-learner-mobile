@@ -41,6 +41,7 @@ import addAdhocSentenceTTSAPI from '../../api/add-adhoc-sentence-tts';
 import addAdhocGrammarTTSAPI from '../../api/add-adhoc-grammar-tts';
 import {addAdhocWordMinimalPairAPI} from '../../api/add-adhoc-word-minimal-pair';
 import {breakdownAllSentencesAPI} from '../../api/breakdown-all-sentences';
+import {sentenceReviewBulkAllAPI} from '../../api/remove-all-content-review';
 
 export const DataContext = createContext(null);
 
@@ -296,6 +297,55 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
       }
     } catch (error) {
       updatePromptFunc(`Error updating ${topicName}!`);
+    }
+  };
+
+  const sentenceReviewBulkAll = async ({
+    topics,
+    generalTopic,
+    contentIndexArr,
+  }) => {
+    try {
+      const updatedContentResArr = await sentenceReviewBulkAllAPI({
+        topics,
+        language,
+      });
+
+      if (updatedContentResArr) {
+        const updatedState = [...targetLanguageLoadedContentMasterState];
+        contentIndexArr.forEach(async (contentIndex, index) => {
+          const isLast = contentIndexArr.length === index + 1;
+          const thisTopicData = updatedState[contentIndex];
+          if (!updatedContentResArr.includes(thisTopicData.title)) {
+            console.log('## bulk not aligned with BE');
+            return;
+          }
+
+          updatedState[contentIndex] = {
+            ...thisTopicData,
+            content: thisTopicData.content.map(sentenceWidget => {
+              if (sentenceWidget?.reviewData) {
+                const {reviewData, ...rest} = sentenceWidget;
+                return {
+                  ...rest,
+                };
+              }
+              return sentenceWidget;
+            }),
+          };
+          if (isLast) {
+            console.log('## saving!');
+            dispatch(setLearningContentStateDispatch(updatedState));
+            await storeDataLocalStorage(
+              dataStorageKeyPrefix + content,
+              updatedState,
+            );
+          }
+        });
+      }
+      updatePromptFunc(`${generalTopic} updated!`);
+    } catch (error) {
+      updatePromptFunc(`Error updating ${generalTopic}!`);
     }
   };
 
@@ -855,6 +905,7 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
         addAdhocGrammar,
         handleAdhocMinimalPair,
         breakdownAllSentences,
+        sentenceReviewBulkAll,
       }}>
       {children}
     </DataContext.Provider>

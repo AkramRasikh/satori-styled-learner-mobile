@@ -5,6 +5,7 @@ const DifficultSentencesTopics = ({
   generalTopicsAvailableState,
   handleShowThisTopicsSentences,
   selectedGeneralTopicState,
+  handleLongPressTopics,
 }) => {
   const statesMappedArr = Object.entries(generalTopicsAvailableState);
   return (
@@ -22,6 +23,7 @@ const DifficultSentencesTopics = ({
         return (
           <TopicListButton
             key={generalTopic}
+            onLongPress={handleLongPressTopics}
             label={label}
             onPress={() => handleShowThisTopicsSentences(generalTopic)}
             isSelected={isSelected}
