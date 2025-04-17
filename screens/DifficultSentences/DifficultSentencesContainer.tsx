@@ -106,6 +106,7 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
   const {
     difficultSentencesState,
     removeDifficultSentenceFromState,
+    setDifficultSentencesState,
     updateDifficultSentence,
   } = useDifficultSentences();
 
@@ -244,11 +245,17 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
 
     try {
       setIsLanguageLoading(true);
-      await sentenceReviewBulkAll({
+      const bulkResponse = await sentenceReviewBulkAll({
         topics: topicsArr,
         generalTopic: longPressedTopic,
         contentIndexArr,
       });
+      if (bulkResponse) {
+        const updatedDifficultSentences = difficultSentencesState.filter(
+          item => item.generalTopic !== longPressedTopic,
+        );
+        setDifficultSentencesState(updatedDifficultSentences);
+      }
     } catch (error) {
       console.log('## Error handleLongPressTopics', error);
     } finally {

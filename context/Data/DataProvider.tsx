@@ -334,16 +334,16 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
             }),
           };
           if (isLast) {
-            console.log('## saving!');
             dispatch(setLearningContentStateDispatch(updatedState));
             await storeDataLocalStorage(
               dataStorageKeyPrefix + content,
               updatedState,
             );
+            updatePromptFunc(`${generalTopic} updated!`);
           }
         });
+        return true;
       }
-      updatePromptFunc(`${generalTopic} updated!`);
     } catch (error) {
       updatePromptFunc(`Error updating ${generalTopic}!`);
     }
