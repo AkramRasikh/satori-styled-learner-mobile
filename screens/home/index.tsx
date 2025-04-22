@@ -15,6 +15,7 @@ import LanguageLoadingIndicator, {
 import LanguageSelection from './components/LanguageSelection';
 import ClearStorageButton from './components/ClearStorageButton';
 import AddSentenceContainer from '../../components/AddSentenceContainer';
+import ContentCreationContainer from '../../components/ContentCreationContainer';
 
 const Home = ({navigation}): React.JSX.Element => {
   const [selectedTopic, setSelectedTopic] = useState('');
@@ -24,6 +25,8 @@ const Home = ({navigation}): React.JSX.Element => {
   const [selectedGeneralTopicState, setSelectedGeneralTopicState] =
     useState('');
   const [showAddSentenceState, setShowAddSentenceState] =
+    useState<boolean>(false);
+  const [addContentFormState, setAddContentFormState] =
     useState<boolean>(false);
 
   const {updateMetaDataState, fetchData} = useData();
@@ -116,6 +119,19 @@ const Home = ({navigation}): React.JSX.Element => {
                     onPress={() =>
                       setShowAddSentenceState(!showAddSentenceState)
                     }
+                  />
+                </View>
+              )}
+              {addContentFormState ? (
+                <ContentCreationContainer
+                  setAddContentFormState={setAddContentFormState}
+                />
+              ) : (
+                <View style={{padding: 10}}>
+                  <FAB
+                    label="Add Content"
+                    size="small"
+                    onPress={() => setAddContentFormState(!addContentFormState)}
                   />
                 </View>
               )}
