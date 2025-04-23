@@ -7,6 +7,7 @@ import React, {
 import useLoadDifficultSentences from '../../hooks/useLoadDifficultSentences';
 import useLanguageSelector from '../LanguageSelector/useLanguageSelector';
 import useData from '../Data/useData';
+import {useSelector} from 'react-redux';
 
 export const DifficultSentencesContext = createContext(null);
 
@@ -20,8 +21,14 @@ export const DifficultSentencesProvider = ({
   ] = useState(false);
   const [combineWordsListState, setCombineWordsListState] = useState([]);
   const [combineSentenceContext, setCombineSentenceContext] = useState('');
+  const [dueWordsState, setDueWordsState] = useState([]);
 
   const {combineWords} = useData();
+
+  const targetLanguageWordsState = useSelector(state => state.words);
+  const adhocTargetLanguageSentencesState = useSelector(
+    state => state.sentences,
+  );
 
   const handleCombineSentences = async () => {
     try {
@@ -78,16 +85,102 @@ export const DifficultSentencesProvider = ({
     }
   }, [languageSelectedState]); // Is there a more efficient way??
 
+  const isDueCheck = (sentence, todayDateObj) => {
+    return (
+      (sentence?.nextReview && sentence.nextReview < todayDateObj) ||
+      new Date(sentence?.reviewData?.due) < todayDateObj
+    );
+  };
+
+  const getAdditionalContextData = arr => {
+    if (arr?.length === 0) {
+      return null;
+    }
+
+    const thisWordsCorrespondingSentenceHelpers = [];
+
+    for (const obj of adhocTargetLanguageSentencesState) {
+      if (arr.includes(obj.id)) {
+        thisWordsCorrespondingSentenceHelpers.push(obj);
+        if (thisWordsCorrespondingSentenceHelpers.length === arr.length) {
+          break; // All matches found early
+        }
+      }
+    }
+
+    return thisWordsCorrespondingSentenceHelpers;
+  };
+
   useEffect(() => {
     const difficultSentencesData = getAllDataReady();
     if (
       difficultSentencesData?.length > 0 &&
       !difficultSentencesHasBeenSetState
     ) {
+      const dateNow = new Date();
       setDifficultSentencesState(difficultSentencesData);
       setDifficultSentencesHasBeenSetState(true);
+      const matchedWordsForCards = [];
+      targetLanguageWordsState.forEach(item => {
+        if (isDueCheck(item, dateNow) || !item?.reviewData) {
+          const firstContext = item.contexts[0];
+
+          const thisWordsSentenceData = difficultSentencesData.find(
+            i => i.id === firstContext,
+          );
+          if (
+            thisWordsSentenceData &&
+            thisWordsSentenceData?.topic &&
+            thisWordsSentenceData?.generalTopic
+          ) {
+            const formattedContext = {
+              ...thisWordsSentenceData,
+              title: thisWordsSentenceData?.generalTopic,
+              fullTitle: thisWordsSentenceData.topic,
+            };
+
+            const contextData =
+              item.contexts.length > 1
+                ? [
+                    formattedContext,
+                    ...getAdditionalContextData(item.contexts.slice(1)),
+                  ]
+                : [formattedContext];
+            matchedWordsForCards.push({
+              ...item,
+              topic: thisWordsSentenceData.topic,
+              generalTopic: thisWordsSentenceData.generalTopic,
+              isWord: true,
+              contextData,
+            });
+          } else {
+            const formattedContext = {
+              ...thisWordsSentenceData,
+              title: 'sentence-helper',
+              fullTitle: 'sentence-helper',
+            };
+            const contextData =
+              item.contexts.length > 1
+                ? [formattedContext, ...getAdditionalContextData(item.contexts)]
+                : [formattedContext];
+            matchedWordsForCards.push({
+              ...item,
+              topic: 'sentence-helper',
+              generalTopic: 'sentence-helper',
+              isWord: true,
+              contextData,
+            });
+          }
+        }
+      });
+
+      setDueWordsState(matchedWordsForCards);
     }
-  }, [difficultSentencesHasBeenSetState, getAllDataReady]);
+  }, [
+    difficultSentencesHasBeenSetState,
+    targetLanguageWordsState,
+    getAllDataReady,
+  ]);
 
   return (
     <DifficultSentencesContext.Provider
@@ -103,6 +196,8 @@ export const DifficultSentencesProvider = ({
         setCombineWordsListState,
         combineSentenceContext,
         setCombineSentenceContext,
+        dueWordsState,
+        setDueWordsState,
       }}>
       {children}
     </DifficultSentencesContext.Provider>

@@ -15,6 +15,7 @@ import {LanguageSelectorProvider} from './context/LanguageSelector/LanguageSelec
 import useSetupPlayer from './hooks/useSetupPlayer';
 import ContentScreen from './screens/Content/ContentScreen';
 import {DifficultSentencesProvider} from './context/DifficultSentences/DifficultSentencesProvider';
+import {WordDataProvider} from './context/WordData/WordDataProvider';
 
 enableScreens();
 
@@ -59,27 +60,29 @@ function App(): React.JSX.Element {
       <LanguageSelectorProvider>
         <DataProvider>
           <DifficultSentencesProvider>
-            <SafeAreaProvider>
-              <NavigationContainer>
-                <Stack.Navigator
-                  initialRouteName="Home" // This sets the default screen
-                  screenOptions={{headerShown: false}} // Optional: Hide headers
-                >
-                  <Stack.Screen name="ContentScreen">
-                    {props => <ContentScreen {...props} />}
-                  </Stack.Screen>
-                  <Stack.Screen name="Home">
-                    {props => <Home {...props} />}
-                  </Stack.Screen>
-                  <Stack.Screen name="WordStudy">
-                    {props => <WordStudy {...props} />}
-                  </Stack.Screen>
-                  <Stack.Screen name="DifficultSentences">
-                    {props => <DifficultSentences {...props} />}
-                  </Stack.Screen>
-                </Stack.Navigator>
-              </NavigationContainer>
-            </SafeAreaProvider>
+            <WordDataProvider>
+              <SafeAreaProvider>
+                <NavigationContainer>
+                  <Stack.Navigator
+                    initialRouteName="Home" // This sets the default screen
+                    screenOptions={{headerShown: false}} // Optional: Hide headers
+                  >
+                    <Stack.Screen name="ContentScreen">
+                      {props => <ContentScreen {...props} />}
+                    </Stack.Screen>
+                    <Stack.Screen name="Home">
+                      {props => <Home {...props} />}
+                    </Stack.Screen>
+                    <Stack.Screen name="WordStudy">
+                      {props => <WordStudy {...props} />}
+                    </Stack.Screen>
+                    <Stack.Screen name="DifficultSentences">
+                      {props => <DifficultSentences {...props} />}
+                    </Stack.Screen>
+                  </Stack.Navigator>
+                </NavigationContainer>
+              </SafeAreaProvider>
+            </WordDataProvider>
           </DifficultSentencesProvider>
         </DataProvider>
       </LanguageSelectorProvider>

@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {useSelector} from 'react-redux';
 import {ScrollView, View} from 'react-native';
 import {useRoute} from '@react-navigation/native';
@@ -18,6 +18,8 @@ import useLanguageSelector from '../../context/LanguageSelector/useLanguageSelec
 import {ActivityIndicator, MD2Colors} from 'react-native-paper';
 import CombineSentencesContainer from '../../components/CombineSentencesContainer';
 import {sortObjByKeys} from '../../utils/sort-obj-by-keys';
+import FlashCard from '../../components/FlashCard';
+import {FlashCardProvider} from '../../components/FlashCard/context/FlashCardProvider';
 
 const sortFilteredOrder = (a, b) => {
   if (!a.topic) return 1; // Push objects without a topic to the end
@@ -45,6 +47,10 @@ const sortFilteredOrder = (a, b) => {
 const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
   const [toggleableSentencesState, setToggleableSentencesState] = useState([]);
   const [selectedDueCardState, setSelectedDueCardState] = useState(null);
+  const [
+    selectedDueCardComprehensiveState,
+    setSelectedDueCardComprehensiveState,
+  ] = useState(null);
   const [selectedGeneralTopicState, setSelectedGeneralTopicState] =
     useState('');
   const [generalTopicsAvailableState, setGeneralTopicsAvailableState] =
@@ -54,6 +60,7 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
   const [isMountedState, setIsMountedState] = useState(false);
   const [loadingCombineSentences, setLoadingCombineSentences] = useState(false);
   const [isLanguageLoading, setIsLanguageLoading] = useState(false);
+  const scrollViewRef = useRef(null);
 
   const targetLanguageWordsState = useSelector(state => state.words);
   const numberOfWords = targetLanguageWordsState.length;
@@ -65,6 +72,7 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
     pureWords,
     fetchData,
     updateWordData,
+    handleAdhocMinimalPair,
   } = useData();
 
   const {
@@ -74,6 +82,8 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
     refreshDifficultSentencesInfo,
     combineSentenceContext,
     setCombineSentenceContext,
+    dueWordsState,
+    setDueWordsState,
   } = useDifficultSentences();
 
   const route = useRoute();
@@ -274,6 +284,26 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
     return ids;
   };
 
+  const handleDeleteWordFlashCard = async wordFromFlashCard => {
+    if (!wordFromFlashCard) {
+      return;
+    }
+    const selectedWordId = wordFromFlashCard.id;
+    const wordBaseForm = wordFromFlashCard.baseForm;
+    try {
+      const updatedWordState = dueWordsState.filter(
+        item => item.id !== selectedWordId,
+      );
+      setDueWordsState(updatedWordState);
+      await deleteWord({
+        wordId: selectedWordId,
+        wordBaseForm,
+      });
+    } catch (error) {
+      console.log('## Error handleDeleteWordFlashCard', {error});
+    }
+  };
+
   useEffect(() => {
     if (!isMountedState) return;
 
@@ -281,7 +311,7 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
     const topicCount = {};
     const filteredSentences = [];
 
-    for (const sentence of difficultSentencesState) {
+    for (const sentence of [...difficultSentencesState, ...dueWordsState]) {
       const matchesTopic =
         !selectedGeneralTopicState ||
         sentence.generalTopic === selectedGeneralTopicState;
@@ -307,7 +337,40 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
     selectedGeneralTopicState,
     isShowDueOnly,
     isMountedState,
+    dueWordsState,
   ]);
+
+  const updateWordDataAdditionalFunc = updatedWordData => {
+    const updatedWordState = dueWordsState.map(item => {
+      if (item.id === updatedWordData.wordId) {
+        const postFieldUpdatedWord = {
+          ...item,
+          reviewData: updatedWordData.fieldToUpdate.reviewData,
+        };
+        return postFieldUpdatedWord;
+      }
+      return item;
+    });
+
+    setDueWordsState(updatedWordState);
+  };
+
+  const handleAdhocMinimalPairFunc = async ({inputWord, mode}) => {
+    const res = await handleAdhocMinimalPair({inputWord, mode});
+    const sentenceIds = res.map(item => item.id);
+
+    const updatedDueCardsState = dueWordsState.map(item => {
+      if (item.id === inputWord.id) {
+        return {
+          ...item,
+          contexts: [...item.contexts, sentenceIds],
+          contextData: [...item.contextData, ...res],
+        };
+      }
+      return item;
+    });
+    setDueWordsState(updatedDueCardsState);
+  };
 
   const handleLanguageSelection = async selectedLanguage => {
     try {
@@ -385,6 +448,7 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
           padding: 10,
           paddingBottom: 70,
           opacity: isLanguageLoading ? 0.5 : 1,
+          marginBottom: 70,
         }}>
         {selectedDueCardState && (
           <WordModalDifficultSentence
@@ -402,7 +466,8 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
         />
         <ScrollView
           contentInsetAdjustmentBehavior="automatic"
-          style={{paddingBottom: 30}}>
+          style={{paddingBottom: 30}}
+          ref={scrollViewRef}>
           {generalTopicsAvailableState ? (
             <DifficultSentencesTopics
               generalTopicsAvailableState={generalTopicsAvailableState}
@@ -417,6 +482,32 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
           />
           <View style={{marginTop: 10}}>
             {toggleableSentencesState.map((sentence, index) => {
+              const isWordCard = sentence?.isWord;
+              if (isWordCard) {
+                return (
+                  <View style={{paddingVertical: 10}} key={sentence.id}>
+                    <FlashCardProvider>
+                      <FlashCard
+                        wordData={sentence}
+                        index={index}
+                        realCapacity={toggleableSentencesState.length}
+                        sliceArrState={null}
+                        handleDeleteWord={handleDeleteWordFlashCard}
+                        handleExpandWordArray={() => {}}
+                        selectedDueCardState={selectedDueCardComprehensiveState}
+                        setSelectedDueCardState={
+                          setSelectedDueCardComprehensiveState
+                        }
+                        handleAdhocMinimalPairFunc={handleAdhocMinimalPairFunc}
+                        scrollViewRef={scrollViewRef}
+                        updateWordDataAdditionalFunc={
+                          updateWordDataAdditionalFunc
+                        }
+                      />
+                    </FlashCardProvider>
+                  </View>
+                );
+              }
               const nextAudioIsTheSameUrl =
                 sentence.isMediaContent &&
                 sentence.topic === toggleableSentencesState[index + 1]?.topic;

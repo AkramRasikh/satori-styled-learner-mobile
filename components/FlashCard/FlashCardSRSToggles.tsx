@@ -15,6 +15,7 @@ const FlashCardSRSToggles = ({
   deleteWord,
   collapseAnimation,
   definition,
+  updateWordDataAdditionalFunc,
 }) => {
   const [showAreYouSureSectionState, setShowAreYouSureSectionState] =
     useState(false);
@@ -44,7 +45,7 @@ const FlashCardSRSToggles = ({
     collapseAnimation?.();
     await new Promise(resolve => setTimeout(resolve, 0));
     const nextReviewData = nextScheduledOptions[difficulty].card;
-    updateWordData({
+    const res = await updateWordData({
       wordId: id,
       wordBaseForm: baseForm,
       fieldToUpdate: {
@@ -55,6 +56,20 @@ const FlashCardSRSToggles = ({
         },
       },
     });
+
+    if (res) {
+      updateWordDataAdditionalFunc?.({
+        wordId: id,
+        wordBaseForm: baseForm,
+        fieldToUpdate: {
+          reviewData: {
+            ...nextReviewData,
+            due: nextReviewData.due.toISOString(),
+            last_review: nextReviewData.last_review.toISOString(),
+          },
+        },
+      });
+    }
   };
 
   return (

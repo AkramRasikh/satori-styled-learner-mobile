@@ -48,6 +48,7 @@ const FlashCard = ({
   setSelectedDueCardState,
   scrollViewRef,
   handleAdhocMinimalPairFunc,
+  updateWordDataAdditionalFunc,
 }) => {
   const [isCollapsingState, setIsCollapsingState] = useState(false);
   const [isOpenWordOptionsState, setIsOpenWordOptionsState] = useState(false);
@@ -114,9 +115,11 @@ const FlashCard = ({
   };
 
   const scrollToTarget = () => {
-    targetRef.current?.measureLayout(scrollViewRef.current, (_, y) => {
-      scrollViewRef.current?.scrollTo({y: y - 100, animated: true});
-    });
+    if (targetRef.current && scrollViewRef.current) {
+      targetRef.current?.measureLayout(scrollViewRef.current, (_, y) => {
+        scrollViewRef.current?.scrollTo({y: y - 100, animated: true});
+      });
+    }
   };
   const selectWordWithScroll = () => {
     setSelectedDueCardState(wordData);
@@ -161,6 +164,7 @@ const FlashCard = ({
               deleteWord={handleDeleteWordWithAnimation}
               collapseAnimation={collapseAnimationWithState}
               definition={definition}
+              updateWordDataAdditionalFunc={updateWordDataAdditionalFunc}
             />
             {isOpenWordOptionsState && (
               <View>
