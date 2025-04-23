@@ -60,6 +60,7 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
   const [isMountedState, setIsMountedState] = useState(false);
   const [loadingCombineSentences, setLoadingCombineSentences] = useState(false);
   const [isLanguageLoading, setIsLanguageLoading] = useState(false);
+  const [includeWordsState, setIncludeWordsState] = useState(true);
   const scrollViewRef = useRef(null);
 
   const targetLanguageWordsState = useSelector(state => state.words);
@@ -311,7 +312,8 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
     const topicCount = {};
     const filteredSentences = [];
 
-    for (const sentence of [...difficultSentencesState, ...dueWordsState]) {
+    const wordsState = includeWordsState ? dueWordsState : [];
+    for (const sentence of [...difficultSentencesState, ...wordsState]) {
       const matchesTopic =
         !selectedGeneralTopicState ||
         sentence.generalTopic === selectedGeneralTopicState;
@@ -338,6 +340,7 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
     isShowDueOnly,
     isMountedState,
     dueWordsState,
+    includeWordsState,
   ]);
 
   const updateWordDataAdditionalFunc = updatedWordData => {
@@ -479,6 +482,8 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
           <DifficultSentencesWordNavigator
             handleNavigationToWords={handleNavigationToWords}
             numberOfWords={numberOfWords}
+            includeWordsState={includeWordsState}
+            setIncludeWordsState={setIncludeWordsState}
           />
           <View style={{marginTop: 10}}>
             {toggleableSentencesState.map((sentence, index) => {

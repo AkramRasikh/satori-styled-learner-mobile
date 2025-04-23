@@ -1,9 +1,12 @@
 import React, {View} from 'react-native';
 import {FAB, MD2Colors} from 'react-native-paper';
+import TopicListButton from '../../components/TopicListButton';
 
 const DifficultSentencesWordNavigator = ({
   handleNavigationToWords,
   numberOfWords,
+  includeWordsState,
+  setIncludeWordsState,
 }) => {
   const label = `Words (${numberOfWords})`;
   return (
@@ -11,6 +14,9 @@ const DifficultSentencesWordNavigator = ({
       style={{
         marginTop: 5,
         alignSelf: 'flex-start',
+        gap: 5,
+        display: 'flex',
+        flexDirection: 'row',
       }}>
       <FAB
         label={label}
@@ -19,6 +25,10 @@ const DifficultSentencesWordNavigator = ({
         style={{
           backgroundColor: MD2Colors.green100,
         }}
+      />
+      <TopicListButton
+        label={`With Words ${includeWordsState ? '✅' : '❌'}`}
+        onPress={() => setIncludeWordsState(!includeWordsState)}
       />
     </View>
   );
