@@ -57,7 +57,7 @@ const TopicContent = ({
   const isDurationAudioLoaded = loadedContent?.isDurationAudioLoaded;
 
   useEffect(() => {
-    if (!hasVideoCheckState === null) {
+    if (hasVideoCheckState === null) {
       checkIfVideoExists(
         getFirebaseVideoURL(
           getGeneralTopicName(topicName),
@@ -73,7 +73,7 @@ const TopicContent = ({
         })
         .catch(() => {});
     }
-  }, [hasVideo, hasVideoCheckState, languageSelectedState]);
+  }, [hasVideoCheckState, languageSelectedState]);
 
   const hasContentToReview = content?.some(
     sentenceWidget => sentenceWidget?.reviewData,
