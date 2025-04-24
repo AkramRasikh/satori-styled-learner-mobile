@@ -1,6 +1,7 @@
 import React, {useEffect, useRef, useState} from 'react';
 import useGetCombinedAudioData, {
   getFirebaseAudioURL,
+  getFirebaseVideoURL,
 } from '../../hooks/useGetCombinedAudioData';
 import TopicContentLoader from '../TopicContentLoader';
 import useLanguageSelector from '../../context/LanguageSelector/useLanguageSelector';
@@ -12,6 +13,8 @@ import {TopicContentAudioProvider} from './context/TopicContentAudioProvider';
 import Sound from 'react-native-sound';
 import useOpenGoogleTranslate from '../../hooks/useOpenGoogleTranslate';
 import useInitAudio from '../../hooks/useInitAudio';
+import checkIfVideoExists from '../../api/check-if-video-exists';
+import {getGeneralTopicName} from '../../utils/get-general-topic-name';
 
 const TopicContent = ({
   topicName,
@@ -32,6 +35,7 @@ const TopicContent = ({
 
   const [highlightTargetTextState, setHighlightTargetTextState] = useState('');
   const [audioLoadingProgress, setAudioLoadingProgress] = useState(0);
+  const [hasVideoCheckState, setHasVideoCheckState] = useState(null);
 
   const {languageSelectedState} = useLanguageSelector();
 
@@ -51,6 +55,25 @@ const TopicContent = ({
   const realStartTime = loadedContent?.realStartTime;
   const hasAudio = loadedContent?.hasAudio;
   const isDurationAudioLoaded = loadedContent?.isDurationAudioLoaded;
+
+  useEffect(() => {
+    if (!hasVideoCheckState === null) {
+      checkIfVideoExists(
+        getFirebaseVideoURL(
+          getGeneralTopicName(topicName),
+          languageSelectedState,
+        ),
+      )
+        .then(res => {
+          if (res) {
+            setHasVideoCheckState(true);
+          } else {
+            setHasVideoCheckState(false);
+          }
+        })
+        .catch(() => {});
+    }
+  }, [hasVideo, hasVideoCheckState, languageSelectedState]);
 
   const hasContentToReview = content?.some(
     sentenceWidget => sentenceWidget?.reviewData,
@@ -99,7 +122,7 @@ const TopicContent = ({
     );
   }
 
-  if (isVideoModeState) {
+  if (isVideoModeState && hasVideoCheckState) {
     return (
       <TopicContentVideoProvider realStartTime={realStartTime}>
         <TopicContentVideoMode
@@ -115,6 +138,7 @@ const TopicContent = ({
           secondsToSentencesMapState={secondsToSentencesMapState}
           hasContentToReview={hasContentToReview}
           handleOpenGoogle={handleOpenGoogle}
+          hasVideo={hasVideoCheckState}
         />
       </TopicContentVideoProvider>
     );
@@ -143,6 +167,7 @@ const TopicContent = ({
         url={url}
         handleOpenGoogle={handleOpenGoogle}
         dueSentences={dueSentences}
+        hasVideo={hasVideoCheckState}
       />
     </TopicContentAudioProvider>
   );

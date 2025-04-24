@@ -29,6 +29,7 @@ const TopicContentVideoMode = ({
   secondsToSentencesMapState,
   hasContentToReview,
   handleOpenGoogle,
+  hasVideo,
 }) => {
   const [engMaster, setEngMaster] = useState(true);
   const [showReviewSectionState, setShowReviewSectionState] = useState(false);
@@ -70,7 +71,7 @@ const TopicContentVideoMode = ({
     setViewHeight(height);
   };
 
-  const {reviewHistory, nextReview, isCore, contentIndex, hasVideo, content} =
+  const {reviewHistory, nextReview, isCore, contentIndex, content} =
     loadedContent;
 
   const masterPlay =

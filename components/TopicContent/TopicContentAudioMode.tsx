@@ -36,6 +36,7 @@ const TopicContentAudioMode = ({
   hasContentToReview,
   url,
   handleOpenGoogle,
+  hasVideo,
 }) => {
   const [masterPlay, setMasterPlay] = useState('');
   const [engMaster, setEngMaster] = useState(true);
@@ -75,7 +76,7 @@ const TopicContentAudioMode = ({
     setIsPlaying,
   } = useTopicContentAudio();
 
-  const {reviewHistory, nextReview, isCore, contentIndex, hasVideo, content} =
+  const {reviewHistory, nextReview, isCore, contentIndex, content} =
     loadedContent;
 
   const soundDuration = soundRef?.current?._duration || 0;
