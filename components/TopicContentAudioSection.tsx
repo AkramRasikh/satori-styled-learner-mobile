@@ -16,6 +16,7 @@ const TopicContentAudioSection = ({
     isPlaying,
     currentTimeState,
     handlePreviousSentence,
+    handleLoopThisSentence,
   } = useTopicContentAudio();
 
   const progressRate = currentTimeState / soundDuration || 0;
@@ -59,6 +60,7 @@ const TopicContentAudioSection = ({
         <IconButton
           mode="contained"
           onPress={isPlaying ? pauseSound : playSound}
+          onLongPress={handleLoopThisSentence}
           icon={isPlaying ? 'pause' : 'play'}
           containerColor={isPlaying ? MD2Colors.green300 : MD2Colors.grey300}
         />

@@ -46,6 +46,18 @@ export const TopicContentAudioProvider = ({
       }
     }
   };
+  const handleLoopThisSentence = () => {
+    const currentlyPlayingId =
+      secondsToSentencesMapState[Math.floor(currentTimeState)];
+    const index = loadedContent.content.findIndex(
+      i => i.id === currentlyPlayingId,
+    );
+
+    const topicSentence = loadedContent.content[index];
+    if (topicSentence) {
+      playFromThisSentence(topicSentence?.startAt || topicSentence.time);
+    }
+  };
 
   const playFromHere = seconds => {
     if (soundRef.current) {
@@ -84,6 +96,7 @@ export const TopicContentAudioProvider = ({
         rewindSound,
         forwardSound,
         handlePreviousSentence,
+        handleLoopThisSentence,
       }}>
       {children}
     </TopicContentAudioContext.Provider>
