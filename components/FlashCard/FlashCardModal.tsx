@@ -23,9 +23,13 @@ const ExampleSentences = ({sentenceExamples, baseForm, surfaceForm}) => {
       );
     });
   };
+
   return (
     <View>
       {sentenceExamples?.map((exampleSentence, index) => {
+        if (!exampleSentence?.targetLang) {
+          return null;
+        }
         const exampleNumber = index + 1 + ') ';
         const baseLang = exampleSentence.baseLang;
         const targetLang = exampleSentence.targetLang;
