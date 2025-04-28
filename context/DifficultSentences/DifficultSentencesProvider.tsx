@@ -121,6 +121,7 @@ export const DifficultSentencesProvider = ({
       setDifficultSentencesState(difficultSentencesData);
       setDifficultSentencesHasBeenSetState(true);
       const matchedWordsForCards = [];
+      // need to map first sentence with topic
       targetLanguageWordsState.forEach(item => {
         if (isDueCheck(item, dateNow) || !item?.reviewData) {
           const firstContext = item.contexts[0];

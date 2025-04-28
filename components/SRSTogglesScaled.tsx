@@ -1,5 +1,5 @@
 import React, {View} from 'react-native';
-import {Button, DefaultTheme} from 'react-native-paper';
+import {Button, DefaultTheme, IconButton, MD2Colors} from 'react-native-paper';
 
 const SRSTogglesScaled = ({
   handleNextReview,
@@ -8,6 +8,7 @@ const SRSTogglesScaled = ({
   goodText,
   easyText,
   fontSize = 12,
+  quickDeleteFunc,
 }) => {
   const btnsArr = [
     {
@@ -29,7 +30,14 @@ const SRSTogglesScaled = ({
   ];
 
   return (
-    <View style={{display: 'flex', flexDirection: 'row', gap: 5}}>
+    <View
+      style={{
+        display: 'flex',
+        flexDirection: 'row',
+        gap: 5,
+        alignContent: 'center',
+        alignItems: 'center',
+      }}>
       {btnsArr.map((btn, index) => {
         return (
           <Button
@@ -45,6 +53,14 @@ const SRSTogglesScaled = ({
           </Button>
         );
       })}
+      {quickDeleteFunc && (
+        <IconButton
+          icon={'delete'}
+          onPress={quickDeleteFunc}
+          iconColor={MD2Colors.white}
+          containerColor={MD2Colors.red400}
+        />
+      )}
     </View>
   );
 };

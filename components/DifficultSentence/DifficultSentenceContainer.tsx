@@ -332,7 +332,10 @@ const DifficultSentenceContainer = ({
             notes={sentence.notes}
           />
           {isDueState ? (
-            <DifficultSentenceSRSToggles reviewData={sentence.reviewData} />
+            <DifficultSentenceSRSToggles
+              reviewData={sentence.reviewData}
+              isSentenceHelper={sentence?.isSentenceHelper && !sentence?.isWord}
+            />
           ) : (
             <View style={{alignSelf: 'center'}}>
               <Text style={DefaultTheme.fonts.bodyMedium}>{text}</Text>
