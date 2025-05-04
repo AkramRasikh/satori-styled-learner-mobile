@@ -4,7 +4,6 @@ import {
   ActivityIndicator,
   Button,
   Divider,
-  IconButton,
   MD2Colors,
 } from 'react-native-paper';
 import useAnimation from '../../hooks/useAnimation';
