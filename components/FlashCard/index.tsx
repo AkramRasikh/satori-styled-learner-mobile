@@ -17,6 +17,8 @@ import FlashCardBodyContainer from './FlashCardBodyContainer';
 import AnimationContainer from '../AnimationContainer';
 import Clipboard from '@react-native-clipboard/clipboard';
 import useData from '../../context/Data/useData';
+import useLanguageSelector from '../../context/LanguageSelector/useLanguageSelector';
+import {characterBasedLanguages} from '../../context/LanguageSelector/LanguageSelectorProvider';
 
 const NestedFlashCard = ({
   fadeAnimNestedModal,
@@ -64,6 +66,13 @@ const FlashCard = ({
   const scaleAnimNestedModal = useRef(new Animated.Value(0.8)).current;
   const targetRef = useRef(null);
   const {setUpdatePromptState} = useData();
+  const {languageSelectedState} = useLanguageSelector();
+
+  const isCharacterBasedLanguage = characterBasedLanguages.includes(
+    languageSelectedState,
+  );
+
+  console.log('## isCharacterBasedLanguage', isCharacterBasedLanguage);
 
   const {collapseAnimation} = useAnimation({
     fadeAnim,
@@ -252,6 +261,14 @@ const FlashCard = ({
                     onPress={() => handleAdhocWord('rhyme')}>
                     rhyme
                   </Button>
+                  {isCharacterBasedLanguage && (
+                    <Button
+                      mode="elevated"
+                      disabled={isLoadingState}
+                      onPress={() => handleAdhocWord('seperate')}>
+                      seperate 字字
+                    </Button>
+                  )}
                   <Button
                     buttonColor={MD2Colors.lightBlue300}
                     mode="elevated"

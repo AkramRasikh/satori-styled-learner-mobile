@@ -8,6 +8,11 @@ export enum LanguageEnum {
   Arabic = 'arabic',
 }
 
+export const characterBasedLanguages = [
+  LanguageEnum.Chinese,
+  LanguageEnum.Japanese,
+];
+
 export const LanguageSelectorProvider = ({children}: PropsWithChildren<{}>) => {
   const [languageSelectedState, setLanguageSelectedState] =
     useState<LanguageEnum>();
