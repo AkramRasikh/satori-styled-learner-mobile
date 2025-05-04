@@ -8,6 +8,7 @@ import useLoadDifficultSentences from '../../hooks/useLoadDifficultSentences';
 import useLanguageSelector from '../LanguageSelector/useLanguageSelector';
 import useData from '../Data/useData';
 import {useSelector} from 'react-redux';
+import useWordData from '../WordData/useWordData';
 
 export const DifficultSentencesContext = createContext(null);
 
@@ -19,7 +20,7 @@ export const DifficultSentencesProvider = ({
     difficultSentencesHasBeenSetState,
     setDifficultSentencesHasBeenSetState,
   ] = useState(false);
-  const [combineWordsListState, setCombineWordsListState] = useState([]);
+  const {combineWordsListState, setCombineWordsListState} = useWordData();
   const [combineSentenceContext, setCombineSentenceContext] = useState('');
   const [dueWordsState, setDueWordsState] = useState([]);
 

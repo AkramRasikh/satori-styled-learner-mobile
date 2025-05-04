@@ -59,8 +59,8 @@ function App(): React.JSX.Element {
     <Provider store={store}>
       <LanguageSelectorProvider>
         <DataProvider>
-          <DifficultSentencesProvider>
-            <WordDataProvider>
+          <WordDataProvider>
+            <DifficultSentencesProvider>
               <SafeAreaProvider>
                 <NavigationContainer>
                   <Stack.Navigator
@@ -82,8 +82,8 @@ function App(): React.JSX.Element {
                   </Stack.Navigator>
                 </NavigationContainer>
               </SafeAreaProvider>
-            </WordDataProvider>
-          </DifficultSentencesProvider>
+            </DifficultSentencesProvider>
+          </WordDataProvider>
         </DataProvider>
       </LanguageSelectorProvider>
     </Provider>
