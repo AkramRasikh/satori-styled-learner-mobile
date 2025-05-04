@@ -124,7 +124,10 @@ const TopicContent = ({
 
   if (isVideoModeState && hasVideoCheckState) {
     return (
-      <TopicContentVideoProvider realStartTime={realStartTime}>
+      <TopicContentVideoProvider
+        realStartTime={realStartTime}
+        secondsToSentencesMapState={secondsToSentencesMapState}
+        loadedContent={loadedContent}>
         <TopicContentVideoMode
           topicName={topicName}
           updateTopicMetaData={updateTopicMetaData}

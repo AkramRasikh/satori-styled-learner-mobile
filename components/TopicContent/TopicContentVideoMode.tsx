@@ -64,6 +64,7 @@ const TopicContentVideoMode = ({
     setCurrentVideoTimeState,
     setVideoDurationState,
     playVideo,
+    handleLoopThisSentence,
   } = useTopicContentVideo();
 
   const handleLayout = event => {
@@ -177,6 +178,7 @@ const TopicContentVideoMode = ({
             seekHandler={seekHandler}
             progress={progress}
             setShowReviewSectionState={setShowReviewSectionState}
+            handleLoopThisSentence={handleLoopThisSentence}
           />
         </View>
       </View>

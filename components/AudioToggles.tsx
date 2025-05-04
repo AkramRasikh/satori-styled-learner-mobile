@@ -13,6 +13,7 @@ const AudioToggles = ({
   seekHandler,
   progress,
   setShowReviewSectionState,
+  handleLoopThisSentence,
 }) => (
   <View
     style={{
@@ -55,6 +56,7 @@ const AudioToggles = ({
         onPress={playSound}
         icon={isPlaying ? 'pause' : 'play'}
         containerColor={isPlaying ? MD2Colors.green300 : MD2Colors.grey300}
+        onLongPress={handleLoopThisSentence && handleLoopThisSentence}
       />
     </View>
   </View>

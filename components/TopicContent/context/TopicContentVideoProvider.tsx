@@ -4,6 +4,8 @@ import {VideoRef} from 'react-native-video';
 export const TopicContentVideoContext = createContext(null);
 
 export const TopicContentVideoProvider = ({
+  secondsToSentencesMapState,
+  loadedContent,
   realStartTime,
   children,
 }: PropsWithChildren<{}>) => {
@@ -55,6 +57,19 @@ export const TopicContentVideoProvider = ({
     }
   };
 
+  const handleLoopThisSentence = () => {
+    const currentlyPlayingId =
+      secondsToSentencesMapState[Math.floor(currentVideoTimeState)];
+    const index = loadedContent.content.findIndex(
+      i => i.id === currentlyPlayingId,
+    );
+
+    const topicSentence = loadedContent.content[index];
+    if (topicSentence) {
+      handlePlayFromThisSentence(topicSentence?.startAt || topicSentence.time);
+    }
+  };
+
   const handleVideoPause = () => {
     if (isVideoPlaying) {
       setIsVideoPlaying(false);
@@ -74,6 +89,7 @@ export const TopicContentVideoProvider = ({
         setCurrentVideoTimeState,
         setVideoDurationState,
         playVideo,
+        handleLoopThisSentence,
       }}>
       {children}
     </TopicContentVideoContext.Provider>
