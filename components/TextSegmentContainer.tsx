@@ -1,4 +1,4 @@
-import React, {Text} from 'react-native';
+import React, {Text, View} from 'react-native';
 import TextSegmentWithWordOverlap from './TextSegmentWithWordOverlap';
 import {getHexCode} from '../utils/get-hex-code';
 
@@ -38,6 +38,12 @@ const TextSegmentContainer = ({
           return nestedValueIndex.colorIndex;
         });
 
+        const showPhoneticHint =
+          isPartOfPerfectlyMatchedWord?.phonetic !==
+            isPartOfPerfectlyMatchedWord?.baseForm ||
+          isPartOfPerfectlyMatchedWord?.phonetic !==
+            isPartOfPerfectlyMatchedWord?.surface;
+
         return (
           <Text
             key={index}
@@ -61,6 +67,27 @@ const TextSegmentContainer = ({
                 nestedCoordinates={nestedCoordinates}
                 colorIndex={isPartOfPerfectlyMatchedWord.colorIndex}
               />
+            ) : showPhoneticHint ? (
+              <View style={{height: 32}}>
+                <Text
+                  style={{
+                    fontSize: 10,
+                    color: getHexCode(isPartOfPerfectlyMatchedWord.colorIndex),
+                    marginHorizontal: 'auto',
+                    marginBottom: 2,
+                  }}>
+                  {isPartOfPerfectlyMatchedWord.phonetic}
+                </Text>
+                <Text
+                  style={{
+                    fontSize: 20,
+                    color: getHexCode(isPartOfPerfectlyMatchedWord.colorIndex),
+                    marginHorizontal: 'auto',
+                    marginVertical: 'auto',
+                  }}>
+                  {segment.text}
+                </Text>
+              </View>
             ) : (
               segment.text
             )}
