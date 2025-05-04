@@ -10,7 +10,10 @@ const TextSegmentWithWordOverlap = ({
   const [textWidth, setTextWidth] = useState(0);
 
   return (
-    <View>
+    <View
+      style={{
+        height: 32,
+      }}>
       <View
         style={{
           display: 'flex',
