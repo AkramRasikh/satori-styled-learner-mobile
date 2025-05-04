@@ -449,6 +449,7 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
           isLoading={loadingCombineSentences}
           combineSentenceContext={combineSentenceContext}
           setCombineSentenceContext={setCombineSentenceContext}
+          handleShowCardInfo={handleSelectWord}
         />
       ) : null}
       {isLanguageLoading && (

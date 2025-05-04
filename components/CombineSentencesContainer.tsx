@@ -1,4 +1,4 @@
-import React, {View} from 'react-native';
+import React, {TouchableOpacity, View} from 'react-native';
 import {
   ActivityIndicator,
   TextInput,
@@ -9,14 +9,21 @@ import {
   Divider,
 } from 'react-native-paper';
 
-const CombineSentenceWord = ({indexNum, item, setCombineWordsListState}) => (
+const CombineSentenceWord = ({
+  indexNum,
+  item,
+  setCombineWordsListState,
+  handleShowCardInfo,
+}) => (
   <View
     style={{
       display: 'flex',
       flexDirection: 'row',
       alignItems: 'center',
     }}>
-    <Text>{indexNum + 1 + ') ' + item.word}</Text>
+    <TouchableOpacity onPress={() => handleShowCardInfo?.(item)}>
+      <Text>{indexNum + 1 + ') ' + item.word}</Text>
+    </TouchableOpacity>
     <IconButton
       icon="minus"
       containerColor={MD3Colors.error30}
@@ -36,6 +43,7 @@ const CombineSentencesContainer = ({
   isLoading,
   combineSentenceContext,
   setCombineSentenceContext,
+  handleShowCardInfo,
 }) => (
   <View
     style={{
@@ -71,6 +79,7 @@ const CombineSentencesContainer = ({
             setCombineWordsListState={setCombineWordsListState}
             indexNum={index}
             item={item}
+            handleShowCardInfo={handleShowCardInfo}
           />
         ))}
       </Text>
