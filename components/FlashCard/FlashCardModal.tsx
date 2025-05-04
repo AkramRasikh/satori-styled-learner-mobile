@@ -120,11 +120,12 @@ export const FlashCardContent = ({
 }) => {
   const {updateWordData} = useWordData();
   const arr = [
+    {label: 'Base Form:', value: baseForm, property: 'baseForm'},
     {label: 'Surface Form:', value: surfaceForm, property: 'surfaceForm'},
-    {label: 'Definition: ', value: definition, property: 'definition'},
-    {label: 'Phonetic: ', value: phonetic, property: 'phonetic'},
+    {label: 'Definition:', value: definition, property: 'definition'},
+    {label: 'Phonetic:', value: phonetic, property: 'phonetic'},
     {
-      label: 'Transliteration: ',
+      label: 'Transliteration:',
       value: transliteration,
       property: transliteration,
     },
