@@ -57,6 +57,24 @@ export const TopicContentVideoProvider = ({
     }
   };
 
+  const handlePreviousSentence = () => {
+    const currentlyPlayingId =
+      secondsToSentencesMapState[Math.floor(currentVideoTimeState)];
+    const index = loadedContent.content.findIndex(
+      i => i.id === currentlyPlayingId,
+    );
+
+    const previousSentence = index - 1;
+    if (previousSentence >= 0) {
+      const topicSentence = loadedContent.content[previousSentence];
+      if (topicSentence) {
+        handlePlayFromThisSentence(
+          topicSentence?.startAt || topicSentence.time,
+        );
+      }
+    }
+  };
+
   const handleLoopThisSentence = () => {
     const currentlyPlayingId =
       secondsToSentencesMapState[Math.floor(currentVideoTimeState)];
@@ -90,6 +108,7 @@ export const TopicContentVideoProvider = ({
         setVideoDurationState,
         playVideo,
         handleLoopThisSentence,
+        handlePreviousSentence,
       }}>
       {children}
     </TopicContentVideoContext.Provider>

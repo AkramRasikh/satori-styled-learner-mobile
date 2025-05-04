@@ -14,6 +14,7 @@ const AudioToggles = ({
   progress,
   setShowReviewSectionState,
   handleLoopThisSentence,
+  handlePreviousSentence,
 }) => (
   <View
     style={{
@@ -51,6 +52,13 @@ const AudioToggles = ({
         onPress={() => seekHandler(true)}
         icon="fast-forward"
       />
+      {handlePreviousSentence && (
+        <IconButton
+          mode="contained"
+          onPress={handlePreviousSentence}
+          icon="skip-backward"
+        />
+      )}
       <IconButton
         mode="contained"
         onPress={playSound}
