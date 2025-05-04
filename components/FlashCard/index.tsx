@@ -72,8 +72,6 @@ const FlashCard = ({
     languageSelectedState,
   );
 
-  console.log('## isCharacterBasedLanguage', isCharacterBasedLanguage);
-
   const {collapseAnimation} = useAnimation({
     fadeAnim,
     scaleAnim,
