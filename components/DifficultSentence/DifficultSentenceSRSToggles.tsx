@@ -4,7 +4,7 @@ import useDifficultSentenceContext from './context/useDifficultSentence';
 import SRSTogglesScaled from '../SRSTogglesScaled';
 import {srsCalculationAndText} from '../../utils/srs/srs-calculation-and-text';
 
-const DifficultSentenceSRSToggles = ({reviewData, isSentenceHelper}) => {
+const DifficultSentenceSRSToggles = ({reviewData}) => {
   const {handleNextReview, handleDeleteContent} = useDifficultSentenceContext();
   const timeNow = new Date();
 
@@ -26,11 +26,7 @@ const DifficultSentenceSRSToggles = ({reviewData, isSentenceHelper}) => {
         hardText={hardText}
         goodText={goodText}
         easyText={easyText}
-        quickDeleteFunc={
-          isScheduledForDeletion && isSentenceHelper
-            ? handleDeleteContent
-            : null
-        }
+        quickDeleteFunc={isScheduledForDeletion ? handleDeleteContent : null}
       />
     </View>
   );
