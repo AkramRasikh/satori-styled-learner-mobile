@@ -10,9 +10,11 @@ const FlashCardTopSection = ({
   handleCloseModal,
   setIsOpenWordOptionsState,
   isOpenWordOptionsState,
+  handleCopyText,
 }) => (
   <TouchableOpacity
     onPress={selectWordWithScroll}
+    onLongPress={handleCopyText}
     style={{
       alignSelf: 'flex-start',
       marginVertical: 5,

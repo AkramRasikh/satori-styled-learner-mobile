@@ -15,6 +15,8 @@ import FlashCardModal from './FlashCardModal';
 import FlashCardLoadMoreBtn from './FlashCardLoadMoreBtn';
 import FlashCardBodyContainer from './FlashCardBodyContainer';
 import AnimationContainer from '../AnimationContainer';
+import Clipboard from '@react-native-clipboard/clipboard';
+import useData from '../../context/Data/useData';
 
 const NestedFlashCard = ({
   fadeAnimNestedModal,
@@ -61,6 +63,7 @@ const FlashCard = ({
   const fadeAnimNestedModal = useRef(new Animated.Value(0)).current;
   const scaleAnimNestedModal = useRef(new Animated.Value(0.8)).current;
   const targetRef = useRef(null);
+  const {setUpdatePromptState} = useData();
 
   const {collapseAnimation} = useAnimation({
     fadeAnim,
@@ -91,6 +94,11 @@ const FlashCard = ({
       setTimeout(resolve, 100);
     });
     setSelectedDueCardState(null);
+  };
+
+  const handleCopyText = () => {
+    Clipboard.setString(baseForm);
+    setUpdatePromptState(`${baseForm} added 📎📋!`);
   };
 
   const handleSubmitWordPrompt = async () => {
@@ -166,6 +174,7 @@ const FlashCard = ({
               handleCloseModal={handleCloseModal}
               setIsOpenWordOptionsState={setIsOpenWordOptionsState}
               isOpenWordOptionsState={isOpenWordOptionsState}
+              handleCopyText={handleCopyText}
             />
             <Divider bold />
             {isSelectedWord && (
