@@ -74,6 +74,7 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
     fetchData,
     updateWordData,
     handleAdhocMinimalPair,
+    handleAddCustomWordPrompt,
   } = useData();
 
   const {
@@ -375,6 +376,23 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
     setDueWordsState(updatedDueCardsState);
   };
 
+  const handleAddCustomWordPromptFunc = async ({inputWord, prompt}) => {
+    const res = await handleAddCustomWordPrompt({inputWord, prompt});
+    const sentenceIds = res.map(item => item.id);
+
+    const updatedDueCardsState = dueWordsState.map(item => {
+      if (item.id === inputWord.id) {
+        return {
+          ...item,
+          contexts: [...item.contexts, sentenceIds],
+          contextData: [...item.contextData, ...res],
+        };
+      }
+      return item;
+    });
+    setDueWordsState(updatedDueCardsState);
+  };
+
   const handleLanguageSelection = async selectedLanguage => {
     try {
       setIsLanguageLoading(true);
@@ -507,6 +525,9 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
                         scrollViewRef={scrollViewRef}
                         updateWordDataAdditionalFunc={
                           updateWordDataAdditionalFunc
+                        }
+                        handleAddCustomWordPromptFunc={
+                          handleAddCustomWordPromptFunc
                         }
                       />
                     </FlashCardProvider>

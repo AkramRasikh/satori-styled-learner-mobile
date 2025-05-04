@@ -10,6 +10,7 @@ const FlashcardsWordsSection = ({
   realCapacity,
   scrollViewRef,
   handleAdhocMinimalPairFunc,
+  handleAddCustomWordPromptFunc,
 }) => {
   const [selectedDueCardState, setSelectedDueCardState] = useState();
 
@@ -26,6 +27,7 @@ const FlashcardsWordsSection = ({
         setSelectedDueCardState={setSelectedDueCardState}
         scrollViewRef={scrollViewRef}
         handleAdhocMinimalPairFunc={handleAdhocMinimalPairFunc}
+        handleAddCustomWordPromptFunc={handleAddCustomWordPromptFunc}
       />
     </FlashCardProvider>
   ));

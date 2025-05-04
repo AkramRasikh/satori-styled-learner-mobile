@@ -39,7 +39,8 @@ function WordStudyContainer(): React.JSX.Element {
 
   const {languageSelectedState} = useLanguageSelector();
 
-  const {combineWords, handleAdhocMinimalPair} = useData();
+  const {combineWords, handleAdhocMinimalPair, handleAddCustomWordPrompt} =
+    useData();
 
   const {
     deleteWord,
@@ -113,6 +114,21 @@ function WordStudyContainer(): React.JSX.Element {
 
   const handleAdhocMinimalPairFunc = async ({inputWord, mode}) => {
     const res = await handleAdhocMinimalPair({inputWord, mode});
+    const sentenceIds = res.map(item => item.id);
+    const updatedDueCardsState = dueCardsState.map(item => {
+      if (item.id === inputWord.id) {
+        return {
+          ...item,
+          contexts: [...item.contexts, sentenceIds],
+          contextData: [...item.contextData, ...res],
+        };
+      }
+      return item;
+    });
+    setShowDueCardsState(updatedDueCardsState);
+  };
+  const handleAddCustomWordPromptFunc = async ({inputWord, prompt}) => {
+    const res = await handleAddCustomWordPrompt({inputWord, prompt});
     const sentenceIds = res.map(item => item.id);
     const updatedDueCardsState = dueCardsState.map(item => {
       if (item.id === inputWord.id) {
@@ -232,6 +248,7 @@ function WordStudyContainer(): React.JSX.Element {
             realCapacity={realCapacity}
             scrollViewRef={scrollViewRef}
             handleAdhocMinimalPairFunc={handleAdhocMinimalPairFunc}
+            handleAddCustomWordPromptFunc={handleAddCustomWordPromptFunc}
           />
         </View>
       </ScrollView>

@@ -5,6 +5,7 @@ import {
   Button,
   Divider,
   MD2Colors,
+  TextInput,
 } from 'react-native-paper';
 import useAnimation from '../../hooks/useAnimation';
 import FlashCardLoadingSpinner from './FlashCardLoadingSpinner';
@@ -48,10 +49,13 @@ const FlashCard = ({
   scrollViewRef,
   handleAdhocMinimalPairFunc,
   updateWordDataAdditionalFunc,
+  handleAddCustomWordPromptFunc,
 }) => {
   const [isCollapsingState, setIsCollapsingState] = useState(false);
   const [isOpenWordOptionsState, setIsOpenWordOptionsState] = useState(false);
   const [isLoadingState, setIsLoadingState] = useState(false);
+  const [isCustomPromptOpenState, setIsCustomPromptOpenState] = useState(false);
+  const [customPromptTextState, setCustomPromptTextState] = useState('');
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const scaleAnim = useRef(new Animated.Value(0.8)).current;
   const fadeAnimNestedModal = useRef(new Animated.Value(0)).current;
@@ -87,6 +91,22 @@ const FlashCard = ({
       setTimeout(resolve, 100);
     });
     setSelectedDueCardState(null);
+  };
+
+  const handleSubmitWordPrompt = async () => {
+    if (!customPromptTextState) {
+      return null;
+    }
+    try {
+      setIsLoadingState(true);
+      await handleAddCustomWordPromptFunc({
+        inputWord: {id: wordData.id, word: baseForm, definition},
+        prompt: customPromptTextState,
+      });
+    } catch (error) {
+    } finally {
+      setIsLoadingState(false);
+    }
   };
 
   const handleAdhocWord = async mode => {
@@ -230,7 +250,35 @@ const FlashCard = ({
                     onPress={() => handleAdhocWord('')}>
                     sound 🎶
                   </Button>
+
+                  <Button
+                    buttonColor={MD2Colors.teal500}
+                    mode="elevated"
+                    disabled={isLoadingState}
+                    onPress={() =>
+                      setIsCustomPromptOpenState(!isCustomPromptOpenState)
+                    }>
+                    Custom
+                  </Button>
                 </View>
+                {isCustomPromptOpenState && (
+                  <View>
+                    <TextInput
+                      label="Prompt"
+                      value={customPromptTextState}
+                      onChangeText={setCustomPromptTextState}
+                      mode="outlined"
+                      style={{margin: 5}}
+                      multiline
+                    />
+                    <Button
+                      mode="contained"
+                      onPress={handleSubmitWordPrompt}
+                      disabled={customPromptTextState?.trim() === ''}>
+                      Submit
+                    </Button>
+                  </View>
+                )}
               </View>
             )}
           </FlashCardBodyContainer>
