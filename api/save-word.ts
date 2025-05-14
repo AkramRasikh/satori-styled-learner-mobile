@@ -1,4 +1,4 @@
-import {BACKEND_ENDPOINT} from '@env';
+import {ADD_WORD_URL} from '@env';
 
 const saveWordAPI = async ({
   highlightedWord,
@@ -9,10 +9,10 @@ const saveWordAPI = async ({
   reviewData,
   meaning,
 }) => {
-  const baseUrl = BACKEND_ENDPOINT;
+  const baseUrl = ADD_WORD_URL;
 
   try {
-    const response = await fetch(baseUrl + '/add-word', {
+    const response = await fetch(baseUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
