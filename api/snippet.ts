@@ -1,8 +1,8 @@
-import {BACKEND_ENDPOINT} from '@env';
+import {ADD_SNIPPET_URL, DELETE_SNIPPET_URL} from '@env';
 import {snippets} from '../refs';
 
 export const addSnippetAPI = async ({contentEntry, language}) => {
-  const url = BACKEND_ENDPOINT + '/add-snippet';
+  const url = ADD_SNIPPET_URL;
 
   try {
     const response = await fetch(url, {
@@ -26,7 +26,7 @@ export const addSnippetAPI = async ({contentEntry, language}) => {
   }
 };
 export const deleteSnippetAPI = async ({snippetId, language}) => {
-  const url = BACKEND_ENDPOINT + '/delete-snippet';
+  const url = DELETE_SNIPPET_URL;
 
   try {
     const response = await fetch(url, {
