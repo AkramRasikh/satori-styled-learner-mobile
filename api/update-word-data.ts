@@ -1,7 +1,7 @@
-import {BACKEND_ENDPOINT} from '@env';
+import {UPDATE_WORD_URL} from '@env';
 
 export const updateWordAPI = async ({wordId, fieldToUpdate, language}) => {
-  const url = BACKEND_ENDPOINT + '/update-word';
+  const url = UPDATE_WORD_URL;
 
   try {
     const response = await fetch(url, {
@@ -10,8 +10,8 @@ export const updateWordAPI = async ({wordId, fieldToUpdate, language}) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
+        id: wordId,
         language,
-        wordId,
         fieldToUpdate,
       }),
     });
