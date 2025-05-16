@@ -1,7 +1,7 @@
-import {BACKEND_ENDPOINT} from '@env';
+import {DELETE_WORD_URL} from '@env';
 
 export const deleteWordAPI = async ({wordId, language}) => {
-  const url = BACKEND_ENDPOINT + '/delete-word';
+  const url = DELETE_WORD_URL;
 
   try {
     const response = await fetch(url, {
