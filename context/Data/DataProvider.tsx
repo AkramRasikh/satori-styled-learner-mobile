@@ -3,8 +3,6 @@ import {createContext, PropsWithChildren, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {getAllData} from '../../api/load-content';
 import {updateSentenceDataAPI} from '../../api/update-sentence-data';
-import addAdhocSentenceAPI from '../../api/add-adhoc-sentence';
-import {setFutureReviewDate} from '../../components/ReviewSection';
 import updateAdhocSentenceAPI from '../../api/update-adhoc-sentence';
 import {addSnippetAPI, deleteSnippetAPI} from '../../api/snippet';
 import {makeArrayUnique} from '../../hooks/useHighlightWordToWordBank';
@@ -51,7 +49,6 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
   const [dataProviderIsLoading, setDataProviderIsLoading] = useState(true);
   const [provdiderError, setProvdiderError] = useState(null);
   const [updatePromptState, setUpdatePromptState] = useState('');
-  const [isAdhocDataLoading, setIsAdhocDataLoading] = useState(true);
   const [combineWordsListState, setCombineWordsListState] = useState([]);
   const [updateMetaDataState, setUpdateMetaDataState] = useState(0);
   const adhocTargetLanguageSentencesState = useSelector(
@@ -591,34 +588,6 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
     }
   };
 
-  const addAdhocSentenceFunc = async ({baseLang, context, topic, tags}) => {
-    try {
-      const adhocObject = await addAdhocSentenceAPI({
-        baseLang,
-        context,
-        topic,
-        tags,
-        nextReview: setFutureReviewDate(new Date(), 3), // update here!
-      });
-      setIsAdhocDataLoading(true);
-      const updatedAdhocSentencesState = [
-        ...adhocTargetLanguageSentencesState,
-        adhocObject,
-      ];
-      dispatch(setSentencesStateDispatch(updatedAdhocSentencesState));
-      await storeDataLocalStorage(
-        dataStorageKeyPrefix + adhocSentences,
-        updatedAdhocSentencesState,
-      );
-      return adhocObject;
-    } catch (error) {
-      setProvdiderError('Error adding adhoc sentence');
-      setTimeout(() => setProvdiderError(null), 3000);
-    } finally {
-      setIsAdhocDataLoading(false);
-    }
-  };
-
   const addSnippet = async snippetData => {
     try {
       const snippetDataFromAPI = await addSnippetAPI({
@@ -911,8 +880,6 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
         dataProviderIsLoading,
         provdiderError,
         updateSentenceData,
-        addAdhocSentenceFunc,
-        isAdhocDataLoading,
         addSnippet,
         removeSnippet,
         pureWords: pureWordsArr,
