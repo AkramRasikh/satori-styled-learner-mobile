@@ -18,10 +18,6 @@ const SatoriLineSRS = ({
   const reviewData = sentence?.reviewData;
   const isAdhoc = sentence?.isAdhoc;
 
-  const nextReview = sentence?.nextReview;
-
-  const hasLegacyReviewSystem = !reviewData?.due && nextReview;
-
   const hasDueDate = getDueDate(reviewData);
 
   const hasDueDateInFuture = new Date(hasDueDate) > timeNow;
@@ -33,16 +29,6 @@ const SatoriLineSRS = ({
       timeNow,
     });
 
-  const getShouldRemoveLegacyFields = () => {
-    if (hasLegacyReviewSystem) {
-      return {
-        nextReview: null,
-        reviewHistory: null,
-      };
-    }
-    return {};
-  };
-
   const handleDeleteReview = async () => {
     setShowReviewSettings(false);
     setIsSettingsOpenState(false);
@@ -51,8 +37,7 @@ const SatoriLineSRS = ({
       topicName: sentence.topic,
       sentenceId: sentence.id,
       fieldToUpdate: {
-        reviewData: null,
-        ...getShouldRemoveLegacyFields(),
+        reviewData: {},
       },
       contentIndex: contentIndex ?? sentence.contentIndex,
     });
@@ -69,7 +54,6 @@ const SatoriLineSRS = ({
       sentenceId: sentence.id,
       fieldToUpdate: {
         reviewData: nextReviewData,
-        ...getShouldRemoveLegacyFields(),
       },
       contentIndex: contentIndex ?? sentence.contentIndex,
     });

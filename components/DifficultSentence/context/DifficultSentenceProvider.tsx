@@ -42,8 +42,6 @@ export const DifficultSentenceProvider = ({
   const hasSentenceBreakdown = sentence?.vocab;
   const revealSentenceBreakdown = showSentenceBreakDown && hasSentenceBreakdown;
 
-  const hasLegacyReviewSystem = !reviewData?.due && nextReview;
-
   const cardDataRelativeToNow = getCardDataRelativeToNow({
     hasDueDate,
     reviewData,
@@ -55,16 +53,6 @@ export const DifficultSentenceProvider = ({
     setShowSentenceBreakDown(!showSentenceBreakDown);
   };
 
-  const getShouldRemoveLegacyFields = () => {
-    if (hasLegacyReviewSystem) {
-      return {
-        nextReview: null,
-        reviewHistory: null,
-      };
-    }
-    return {};
-  };
-
   const handleDeleteContent = async () => {
     try {
       setIsTriggeringReview(true);
@@ -74,9 +62,7 @@ export const DifficultSentenceProvider = ({
         topicName: sentence.topic,
         sentenceId: sentence.id,
         fieldToUpdate: {
-          reviewData: null,
-          nextReview: null,
-          reviewHistory: null,
+          reviewData: {},
         },
         contentIndex: sentence?.contentIndex,
       });
@@ -105,7 +91,6 @@ export const DifficultSentenceProvider = ({
         sentenceId: sentence.id,
         fieldToUpdate: {
           reviewData: nextReviewData,
-          ...getShouldRemoveLegacyFields(),
         },
         contentIndex: sentence.contentIndex,
       });

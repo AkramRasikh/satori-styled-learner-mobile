@@ -18,10 +18,6 @@ const BilingualTextSwipeSRS = ({
   const reviewData = sentence?.reviewData;
   const isAdhoc = sentence?.isAdhoc;
 
-  const nextReview = sentence?.nextReview;
-
-  const hasLegacyReviewSystem = !reviewData?.due && nextReview;
-
   const hasDueDate = getDueDate(reviewData);
 
   const {hardText, nextScheduledOptions} = srsCalculationAndText({
@@ -38,16 +34,6 @@ const BilingualTextSwipeSRS = ({
     scaleAnim,
   });
 
-  const getShouldRemoveLegacyFields = () => {
-    if (hasLegacyReviewSystem) {
-      return {
-        nextReview: null,
-        reviewHistory: null,
-      };
-    }
-    return {};
-  };
-
   const handleDeleteReview = async () => {
     setShowQuickReviewState(false);
     await updateSentenceData({
@@ -55,8 +41,7 @@ const BilingualTextSwipeSRS = ({
       topicName: sentence.topic,
       sentenceId: sentence.id,
       fieldToUpdate: {
-        reviewData: null,
-        ...getShouldRemoveLegacyFields(),
+        reviewData: {},
       },
       contentIndex: contentIndex ?? sentence.contentIndex,
     });
@@ -71,7 +56,6 @@ const BilingualTextSwipeSRS = ({
       sentenceId: sentence.id,
       fieldToUpdate: {
         reviewData: nextReviewData,
-        ...getShouldRemoveLegacyFields(),
       },
       contentIndex: contentIndex ?? sentence.contentIndex,
     });

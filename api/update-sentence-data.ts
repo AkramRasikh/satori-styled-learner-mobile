@@ -1,4 +1,4 @@
-import {BACKEND_ENDPOINT} from '@env';
+import {UPDATE_SENTENCE_URL} from '@env';
 
 export const updateSentenceDataAPI = async ({
   topicName,
@@ -6,7 +6,7 @@ export const updateSentenceDataAPI = async ({
   fieldToUpdate,
   language,
 }) => {
-  const url = BACKEND_ENDPOINT + '/update-sentence-review';
+  const url = UPDATE_SENTENCE_URL;
 
   try {
     const response = await fetch(url, {
