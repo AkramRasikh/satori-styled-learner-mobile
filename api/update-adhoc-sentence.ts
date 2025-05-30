@@ -1,12 +1,11 @@
-import {BACKEND_ENDPOINT} from '@env';
+import {UPDATE_ADHOC_SENTENCE_URL} from '@env';
 
 const updateAdhocSentenceAPI = async ({
   sentenceId,
   fieldToUpdate,
   language,
 }) => {
-  const baseUrl = BACKEND_ENDPOINT;
-  const url = baseUrl + '/update-adhoc-sentence';
+  const url = UPDATE_ADHOC_SENTENCE_URL;
   try {
     const response = await fetch(url, {
       method: 'POST',
@@ -15,7 +14,7 @@ const updateAdhocSentenceAPI = async ({
       },
       body: JSON.stringify({
         language,
-        sentenceId,
+        id: sentenceId,
         fieldToUpdate,
       }),
     });
