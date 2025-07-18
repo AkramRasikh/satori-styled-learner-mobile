@@ -9,6 +9,7 @@
     "start": "NODE_ENV=development npx react-native start --reset-cache",
     "start-local": "NODE_ENV=local-dev npx react-native start --reset-cache",
     "start-local-physical": "NODE_ENV=local-dev-physical npx react-native start --reset-cache",
+    "start-local-firebase": "NODE_ENV=local-dev-firebase npx react-native start --reset-cache",
     "start-test": "cross-env node USE_MOCK_DB=true react-native start",
     "local": "/Users/akramrasikh/projects/SatoriNativeApp/node_modules/.generated/launchPackager.command; exit",
     "test": "jest",

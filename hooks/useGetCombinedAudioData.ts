@@ -1,5 +1,6 @@
 import {useEffect} from 'react';
-import {FIREBASE_ASSETS_URL, FIREBASE_STORAGE_ID} from '@env';
+import {FIREBASE_ASSETS_URL} from '@env';
+// import {FIREBASE_ASSETS_URL, FIREBASE_STORAGE_ID} from '@env';
 import Sound from 'react-native-sound';
 import useLanguageSelector from '../context/LanguageSelector/useLanguageSelector';
 Sound.setCategory('Playback');
@@ -7,8 +8,9 @@ Sound.setCategory('Playback');
 export const getFirebaseAudioURL = (mp3FileName: string, language: string) => {
   const languageParam = `${language}-audio%2F`;
   const baseURL = FIREBASE_ASSETS_URL + languageParam;
-  const firebaseToken = FIREBASE_STORAGE_ID;
-  const url = `${baseURL}${mp3FileName}.mp3?alt=media&token=${firebaseToken}`;
+  const url = `${baseURL}${mp3FileName}.mp3`;
+  // const firebaseToken = FIREBASE_STORAGE_ID;
+  // const url = `${baseURL}${mp3FileName}.mp3?alt=media&token=${firebaseToken}`;
 
   return url;
 };
@@ -16,8 +18,9 @@ export const getFirebaseAudioURL = (mp3FileName: string, language: string) => {
 export const getFirebaseVideoURL = (mp3FileName: string, language: string) => {
   const languageParam = `${language}-video%2F`;
   const baseURL = FIREBASE_ASSETS_URL + languageParam;
-  const firebaseToken = FIREBASE_STORAGE_ID;
-  const url = `${baseURL}${mp3FileName}.mp4?alt=media&token=${firebaseToken}`;
+  const url = `${baseURL}${mp3FileName}.mp4`;
+  // const url = `${baseURL}${mp3FileName}.mp4?alt=media&token=${firebaseToken}`;
+  // const firebaseToken = FIREBASE_STORAGE_ID;
 
   return url;
 };
