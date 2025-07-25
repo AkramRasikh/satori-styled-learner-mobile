@@ -1,5 +1,5 @@
-import React, {View} from 'react-native';
-import {useEffect, useState} from 'react';
+import React, {PanResponder, View} from 'react-native';
+import {useEffect, useRef, useState} from 'react';
 import DifficultSentenceTopHeader from './DifficultSentenceTopHeader';
 import DifficultSentenceTextContainer from './DifficultSentenceTextContainer';
 import useData from '../../context/Data/useData';
@@ -115,7 +115,40 @@ const DifficultSentenceContainer = ({
 }) => {
   const [showAllMatchedWordsState, setShowAllMatchedWordsState] =
     useState(false);
+  const [isDeleteReadyState, setIsDeleteReadyState] = useState(false);
   const [isHighlightMode, setHighlightMode] = useState(false);
+
+  const {handleDeleteContent, collapseAnimation} =
+    useDifficultSentenceContext();
+
+  useEffect(() => {
+    if (isDeleteReadyState) {
+      const handleDeleteContentFunc = async () => {
+        await collapseAnimation();
+        await handleDeleteContent();
+      };
+      handleDeleteContentFunc();
+    }
+  }, [isDeleteReadyState, handleDeleteContent]);
+
+  const swipeDistance = useRef(0);
+
+  const panResponder = useRef(
+    PanResponder.create({
+      onMoveShouldSetPanResponder: (_, gestureState) => {
+        swipeDistance.current = 0;
+        return Math.abs(gestureState.dx) > 5;
+      },
+      onPanResponderMove: (_, gestureState) => {
+        swipeDistance.current += gestureState.dx; // Accumulate swipe distance
+        const distance = Math.abs(gestureState.dx);
+
+        if (distance > 200 && !isHighlightMode) {
+          setIsDeleteReadyState(true); // Set state when 50px threshold is reached
+        }
+      },
+    }),
+  ).current;
 
   const handleShowAllMatchedWords = () => {
     setShowAllMatchedWordsState(!showAllMatchedWordsState);
@@ -236,7 +269,7 @@ const DifficultSentenceContainer = ({
     );
   };
 
-  const getSafeText = (targetText: string) => {
+  const getSafeText = () => {
     if (revealSentenceBreakdown) {
       const vocabBreakDoownWithHexCode = revealSentenceBreakdown
         ? sentence.vocab.map((i, index) => {
@@ -293,7 +326,7 @@ const DifficultSentenceContainer = ({
   };
 
   return (
-    <View>
+    <View {...panResponder.panHandlers}>
       {isTriggeringReview && (
         <ActivityIndicator
           style={{
@@ -322,6 +355,7 @@ const DifficultSentenceContainer = ({
           />
           <DifficultSentenceTextContainer
             targetLang={sentence.targetLang}
+            previousSentence={sentence.previousSentence}
             baseLang={sentence.baseLang}
             sentenceId={sentence.id}
             safeTextFunc={getSafeText}

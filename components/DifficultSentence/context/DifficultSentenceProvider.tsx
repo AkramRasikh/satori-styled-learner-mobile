@@ -121,6 +121,7 @@ export const DifficultSentenceProvider = ({
         hasSentenceBreakdown,
         quickTranslationArr,
         setQuickTranslationArr,
+        collapseAnimation,
       }}>
       {children}
     </DifficultSentenceContext.Provider>
