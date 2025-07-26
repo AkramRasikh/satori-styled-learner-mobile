@@ -20,6 +20,8 @@ import {BACKEND_ENDPOINT} from '@env';
 const addAdhocSentenceTTSAPI = async params => {
   const baseUrl = BACKEND_ENDPOINT;
 
+  // swap 'adhoc-sentence-tts' for newly deployed firebase function & refactor the whole damn ting
+
   const modeParam =
     params.mode === 'inquiry' ? '/adhoc-expression-tts' : '/adhoc-sentence-tts';
 
