@@ -50,6 +50,8 @@ const DifficultSentenceMidSection = ({sentence, addSnippet, removeSnippet}) => {
     setCurrentTimeState,
     handleOnLoopSentence,
     isOnLoopState,
+    handleThreeSecondLoop,
+    isOnThreeSecondLoopState,
   } = useDifficultSentenceAudio();
 
   const hasSnippets = isLoaded && miniSnippets.length > 0;
@@ -139,6 +141,38 @@ const DifficultSentenceMidSection = ({sentence, addSnippet, removeSnippet}) => {
               mode="outlined"
               size={20}
               onPress={handleOnLoopSentence}
+            />
+          )}
+          {isPlaying && Number.isFinite(isOnThreeSecondLoopState) ? (
+            <>
+              <DifficultSentenceProgressBar
+                currentTimeState={
+                  currentTimeState - (isOnThreeSecondLoopState - 1.5)
+                }
+                soundDuration={3}
+                isLoaded={isLoaded}
+                secondary
+              />
+              <Animated.View style={{transform: [{rotate}]}}>
+                <IconButton
+                  icon={'timer-3'}
+                  mode="outlined"
+                  size={20}
+                  onPress={handleThreeSecondLoop}
+                  iconColor="green"
+                  style={{
+                    borderWidth: 1,
+                    borderColor: 'green',
+                  }}
+                />
+              </Animated.View>
+            </>
+          ) : (
+            <IconButton
+              icon={'timer-3'}
+              mode="outlined"
+              size={20}
+              onPress={handleThreeSecondLoop}
             />
           )}
         </View>

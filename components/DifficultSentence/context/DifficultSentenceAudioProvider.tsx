@@ -20,6 +20,7 @@ export const DifficultSentenceAudioProvider = ({
   const [miniSnippets, setMiniSnippets] = useState([]);
   const [isTriggered, setIsTriggered] = useState(false);
   const [isOnLoopState, setIsOnLoopState] = useState(false);
+  const [isOnThreeSecondLoopState, setIsOnThreeSecondLoopState] = useState();
   const {languageSelectedState} = useLanguageSelector();
 
   const targetLanguageSnippetsState = useSelector(state => state.snippets);
@@ -52,8 +53,26 @@ export const DifficultSentenceAudioProvider = ({
   }, []);
 
   useEffect(() => {
-    if (!isPlaying && isOnLoopState) {
+    if (
+      !isPlaying &&
+      (isOnLoopState || Number.isFinite(isOnThreeSecondLoopState))
+    ) {
       setIsOnLoopState(false);
+      setIsOnThreeSecondLoopState(null);
+      return;
+    }
+
+    if (Number.isFinite(isOnThreeSecondLoopState) && soundRef.current) {
+      const startTime = isOnThreeSecondLoopState - 1.5;
+      const endTime = isOnThreeSecondLoopState + 1.5;
+      const beforeLoopTime1500 = currentTimeState < startTime;
+      const beyondLoopTime1500 = endTime < currentTimeState;
+
+      if (beforeLoopTime1500 || beyondLoopTime1500) {
+        soundRef.current.getCurrentTime(() => {
+          soundRef.current.setCurrentTime(startTime);
+        });
+      }
       return;
     }
     if (isOnLoopState && soundRef.current) {
@@ -65,7 +84,14 @@ export const DifficultSentenceAudioProvider = ({
         });
       }
     }
-  }, [sentence, isOnLoopState, currentTimeState, soundRef, isPlaying]);
+  }, [
+    sentence,
+    isOnLoopState,
+    currentTimeState,
+    soundRef,
+    isPlaying,
+    isOnThreeSecondLoopState,
+  ]);
 
   useEffect(() => {
     const getCurrentTimeFunc = () => {
@@ -104,6 +130,14 @@ export const DifficultSentenceAudioProvider = ({
     }
   }, [loadFile, isLoaded, indexNum, audioId, url, isTriggered]);
 
+  const handleThreeSecondLoop = () => {
+    if (Number.isFinite(isOnThreeSecondLoopState)) {
+      setIsOnThreeSecondLoopState(null);
+    } else {
+      setIsOnThreeSecondLoopState(currentTimeState);
+    }
+  };
+
   const handleSnippet = () => {
     const snippetId = topic + '-' + generateRandomId();
     const itemToSave = {
@@ -133,6 +167,8 @@ export const DifficultSentenceAudioProvider = ({
         setCurrentTimeState,
         handleOnLoopSentence,
         isOnLoopState,
+        handleThreeSecondLoop,
+        isOnThreeSecondLoopState,
       }}>
       {children}
     </DifficultSentenceAudioContext.Provider>
