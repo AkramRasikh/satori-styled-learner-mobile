@@ -150,6 +150,8 @@ const DifficultSentenceContainer = ({
     }),
   ).current;
 
+  const spreadHandler = isHighlightMode ? {} : panResponder.panHandlers;
+
   const handleShowAllMatchedWords = () => {
     setShowAllMatchedWordsState(!showAllMatchedWordsState);
   };
@@ -326,7 +328,7 @@ const DifficultSentenceContainer = ({
   };
 
   return (
-    <View {...panResponder.panHandlers}>
+    <View {...spreadHandler}>
       {isTriggeringReview && (
         <ActivityIndicator
           style={{
