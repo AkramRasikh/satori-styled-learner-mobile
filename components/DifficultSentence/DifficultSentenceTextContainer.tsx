@@ -52,7 +52,9 @@ const DifficultSentenceTextContainer = ({
             display: 'flex',
             gap: 3,
           }}>
-          {previousSentence && <Text>{previousSentence}</Text>}
+          {previousSentence && (
+            <Text style={{opacity: 0.5}}>{previousSentence}</Text>
+          )}
           {safeTextFunc(targetLang)}
         </View>
       )}
