@@ -1,4 +1,4 @@
-import React, {PanResponder, View} from 'react-native';
+import React, {Animated, Easing, PanResponder, View} from 'react-native';
 import {useEffect, useRef, useState} from 'react';
 import DifficultSentenceTopHeader from './DifficultSentenceTopHeader';
 import DifficultSentenceTextContainer from './DifficultSentenceTextContainer';
@@ -9,6 +9,7 @@ import {
   Button,
   Text,
   ActivityIndicator,
+  IconButton,
 } from 'react-native-paper';
 import DifficultSentenceMappedWords from './DifficultSentenceMappedWords';
 import TextSegmentContainer from '../TextSegmentContainer';
@@ -47,9 +48,37 @@ const DifficultSentenceMidSection = ({sentence, addSnippet, removeSnippet}) => {
     handleLoad,
     handleSnippet,
     setCurrentTimeState,
+    handleOnLoopSentence,
+    isOnLoopState,
   } = useDifficultSentenceAudio();
 
   const hasSnippets = isLoaded && miniSnippets.length > 0;
+
+  const canBeLooped = Number.isFinite(sentence?.endTime);
+
+  const rotateAnim = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    const spin = () => {
+      if (!isOnLoopState || !isPlaying) return;
+      rotateAnim.setValue(0);
+      Animated.loop(
+        Animated.timing(rotateAnim, {
+          toValue: 1,
+          duration: 1000,
+          easing: Easing.linear,
+          useNativeDriver: true,
+        }),
+      ).start();
+    };
+
+    spin();
+  }, [rotateAnim, isOnLoopState, isPlaying]);
+
+  const rotate = rotateAnim.interpolate({
+    inputRange: [0, 1],
+    outputRange: ['0deg', '360deg'],
+  });
 
   return (
     <>
@@ -75,6 +104,38 @@ const DifficultSentenceMidSection = ({sentence, addSnippet, removeSnippet}) => {
           handleSnippet={handleSnippet}
         />
       </View>
+      {canBeLooped && (
+        <View
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'flex-end',
+            width: '80%',
+          }}>
+          {isOnLoopState && isPlaying ? (
+            <Animated.View style={{transform: [{rotate}]}}>
+              <IconButton
+                icon={'repeat'}
+                mode="outlined"
+                size={20}
+                onPress={handleOnLoopSentence}
+                iconColor="green"
+                style={{
+                  borderWidth: 1,
+                  borderColor: 'green',
+                }}
+              />
+            </Animated.View>
+          ) : (
+            <IconButton
+              icon={'repeat'}
+              mode="outlined"
+              size={20}
+              onPress={handleOnLoopSentence}
+            />
+          )}
+        </View>
+      )}
       {hasSnippets &&
         miniSnippets.map((snippetData, index) => {
           return (

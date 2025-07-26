@@ -27,6 +27,7 @@ const useLoadDifficultSentences = () => {
         ) {
           const thisGeneralTopicsName = getGeneralTopicName(thisTopic);
 
+          const isLast = content.length - 1 === index;
           difficultSentences.push({
             sentenceIndex: index,
             topic: thisTopic,
@@ -36,6 +37,7 @@ const useLoadDifficultSentences = () => {
             generalTopic: thisGeneralTopicsName,
             previousSentence: index > 0 ? content[index - 1].targetLang : null,
             ...sentenceInContent,
+            endTime: isLast ? null : content[index + 1].time,
           });
         }
       });

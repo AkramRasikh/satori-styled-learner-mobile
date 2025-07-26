@@ -19,6 +19,7 @@ export const DifficultSentenceAudioProvider = ({
   const [isPlaying, setIsPlaying] = useState(false);
   const [miniSnippets, setMiniSnippets] = useState([]);
   const [isTriggered, setIsTriggered] = useState(false);
+  const [isOnLoopState, setIsOnLoopState] = useState(false);
   const {languageSelectedState} = useLanguageSelector();
 
   const targetLanguageSnippetsState = useSelector(state => state.snippets);
@@ -51,6 +52,18 @@ export const DifficultSentenceAudioProvider = ({
   }, []);
 
   useEffect(() => {
+    if (isOnLoopState && soundRef.current) {
+      const beforeStartTime = currentTimeState < sentence.time;
+      const beyondEndTime = sentence?.endTime < currentTimeState;
+      if (beforeStartTime || beyondEndTime) {
+        soundRef.current.getCurrentTime(() => {
+          soundRef.current.setCurrentTime(sentence.time);
+        });
+      }
+    }
+  }, [sentence, isOnLoopState, currentTimeState, soundRef]);
+
+  useEffect(() => {
     const getCurrentTimeFunc = () => {
       soundRef.current.getCurrentTime(currentTime => {
         setCurrentTimeState(currentTime);
@@ -74,6 +87,10 @@ export const DifficultSentenceAudioProvider = ({
       triggerLoadURL();
     }
   }, [filePath, triggerLoadURL, isLoaded]);
+
+  const handleOnLoopSentence = () => {
+    setIsOnLoopState(!isOnLoopState);
+  };
 
   useEffect(() => {
     const isFirst2 = indexNum === 0 || indexNum === 1;
@@ -110,6 +127,8 @@ export const DifficultSentenceAudioProvider = ({
         miniSnippets,
         setMiniSnippets,
         setCurrentTimeState,
+        handleOnLoopSentence,
+        isOnLoopState,
       }}>
       {children}
     </DifficultSentenceAudioContext.Provider>
