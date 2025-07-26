@@ -52,6 +52,10 @@ export const DifficultSentenceAudioProvider = ({
   }, []);
 
   useEffect(() => {
+    if (!isPlaying && isOnLoopState) {
+      setIsOnLoopState(false);
+      return;
+    }
     if (isOnLoopState && soundRef.current) {
       const beforeStartTime = currentTimeState < sentence.time;
       const beyondEndTime = sentence?.endTime < currentTimeState;
@@ -61,7 +65,7 @@ export const DifficultSentenceAudioProvider = ({
         });
       }
     }
-  }, [sentence, isOnLoopState, currentTimeState, soundRef]);
+  }, [sentence, isOnLoopState, currentTimeState, soundRef, isPlaying]);
 
   useEffect(() => {
     const getCurrentTimeFunc = () => {

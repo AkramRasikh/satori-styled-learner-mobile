@@ -110,22 +110,29 @@ const DifficultSentenceMidSection = ({sentence, addSnippet, removeSnippet}) => {
             display: 'flex',
             flexDirection: 'row',
             justifyContent: 'flex-end',
-            width: '80%',
           }}>
           {isOnLoopState && isPlaying ? (
-            <Animated.View style={{transform: [{rotate}]}}>
-              <IconButton
-                icon={'repeat'}
-                mode="outlined"
-                size={20}
-                onPress={handleOnLoopSentence}
-                iconColor="green"
-                style={{
-                  borderWidth: 1,
-                  borderColor: 'green',
-                }}
+            <>
+              <DifficultSentenceProgressBar
+                currentTimeState={currentTimeState - sentence.time}
+                soundDuration={sentence.endTime - sentence.time}
+                isLoaded={isLoaded}
+                secondary
               />
-            </Animated.View>
+              <Animated.View style={{transform: [{rotate}]}}>
+                <IconButton
+                  icon={'repeat'}
+                  mode="outlined"
+                  size={20}
+                  onPress={handleOnLoopSentence}
+                  iconColor="green"
+                  style={{
+                    borderWidth: 1,
+                    borderColor: 'green',
+                  }}
+                />
+              </Animated.View>
+            </>
           ) : (
             <IconButton
               icon={'repeat'}

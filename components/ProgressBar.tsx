@@ -1,7 +1,7 @@
 import React, {Text, View} from 'react-native';
 import {ProgressBar} from 'react-native-paper';
 
-const ProgressBarComponent = ({progress, progressWidth, text}) => (
+const ProgressBarComponent = ({progress, progressWidth, text, secondary}) => (
   <View
     style={{
       display: 'flex',
@@ -13,7 +13,11 @@ const ProgressBarComponent = ({progress, progressWidth, text}) => (
         width: progressWidth || '75%',
         alignSelf: 'center',
       }}>
-      <ProgressBar progress={progress} style={{marginVertical: 5}} />
+      <ProgressBar
+        progress={progress}
+        style={{marginVertical: 5}}
+        color={secondary ? 'green' : ''}
+      />
     </View>
     {text && (
       <View>
