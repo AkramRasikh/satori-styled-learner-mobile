@@ -34,6 +34,7 @@ const useLoadDifficultSentences = () => {
             isMediaContent,
             contentIndex,
             generalTopic: thisGeneralTopicsName,
+            previousSentence: index > 0 ? content[index - 1].targetLang : null,
             ...sentenceInContent,
           });
         }

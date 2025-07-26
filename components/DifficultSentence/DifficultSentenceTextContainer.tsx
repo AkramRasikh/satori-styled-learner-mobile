@@ -13,6 +13,7 @@ const DifficultSentenceTextContainer = ({
   setHighlightMode,
   handleQuickGoogleTranslate,
   notes,
+  previousSentence,
 }) => {
   const [highlightedIndices, setHighlightedIndices] = useState([]);
   const [isBlurredState, setIsBlurredState] = useState(true);
@@ -46,7 +47,14 @@ const DifficultSentenceTextContainer = ({
           />
         </View>
       ) : (
-        safeTextFunc(targetLang)
+        <View
+          style={{
+            display: 'flex',
+            gap: 3,
+          }}>
+          {previousSentence && <Text>{previousSentence}</Text>}
+          {safeTextFunc(targetLang)}
+        </View>
       )}
       <TouchableOpacity
         style={{
