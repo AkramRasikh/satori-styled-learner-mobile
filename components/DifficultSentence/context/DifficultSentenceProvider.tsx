@@ -1,6 +1,5 @@
-import React, {useRef, useState} from 'react';
+import React, {useRef, useState, createContext, PropsWithChildren} from 'react';
 import {Animated} from 'react-native';
-import {createContext, PropsWithChildren} from 'react';
 import {
   getCardDataRelativeToNow,
   getDueDate,
