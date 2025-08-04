@@ -9,6 +9,7 @@ import {
 } from '../../../srs-algo';
 import Clipboard from '@react-native-clipboard/clipboard';
 import useAnimation from '../../../hooks/useAnimation';
+import {srsCalculationAndText} from '../../../utils/srs/srs-calculation-and-text';
 
 export const DifficultSentenceContext = createContext(null);
 
@@ -84,16 +85,34 @@ export const DifficultSentenceProvider = ({
         contentType: srsRetentionKeyTypes.sentences,
       });
       const nextReviewData = nextScheduledOptions[difficulty].card;
-      await collapseAnimation();
-      await updateSentenceData({
-        isAdhoc,
-        topicName: sentence.topic,
-        sentenceId: sentence.id,
-        fieldToUpdate: {
-          reviewData: nextReviewData,
-        },
-        contentIndex: sentence.contentIndex,
+      const futureReviewData = srsCalculationAndText({
+        reviewData: nextReviewData,
+        contentType: srsRetentionKeyTypes.sentences,
+        timeNow: new Date(),
       });
+
+      await collapseAnimation();
+      if (futureReviewData.isScheduledForDeletion) {
+        await updateSentenceData({
+          isAdhoc: sentence?.isAdhoc,
+          topicName: sentence.topic,
+          sentenceId: sentence.id,
+          fieldToUpdate: {
+            reviewData: {},
+          },
+          contentIndex: sentence?.contentIndex,
+        });
+      } else {
+        await updateSentenceData({
+          isAdhoc,
+          topicName: sentence.topic,
+          sentenceId: sentence.id,
+          fieldToUpdate: {
+            reviewData: nextReviewData,
+          },
+          contentIndex: sentence.contentIndex,
+        });
+      }
     } catch (error) {
     } finally {
       setIsTriggeringReview(true);

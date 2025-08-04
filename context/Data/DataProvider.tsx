@@ -545,7 +545,11 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
           );
         }
       }
-      updatePromptFunc(`${topicName} updated!`);
+      updatePromptFunc(
+        isRemoveReview
+          ? `${topicName} sentence removed`
+          : `${topicName} updated!`,
+      );
       return updatedFieldFromDB;
     } catch (error) {
       console.log('## updateSentenceData', {error});
