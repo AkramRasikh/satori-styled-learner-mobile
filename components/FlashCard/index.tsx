@@ -54,6 +54,7 @@ const FlashCard = ({
   handleAdhocMinimalPairFunc,
   updateWordDataAdditionalFunc,
   handleAddCustomWordPromptFunc,
+  combineWordsSentenceDiffSentence,
 }) => {
   const [isCollapsingState, setIsCollapsingState] = useState(false);
   const [isOpenWordOptionsState, setIsOpenWordOptionsState] = useState(false);
@@ -132,6 +133,18 @@ const FlashCard = ({
         mode,
       });
     } catch (error) {
+    } finally {
+      setIsLoadingState(false);
+    }
+  };
+  const combineThisWordWithOthers = async () => {
+    try {
+      setIsLoadingState(true);
+      await combineWordsSentenceDiffSentence({
+        inputWords: [{id: wordData.id, word: baseForm, definition}],
+      });
+    } catch (error) {
+      console.log('## combineThisWordWithOthers', error);
     } finally {
       setIsLoadingState(false);
     }
@@ -247,6 +260,12 @@ const FlashCard = ({
                     onPress={() => handleAdhocWord('functional')}>
                     functional
                   </Button>
+                  {/* <Button
+                    mode="elevated"
+                    disabled={isLoadingState}
+                    onPress={() => handleAdhocWord('conversation')}>
+                    conversation
+                  </Button>
                   <Button
                     mode="elevated"
                     disabled={isLoadingState}
@@ -258,7 +277,8 @@ const FlashCard = ({
                     disabled={isLoadingState}
                     onPress={() => handleAdhocWord('rhyme')}>
                     rhyme
-                  </Button>
+                  </Button> */}
+
                   {isCharacterBasedLanguage && (
                     <Button
                       mode="elevated"
@@ -267,12 +287,19 @@ const FlashCard = ({
                       seperate 字字
                     </Button>
                   )}
-                  <Button
+                  {/* <Button
                     buttonColor={MD2Colors.lightBlue300}
                     mode="elevated"
                     disabled={isLoadingState}
                     onPress={() => handleAdhocWord('')}>
                     sound 🎶
+                  </Button> */}
+                  <Button
+                    buttonColor={MD2Colors.lightBlue300}
+                    mode="elevated"
+                    disabled={isLoadingState}
+                    onPress={combineThisWordWithOthers}>
+                    combine
                   </Button>
 
                   <Button

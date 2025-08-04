@@ -74,6 +74,7 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
     fetchData,
     updateWordData,
     handleAdhocMinimalPair,
+    combineWordsFromSingularDataProvider,
     handleAddCustomWordPrompt,
   } = useData();
 
@@ -376,6 +377,24 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
     setDueWordsState(updatedDueCardsState);
   };
 
+  const combineWordsSentenceDiffSentence = async ({inputWords}) => {
+    const res = await combineWordsFromSingularDataProvider({inputWords});
+    const sentenceIds = res.map(item => item.id);
+
+    const updatedDueCardsState = dueWordsState.map(item => {
+      if (item.id === inputWords[0].id) {
+        return {
+          ...item,
+          contexts: [...item.contexts, sentenceIds],
+          contextData: [...item.contextData, ...res],
+        };
+      }
+      return item;
+    });
+    setDueWordsState(updatedDueCardsState);
+  };
+  //
+
   const handleAddCustomWordPromptFunc = async ({inputWord, prompt}) => {
     const res = await handleAddCustomWordPrompt({inputWord, prompt});
     const sentenceIds = res.map(item => item.id);
@@ -512,6 +531,9 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
                   <View style={{paddingVertical: 10}} key={sentence.id}>
                     <FlashCardProvider>
                       <FlashCard
+                        combineWordsSentenceDiffSentence={
+                          combineWordsSentenceDiffSentence
+                        }
                         wordData={sentence}
                         index={index}
                         realCapacity={toggleableSentencesState.length}

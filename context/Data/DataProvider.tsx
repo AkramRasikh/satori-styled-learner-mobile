@@ -264,6 +264,45 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
     }
   };
 
+  const combineWordsFromSingularDataProvider = async ({inputWords}) => {
+    try {
+      const combineWordsSentencesRes = await combineWordsAPI({
+        inputWords,
+        language,
+      });
+      const updatedAdhocSentencesState = [
+        ...adhocTargetLanguageSentencesState,
+        ...combineWordsSentencesRes,
+      ];
+      dispatch(setSentencesStateDispatch(updatedAdhocSentencesState));
+      const wordsForBanner = inputWords.map((item, index) => {
+        const word = item.word;
+        if (index === inputWords.length) {
+          return word;
+        }
+        return `${word}, `;
+      });
+      updatePromptFunc(
+        `Added ${wordsForBanner.join('')} in ${
+          combineWordsSentencesRes.length
+        } sentences!`,
+      );
+      await storeDataLocalStorage(
+        dataStorageKeyPrefix + adhocSentences,
+        updatedAdhocSentencesState,
+      ); // saving to adhoc or sentences?
+      return combineWordsSentencesRes.map(item => ({
+        ...item,
+        isSentenceHelper: true,
+        isAdhoc: true,
+        generalTopic: 'sentence-helper',
+      }));
+    } catch (error) {
+      updatePromptFunc('Error combining words');
+    } finally {
+    }
+  };
+
   const sentenceReviewBulk = async ({
     fieldToUpdate,
     topicName,
@@ -908,6 +947,7 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
         breakdownAllSentences,
         sentenceReviewBulkAll,
         handleAddCustomWordPrompt,
+        combineWordsFromSingularDataProvider,
       }}>
       {children}
     </DataContext.Provider>
