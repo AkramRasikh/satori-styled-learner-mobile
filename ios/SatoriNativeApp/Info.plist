@@ -77,5 +77,9 @@
 		<string>Zocial.ttf</string>
 		<string>Fontisto.ttf</string>
 	</array>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>We need access to the microphone to listen.</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>Speech recognition is used to transcribe your voice.</string>
 </dict>
 </plist>
