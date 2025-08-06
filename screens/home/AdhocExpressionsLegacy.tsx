@@ -1,6 +1,5 @@
 import React, {View} from 'react-native';
 import AddSentenceContainer from '../../components/AddSentenceContainer';
-import HomeContainerToSentencesOrWords from '../../components/HomeContainerToSentencesOrWords';
 import {FAB} from 'react-native-paper';
 import ContentCreationContainer from '../../components/ContentCreationContainer';
 import {useState} from 'react';
@@ -12,7 +11,6 @@ const AdhocExpressionsLegacy = ({navigation}) => {
     useState<boolean>(false);
   return (
     <>
-      <HomeContainerToSentencesOrWords navigation={navigation} />
       {showAddSentenceState ? (
         <AddSentenceContainer
           setShowAddSentenceState={setShowAddSentenceState}
