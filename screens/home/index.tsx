@@ -13,6 +13,7 @@ import LanguageLoadingIndicator, {
 } from './components/LanguageLoadingIndicator';
 import LanguageSelection from './components/LanguageSelection';
 import ClearStorageButton from './components/ClearStorageButton';
+import TranscribeTextComponent from './TranscribeTextComponent';
 
 const Home = ({navigation}): React.JSX.Element => {
   const [selectedTopic, setSelectedTopic] = useState('');
@@ -96,7 +97,7 @@ const Home = ({navigation}): React.JSX.Element => {
               }}
             />
           )}
-
+          {languageSelectedState && <TranscribeTextComponent />}
           {languageSelectedState && !selectedTopic && (
             <Topics
               setSelectedGeneralTopicState={setSelectedGeneralTopicState}

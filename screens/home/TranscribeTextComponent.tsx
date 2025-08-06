@@ -1,69 +1,58 @@
-import React, {useEffect, useState} from 'react';
-import {
-  View,
-  Button,
-  Text,
-  PermissionsAndroid,
-  Platform,
-  Alert,
-} from 'react-native';
+import React, {useEffect, useRef, useState} from 'react';
+import {View, Text, Alert} from 'react-native';
+import {Card, Divider, IconButton} from 'react-native-paper';
 import Voice from '@react-native-voice/voice';
+import TranscribeContextComponent from './TranscribeContextComponent';
 
 export default function TranscribeTextComponent() {
-  const [transcript, setTranscript] = useState('');
-  const [isRecording, setIsRecording] = useState(false);
+  const [transcriptState, setTranscriptState] = useState('');
+  const [isRecordingTranscriptState, setIsRecordingTranscriptState] =
+    useState(false);
+  const [contextState, setContextState] = useState('');
+  const [isRecordingContextState, setIsRecordingContextState] = useState(false);
+
+  const isRecordingTranscriptRef = useRef(false); // 👈 live state tracker
+  const isRecordingContextRef = useRef(false); // 👈 live state tracker
 
   // Handle speech results
   useEffect(() => {
     Voice.onSpeechResults = event => {
       if (event.value && event.value.length > 0) {
-        setTranscript(event.value[0]);
+        if (isRecordingTranscriptRef.current) {
+          setTranscriptState(event.value[0]);
+        } else if (isRecordingContextRef.current) {
+          setContextState(event.value[0]);
+        }
       }
     };
 
     Voice.onSpeechError = e => {
-      console.error('Speech error:', e.error);
+      console.error('## Speech error:', e.error);
       Alert.alert('Speech Error', e.error.message || 'Unknown error');
-      setIsRecording(false);
+      setIsRecordingTranscriptState(false);
     };
-
     return () => {
       Voice.destroy().then(Voice.removeAllListeners);
     };
   }, []);
 
-  // Request permission (Android only)
-  const requestPermission = async () => {
-    if (Platform.OS === 'android') {
-      const granted = await PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.RECORD_AUDIO,
-      );
-      return granted === PermissionsAndroid.RESULTS.GRANTED;
-    }
-    return true;
-  };
-
   // Start recording
-  const startRecording = async () => {
-    // const permissionGranted = await requestPermission();
-    // if (!permissionGranted) {
-    //   Alert.alert('Permission denied', 'Microphone access is required.');
-    //   return;
-    // }
-
+  const startRecordingTranscript = async () => {
     try {
+      isRecordingTranscriptRef.current = true;
       await Voice.start('en-US');
-      setIsRecording(true);
+      setIsRecordingTranscriptState(true);
     } catch (err) {
       console.error('Failed to start voice recognition:', err);
     }
   };
 
   // Stop recording
-  const stopRecording = async () => {
+  const stopRecordingTranscript = async () => {
     try {
+      isRecordingTranscriptRef.current = false;
       await Voice.stop();
-      setIsRecording(false);
+      setIsRecordingTranscriptState(false);
     } catch (err) {
       console.error('Failed to stop voice recognition:', err);
     }
@@ -71,13 +60,61 @@ export default function TranscribeTextComponent() {
 
   return (
     <View style={{padding: 20}}>
-      <Button
-        title={isRecording ? 'Stop Listening' : 'Start Listening'}
-        onPress={isRecording ? stopRecording : startRecording}
-      />
-      <Text style={{marginTop: 20, fontSize: 16}}>
-        📝 Transcript: {transcript || '(no input yet)'}
-      </Text>
+      <Card>
+        <View
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            gap: 5,
+            margin: 'auto',
+          }}>
+          <View style={{margin: 'auto'}}>
+            <Text style={{textDecorationLine: 'underline'}}>Transcript</Text>
+          </View>
+          <IconButton
+            icon={'record-circle'}
+            onPress={
+              isRecordingTranscriptState
+                ? stopRecordingTranscript
+                : startRecordingTranscript
+            }
+            containerColor={isRecordingTranscriptState ? 'red' : ''}
+          />
+          <IconButton
+            icon={'delete-variant'}
+            onPress={() => setTranscriptState('')}
+          />
+        </View>
+        <View style={{padding: 10}}>
+          <Text style={{textDecorationLine: 'underline', fontStyle: 'italic'}}>
+            Output:
+          </Text>
+          <Text style={{marginTop: 20, fontSize: 16}}>
+            {transcriptState || '(no input yet)'}
+          </Text>
+        </View>
+        {transcriptState && !isRecordingTranscriptState && (
+          <>
+            <Divider
+              bold
+              style={{
+                backgroundColor: 'gray',
+                width: '80%',
+                margin: 'auto',
+                opacity: 0.8,
+              }}
+            />
+            <TranscribeContextComponent
+              contextState={contextState}
+              setContextState={setContextState}
+              isRecordingContextState={isRecordingContextState}
+              setIsRecordingContextState={setIsRecordingContextState}
+              isRecordingTranscriptRef={isRecordingTranscriptRef}
+              isRecordingContextRef={isRecordingContextRef}
+            />
+          </>
+        )}
+      </Card>
     </View>
   );
 }
