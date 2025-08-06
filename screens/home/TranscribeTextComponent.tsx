@@ -1,8 +1,15 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {View, Text, Alert} from 'react-native';
-import {Card, Divider, IconButton} from 'react-native-paper';
+import {
+  ActivityIndicator,
+  Button,
+  Card,
+  Divider,
+  IconButton,
+} from 'react-native-paper';
 import Voice from '@react-native-voice/voice';
 import TranscribeContextComponent from './TranscribeContextComponent';
+import useData from '../../context/Data/useData';
 
 export default function TranscribeTextComponent() {
   const [transcriptState, setTranscriptState] = useState('');
@@ -13,6 +20,10 @@ export default function TranscribeTextComponent() {
 
   const isRecordingTranscriptRef = useRef(false); // 👈 live state tracker
   const isRecordingContextRef = useRef(false); // 👈 live state tracker
+  const [isLoadingState, setIsLoadingState] = useState(false);
+  const [addedSentencesState, setAddedSentencesState] = useState([]);
+
+  const {handleAddExpressDataProvider} = useData();
 
   // Handle speech results
   useEffect(() => {
@@ -36,6 +47,19 @@ export default function TranscribeTextComponent() {
     };
   }, []);
 
+  const addExpressSentence = async () => {
+    try {
+      setIsLoadingState(true);
+      const addedExpression = await handleAddExpressDataProvider({
+        inquiry: transcriptState,
+        context: contextState,
+      });
+      setAddedSentencesState(prev => [...prev, addedExpression]);
+    } catch (error) {
+    } finally {
+      setIsLoadingState(false);
+    }
+  };
   // Start recording
   const startRecordingTranscript = async () => {
     try {
@@ -58,8 +82,20 @@ export default function TranscribeTextComponent() {
     }
   };
 
+  console.log('## addedSentencesState', addedSentencesState);
+
   return (
-    <View style={{padding: 20}}>
+    <View style={{padding: 20, opacity: isLoadingState ? 0.5 : 1}}>
+      {isLoadingState && (
+        <ActivityIndicator
+          style={{
+            position: 'absolute',
+            alignSelf: 'center',
+            top: '50%',
+            zIndex: 100,
+          }}
+        />
+      )}
       <Card>
         <View
           style={{
@@ -115,6 +151,31 @@ export default function TranscribeTextComponent() {
           </>
         )}
       </Card>
+      {transcriptState && (
+        <Button
+          mode="outlined"
+          style={{width: '50%', margin: 'auto', marginTop: 10}}
+          disabled={
+            isLoadingState ||
+            isRecordingTranscriptRef.current ||
+            isRecordingContextRef.current
+          }
+          onPress={addExpressSentence}>
+          Submit
+        </Button>
+      )}
+      {addedSentencesState?.length > 0 ? (
+        <View style={{marginTop: 10}}>
+          {addedSentencesState.map((sentence, index) => (
+            <View key={sentence.id}>
+              <Text>
+                {index + 1}) {sentence.targetLang}
+              </Text>
+              <Text>{sentence.baseLang}</Text>
+            </View>
+          ))}
+        </View>
+      ) : null}
     </View>
   );
 }

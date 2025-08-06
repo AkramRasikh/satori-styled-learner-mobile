@@ -41,6 +41,7 @@ import {addAdhocWordMinimalPairAPI} from '../../api/add-adhoc-word-minimal-pair'
 import {breakdownAllSentencesAPI} from '../../api/breakdown-all-sentences';
 import {sentenceReviewBulkAllAPI} from '../../api/remove-all-content-review';
 import addCustomWordPromptAPI from '../../api/add-custom-word-prompt';
+import addExpressionAPI from '../../api/add-expression';
 
 export const DataContext = createContext(null);
 
@@ -122,6 +123,30 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
 
     dispatch(setLearningContentStateDispatch(updatedState));
     return updatedState;
+  };
+
+  const handleAddExpressDataProvider = async ({inquiry, context}) => {
+    try {
+      const adhocExpressionRes = await addExpressionAPI({
+        language,
+        inquiry,
+        context,
+      });
+      const updatedAdhocSentencesState = [
+        ...adhocTargetLanguageSentencesState,
+        adhocExpressionRes,
+      ];
+      dispatch(setSentencesStateDispatch(updatedAdhocSentencesState));
+      updatePromptFunc('Added inquiry sentence');
+      await storeDataLocalStorage(
+        dataStorageKeyPrefix + adhocSentences,
+        updatedAdhocSentencesState,
+      ); // saving to adhoc or sentences?
+
+      return adhocExpressionRes;
+    } catch (error) {
+      updatePromptFunc('Error creating expression sentences words');
+    }
   };
 
   const updateAllLoadedContentStateAfterSentenceUpdate = ({
@@ -952,6 +977,7 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
         sentenceReviewBulkAll,
         handleAddCustomWordPrompt,
         combineWordsFromSingularDataProvider,
+        handleAddExpressDataProvider,
       }}>
       {children}
     </DataContext.Provider>

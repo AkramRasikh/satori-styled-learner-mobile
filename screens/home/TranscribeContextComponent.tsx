@@ -36,40 +36,38 @@ export default function TranscribeContextComponent({
 
   return (
     <View style={{padding: 20}}>
-      <Card>
-        <View
-          style={{
-            display: 'flex',
-            flexDirection: 'row',
-            gap: 5,
-            margin: 'auto',
-          }}>
-          <View style={{margin: 'auto'}}>
-            <Text style={{textDecorationLine: 'underline'}}>Context</Text>
-          </View>
-          <IconButton
-            icon={'record-circle'}
-            onPress={
-              isRecordingContextState
-                ? stopRecordingContext
-                : startRecordingContext
-            }
-            containerColor={isRecordingContextState ? 'red' : ''}
-          />
-          <IconButton
-            icon={'delete-variant'}
-            onPress={() => setContextState('')}
-          />
+      <View
+        style={{
+          display: 'flex',
+          flexDirection: 'row',
+          gap: 5,
+          margin: 'auto',
+        }}>
+        <View style={{margin: 'auto'}}>
+          <Text style={{textDecorationLine: 'underline'}}>Context</Text>
         </View>
-        <View style={{padding: 10}}>
-          <Text style={{textDecorationLine: 'underline', fontStyle: 'italic'}}>
-            Output:
-          </Text>
-          <Text style={{marginTop: 20, fontSize: 16}}>
-            {contextState || '(no input yet)'}
-          </Text>
-        </View>
-      </Card>
+        <IconButton
+          icon={'record-circle'}
+          onPress={
+            isRecordingContextState
+              ? stopRecordingContext
+              : startRecordingContext
+          }
+          containerColor={isRecordingContextState ? 'red' : ''}
+        />
+        <IconButton
+          icon={'delete-variant'}
+          onPress={() => setContextState('')}
+        />
+      </View>
+      <View style={{padding: 10}}>
+        <Text style={{textDecorationLine: 'underline', fontStyle: 'italic'}}>
+          Output:
+        </Text>
+        <Text style={{marginTop: 20, fontSize: 16}}>
+          {contextState || '(no input yet)'}
+        </Text>
+      </View>
     </View>
   );
 }
