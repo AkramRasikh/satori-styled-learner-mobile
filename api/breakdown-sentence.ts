@@ -1,4 +1,4 @@
-import {BACKEND_ENDPOINT} from '@env';
+import {BREAKDOWN_SENTENCE_URL} from '@env';
 
 export const breakdownSentenceAPI = async ({
   topicName,
@@ -6,7 +6,7 @@ export const breakdownSentenceAPI = async ({
   language,
   targetLang,
 }) => {
-  const url = BACKEND_ENDPOINT + '/breakdown-sentence';
+  const url = BREAKDOWN_SENTENCE_URL;
 
   try {
     const response = await fetch(url, {
