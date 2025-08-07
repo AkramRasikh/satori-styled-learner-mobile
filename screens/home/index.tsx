@@ -98,7 +98,9 @@ const Home = ({navigation}): React.JSX.Element => {
               }}
             />
           )}
-          <HomeContainerToSentencesOrWords navigation={navigation} />
+          {languageSelectedState && (
+            <HomeContainerToSentencesOrWords navigation={navigation} />
+          )}
           {languageSelectedState && <TranscribeTextComponent />}
           {languageSelectedState && !selectedTopic && (
             <Topics
