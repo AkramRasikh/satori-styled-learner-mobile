@@ -5,7 +5,8 @@ import SRSTogglesScaled from '../SRSTogglesScaled';
 import {srsCalculationAndText} from '../../utils/srs/srs-calculation-and-text';
 
 const DifficultSentenceSRSToggles = ({reviewData}) => {
-  const {handleNextReview, handleDeleteContent} = useDifficultSentenceContext();
+  const {handleNextReview, handleDeleteContent, isEasyFollowedByDeletion} =
+    useDifficultSentenceContext();
   const timeNow = new Date();
 
   const {againText, hardText, goodText, easyText, isScheduledForDeletion} =
@@ -14,6 +15,8 @@ const DifficultSentenceSRSToggles = ({reviewData}) => {
       contentType: srsRetentionKeyTypes.sentences,
       timeNow,
     });
+
+  const willBeFollowedByDeletion = isEasyFollowedByDeletion();
 
   return (
     <View
@@ -27,6 +30,7 @@ const DifficultSentenceSRSToggles = ({reviewData}) => {
         goodText={goodText}
         easyText={easyText}
         quickDeleteFunc={isScheduledForDeletion ? handleDeleteContent : null}
+        willBeFollowedByDeletion={willBeFollowedByDeletion}
       />
     </View>
   );

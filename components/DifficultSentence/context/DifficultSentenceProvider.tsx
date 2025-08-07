@@ -49,6 +49,21 @@ export const DifficultSentenceProvider = ({
     reviewHistory,
   });
 
+  const isEasyFollowedByDeletion = () => {
+    const nextScheduledOptions = getNextScheduledOptions({
+      card: cardDataRelativeToNow,
+      contentType: srsRetentionKeyTypes.sentences,
+    });
+    const nextReviewData = nextScheduledOptions['4'].card;
+    const futureReviewData = srsCalculationAndText({
+      reviewData: nextReviewData,
+      contentType: srsRetentionKeyTypes.sentences,
+      timeNow: new Date(),
+    });
+
+    return futureReviewData.isScheduledForDeletion;
+  };
+
   const handleSentenceBreakDownState = () => {
     setShowSentenceBreakDown(!showSentenceBreakDown);
   };
@@ -140,6 +155,7 @@ export const DifficultSentenceProvider = ({
         quickTranslationArr,
         setQuickTranslationArr,
         collapseAnimation,
+        isEasyFollowedByDeletion,
       }}>
       {children}
     </DifficultSentenceContext.Provider>

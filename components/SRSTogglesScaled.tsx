@@ -8,6 +8,7 @@ const SRSTogglesScaled = ({
   goodText,
   easyText,
   fontSize = 12,
+  willBeFollowedByDeletion,
   quickDeleteFunc,
 }) => {
   const btnsArr = [
@@ -24,6 +25,9 @@ const SRSTogglesScaled = ({
       text: goodText,
     },
     {
+      bottonColor: willBeFollowedByDeletion
+        ? DefaultTheme.colors.errorContainer
+        : '',
       onPress: () => handleNextReview('4'),
       text: easyText,
     },
@@ -46,6 +50,7 @@ const SRSTogglesScaled = ({
             compact
             mode="outlined"
             textColor={DefaultTheme.colors.onSurface}
+            buttonColor={btn?.bottonColor}
             labelStyle={{
               fontSize,
             }}>
