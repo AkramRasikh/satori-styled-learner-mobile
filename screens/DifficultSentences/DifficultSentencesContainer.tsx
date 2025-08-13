@@ -391,6 +391,7 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
       }
       return item;
     });
+    setDifficultSentencesState(prev => [...prev, ...res]);
     setDueWordsState(updatedDueCardsState);
   };
   //
