@@ -56,7 +56,8 @@ const DifficultSentenceMidSection = ({sentence, addSnippet, removeSnippet}) => {
 
   const hasSnippets = isLoaded && miniSnippets.length > 0;
 
-  const canBeLooped = Number.isFinite(sentence?.endTime);
+  const isSentenceHelper = sentence?.topic === 'sentence-helper';
+  const canBeLooped = Number.isFinite(sentence?.endTime) || isSentenceHelper;
 
   const rotateAnim = useRef(new Animated.Value(0)).current;
 
