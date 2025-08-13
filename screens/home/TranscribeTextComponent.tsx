@@ -82,8 +82,6 @@ export default function TranscribeTextComponent() {
     }
   };
 
-  console.log('## addedSentencesState', addedSentencesState);
-
   return (
     <View style={{padding: 20, opacity: isLoadingState ? 0.5 : 1}}>
       {isLoadingState && (
