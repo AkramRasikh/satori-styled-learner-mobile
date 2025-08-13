@@ -70,7 +70,10 @@ const useOnLoadContentScreen = ({
         {
           isCore: item.isCore,
           isYoutube: isYoutube(item?.origin),
-          isMediaContent: isYoutube(item?.origin) || item?.origin === 'netflix',
+          isMediaContent:
+            isYoutube(item?.origin) ||
+            item?.origin === 'netflix' ||
+            item?.isArticle,
           hasFutureReview: checkIsFutureReviewNeeded({
             nextReview: item?.nextReview,
             todayDate: today,
