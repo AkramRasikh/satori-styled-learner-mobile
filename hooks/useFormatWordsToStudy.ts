@@ -37,11 +37,13 @@ const useFormatWordsToStudy = ({
         thisWordsContext.forEach(contextId => {
           targetLanguageLoadedContent.forEach(contentData => {
             const content = contentData.content;
+            const isArticle = contentData?.isArticle;
             const generalTopicTitle = getGeneralTopicName(contentData.title);
             const tags = content?.tags;
             const isMediaContent =
               contentData?.origin === 'netflix' ||
-              contentData?.origin === 'youtube';
+              contentData?.origin === 'youtube' ||
+              isArticle;
 
             const contextIdMatchesSentence = content.find(
               contentSentence => contentSentence.id === contextId,

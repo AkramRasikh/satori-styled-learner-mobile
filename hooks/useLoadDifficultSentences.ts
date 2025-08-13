@@ -16,9 +16,11 @@ const useLoadDifficultSentences = () => {
       const contentIndex = contentWidget.contentIndex;
       const thisTopic = contentWidget.title;
       const isCore = contentWidget.isCore;
+      const isArticle = contentWidget?.isArticle;
       const isMediaContent =
         contentWidget.origin === 'netflix' ||
-        contentWidget.origin === 'youtube';
+        contentWidget.origin === 'youtube' ||
+        isArticle;
       const content = contentWidget.content;
       content.forEach((sentenceInContent, index) => {
         if (

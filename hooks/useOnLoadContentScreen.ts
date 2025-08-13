@@ -59,7 +59,7 @@ const useOnLoadContentScreen = ({
   useEffect(() => {
     targetLanguageLoadedContentMasterState.forEach(item => {
       const generalTopic = getGeneralTopicName(item.title);
-      const isMedia = isMediaContent(item?.origin);
+      const isMedia = isMediaContent(item?.origin) || item?.isArticle;
       targetContent.push({
         generalTopic,
         isMedia,

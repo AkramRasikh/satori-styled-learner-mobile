@@ -55,6 +55,7 @@ const TopicContent = ({
   const realStartTime = loadedContent?.realStartTime;
   const hasAudio = loadedContent?.hasAudio;
   const isDurationAudioLoaded = loadedContent?.isDurationAudioLoaded;
+  const isArticle = loadedContent?.isArticle;
 
   useEffect(() => {
     if (hasVideoCheckState === null) {
@@ -79,7 +80,8 @@ const TopicContent = ({
     sentenceWidget => sentenceWidget?.reviewData,
   );
 
-  const isMediaContent = origin === 'netflix' || origin === 'youtube';
+  const isMediaContent =
+    origin === 'netflix' || origin === 'youtube' || isArticle;
 
   const soundDuration = soundRef?.current?._duration || 0;
 
