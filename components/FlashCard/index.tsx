@@ -89,12 +89,9 @@ const FlashCard = ({
   const isLastInTotalOrder = realCapacity === index + 1;
   const isCardDue = wordData?.isCardDue;
   const cardReviewButNotDue = !isCardDue && wordData?.reviewData?.due;
-  const freshCard = !cardReviewButNotDue && !isCardDue;
   const definition = wordData.definition;
 
   const moreToLoad = sliceArrState === index + 1 && !isLastInTotalOrder;
-
-  const wordListText = listTextNumber + baseForm;
 
   const handleCloseModal = async () => {
     await new Promise(resolve => {
@@ -187,9 +184,10 @@ const FlashCard = ({
             cardReviewButNotDue={cardReviewButNotDue}
             targetRef={targetRef}>
             <FlashCardTopSection
+              listTextNumber={listTextNumber}
+              baseForm={baseForm}
+              definiton={definition}
               selectWordWithScroll={selectWordWithScroll}
-              wordListText={wordListText}
-              freshCard={freshCard}
               isSelectedWord={isSelectedWord}
               handleCloseModal={handleCloseModal}
               setIsOpenWordOptionsState={setIsOpenWordOptionsState}
