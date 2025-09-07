@@ -6,10 +6,12 @@ import {
   Card,
   Divider,
   IconButton,
+  TextInput,
 } from 'react-native-paper';
 import Voice from '@react-native-voice/voice';
 import TranscribeContextComponent from './TranscribeContextComponent';
 import useData from '../../context/Data/useData';
+import {DoubleClickButton} from '../../components/Button';
 
 export default function TranscribeTextComponent() {
   const [transcriptState, setTranscriptState] = useState('');
@@ -17,6 +19,7 @@ export default function TranscribeTextComponent() {
     useState(false);
   const [contextState, setContextState] = useState('');
   const [isRecordingContextState, setIsRecordingContextState] = useState(false);
+  const [isEditingOuputState, setIsEditingOuputState] = useState(false);
 
   const isRecordingTranscriptRef = useRef(false); // 👈 live state tracker
   const isRecordingContextRef = useRef(false); // 👈 live state tracker
@@ -46,6 +49,12 @@ export default function TranscribeTextComponent() {
       Voice.destroy().then(Voice.removeAllListeners);
     };
   }, []);
+
+  useEffect(() => {
+    if (!transcriptState && isEditingOuputState) {
+      setIsEditingOuputState(false);
+    }
+  }, [transcriptState, isEditingOuputState]);
 
   const addExpressSentence = async () => {
     try {
@@ -120,12 +129,33 @@ export default function TranscribeTextComponent() {
           />
         </View>
         <View style={{padding: 10}}>
-          <Text style={{textDecorationLine: 'underline', fontStyle: 'italic'}}>
-            Output:
-          </Text>
-          <Text style={{marginTop: 20, fontSize: 16}}>
-            {transcriptState || '(no input yet)'}
-          </Text>
+          <View style={{display: 'flex', flexDirection: 'row'}}>
+            <Text
+              style={{textDecorationLine: 'underline', fontStyle: 'italic'}}>
+              Output:
+            </Text>
+            {isEditingOuputState && <Text>📝</Text>}
+          </View>
+          {transcriptState && !isEditingOuputState ? (
+            <DoubleClickButton onPress={() => setIsEditingOuputState(true)}>
+              <Text style={{marginTop: 20, fontSize: 16}}>
+                {transcriptState}
+              </Text>
+            </DoubleClickButton>
+          ) : transcriptState && isEditingOuputState ? (
+            <View>
+              <TextInput
+                multiline
+                value={transcriptState}
+                onChangeText={setTranscriptState}
+                style={{
+                  marginTop: 10,
+                }}
+              />
+            </View>
+          ) : (
+            <Text style={{marginTop: 20, fontSize: 16}}>(no input yet)</Text>
+          )}
         </View>
         {transcriptState && !isRecordingTranscriptState && (
           <>

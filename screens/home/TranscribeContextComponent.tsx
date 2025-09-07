@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, Text} from 'react-native';
-import {Card, IconButton} from 'react-native-paper';
+import {IconButton} from 'react-native-paper';
 import Voice from '@react-native-voice/voice';
 
 export default function TranscribeContextComponent({
