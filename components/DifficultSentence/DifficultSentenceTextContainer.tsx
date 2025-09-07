@@ -60,7 +60,6 @@ const DifficultSentenceTextContainer = ({
       )}
       <TouchableOpacity
         style={{
-          opacity: isBlurredState ? 0.1 : 1,
           alignItems: isBlurredState ? 'flex-end' : 'flex-start',
         }}
         onLongPress={() => setIsBlurredState(!isBlurredState)}>
