@@ -1,5 +1,5 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {View, Text, Alert} from 'react-native';
+import {View, Text, Alert, TouchableOpacity} from 'react-native';
 import {
   ActivityIndicator,
   Button,
@@ -129,12 +129,29 @@ export default function TranscribeTextComponent() {
           />
         </View>
         <View style={{padding: 10}}>
-          <View style={{display: 'flex', flexDirection: 'row'}}>
+          <View
+            style={{
+              display: 'flex',
+              flexDirection: 'row',
+              width: '100%',
+              justifyContent: 'space-between',
+            }}>
             <Text
               style={{textDecorationLine: 'underline', fontStyle: 'italic'}}>
               Output:
             </Text>
-            {isEditingOuputState && <Text>📝</Text>}
+            {isEditingOuputState && (
+              <View
+                style={{
+                  display: 'flex',
+                  flexDirection: 'row',
+                  justifyContent: 'flex-end',
+                }}>
+                <TouchableOpacity onPress={() => setIsEditingOuputState(false)}>
+                  <Text>📝</Text>
+                </TouchableOpacity>
+              </View>
+            )}
           </View>
           {transcriptState && !isEditingOuputState ? (
             <DoubleClickButton onPress={() => setIsEditingOuputState(true)}>
