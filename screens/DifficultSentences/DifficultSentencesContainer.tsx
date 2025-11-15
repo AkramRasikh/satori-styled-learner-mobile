@@ -46,10 +46,6 @@ const sortFilteredOrder = (a, b) => {
 
 const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
   const [selectedDueCardState, setSelectedDueCardState] = useState(null);
-  const [
-    selectedDueCardComprehensiveState,
-    setSelectedDueCardComprehensiveState,
-  ] = useState(null);
   const [selectedGeneralTopicState, setSelectedGeneralTopicState] =
     useState('');
 
@@ -523,10 +519,6 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
                         sliceArrState={null}
                         handleDeleteWord={handleDeleteWordFlashCard}
                         handleExpandWordArray={() => {}}
-                        selectedDueCardState={selectedDueCardComprehensiveState}
-                        setSelectedDueCardState={
-                          setSelectedDueCardComprehensiveState
-                        }
                         handleAdhocMinimalPairFunc={handleAdhocMinimalPairFunc}
                         scrollViewRef={scrollViewRef}
                         updateWordDataAdditionalFunc={
