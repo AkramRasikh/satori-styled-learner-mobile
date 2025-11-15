@@ -45,7 +45,6 @@ const sortFilteredOrder = (a, b) => {
 };
 
 const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
-  const [toggleableSentencesState, setToggleableSentencesState] = useState([]);
   const [selectedDueCardState, setSelectedDueCardState] = useState(null);
   const [
     selectedDueCardComprehensiveState,
@@ -106,7 +105,6 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
   });
 
   const defaultScreenState = () => {
-    setToggleableSentencesState([]);
     setSelectedDueCardState(null);
     setSelectedGeneralTopicState('');
     setSliceArrState(10);
@@ -132,39 +130,35 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
     );
   };
 
-  const showDueInit = () => {
+  const toggleableSentencesMemoized = useMemo(() => {
+    if (!isMountedState) {
+      return [];
+    }
     const today = new Date();
-    const dueSentences = [];
-    const dueTopicCount = {};
+    const filteredSentences = [];
 
-    for (const sentence of difficultSentencesState) {
-      if (isDueCheck(sentence, today)) {
-        dueSentences.push(sentence);
-        if (sentence.generalTopic) {
-          dueTopicCount[sentence.generalTopic] =
-            (dueTopicCount[sentence.generalTopic] || 0) + 1;
-        }
+    const wordsState = includeWordsState ? dueWordsState : [];
+    for (const sentence of [...difficultSentencesState, ...wordsState]) {
+      const matchesTopic =
+        !selectedGeneralTopicState ||
+        sentence.generalTopic === selectedGeneralTopicState;
+
+      const isEligible = !isShowDueOnly || isDueCheck(sentence, today);
+
+      if (matchesTopic && isEligible) {
+        filteredSentences.push(sentence);
       }
     }
 
-    if (dueSentences.length > 0) {
-      setToggleableSentencesState(
-        dueSentences.sort(sortFilteredOrder).slice(0, 3),
-      );
-    } else {
-      const fallbackTopicCount = {};
-      for (const sentence of difficultSentencesState) {
-        if (sentence.generalTopic) {
-          fallbackTopicCount[sentence.generalTopic] =
-            (fallbackTopicCount[sentence.generalTopic] || 0) + 1;
-        }
-      }
-
-      setToggleableSentencesState(
-        difficultSentencesState.sort(sortFilteredOrder).slice(0, 3),
-      );
-    }
-  };
+    return filteredSentences.sort(sortFilteredOrder).slice(0, 3);
+  }, [
+    difficultSentencesState,
+    dueWordsState,
+    includeWordsState,
+    isMountedState,
+    isShowDueOnly,
+    selectedGeneralTopicState,
+  ]);
 
   const generalTopicsAvailableMemoized = useMemo(() => {
     const today = new Date();
@@ -182,9 +176,6 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
     }
 
     if (dueSentences.length > 0) {
-      // setToggleableSentencesState(
-      //   dueSentences.sort(sortFilteredOrder).slice(0, 3),
-      // );
       if (Object.keys(dueTopicCount).length > 0) {
         return sortObjByKeys(dueTopicCount);
       }
@@ -202,7 +193,7 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
       }
       return {};
     }
-  }, []);
+  }, [difficultSentencesState]);
 
   const handleShowThisTopicsSentences = topic => {
     if (topic === selectedGeneralTopicState) {
@@ -308,7 +299,7 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
 
   const getThisTopicsDueSentences = topic => {
     const ids = [];
-    toggleableSentencesState.forEach(item => {
+    toggleableSentencesMemoized.forEach(item => {
       if (item.topic === topic) {
         ids.push(item.id);
       }
@@ -336,42 +327,6 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
       console.log('## Error handleDeleteWordFlashCard', {error});
     }
   };
-
-  useEffect(() => {
-    if (!isMountedState) return;
-
-    const today = new Date();
-    const topicCount = {};
-    const filteredSentences = [];
-
-    const wordsState = includeWordsState ? dueWordsState : [];
-    for (const sentence of [...difficultSentencesState, ...wordsState]) {
-      const matchesTopic =
-        !selectedGeneralTopicState ||
-        sentence.generalTopic === selectedGeneralTopicState;
-
-      const isEligible = !isShowDueOnly || isDueCheck(sentence, today);
-
-      if (matchesTopic && isEligible) {
-        filteredSentences.push(sentence);
-      }
-      if (isEligible) {
-        topicCount[sentence.generalTopic] =
-          (topicCount[sentence.generalTopic] || 0) + 1;
-      }
-    }
-
-    setToggleableSentencesState(
-      filteredSentences.sort(sortFilteredOrder).slice(0, 3),
-    );
-  }, [
-    difficultSentencesState,
-    selectedGeneralTopicState,
-    isShowDueOnly,
-    isMountedState,
-    dueWordsState,
-    includeWordsState,
-  ]);
 
   const updateWordDataAdditionalFunc = updatedWordData => {
     const updatedWordState = dueWordsState.map(item => {
@@ -456,27 +411,26 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
   useEffect(() => {
     if (
       difficultSentencesState.length > 0 &&
-      toggleableSentencesState?.length === 0 &&
+      toggleableSentencesMemoized?.length === 0 &&
       selectedGeneralTopicState
     ) {
       setSelectedGeneralTopicState('');
     }
   }, [
     difficultSentencesState,
-    toggleableSentencesState,
+    toggleableSentencesMemoized,
     selectedGeneralTopicState,
   ]);
 
   useEffect(() => {
     setIsMountedState(true);
-    showDueInit();
   }, []);
 
   if (difficultSentencesState.length === 0) {
     return <LoadingScreen>Getting ready!</LoadingScreen>;
   }
 
-  const realCapacity = toggleableSentencesState.length;
+  const realCapacity = toggleableSentencesMemoized.length;
 
   const dueLength = selectedGeneralTopicState
     ? generalTopicsAvailableMemoized[selectedGeneralTopicState]
@@ -553,7 +507,7 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
             setIncludeWordsState={setIncludeWordsState}
           />
           <View style={{marginTop: 10}}>
-            {toggleableSentencesState.map((sentence, index) => {
+            {toggleableSentencesMemoized.map((sentence, index) => {
               const isWordCard = sentence?.isWord;
               if (isWordCard) {
                 return (
@@ -565,7 +519,7 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
                         }
                         wordData={sentence}
                         index={index}
-                        realCapacity={toggleableSentencesState.length}
+                        realCapacity={toggleableSentencesMemoized.length}
                         sliceArrState={null}
                         handleDeleteWord={handleDeleteWordFlashCard}
                         handleExpandWordArray={() => {}}
@@ -588,7 +542,8 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
               }
               const nextAudioIsTheSameUrl =
                 sentence.isMediaContent &&
-                sentence.topic === toggleableSentencesState[index + 1]?.topic;
+                sentence.topic ===
+                  toggleableSentencesMemoized[index + 1]?.topic;
               return (
                 <DifficultSentenceComponent
                   key={sentence.id}

@@ -13,7 +13,7 @@ const SpecificTopicContainer = ({
   const [areYouSurePromptOpen, setAreYouSurePromptOpen] = useState(false);
 
   const isSelected = generalTopic === selectedGeneralTopicState;
-  const label = `${generalTopic} (${numberOfSentences})`;
+  const label = `${generalTopic.slice(0, 30)} (${numberOfSentences})`;
   const shadowStyles = areYouSurePromptOpen
     ? {
         shadowOffset: {
