@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useMemo, useRef, useState} from 'react';
 import {useSelector} from 'react-redux';
 import {ScrollView, View} from 'react-native';
 import {useRoute} from '@react-navigation/native';
@@ -53,8 +53,7 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
   ] = useState(null);
   const [selectedGeneralTopicState, setSelectedGeneralTopicState] =
     useState('');
-  const [generalTopicsAvailableState, setGeneralTopicsAvailableState] =
-    useState(null);
+
   const [sliceArrState, setSliceArrState] = useState(10);
   const [isShowDueOnly, setIsShowDueOnly] = useState(true);
   const [isMountedState, setIsMountedState] = useState(false);
@@ -110,7 +109,6 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
     setToggleableSentencesState([]);
     setSelectedDueCardState(null);
     setSelectedGeneralTopicState('');
-    setGeneralTopicsAvailableState(null);
     setSliceArrState(10);
     setIsShowDueOnly(true);
     setIsMountedState(true);
@@ -153,9 +151,6 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
       setToggleableSentencesState(
         dueSentences.sort(sortFilteredOrder).slice(0, 3),
       );
-      if (Object.keys(dueTopicCount).length > 0) {
-        setGeneralTopicsAvailableState(sortObjByKeys(dueTopicCount));
-      }
     } else {
       const fallbackTopicCount = {};
       for (const sentence of difficultSentencesState) {
@@ -168,11 +163,46 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
       setToggleableSentencesState(
         difficultSentencesState.sort(sortFilteredOrder).slice(0, 3),
       );
-      if (Object.keys(fallbackTopicCount).length > 0) {
-        setGeneralTopicsAvailableState(sortObjByKeys(fallbackTopicCount));
-      }
     }
   };
+
+  const generalTopicsAvailableMemoized = useMemo(() => {
+    const today = new Date();
+    const dueSentences = [];
+    const dueTopicCount = {};
+
+    for (const sentence of difficultSentencesState) {
+      if (isDueCheck(sentence, today)) {
+        dueSentences.push(sentence);
+        if (sentence.generalTopic) {
+          dueTopicCount[sentence.generalTopic] =
+            (dueTopicCount[sentence.generalTopic] || 0) + 1;
+        }
+      }
+    }
+
+    if (dueSentences.length > 0) {
+      // setToggleableSentencesState(
+      //   dueSentences.sort(sortFilteredOrder).slice(0, 3),
+      // );
+      if (Object.keys(dueTopicCount).length > 0) {
+        return sortObjByKeys(dueTopicCount);
+      }
+    } else {
+      const fallbackTopicCount = {};
+      for (const sentence of difficultSentencesState) {
+        if (sentence.generalTopic) {
+          fallbackTopicCount[sentence.generalTopic] =
+            (fallbackTopicCount[sentence.generalTopic] || 0) + 1;
+        }
+      }
+
+      if (Object.keys(fallbackTopicCount).length > 0) {
+        return sortObjByKeys(fallbackTopicCount);
+      }
+      return {};
+    }
+  }, []);
 
   const handleShowThisTopicsSentences = topic => {
     if (topic === selectedGeneralTopicState) {
@@ -334,8 +364,6 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
     setToggleableSentencesState(
       filteredSentences.sort(sortFilteredOrder).slice(0, 3),
     );
-
-    setGeneralTopicsAvailableState(sortObjByKeys(topicCount));
   }, [
     difficultSentencesState,
     selectedGeneralTopicState,
@@ -451,9 +479,9 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
   const realCapacity = toggleableSentencesState.length;
 
   const dueLength = selectedGeneralTopicState
-    ? generalTopicsAvailableState[selectedGeneralTopicState]
-    : generalTopicsAvailableState
-    ? Object.values(generalTopicsAvailableState).reduce(
+    ? generalTopicsAvailableMemoized[selectedGeneralTopicState]
+    : generalTopicsAvailableMemoized
+    ? Object.values(generalTopicsAvailableMemoized).reduce(
         (acc, val) => acc + val,
         0,
       )
@@ -510,9 +538,9 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
           contentInsetAdjustmentBehavior="automatic"
           style={{paddingBottom: 30}}
           ref={scrollViewRef}>
-          {generalTopicsAvailableState ? (
+          {generalTopicsAvailableMemoized ? (
             <DifficultSentencesTopics
-              generalTopicsAvailableState={generalTopicsAvailableState}
+              generalTopicsAvailableState={generalTopicsAvailableMemoized}
               handleShowThisTopicsSentences={handleShowThisTopicsSentences}
               selectedGeneralTopicState={selectedGeneralTopicState}
               handleLongPressTopics={handleLongPressTopics}
