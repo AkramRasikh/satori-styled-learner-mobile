@@ -6,12 +6,26 @@ export const srsRetentionKey = {
   sentences: 0.97,
   topic: 0.95,
   media: 0.93,
+  snippet: 0.99,
 };
 export const srsRetentionKeyTypes = {
   vocab: 'vocab',
   sentences: 'sentences',
   topic: 'topic',
   media: 'media',
+  snippet: 'snippet',
+};
+
+export const isMoreThanADayAhead = (date, currentDue) => {
+  const diffMs = new Date(date).getTime() - currentDue.getTime();
+
+  return diffMs >= (23 * 60 + 50) * 60 * 1000;
+};
+
+export const setToFiveAM = date => {
+  const newDate = new Date(date);
+  newDate.setHours(5, 0, 0, 0);
+  return newDate;
 };
 
 const initFsrs = ({contentType}) => {

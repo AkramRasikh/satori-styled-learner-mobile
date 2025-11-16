@@ -1,11 +1,11 @@
-import {BACKEND_ENDPOINT} from '@env';
+import {UPDATE_CONTENT_META_URL} from '@env';
 
 export const updateCreateReviewHistory = async ({
   title,
   fieldToUpdate,
   language,
 }) => {
-  const url = BACKEND_ENDPOINT + '/update-content';
+  const url = UPDATE_CONTENT_META_URL;
 
   try {
     const response = await fetch(url, {
