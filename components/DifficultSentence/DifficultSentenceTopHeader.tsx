@@ -13,6 +13,8 @@ const DifficultSentenceTopHeader = ({
   const [areYouSureDeleteState, setAreYouSureDeleteState] = useState(false);
 
   const {handleDeleteContent} = useDifficultSentenceContext();
+
+  const topicText = topic.length > 37 ? `${topic.substring(0, 30)}...` : topic;
   return (
     <View>
       <View
@@ -35,7 +37,7 @@ const DifficultSentenceTopHeader = ({
               textDecorationLine: 'underline',
               fontStyle: 'italic',
             }}>
-            {topic}
+            {topicText}
           </Button>
         </View>
         <IconButton
