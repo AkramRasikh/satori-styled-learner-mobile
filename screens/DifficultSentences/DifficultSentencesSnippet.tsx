@@ -97,6 +97,7 @@ const DifficultSentencesSnippet = ({
   languageSelectedState,
   updateContentSnippetsDataScreenLevel,
 }) => {
+  const [isLoadingState, setIsLoadingState] = useState(false);
   const topic = snippetData.topic;
   const generalTopic = snippetData.generalTopic;
   let startTime = snippetData.time;
@@ -190,11 +191,17 @@ const DifficultSentencesSnippet = ({
   }, [filePath, triggerLoadURL, isLoaded]);
 
   const quickDeleteFunc = async () => {
-    await updateContentSnippetsDataScreenLevel({
-      snippetId: snippetData.id,
-      contentIndex: snippetData.contentIndex,
-      isRemove: true,
-    });
+    try {
+      setIsLoadingState(true);
+      await updateContentSnippetsDataScreenLevel({
+        snippetId: snippetData.id,
+        contentIndex: snippetData.contentIndex,
+        isRemove: true,
+      });
+    } catch (error) {
+    } finally {
+      setIsLoadingState(false);
+    }
   };
 
   useEffect(() => {
@@ -205,21 +212,27 @@ const DifficultSentencesSnippet = ({
   }, [loadFile, isLoaded, topic, url, isTriggered]);
 
   const handleNextReview = async difficulty => {
-    const nextReviewData = nextScheduledOptions[difficulty].card;
-    const isMoreThanADayAheadBool = isMoreThanADayAhead(
-      nextReviewData.due,
-      new Date(),
-    );
+    try {
+      setIsLoadingState(true);
+      const nextReviewData = nextScheduledOptions[difficulty].card;
+      const isMoreThanADayAheadBool = isMoreThanADayAhead(
+        nextReviewData.due,
+        new Date(),
+      );
 
-    const formattedToBe5am = isMoreThanADayAheadBool
-      ? {...nextReviewData, due: setToFiveAM(nextReviewData.due)}
-      : nextReviewData;
+      const formattedToBe5am = isMoreThanADayAheadBool
+        ? {...nextReviewData, due: setToFiveAM(nextReviewData.due)}
+        : nextReviewData;
 
-    await updateContentSnippetsDataScreenLevel({
-      snippetId: snippetData.id,
-      fieldToUpdate: {reviewData: formattedToBe5am},
-      contentIndex: snippetData.contentIndex,
-    });
+      await updateContentSnippetsDataScreenLevel({
+        snippetId: snippetData.id,
+        fieldToUpdate: {reviewData: formattedToBe5am},
+        contentIndex: snippetData.contentIndex,
+      });
+    } catch (error) {
+    } finally {
+      setIsLoadingState(false);
+    }
   };
 
   return (
@@ -230,6 +243,7 @@ const DifficultSentencesSnippet = ({
         flexDirection: 'column',
         gap: 10,
         alignItems: 'center',
+        opacity: isLoadingState ? 0.5 : 1,
       }}>
       <Text>{topic}</Text>
       <FocusedTextHighlighted

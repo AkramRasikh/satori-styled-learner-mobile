@@ -20,6 +20,7 @@ import CombineSentencesContainer from '../../components/CombineSentencesContaine
 import {sortObjByKeys} from '../../utils/sort-obj-by-keys';
 import FlashCard from '../../components/FlashCard';
 import {FlashCardProvider} from '../../components/FlashCard/context/FlashCardProvider';
+import DifficultSentencesSnippet from './DifficultSentencesSnippet';
 
 const sortFilteredOrder = (a, b) => {
   if (!a.topic) return 1; // Push objects without a topic to the end
@@ -58,6 +59,9 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
   const scrollViewRef = useRef(null);
 
   const targetLanguageWordsState = useSelector(state => state.words);
+  const targetLanguageLoadedContentMasterState = useSelector(
+    state => state.learningContent,
+  );
   const numberOfWords = targetLanguageWordsState.length;
 
   const {
@@ -70,6 +74,7 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
     handleAdhocMinimalPair,
     combineWordsFromSingularDataProvider,
     handleAddCustomWordPrompt,
+    updateContentMetaData,
   } = useData();
 
   const {
@@ -94,7 +99,8 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
     }
   }, [refreshState]);
 
-  const {setLanguageSelectedState} = useLanguageSelector();
+  const {setLanguageSelectedState, languageSelectedState} =
+    useLanguageSelector();
 
   const {underlineWordsInSentence} = useHighlightWordToWordBank({
     pureWordsUnique: pureWords,
@@ -146,7 +152,10 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
       }
     }
 
-    return filteredSentences.sort(sortFilteredOrder).slice(0, 3);
+    return filteredSentences
+      .filter(item => item?.isSnippet)
+      .sort(sortFilteredOrder)
+      .slice(0, 3);
   }, [
     difficultSentencesState,
     dueWordsState,
@@ -205,6 +214,68 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
   };
 
   const {openGoogleTranslateApp} = useOpenGoogleTranslate();
+
+  const updateContentSnippetsDataScreenLevel = async ({
+    snippetId,
+    isRemove,
+    fieldToUpdate,
+    contentIndex,
+  }) => {
+    try {
+      const thisContent = targetLanguageLoadedContentMasterState[contentIndex];
+      const topicName = thisContent.title;
+      const thisContentSnippets = thisContent?.snippets;
+
+      if (isRemove) {
+        const filteredSnippets = thisContentSnippets.filter(
+          item => item.id !== snippetId,
+        );
+        await updateContentMetaData({
+          topicName,
+          fieldToUpdate: {
+            snippets: [...filteredSnippets],
+          },
+          contentIndex,
+        });
+
+        const updatedState = difficultSentencesState.filter(
+          sentenceData => sentenceData.id !== snippetId,
+        );
+        setDifficultSentencesState(updatedState);
+      } else {
+        const updatedSnippets = thisContentSnippets.map(item => {
+          if (item.id === snippetId) {
+            return {
+              ...item,
+              ...fieldToUpdate,
+            };
+          }
+          return item;
+        });
+
+        await updateContentMetaData({
+          topicName,
+          fieldToUpdate: {
+            snippets: [...updatedSnippets],
+          },
+          contentIndex,
+        });
+
+        const difficultUpdatedState = [...difficultSentencesState].map(item => {
+          if (item.id === snippetId) {
+            return {
+              ...item,
+              ...fieldToUpdate,
+            };
+          }
+          return item;
+        });
+        setDifficultSentencesState(difficultUpdatedState);
+      }
+    } catch (error) {
+      console.log('## updateContentSnippetsDataScreenLevel error', error);
+    }
+  };
 
   const updateSentenceDataScreenLevel = async ({
     isAdhoc,
@@ -404,19 +475,19 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
     }
   };
 
-  useEffect(() => {
-    if (
-      difficultSentencesState.length > 0 &&
-      toggleableSentencesMemoized?.length === 0 &&
-      selectedGeneralTopicState
-    ) {
-      setSelectedGeneralTopicState('');
-    }
-  }, [
-    difficultSentencesState,
-    toggleableSentencesMemoized,
-    selectedGeneralTopicState,
-  ]);
+  // useEffect(() => {
+  //   if (
+  //     difficultSentencesState.length > 0 &&
+  //     toggleableSentencesMemoized?.length === 0 &&
+  //     selectedGeneralTopicState
+  //   ) {
+  //     // setSelectedGeneralTopicState('');
+  //   }
+  // }, [
+  //   difficultSentencesState,
+  //   toggleableSentencesMemoized,
+  //   selectedGeneralTopicState,
+  // ]);
 
   useEffect(() => {
     setIsMountedState(true);
@@ -530,6 +601,19 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
                       />
                     </FlashCardProvider>
                   </View>
+                );
+              }
+
+              if (sentence?.isSnippet) {
+                return (
+                  <DifficultSentencesSnippet
+                    key={sentence.id}
+                    snippetData={sentence}
+                    languageSelectedState={languageSelectedState}
+                    updateContentSnippetsDataScreenLevel={
+                      updateContentSnippetsDataScreenLevel
+                    }
+                  />
                 );
               }
               const nextAudioIsTheSameUrl =
