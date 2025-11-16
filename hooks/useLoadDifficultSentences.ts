@@ -47,18 +47,21 @@ const useLoadDifficultSentences = () => {
             previousSentence: index > 0 ? content[index - 1].targetLang : null,
             ...sentenceInContent,
             endTime: isLast ? null : content[index + 1].time,
+            isContent: true,
           });
         }
       });
       snippets?.forEach(snippet => {
         if (snippet?.reviewData?.due) {
-          const thisGeneralTopicsName = getGeneralTopicName(thisTopic);
+          const generalTopicName = !stringEndsWithNumber(contentWidget.title)
+            ? contentWidget.title
+            : getGeneralTopicName(contentWidget.title);
           difficultSentences.push({
             topic: thisTopic,
             isCore,
             isMediaContent,
             contentIndex,
-            generalTopic: thisGeneralTopicsName,
+            generalTopic: generalTopicName,
             ...snippet,
             isSnippet: true,
           });

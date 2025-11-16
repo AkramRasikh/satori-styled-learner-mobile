@@ -7,29 +7,54 @@ const DifficultSentencesWordNavigator = ({
   numberOfWords,
   includeWordsState,
   setIncludeWordsState,
+  includeContentState,
+  setIncludeContentState,
+  includeSnippetsState,
+  setIncludeSnippetsState,
 }) => {
   const label = `Words (${numberOfWords})`;
   return (
-    <View
-      style={{
-        marginTop: 5,
-        alignSelf: 'flex-start',
-        gap: 5,
-        display: 'flex',
-        flexDirection: 'row',
-      }}>
-      <FAB
-        label={label}
-        onPress={handleNavigationToWords}
-        customSize={30}
+    <View>
+      <View
         style={{
-          backgroundColor: MD2Colors.green100,
-        }}
-      />
-      <TopicListButton
-        label={`With Words ${includeWordsState ? '✅' : '❌'}`}
-        onPress={() => setIncludeWordsState(!includeWordsState)}
-      />
+          marginTop: 5,
+          alignSelf: 'flex-start',
+          gap: 5,
+          display: 'flex',
+          flexDirection: 'row',
+          flexWrap: 'wrap',
+        }}>
+        <TopicListButton
+          label={`Words ${includeWordsState ? '✅' : '❌'}`}
+          onPress={() => setIncludeWordsState(!includeWordsState)}
+        />
+        <TopicListButton
+          label={`Content ${includeContentState ? '✅' : '❌'}`}
+          onPress={() => setIncludeContentState(!includeContentState)}
+        />
+        <TopicListButton
+          label={`Snippets ${includeSnippetsState ? '✅' : '❌'}`}
+          onPress={() => setIncludeSnippetsState(!includeSnippetsState)}
+        />
+      </View>
+
+      <View
+        style={{
+          marginTop: 5,
+          alignSelf: 'flex-start',
+          gap: 5,
+          display: 'flex',
+          flexDirection: 'row',
+        }}>
+        <FAB
+          label={label}
+          onPress={handleNavigationToWords}
+          customSize={30}
+          style={{
+            backgroundColor: MD2Colors.green100,
+          }}
+        />
+      </View>
     </View>
   );
 };
