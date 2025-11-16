@@ -609,6 +609,7 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
                 return (
                   <DifficultSentencesSnippet
                     key={sentence.id}
+                    indexNum={index}
                     snippetData={sentence}
                     languageSelectedState={languageSelectedState}
                     updateContentSnippetsDataScreenLevel={

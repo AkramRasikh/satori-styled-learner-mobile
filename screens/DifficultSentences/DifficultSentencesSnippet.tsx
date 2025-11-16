@@ -1,5 +1,4 @@
 import {Text, View} from 'react-native';
-import AudioSnippetPlayer from '../../components/AudioSnippetPlayer';
 import {getFirebaseAudioURL} from '../../hooks/useGetCombinedAudioData';
 import SRSTogglesScaled from '../../components/SRSTogglesScaled';
 import {
@@ -14,9 +13,15 @@ import useMP3File from '../../hooks/useMP3File';
 import useLoadAudioInstance from '../../hooks/useLoadAudioInstance';
 
 import React from 'react-native';
-import {IconButton} from 'react-native-paper';
+import {
+  DefaultTheme,
+  IconButton,
+  MD2Colors,
+  MD3Colors,
+} from 'react-native-paper';
 
 import useMainAudioControls from '../../hooks/useMainAudioControls';
+import {getTimeDiffSRS} from '../../utils/getTimeDiffSRS';
 
 const DifficultSnippetAudioControls = ({
   sentence,
@@ -96,6 +101,7 @@ const DifficultSentencesSnippet = ({
   snippetData,
   languageSelectedState,
   updateContentSnippetsDataScreenLevel,
+  indexNum,
 }) => {
   const [isLoadingState, setIsLoadingState] = useState(false);
   const topic = snippetData.topic;
@@ -105,7 +111,6 @@ const DifficultSentencesSnippet = ({
   const duration = isContracted ? 1.5 : 3;
   let endTime = startTime + duration;
   startTime = startTime - (isContracted ? 0.75 : 1.5);
-  console.log('## generalTopic', generalTopic, topic);
 
   const url = getFirebaseAudioURL(generalTopic, languageSelectedState);
 
@@ -205,11 +210,12 @@ const DifficultSentencesSnippet = ({
   };
 
   useEffect(() => {
-    if (!isLoaded && !isTriggered) {
+    const isFirst2 = indexNum === 0 || indexNum === 1;
+    if (!isLoaded && isFirst2 && !isTriggered) {
       setIsTriggered(true);
       loadFile(topic, url);
     }
-  }, [loadFile, isLoaded, topic, url, isTriggered]);
+  }, [loadFile, isLoaded, topic, url, isTriggered, indexNum]);
 
   const handleNextReview = async difficulty => {
     try {
@@ -266,15 +272,40 @@ const DifficultSentencesSnippet = ({
           handleLoad={handleLoad}
           isLoaded={isLoaded}
         />
-        <SRSTogglesScaled
-          handleNextReview={handleNextReview}
-          againText={againText}
-          hardText={hardText}
-          goodText={goodText}
-          easyText={easyText}
-          fontSize={10}
-          quickDeleteFunc={quickDeleteFunc}
-        />
+        {hasDueDateInFuture ? (
+          <View
+            style={{
+              display: 'flex',
+              flexDirection: 'row',
+              gap: 10,
+            }}>
+            <Text
+              style={{
+                ...DefaultTheme.fonts.bodySmall,
+                alignSelf: 'center',
+                fontStyle: 'italic',
+              }}>
+              Due in {getTimeDiffSRS({dueTimeStamp: hasDueDate, timeNow})}
+            </Text>
+            <IconButton
+              icon="delete"
+              containerColor={MD3Colors.error50}
+              iconColor={MD2Colors.white}
+              size={20}
+              onPress={quickDeleteFunc}
+            />
+          </View>
+        ) : (
+          <SRSTogglesScaled
+            handleNextReview={handleNextReview}
+            againText={againText}
+            hardText={hardText}
+            goodText={goodText}
+            easyText={easyText}
+            fontSize={10}
+            quickDeleteFunc={quickDeleteFunc}
+          />
+        )}
       </View>
     </View>
   );
