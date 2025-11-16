@@ -1,6 +1,9 @@
 import {useSelector} from 'react-redux';
 import {sortByDueDate} from '../utils/sort-by-due-date';
-import {getGeneralTopicName} from '../utils/get-general-topic-name';
+import {
+  getGeneralTopicName,
+  stringEndsWithNumber,
+} from '../utils/get-general-topic-name';
 
 const useLoadDifficultSentences = () => {
   const targetLanguageLoadedContentMasterState = useSelector(
@@ -17,6 +20,8 @@ const useLoadDifficultSentences = () => {
       const thisTopic = contentWidget.title;
       const isCore = contentWidget.isCore;
       const isArticle = contentWidget?.isArticle;
+      const snippets = contentWidget?.snippets;
+
       const isMediaContent =
         contentWidget.origin === 'netflix' ||
         contentWidget.origin === 'youtube' ||
@@ -27,7 +32,9 @@ const useLoadDifficultSentences = () => {
           sentenceInContent?.nextReview ||
           sentenceInContent?.reviewData?.due
         ) {
-          const thisGeneralTopicsName = getGeneralTopicName(thisTopic);
+          const generalTopicName = !stringEndsWithNumber(contentWidget.title)
+            ? contentWidget.title
+            : getGeneralTopicName(contentWidget.title);
 
           const isLast = content.length - 1 === index;
           difficultSentences.push({
@@ -36,10 +43,24 @@ const useLoadDifficultSentences = () => {
             isCore,
             isMediaContent,
             contentIndex,
-            generalTopic: thisGeneralTopicsName,
+            generalTopic: generalTopicName,
             previousSentence: index > 0 ? content[index - 1].targetLang : null,
             ...sentenceInContent,
             endTime: isLast ? null : content[index + 1].time,
+          });
+        }
+      });
+      snippets?.forEach(snippet => {
+        if (snippet?.reviewData?.due) {
+          const thisGeneralTopicsName = getGeneralTopicName(thisTopic);
+          difficultSentences.push({
+            topic: thisTopic,
+            isCore,
+            isMediaContent,
+            contentIndex,
+            generalTopic: thisGeneralTopicsName,
+            ...snippet,
+            isSnippet: true,
           });
         }
       });
