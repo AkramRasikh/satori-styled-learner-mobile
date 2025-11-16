@@ -56,7 +56,7 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
   const [loadingCombineSentences, setLoadingCombineSentences] = useState(false);
   const [isLanguageLoading, setIsLanguageLoading] = useState(false);
   const [includeWordsState, setIncludeWordsState] = useState(true);
-  const [includeContentState, setIncludeContentState] = useState(true);
+  const [includeContentState, setIncludeContentState] = useState(false);
   const [includeSnippetsState, setIncludeSnippetsState] = useState(true);
   const scrollViewRef = useRef(null);
 
