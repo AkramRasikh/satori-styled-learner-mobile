@@ -77,4 +77,5 @@ yarn-error.log
 .env
 .env.local-dev
 .env.local-firebase
+.env.local-dev-firebase
 .env.development
