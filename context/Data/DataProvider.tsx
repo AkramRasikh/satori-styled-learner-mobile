@@ -13,7 +13,6 @@ import {storeDataLocalStorage} from '../../helper-functions/local-storage-utils'
 import {updateCreateReviewHistory} from '../../api/update-create-review-history';
 import {sentenceReviewBulkAPI} from '../../api/sentence-review-bulk';
 import {combineWordsAPI} from '../../api/combine-words';
-import {addSentenceContextAPI} from '../../api/add-sentence-context';
 import {addSentenceAudioAPI} from '../../api/add-sentence-audio';
 import {
   setLearningContentStateDispatch,
@@ -594,19 +593,6 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
     }
   };
 
-  const addSentenceContext = async contextData => {
-    try {
-      const contextWordsAddedResponse = await addSentenceContextAPI({
-        language,
-        ...contextData,
-      });
-      const contextIds = contextWordsAddedResponse.map(item => item.id);
-      return contextIds;
-    } catch (error) {
-      updatePromptFunc('Error adding context data');
-    }
-  };
-
   const bulkAddReviews = async ({topicName, sentencesArray, contentIndex}) => {
     const res = await Promise.all(
       // currently returning content for each arr
@@ -962,7 +948,6 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
         combineWordsListState,
         combineWords,
         setCombineWordsListState,
-        addSentenceContext,
         getSentenceAudio,
         deleteWord,
         updateWordData,
