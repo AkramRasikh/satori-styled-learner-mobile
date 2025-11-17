@@ -191,6 +191,7 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
         title: topicName,
         fieldToUpdate,
         language,
+        contentIndex,
       });
       if (resObj) {
         const updatedState = [...targetLanguageLoadedContentMasterState];

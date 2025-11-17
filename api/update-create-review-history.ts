@@ -4,6 +4,7 @@ export const updateCreateReviewHistory = async ({
   title,
   fieldToUpdate,
   language,
+  contentIndex,
 }) => {
   const url = UPDATE_CONTENT_META_URL;
 
@@ -17,6 +18,7 @@ export const updateCreateReviewHistory = async ({
         language,
         title,
         fieldToUpdate,
+        contentIndex,
       }),
     });
 
