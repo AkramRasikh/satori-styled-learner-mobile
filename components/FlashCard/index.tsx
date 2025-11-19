@@ -25,6 +25,7 @@ const NestedFlashCard = ({
   scaleAnimNestedModal,
   wordData,
   handleCloseModal,
+  isJapanese,
 }) => {
   const fadeAnim = fadeAnimNestedModal || useRef(new Animated.Value(0)).current;
   const scaleAnim =
@@ -36,7 +37,11 @@ const NestedFlashCard = ({
 
   return (
     <AnimationContainer fadeAnim={fadeAnim} scaleAnim={scaleAnim}>
-      <FlashCardModal wordData={wordData} onClose={handleCloseModal} />
+      <FlashCardModal
+        wordData={wordData}
+        onClose={handleCloseModal}
+        isJapanese={isJapanese}
+      />
     </AnimationContainer>
   );
 };
@@ -72,6 +77,8 @@ const FlashCard = ({
   const isCharacterBasedLanguage = characterBasedLanguages.includes(
     languageSelectedState,
   );
+
+  const isJapanese = languageSelectedState === 'japanese';
 
   const {collapseAnimation} = useAnimation({
     fadeAnim,
@@ -201,6 +208,7 @@ const FlashCard = ({
                 scaleAnimNestedModal={scaleAnimNestedModal}
                 wordData={wordData}
                 handleCloseModal={handleCloseModal}
+                isJapanese={isJapanese}
               />
             )}
             <FlashCardSRSToggles

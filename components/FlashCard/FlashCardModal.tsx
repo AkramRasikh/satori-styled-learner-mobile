@@ -7,6 +7,7 @@ import FlashCardAudio from '../FlashCard/FlashCardAudio';
 import {SoundProvider} from '../WordSoundComponent/context/SoundProvider';
 import useWordData from '../../context/WordData/useWordData';
 import {DoubleClickButton} from '../Button';
+import FlashCardCheckForKanji from './FlashCardCheckForKanji';
 
 const ExampleSentences = ({sentenceExamples, baseForm, surfaceForm}) => {
   const {underlineWordsInSentence} = useHighlightWordToWordBank({
@@ -109,6 +110,12 @@ const FlashCardLineContainer = ({
   );
 };
 
+const kanjiRegex = /[\u4E00-\u9FFF\u3400-\u4DBF]/g;
+function extractKanji(str: string): string[] {
+  const matches = str.match(kanjiRegex);
+  return matches ? matches : [];
+}
+
 export const FlashCardContent = ({
   id,
   baseForm,
@@ -117,8 +124,11 @@ export const FlashCardContent = ({
   phonetic,
   transliteration,
   sentenceExamples,
+  isJapanese,
 }) => {
+  const [kanjiDataState, setKanjiDataState] = useState<any>(null);
   const {updateWordData} = useWordData();
+
   const arr = [
     {label: 'Base Form:', value: baseForm, property: 'baseForm'},
     {label: 'Surface Form:', value: surfaceForm, property: 'surfaceForm'},
@@ -130,6 +140,9 @@ export const FlashCardContent = ({
       property: transliteration,
     },
   ];
+
+  const hasKanji = isJapanese && extractKanji(baseForm);
+  const uniqueSetOfKanj = [...new Set(hasKanji)];
 
   return (
     <View style={[styles.modalContainer]}>
@@ -146,6 +159,15 @@ export const FlashCardContent = ({
           />
         );
       })}
+      {uniqueSetOfKanj?.length > 0 && (
+        <FlashCardCheckForKanji
+          kanjiDataState={kanjiDataState}
+          setKanjiDataState={setKanjiDataState}
+          uniqueSetOfKanj={uniqueSetOfKanj}
+          kanji={hasKanji}
+          baseForm={baseForm}
+        />
+      )}
       {sentenceExamples?.length > 0 && (
         <ExampleSentences
           sentenceExamples={sentenceExamples}
@@ -157,7 +179,7 @@ export const FlashCardContent = ({
   );
 };
 
-const FlashCardModal = ({wordData, onClose}) => {
+const FlashCardModal = ({wordData, onClose, isJapanese}) => {
   const baseForm = wordData.baseForm;
   const surfaceForm = wordData.surfaceForm;
   const transliteration = wordData.transliteration;
@@ -180,6 +202,7 @@ const FlashCardModal = ({wordData, onClose}) => {
         phonetic={phonetic}
         transliteration={transliteration}
         sentenceExamples={sentenceExamples}
+        isJapanese={isJapanese}
       />
     </View>
   );
