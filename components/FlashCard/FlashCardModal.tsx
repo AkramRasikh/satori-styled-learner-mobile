@@ -124,6 +124,7 @@ export const FlashCardContent = ({
   phonetic,
   transliteration,
   sentenceExamples,
+  mnemonic,
   isJapanese,
 }) => {
   const [kanjiDataState, setKanjiDataState] = useState<any>(null);
@@ -138,6 +139,11 @@ export const FlashCardContent = ({
       label: 'Transliteration:',
       value: transliteration,
       property: transliteration,
+    },
+    {
+      label: 'Mnemonic:',
+      value: mnemonic,
+      property: 'mnemonic',
     },
   ];
 
@@ -184,6 +190,7 @@ const FlashCardModal = ({wordData, onClose, isJapanese}) => {
   const surfaceForm = wordData.surfaceForm;
   const transliteration = wordData.transliteration;
   const definition = wordData.definition;
+  const mnemonic = wordData?.mnemonic;
   const phonetic = wordData.phonetic || transliteration;
   const sentenceExamples = wordData?.contextData;
 
@@ -203,6 +210,7 @@ const FlashCardModal = ({wordData, onClose, isJapanese}) => {
         transliteration={transliteration}
         sentenceExamples={sentenceExamples}
         isJapanese={isJapanese}
+        mnemonic={mnemonic}
       />
     </View>
   );
