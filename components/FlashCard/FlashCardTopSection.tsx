@@ -26,6 +26,9 @@ const FlashCardTopSection = ({
         justifyContent: 'space-between',
       }}>
       <TouchableOpacity
+        style={{
+          flex: 6,
+        }}
         onPress={() => setIsShowTargetLangState(!isShowTargetLangState)}>
         <Text
           style={{
@@ -46,6 +49,7 @@ const FlashCardTopSection = ({
           display: 'flex',
           flexDirection: 'row',
           alignItems: 'center',
+          flex: 1,
         }}>
         <View style={{display: 'flex', flexDirection: 'row'}}>
           {isSelectedWord && (
