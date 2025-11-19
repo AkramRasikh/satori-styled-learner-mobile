@@ -6,7 +6,6 @@ import LoadingScreen from '../../components/LoadingScreen';
 import ScreenContainerComponent from '../../components/ScreenContainerComponent';
 import useData from '../../context/Data/useData';
 import useDifficultSentences from '../../context/DifficultSentences/useDifficultSentencesProvider';
-import WordModalDifficultSentence from '../../components/WordModalDifficultSentence';
 import DifficultSentencesTopics from './DifficultSentencesTopics';
 import DifficultSentencesWordNavigator from './DifficultSentencesWordNavigator';
 import DifficultSentencesSegmentHeader from './DifficultSentencesSegmentHeader';
