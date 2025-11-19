@@ -46,7 +46,6 @@ const sortFilteredOrder = (a, b) => {
 };
 
 const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
-  const [selectedDueCardState, setSelectedDueCardState] = useState(null);
   const [selectedGeneralTopicState, setSelectedGeneralTopicState] =
     useState('');
 
@@ -109,7 +108,6 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
   });
 
   const defaultScreenState = () => {
-    setSelectedDueCardState(null);
     setSelectedGeneralTopicState('');
     setSliceArrState(10);
     setIsShowDueOnly(true);
@@ -200,7 +198,6 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
 
   const handleWordUpdate = wordData => {
     updateWordData(wordData);
-    setSelectedDueCardState(null);
   };
 
   const {openGoogleTranslateApp} = useOpenGoogleTranslate();
@@ -300,23 +297,6 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
     } finally {
       setLoadingCombineSentences(false);
     }
-  };
-
-  const handleSelectWord = selectingWord => {
-    const mostUpToDateWord = targetLanguageWordsState.find(
-      i => i.id === selectingWord.id,
-    );
-    if (mostUpToDateWord) {
-      setSelectedDueCardState(mostUpToDateWord);
-    }
-  };
-
-  const handleDeleteWord = async () => {
-    await deleteWord({
-      wordId: selectedDueCardState.id,
-      wordBaseForm: selectedDueCardState.baseForm,
-    });
-    setSelectedDueCardState(null);
   };
 
   const handleLongPressTopics = async longPressedTopic => {
@@ -536,14 +516,6 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
           opacity: isLanguageLoading ? 0.5 : 1,
           marginBottom: 70,
         }}>
-        {selectedDueCardState && (
-          <WordModalDifficultSentence
-            visible={selectedDueCardState}
-            updateWordData={handleWordUpdate}
-            onClose={() => setSelectedDueCardState(null)}
-            deleteWord={() => handleDeleteWord(selectedDueCardState)}
-          />
-        )}
         <DifficultSentencesSegmentHeader
           dueLength={dueLength}
           allLength={difficultSentencesState.length}
@@ -597,8 +569,6 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
                         handleAddCustomWordPromptFunc={
                           handleAddCustomWordPromptFunc
                         }
-                        selectedDueCardState={selectedDueCardState}
-                        setSelectedDueCardState={setSelectedDueCardState}
                       />
                     </FlashCardProvider>
                   </View>
@@ -631,7 +601,6 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
                   sliceArrState={sliceArrState}
                   setSliceArrState={setSliceArrState}
                   realCapacity={realCapacity}
-                  handleSelectWord={handleSelectWord}
                   handleWordUpdate={handleWordUpdate}
                   sentence={sentence}
                   openGoogleTranslateApp={openGoogleTranslateApp}

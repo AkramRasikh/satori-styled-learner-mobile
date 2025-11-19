@@ -98,7 +98,7 @@ const FlashCard = ({
       collapseAnimationNestedFlashCard();
       setTimeout(resolve, 100);
     });
-    setSelectedDueCardState(null);
+    setSelectedDueCardState?.(null);
   };
 
   const handleCopyText = () => {
@@ -166,7 +166,7 @@ const FlashCard = ({
     }
   };
   const selectWordWithScroll = () => {
-    setSelectedDueCardState(wordData);
+    setSelectedDueCardState?.(wordData);
     scrollToTarget();
   };
 

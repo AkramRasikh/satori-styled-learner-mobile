@@ -128,7 +128,7 @@ const WordModalDifficultSentence = ({
             const exampleNumber = index + 1 + ') ';
             const baseLang = exampleSentence.baseLang;
             const targetLang = exampleSentence.targetLang;
-            const isMediaContent = exampleSentence.isMediaContent;
+            // const isMediaContent = exampleSentence.isMediaContent;
             return (
               <View key={index}>
                 <Text style={styles.modalContent}>
@@ -137,10 +137,10 @@ const WordModalDifficultSentence = ({
                 <Text style={styles.modalContent}>
                   {getSafeText(targetLang)}
                 </Text>
-                <WordStudyAudio
+                {/* <WordStudyAudio
                   sentenceData={exampleSentence}
                   isMediaContent={isMediaContent}
-                />
+                /> */}
               </View>
             );
           })}

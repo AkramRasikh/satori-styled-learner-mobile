@@ -50,7 +50,7 @@ const DifficultSentenceMappedWords = ({
         ...addFlexContainer,
       }}>
       <TouchableOpacity
-        onPress={() => handleSelectWord(item)}
+        onPress={() => handleSelectWord?.(item)}
         style={{
           maxWidth: '80%',
         }}>
