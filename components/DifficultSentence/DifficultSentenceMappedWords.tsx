@@ -66,13 +66,6 @@ const DifficultSentenceMappedWords = ({
           <Text style={{fontStyle: 'italic'}}>({item.contexts.length})</Text>
         </Text>
       </TouchableOpacity>
-      {/* {noReview && !overrideReview && (
-        <SRSTogglesQuickComprehensiveDiffSentencesWords
-          wordData={item}
-          deleteWord={deleteWord}
-          updateWordData={handleUpdateWordFinal}
-        />
-      )} */}
       {setCombineWordsListState && (
         <View style={{}}>
           {isInCombineWordList ? (
