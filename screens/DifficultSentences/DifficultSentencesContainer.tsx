@@ -46,6 +46,7 @@ const sortFilteredOrder = (a, b) => {
 };
 
 const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
+  const [selectedDueCardState, setSelectedDueCardState] = useState(null);
   const [selectedGeneralTopicState, setSelectedGeneralTopicState] =
     useState('');
 
@@ -108,6 +109,7 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
   });
 
   const defaultScreenState = () => {
+    setSelectedDueCardState(null);
     setSelectedGeneralTopicState('');
     setSliceArrState(10);
     setIsShowDueOnly(true);
@@ -198,6 +200,7 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
 
   const handleWordUpdate = wordData => {
     updateWordData(wordData);
+    setSelectedDueCardState(null);
   };
 
   const {openGoogleTranslateApp} = useOpenGoogleTranslate();
@@ -296,6 +299,15 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
     } catch (error) {
     } finally {
       setLoadingCombineSentences(false);
+    }
+  };
+
+  const handleSelectWord = selectingWord => {
+    const mostUpToDateWord = targetLanguageWordsState.find(
+      i => i.id === selectingWord.id,
+    );
+    if (mostUpToDateWord) {
+      setSelectedDueCardState(mostUpToDateWord);
     }
   };
 
@@ -569,6 +581,8 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
                         handleAddCustomWordPromptFunc={
                           handleAddCustomWordPromptFunc
                         }
+                        selectedDueCardState={selectedDueCardState}
+                        setSelectedDueCardState={setSelectedDueCardState}
                       />
                     </FlashCardProvider>
                   </View>
@@ -601,6 +615,7 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
                   sliceArrState={sliceArrState}
                   setSliceArrState={setSliceArrState}
                   realCapacity={realCapacity}
+                  handleSelectWord={handleSelectWord}
                   handleWordUpdate={handleWordUpdate}
                   sentence={sentence}
                   openGoogleTranslateApp={openGoogleTranslateApp}

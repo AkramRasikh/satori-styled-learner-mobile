@@ -49,7 +49,7 @@ const FlashCardTopSection = ({
           display: 'flex',
           flexDirection: 'row',
           alignItems: 'center',
-          flex: 1,
+          flex: isSelectedWord ? 3 : 1,
         }}>
         <View style={{display: 'flex', flexDirection: 'row'}}>
           {isSelectedWord && (
