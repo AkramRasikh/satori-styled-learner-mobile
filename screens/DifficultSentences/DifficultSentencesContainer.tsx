@@ -457,20 +457,6 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
     }
   };
 
-  // useEffect(() => {
-  //   if (
-  //     difficultSentencesState.length > 0 &&
-  //     toggleableSentencesMemoized?.length === 0 &&
-  //     selectedGeneralTopicState
-  //   ) {
-  //     // setSelectedGeneralTopicState('');
-  //   }
-  // }, [
-  //   difficultSentencesState,
-  //   toggleableSentencesMemoized,
-  //   selectedGeneralTopicState,
-  // ]);
-
   useEffect(() => {
     setIsMountedState(true);
   }, []);
