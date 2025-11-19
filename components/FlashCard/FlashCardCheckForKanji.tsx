@@ -87,10 +87,6 @@ const FlashCardCheckForKanji = ({
           const meanings = correspondingEnglishMeaning?.join(', ');
           const color = getHexCode(index);
 
-          console.log('## kanjiItem', kanjiItem);
-          console.log('## meanings', meanings);
-          console.log('## splitBaseForm', splitBaseForm);
-
           return (
             <View
               key={index}
