@@ -43,6 +43,7 @@ const ModalBaseUI = ({
   definition,
   phonetic,
   transliteration,
+  mnemonic,
 }) => {
   return (
     <>
@@ -64,6 +65,7 @@ const ModalBaseUI = ({
       <Text style={styles.modalContent}>
         Transliteration: {transliteration}
       </Text>
+      <Text style={styles.modalContent}>Mnemonic: {mnemonic}</Text>
     </>
   );
 };
@@ -82,6 +84,7 @@ const WordModalDifficultSentence = ({
   const surfaceForm = visible.surfaceForm;
   const transliteration = visible.transliteration;
   const definition = visible.definition;
+  const mnemonic = visible?.mnemonic;
   const phonetic = visible.phonetic || transliteration;
   const sentenceExamples = visible?.contextData;
   const reviewData = visible?.reviewData;
@@ -122,6 +125,7 @@ const WordModalDifficultSentence = ({
           definition={definition}
           phonetic={phonetic}
           transliteration={transliteration}
+          mnemonic={mnemonic}
         />
         <View>
           {sentenceExamples?.map((exampleSentence, index) => {
