@@ -1,5 +1,9 @@
 import React, {View} from 'react-native';
-import {srsRetentionKeyTypes} from '../../srs-algo';
+import {
+  isMoreThanADayAhead,
+  setToFiveAM,
+  srsRetentionKeyTypes,
+} from '../../srs-algo';
 import {useState} from 'react';
 import {getTimeDiffSRS} from '../../utils/getTimeDiffSRS';
 import useWordData from '../../context/WordData/useWordData';
@@ -45,16 +49,22 @@ const FlashCardSRSToggles = ({
     collapseAnimation?.();
     await new Promise(resolve => setTimeout(resolve, 0));
     const nextReviewData = nextScheduledOptions[difficulty].card;
+    const isMoreThanADayAheadBool = isMoreThanADayAhead(
+      nextReviewData.due,
+      new Date(),
+    );
+
+    const formattedToBe5am = isMoreThanADayAheadBool
+      ? {...nextReviewData, due: setToFiveAM(nextReviewData.due)}
+      : nextReviewData;
+
+    formattedToBe5am.due.toISOString();
+    formattedToBe5am.last_review.toISOString();
+
     const res = await updateWordData({
       wordId: id,
       wordBaseForm: baseForm,
-      fieldToUpdate: {
-        reviewData: {
-          ...nextReviewData,
-          due: nextReviewData.due.toISOString(),
-          last_review: nextReviewData.last_review.toISOString(),
-        },
-      },
+      fieldToUpdate: {reviewData: formattedToBe5am},
     });
 
     if (res) {

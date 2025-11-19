@@ -1,5 +1,9 @@
 import React, {TouchableOpacity, View} from 'react-native';
-import {srsRetentionKeyTypes} from '../srs-algo';
+import {
+  isMoreThanADayAhead,
+  setToFiveAM,
+  srsRetentionKeyTypes,
+} from '../srs-algo';
 import {useState} from 'react';
 import {getTimeDiffSRS} from '../utils/getTimeDiffSRS';
 import {Button, Text} from 'react-native-paper';
@@ -26,13 +30,22 @@ export const DifficultSentencesSRSToggles = ({
 
   const handleNextReview = async difficulty => {
     const nextReviewData = nextScheduledOptions[difficulty].card;
+    const isMoreThanADayAheadBool = isMoreThanADayAhead(
+      nextReviewData.due,
+      new Date(),
+    );
+
+    const formattedToBe5am = isMoreThanADayAheadBool
+      ? {...nextReviewData, due: setToFiveAM(nextReviewData.due)}
+      : nextReviewData;
+
     try {
       await updateWordData({
         wordId: id,
         wordBaseForm: baseForm,
-        fieldToUpdate: {reviewData: nextReviewData},
+        fieldToUpdate: {reviewData: formattedToBe5am},
       });
-      setNextReviewDateState(nextReviewData.due);
+      setNextReviewDateState(formattedToBe5am.due);
     } catch (error) {
       console.log('## handleNextReview', {error});
     }
