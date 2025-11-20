@@ -1,7 +1,7 @@
 import {UPDATE_SENTENCE_URL} from '@env';
 
 export const updateSentenceDataAPI = async ({
-  topicName,
+  indexKey,
   sentenceId,
   fieldToUpdate,
   language,
@@ -16,7 +16,7 @@ export const updateSentenceDataAPI = async ({
       },
       body: JSON.stringify({
         language,
-        title: topicName,
+        indexKey,
         id: sentenceId,
         fieldToUpdate,
       }),

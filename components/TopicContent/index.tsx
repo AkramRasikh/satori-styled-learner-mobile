@@ -51,6 +51,7 @@ const TopicContent = ({
   const {isLoaded} = useInitAudio({soundRef, topicName, url});
 
   const content = loadedContent.content;
+  const contentId = loadedContent.id;
   const origin = loadedContent.origin;
   const realStartTime = loadedContent?.realStartTime;
   const hasAudio = loadedContent?.hasAudio;
@@ -144,6 +145,7 @@ const TopicContent = ({
           hasContentToReview={hasContentToReview}
           handleOpenGoogle={handleOpenGoogle}
           hasVideo={hasVideoCheckState}
+          contentId={contentId}
         />
       </TopicContentVideoProvider>
     );
@@ -173,6 +175,7 @@ const TopicContent = ({
         handleOpenGoogle={handleOpenGoogle}
         dueSentences={dueSentences}
         hasVideo={hasVideoCheckState}
+        contentId={contentId}
       />
     </TopicContentAudioProvider>
   );

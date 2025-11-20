@@ -28,6 +28,7 @@ const BilingualTextContainerWithQuickReviewWrapper = ({
   currentTimeState,
   dueSentences,
   showOnlyReviewState,
+  contentId,
 }) => {
   const [showQuickReviewState, setShowQuickReviewState] = useState(false);
 
@@ -87,6 +88,7 @@ const BilingualTextContainerWithQuickReviewWrapper = ({
               dueSentences={dueSentences}
               showOnlyReviewState={showOnlyReviewState}
               indexNum={index + 1}
+              contentId={contentId}
             />
           </View>
           {showQuickReviewState && (
@@ -95,6 +97,7 @@ const BilingualTextContainerWithQuickReviewWrapper = ({
               sentence={topicSentence}
               updateSentenceData={updateSentenceData}
               contentIndex={contentIndex}
+              contentId={contentId}
             />
           )}
         </View>
@@ -137,6 +140,7 @@ const BilingualTextContainer = ({
   isAutoScrollingMode,
   dueSentences,
   showOnlyReviewState,
+  contentId,
 }) => {
   return (
     <View
@@ -171,6 +175,7 @@ const BilingualTextContainer = ({
               currentTimeState={currentTimeState}
               dueSentences={dueSentences}
               showOnlyReviewState={showOnlyReviewState}
+              contentId={contentId}
             />
           );
         })}

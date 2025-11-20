@@ -11,6 +11,7 @@ const BilingualTextSwipeSRS = ({
   setShowQuickReviewState,
   sentence,
   updateSentenceData,
+  contentId,
   contentIndex,
 }) => {
   const timeNow = new Date();
@@ -41,9 +42,10 @@ const BilingualTextSwipeSRS = ({
       topicName: sentence.topic,
       sentenceId: sentence.id,
       fieldToUpdate: {
-        reviewData: {},
+        removeReview: true,
       },
       contentIndex: contentIndex ?? sentence.contentIndex,
+      indexKey: contentId,
     });
   };
 
@@ -58,6 +60,7 @@ const BilingualTextSwipeSRS = ({
         reviewData: nextReviewData,
       },
       contentIndex: contentIndex ?? sentence.contentIndex,
+      indexKey: contentId,
     });
   };
 

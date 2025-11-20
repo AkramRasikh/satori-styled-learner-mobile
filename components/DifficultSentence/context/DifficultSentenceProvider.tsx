@@ -76,10 +76,13 @@ export const DifficultSentenceProvider = ({
         isAdhoc: sentence?.isAdhoc,
         topicName: sentence.topic,
         sentenceId: sentence.id,
-        fieldToUpdate: {
-          reviewData: {},
-        },
+        fieldToUpdate: sentence?.isAdhoc
+          ? {}
+          : {
+              removeReview: true,
+            },
         contentIndex: sentence?.contentIndex,
+        indexKey: sentence?.indexKey,
       });
     } catch (error) {
     } finally {
@@ -111,10 +114,15 @@ export const DifficultSentenceProvider = ({
           isAdhoc: sentence?.isAdhoc,
           topicName: sentence.topic,
           sentenceId: sentence.id,
-          fieldToUpdate: {
-            reviewData: {},
-          },
+          fieldToUpdate: sentence?.isAdhoc
+            ? {
+                reviewData: {},
+              }
+            : {
+                removeReview: true,
+              },
           contentIndex: sentence?.contentIndex,
+          indexKey: sentence?.indexKey,
         });
       } else {
         await updateSentenceData({
@@ -124,7 +132,8 @@ export const DifficultSentenceProvider = ({
           fieldToUpdate: {
             reviewData: nextReviewData,
           },
-          contentIndex: sentence.contentIndex,
+          contentIndex: sentence?.contentIndex,
+          indexKey: sentence?.indexKey,
         });
       }
     } catch (error) {

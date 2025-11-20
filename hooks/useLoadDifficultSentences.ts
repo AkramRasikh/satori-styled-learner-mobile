@@ -48,6 +48,7 @@ const useLoadDifficultSentences = () => {
             ...sentenceInContent,
             endTime: isLast ? null : content[index + 1].time,
             isContent: true,
+            indexKey: contentWidget.id,
           });
         }
       });

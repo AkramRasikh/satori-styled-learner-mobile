@@ -37,6 +37,7 @@ const TopicContentAudioMode = ({
   url,
   handleOpenGoogle,
   hasVideo,
+  contentId,
 }) => {
   const [masterPlay, setMasterPlay] = useState('');
   const [engMaster, setEngMaster] = useState(true);
@@ -217,6 +218,7 @@ const TopicContentAudioMode = ({
             isAutoScrollingMode={isAutoScrollingMode}
             dueSentences={dueSentencesState}
             showOnlyReviewState={showOnlyReviewState}
+            contentId={contentId}
           />
         </ScrollView>
         <TopicContentAudioSection

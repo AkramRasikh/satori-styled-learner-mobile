@@ -184,13 +184,13 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
     topicName,
     fieldToUpdate,
     contentIndex,
+    indexKey,
   }) => {
     try {
       const resObj = await updateCreateReviewHistory({
-        title: topicName,
+        indexKey,
         fieldToUpdate,
         language,
-        contentIndex,
       });
       if (resObj) {
         const updatedState = [...targetLanguageLoadedContentMasterState];
@@ -502,6 +502,7 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
     isAdhoc,
     contentIndex,
     isRemoveReview,
+    indexKey,
   }) => {
     try {
       setUpdatingSentenceState(sentenceId);
@@ -511,9 +512,11 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
             fieldToUpdate,
           })
         : await updateSentenceDataAPI({
-            topicName,
+            indexKey,
             sentenceId,
-            fieldToUpdate,
+            fieldToUpdate: isRemoveReview
+              ? {removeReview: true}
+              : fieldToUpdate,
             language,
           });
 
@@ -615,14 +618,15 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
     sentenceId,
     fieldToUpdate,
     contentIndex,
+    indexKey,
   }) => {
     try {
       setUpdatingSentenceState(sentenceId);
       const resObj = await updateSentenceDataAPI({
-        topicName,
         sentenceId,
         fieldToUpdate,
         language,
+        indexKey,
       });
       const updatedContentState = updateLoadedContentStateAfterSentenceUpdate({
         sentenceId,

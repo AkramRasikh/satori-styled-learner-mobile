@@ -38,6 +38,7 @@ const BilingualLine = ({
   dueSentences,
   showOnlyReviewState,
   indexNum,
+  contentId,
 }) => {
   const [showEng, setShowEng] = useState(false);
   const [showNotes, setShowNotes] = useState(false);
@@ -98,7 +99,7 @@ const BilingualLine = ({
       );
       setDueSentencesState(updatedDueSentencesState);
     }
-    updateSentenceData(arg);
+    updateSentenceData({...arg, indexKey: contentId});
   };
 
   const onHighlightedMount = () => {
@@ -416,6 +417,7 @@ const BilingualLine = ({
           setShowReviewSettings={setShowReviewSettings}
           contentIndex={contentIndex}
           setIsSettingsOpenState={setIsSettingsOpenState}
+          contentId={contentId}
         />
       ) : null}
       {showMatchedTranslation &&

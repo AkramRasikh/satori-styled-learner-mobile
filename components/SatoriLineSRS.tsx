@@ -11,6 +11,7 @@ const SatoriLineSRS = ({
   updateSentenceData,
   setShowReviewSettings,
   setIsSettingsOpenState,
+  contentId,
   contentIndex,
 }) => {
   const timeNow = new Date();
@@ -36,9 +37,11 @@ const SatoriLineSRS = ({
       isAdhoc,
       topicName: sentence.topic,
       sentenceId: sentence.id,
-      fieldToUpdate: {
-        reviewData: {},
-      },
+      fieldToUpdate: isAdhoc
+        ? {}
+        : {
+            removeReview: true,
+          },
       contentIndex: contentIndex ?? sentence.contentIndex,
     });
   };
@@ -56,6 +59,7 @@ const SatoriLineSRS = ({
         reviewData: nextReviewData,
       },
       contentIndex: contentIndex ?? sentence.contentIndex,
+      indexKey: contentId,
     });
   };
 

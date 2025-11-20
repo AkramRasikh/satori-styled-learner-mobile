@@ -212,6 +212,8 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
   }) => {
     try {
       const thisContent = targetLanguageLoadedContentMasterState[contentIndex];
+      const thisContentId =
+        targetLanguageLoadedContentMasterState[contentIndex].id;
       const topicName = thisContent.title;
       const thisContentSnippets = thisContent?.snippets;
 
@@ -220,6 +222,7 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
           item => item.id !== snippetId,
         );
         await updateContentMetaData({
+          indexKey: thisContentId,
           topicName,
           fieldToUpdate: {
             snippets: [...filteredSnippets],
@@ -241,8 +244,8 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
           }
           return item;
         });
-
         await updateContentMetaData({
+          indexKey: thisContentId,
           topicName,
           fieldToUpdate: {
             snippets: [...updatedSnippets],
@@ -272,6 +275,7 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
     sentenceId,
     fieldToUpdate,
     contentIndex,
+    indexKey,
   }) => {
     const isRemoveFromDifficultSentences = fieldToUpdate?.nextReview === null;
 
@@ -288,6 +292,7 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
       fieldToUpdate,
       contentIndex,
       isRemoveReview: isRemoveFromDifficultSentences,
+      indexKey,
     });
   };
 

@@ -67,6 +67,9 @@ const ContentScreen = () => {
   const selectedTopic =
     targetLanguageLoadedContentMasterState[selectedTopicIndex].title;
 
+  const selectedTopicId =
+    targetLanguageLoadedContentMasterState[selectedTopicIndex].id;
+
   const updateContentMetaDataIsLoadedDispatch = durationsArr => {
     const updatedState = [...targetLanguageLoadedContentMasterState];
     const thisTopicData = updatedState[selectedTopicIndex];
@@ -168,7 +171,10 @@ const ContentScreen = () => {
     const fieldToUpdate = {
       isCore: !Boolean(selectedContentState?.isCore),
     };
+    const contentId =
+      targetLanguageLoadedContentMasterState[selectedTopicIndex].id;
     const thisUpdatedContent = await updateContentMetaData({
+      indexKey: contentId,
       topicName: selectedTopic,
       fieldToUpdate,
       contentIndex: selectedTopicIndex,
@@ -217,6 +223,7 @@ const ContentScreen = () => {
       sentenceId,
       fieldToUpdate,
       contentIndex: selectedTopicIndex,
+      indexKey: selectedTopicId,
     });
     if (updatedSelectedState) {
       setSelectedContentState({
@@ -232,7 +239,11 @@ const ContentScreen = () => {
   };
 
   const updateMetaData = async ({topicName, fieldToUpdate}) => {
+    const contentId =
+      targetLanguageLoadedContentMasterState[selectedTopicIndex].id;
+
     const thisUpdatedContent = await updateContentMetaData({
+      indexKey: contentId,
       topicName,
       fieldToUpdate,
       contentIndex: selectedTopicIndex,

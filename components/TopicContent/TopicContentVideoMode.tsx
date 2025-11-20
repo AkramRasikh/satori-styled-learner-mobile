@@ -29,6 +29,7 @@ const TopicContentVideoMode = ({
   secondsToSentencesMapState,
   hasContentToReview,
   handleOpenGoogle,
+  contentId,
   hasVideo,
 }) => {
   const [engMaster, setEngMaster] = useState(true);
@@ -171,6 +172,7 @@ const TopicContentVideoMode = ({
               handleOpenGoogle={handleOpenGoogle}
               scrollViewRef={scrollViewRef}
               isAutoScrollingMode={isAutoScrollingMode}
+              contentId={contentId}
             />
           </ScrollView>
           <AudioToggles

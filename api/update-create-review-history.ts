@@ -1,10 +1,9 @@
 import {UPDATE_CONTENT_META_URL} from '@env';
 
 export const updateCreateReviewHistory = async ({
-  title,
+  indexKey,
   fieldToUpdate,
   language,
-  contentIndex,
 }) => {
   const url = UPDATE_CONTENT_META_URL;
 
@@ -16,9 +15,8 @@ export const updateCreateReviewHistory = async ({
       },
       body: JSON.stringify({
         language,
-        title,
+        indexKey,
         fieldToUpdate,
-        contentIndex,
       }),
     });
 
