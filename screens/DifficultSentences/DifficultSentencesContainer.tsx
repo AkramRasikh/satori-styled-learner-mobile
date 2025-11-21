@@ -465,6 +465,16 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
     setIsMountedState(true);
   }, []);
 
+  useEffect(() => {
+    if (
+      isMountedState &&
+      toggleableSentencesMemoized?.length === 0 &&
+      selectedGeneralTopicState
+    ) {
+      setSelectedGeneralTopicState('');
+    }
+  }, [toggleableSentencesMemoized, selectedGeneralTopicState, isMountedState]);
+
   if (difficultSentencesState.length === 0) {
     return <LoadingScreen>Getting ready!</LoadingScreen>;
   }
