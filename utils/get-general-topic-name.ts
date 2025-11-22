@@ -4,5 +4,5 @@ export const stringEndsWithNumber = (str: string) => {
 
 // food-01 -> food
 export const getGeneralTopicName = topicName => {
-  return topicName.split('-').slice(0, -1).join('-');
+  return topicName?.split('-').slice(0, -1).join('-');
 };

@@ -26,8 +26,8 @@ const useLoadDifficultSentences = () => {
         contentWidget.origin === 'netflix' ||
         contentWidget.origin === 'youtube' ||
         isArticle;
-      const content = contentWidget.content;
-      content.forEach((sentenceInContent, index) => {
+      const content = contentWidget?.content;
+      content?.forEach((sentenceInContent, index) => {
         if (
           sentenceInContent?.nextReview ||
           sentenceInContent?.reviewData?.due
