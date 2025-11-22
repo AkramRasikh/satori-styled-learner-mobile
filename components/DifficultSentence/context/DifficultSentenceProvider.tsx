@@ -77,7 +77,9 @@ export const DifficultSentenceProvider = ({
         topicName: sentence.topic,
         sentenceId: sentence.id,
         fieldToUpdate: sentence?.isAdhoc
-          ? {}
+          ? {
+              reviewData: {},
+            }
           : {
               removeReview: true,
             },
