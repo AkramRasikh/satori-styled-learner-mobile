@@ -30,6 +30,7 @@ const DifficultSnippetAudioControls = ({
   isPlaying,
   setIsPlaying,
   soundRef,
+  defaultPlayTime,
 }) => {
   const {playSound, pauseSound} = useMainAudioControls({
     soundRef,
@@ -47,7 +48,19 @@ const DifficultSnippetAudioControls = ({
       if (isPlaying) {
         pauseSound();
       } else {
-        playSound();
+        if (defaultPlayTime) {
+          soundRef.current.setCurrentTime(defaultPlayTime);
+          soundRef.current.getCurrentTime(() => {
+            soundRef.current.play(success => {
+              if (!success) {
+                console.log('Playback failed due to audio decoding errors');
+              }
+            });
+          });
+          setIsPlaying(true);
+        } else {
+          playSound();
+        }
       }
     }
   };
@@ -168,7 +181,7 @@ const DifficultSentencesSnippet = ({
         });
       }
     }
-  }, [snippetData, currentTimeState, soundRef, isPlaying]);
+  }, [snippetData, currentTimeState, soundRef, isPlaying, endTime, startTime]);
 
   useEffect(() => {
     const getCurrentTimeFunc = () => {
@@ -271,6 +284,7 @@ const DifficultSentencesSnippet = ({
           soundRef={soundRef}
           handleLoad={handleLoad}
           isLoaded={isLoaded}
+          defaultPlayTime={startTime}
         />
         {hasDueDateInFuture ? (
           <View
