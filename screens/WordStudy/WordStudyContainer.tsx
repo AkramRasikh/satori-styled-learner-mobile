@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useMemo, useRef, useState} from 'react';
 import {useSelector} from 'react-redux';
 import {ScrollView, View} from 'react-native';
 import useFormatWordsToStudy from '../../hooks/useFormatWordsToStudy';
@@ -15,7 +15,6 @@ import {FAB} from 'react-native-paper';
 import AddSentenceContainer from '../../components/AddSentenceContainer';
 
 function WordStudyContainer(): React.JSX.Element {
-  const [generalTopicState, setGeneralTopicState] = useState<string[]>([]);
   const [showDueCardsState, setShowDueCardsState] = useState<boolean>(true);
   const [showAddSentenceState, setShowAddSentenceState] =
     useState<boolean>(false);
@@ -55,7 +54,6 @@ function WordStudyContainer(): React.JSX.Element {
   useFormatWordsToStudy({
     targetLanguageWordsState,
     setWordStudyState,
-    setGeneralTopicState,
     targetLanguageLoadedContent,
     targetLanguageLoadedSentences,
     setDueCardsState,
@@ -181,6 +179,18 @@ function WordStudyContainer(): React.JSX.Element {
 
   const slicedArr = dueCardsState.slice(0, sliceArrState);
 
+  const generalTopicsMemoized = useMemo(() => {
+    const topicCount = [];
+    for (const sentence of wordStudyState) {
+      const thisWordsOriginalTopic = sentence.contextData?.[0]?.title;
+      if (!topicCount.includes(thisWordsOriginalTopic)) {
+        topicCount.push(thisWordsOriginalTopic);
+      }
+    }
+
+    return topicCount;
+  }, [wordStudyState]);
+
   return (
     <ScreenContainerComponent>
       {showAddSentenceState ? (
@@ -219,12 +229,12 @@ function WordStudyContainer(): React.JSX.Element {
           setSelectedTopic={setSelectedTopic}
           setDueCardsState={setDueCardsState}
           wordStudyState={wordStudyState}
-          generalTopicState={generalTopicState}
+          generalTopicState={generalTopicsMemoized}
           realCapacity={realCapacity}
         />
         {showCategories && !selectedTopic && (
           <SelectedCategoriesWordsSection
-            generalTopicState={generalTopicState}
+            generalTopicState={generalTopicsMemoized}
             handleShowThisCategoriesWords={handleShowThisCategoriesWords}
           />
         )}

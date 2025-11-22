@@ -5,7 +5,6 @@ import {isCardDue} from '../utils/is-card-due';
 const useFormatWordsToStudy = ({
   targetLanguageWordsState,
   setWordStudyState,
-  setGeneralTopicState,
   targetLanguageLoadedContent,
   targetLanguageLoadedSentences,
   setDueCardsState,
@@ -14,7 +13,6 @@ const useFormatWordsToStudy = ({
   const timeNow = new Date();
   useEffect(() => {
     const dueCards = [];
-    const generalTopics = [];
 
     const formattedTargetLanguageWordData = targetLanguageWordsState.map(
       wordData => {
@@ -53,12 +51,6 @@ const useFormatWordsToStudy = ({
                 fullTitle: contentData.title,
                 isMediaContent,
               });
-              if (
-                generalTopicTitle &&
-                !generalTopics.includes(generalTopicTitle)
-              ) {
-                generalTopics.push(generalTopicTitle);
-              }
               thisWordsCategories.push(generalTopicTitle);
             }
           });
@@ -75,12 +67,6 @@ const useFormatWordsToStudy = ({
                 ...adhocSentenceData,
                 title: generalTopicTitle,
               });
-              if (
-                generalTopicTitle &&
-                !generalTopics.includes(generalTopicTitle)
-              ) {
-                generalTopics.push(generalTopicTitle);
-              }
 
               thisWordsCategories.push(generalTopicTitle);
             }
@@ -101,7 +87,6 @@ const useFormatWordsToStudy = ({
       },
     );
     setWordStudyState(formattedTargetLanguageWordData);
-    setGeneralTopicState(generalTopics);
     setDueCardsState(dueCards);
   }, [languageSelectedState]);
 };
