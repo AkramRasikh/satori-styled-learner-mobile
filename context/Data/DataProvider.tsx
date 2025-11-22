@@ -4,11 +4,10 @@ import {useDispatch, useSelector} from 'react-redux';
 import {getAllData} from '../../api/load-content';
 import {updateSentenceDataAPI} from '../../api/update-sentence-data';
 import updateAdhocSentenceAPI from '../../api/update-adhoc-sentence';
-import {addSnippetAPI, deleteSnippetAPI} from '../../api/snippet';
 import {makeArrayUnique} from '../../hooks/useHighlightWordToWordBank';
 import saveWordAPI from '../../api/save-word';
 import useLanguageSelector from '../LanguageSelector/useLanguageSelector';
-import {adhocSentences, content, snippets, words} from '../../refs';
+import {adhocSentences, content, words} from '../../refs';
 import {storeDataLocalStorage} from '../../helper-functions/local-storage-utils';
 import {updateCreateReviewHistory} from '../../api/update-create-review-history';
 import {sentenceReviewBulkAPI} from '../../api/sentence-review-bulk';
@@ -650,27 +649,7 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
     }
   };
 
-  const addSnippet = async snippetData => {
-    try {
-      const snippetDataFromAPI = await addSnippetAPI({
-        contentEntry: snippetData,
-        language,
-      });
-
-      const updatedSnippets = [
-        ...targetLanguageSnippetsState,
-        {...snippetDataFromAPI, saved: true},
-      ];
-      dispatch(setSnippetsStateDispatch(updatedSnippets));
-      await storeDataLocalStorage(
-        dataStorageKeyPrefix + snippets,
-        updatedSnippets,
-      );
-      return snippetDataFromAPI;
-    } catch (error) {
-      updatePromptFunc('❌☠️ Error adding snippet');
-    }
-  };
+  const addSnippet = async snippetData => {};
 
   const updateWordData = async ({wordId, wordBaseForm, fieldToUpdate}) => {
     try {
@@ -725,23 +704,7 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
     }
   };
 
-  const removeSnippet = async ({snippetId}) => {
-    try {
-      const deletedSnippetId = await deleteSnippetAPI({snippetId, language});
-      const updatedSnippets = targetLanguageSnippetsState.filter(
-        item => item.id !== deletedSnippetId,
-      );
-      dispatch(setSnippetsStateDispatch(updatedSnippets));
-      await storeDataLocalStorage(
-        dataStorageKeyPrefix + snippets,
-        updatedSnippets,
-      );
-      return deletedSnippetId;
-    } catch (error) {
-      console.log('## error removeSnippet (DataProvider.tsx)');
-      updatePromptFunc('Error removing snippet');
-    }
-  };
+  const removeSnippet = async ({snippetId}) => {};
 
   const saveWordFirebase = async ({
     highlightedWord,
