@@ -11,14 +11,11 @@ const WordStudyHeader = ({
   selectedTopic,
   showCategories,
   setSelectedTopic,
-  setDueCardsState,
-  wordStudyState,
   generalTopicState,
   realCapacity,
 }) => {
   const handleRemoveSelectedTopic = () => {
     setSelectedTopic('');
-    setDueCardsState(wordStudyState);
   };
 
   const targetLanguageWordsState = useSelector(state => state.words);

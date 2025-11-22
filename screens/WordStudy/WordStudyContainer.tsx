@@ -41,8 +41,6 @@ function WordStudyContainer(): React.JSX.Element {
     deleteWord,
     wordStudyState,
     setWordStudyState,
-    dueCardsState,
-    setDueCardsState,
     selectedTopic,
     setSelectedTopic,
     combineWordsListState,
@@ -56,7 +54,6 @@ function WordStudyContainer(): React.JSX.Element {
     setWordStudyState,
     targetLanguageLoadedContent,
     targetLanguageLoadedSentences,
-    setDueCardsState,
     languageSelectedState,
   });
 
@@ -106,19 +103,7 @@ function WordStudyContainer(): React.JSX.Element {
   };
 
   const handleAdhocMinimalPairFunc = async ({inputWord, mode}) => {
-    const res = await handleAdhocMinimalPair({inputWord, mode});
-    const sentenceIds = res.map(item => item.id);
-    const updatedDueCardsState = dueCardsState.map(item => {
-      if (item.id === inputWord.id) {
-        return {
-          ...item,
-          contexts: [...item.contexts, sentenceIds],
-          contextData: [...item.contextData, ...res],
-        };
-      }
-      return item;
-    });
-    setShowDueCardsState(updatedDueCardsState);
+    await handleAdhocMinimalPair({inputWord, mode});
   };
   const handleAddCustomWordPromptFunc = async ({inputWord, prompt}) => {
     const res = await handleAddCustomWordPrompt({inputWord, prompt});
@@ -147,7 +132,7 @@ function WordStudyContainer(): React.JSX.Element {
     setIsMountedState(true);
   }, []);
 
-  useEffect(() => {
+  const dueCardsState = useMemo(() => {
     const todayDateObj = new Date();
 
     if (isMountedState) {
@@ -165,15 +150,11 @@ function WordStudyContainer(): React.JSX.Element {
         }
         return false;
       });
-      setDueCardsState(thisCategoriesWords);
+
+      return thisCategoriesWords;
     }
-  }, [
-    selectedTopic,
-    wordStudyState,
-    isMountedState,
-    setDueCardsState,
-    showDueCardsState,
-  ]);
+    return [];
+  }, [selectedTopic, wordStudyState, isMountedState, showDueCardsState]);
 
   const realCapacity = dueCardsState.length;
 
@@ -227,8 +208,6 @@ function WordStudyContainer(): React.JSX.Element {
           selectedTopic={selectedTopic}
           showCategories={showCategories}
           setSelectedTopic={setSelectedTopic}
-          setDueCardsState={setDueCardsState}
-          wordStudyState={wordStudyState}
           generalTopicState={generalTopicsMemoized}
           realCapacity={realCapacity}
         />

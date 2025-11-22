@@ -13,7 +13,6 @@ export const WordDataContext = createContext(null);
 
 export const WordDataProvider = ({children}: PropsWithChildren<{}>) => {
   const [wordStudyState, setWordStudyState] = useState([]);
-  const [dueCardsState, setDueCardsState] = useState([]);
   const [combineWordsListState, setCombineWordsListState] = useState([]);
   const [selectedTopic, setSelectedTopic] = useState('');
   const dispatch = useDispatch();
@@ -41,26 +40,17 @@ export const WordDataProvider = ({children}: PropsWithChildren<{}>) => {
       dispatch(setWordsStateDispatch(targetLanguageWordsStateUpdated));
       setUpdatePromptState(`${wordBaseForm} updated!`);
       setTimeout(() => setUpdatePromptState(''), 3000);
-      if (dueCardsState?.length > 0) {
-        const wordStudyStateUpdated = wordStudyState.map(item => {
-          const thisWordId = item.id === wordId;
-          if (thisWordId) {
-            return {
-              ...item,
-              ...fieldToUpdate,
-            };
-          }
-          return item;
-        });
-        setWordStudyState(wordStudyStateUpdated);
-      }
-      if (dueCardsState?.length > 0) {
-        const updatedSelectedTopicWords = dueCardsState.filter(
-          item => item.id !== wordId,
-        );
-        setDueCardsState(updatedSelectedTopicWords);
-      }
-
+      const wordStudyStateUpdated = wordStudyState.map(item => {
+        const thisWordId = item.id === wordId;
+        if (thisWordId) {
+          return {
+            ...item,
+            ...fieldToUpdate,
+          };
+        }
+        return item;
+      });
+      setWordStudyState(wordStudyStateUpdated);
       await updateWordAPI({
         wordId,
         fieldToUpdate,
@@ -105,8 +95,6 @@ export const WordDataProvider = ({children}: PropsWithChildren<{}>) => {
         updatePromptState,
         wordStudyState,
         setWordStudyState,
-        dueCardsState,
-        setDueCardsState,
         selectedTopic,
         setSelectedTopic,
         combineWordsListState,

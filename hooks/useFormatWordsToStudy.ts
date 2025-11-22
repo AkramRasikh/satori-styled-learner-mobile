@@ -7,13 +7,10 @@ const useFormatWordsToStudy = ({
   setWordStudyState,
   targetLanguageLoadedContent,
   targetLanguageLoadedSentences,
-  setDueCardsState,
   languageSelectedState,
 }) => {
   const timeNow = new Date();
   useEffect(() => {
-    const dueCards = [];
-
     const formattedTargetLanguageWordData = targetLanguageWordsState.map(
       wordData => {
         if (!wordData) {
@@ -80,14 +77,10 @@ const useFormatWordsToStudy = ({
           thisWordsCategories,
         };
 
-        if (isCardDueBool && dueCards) {
-          dueCards.push(fullWordData);
-        }
         return fullWordData;
       },
     );
     setWordStudyState(formattedTargetLanguageWordData);
-    setDueCardsState(dueCards);
   }, [languageSelectedState]);
 };
 export default useFormatWordsToStudy;
