@@ -2,7 +2,7 @@ import React, {View} from 'react-native';
 import TopicListButton from './TopicListButton';
 
 const SelectedCategoriesWordsSection = ({
-  wordCategories,
+  generalTopicState,
   handleShowThisCategoriesWords,
 }) => (
   <View
@@ -12,7 +12,7 @@ const SelectedCategoriesWordsSection = ({
       flexWrap: 'wrap',
       gap: 5,
     }}>
-    {wordCategories?.map((wordCategory, index) => (
+    {generalTopicState?.map((wordCategory, index) => (
       <TopicListButton
         key={index}
         label={wordCategory}

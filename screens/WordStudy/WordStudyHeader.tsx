@@ -13,7 +13,7 @@ const WordStudyHeader = ({
   setSelectedTopic,
   setDueCardsState,
   wordStudyState,
-  wordCategories,
+  generalTopicState,
   realCapacity,
 }) => {
   const handleRemoveSelectedTopic = () => {
@@ -25,7 +25,7 @@ const WordStudyHeader = ({
 
   const fullCapacity = targetLanguageWordsState.length;
 
-  const numOfCategories = wordCategories.length;
+  const numOfCategories = generalTopicState.length;
 
   const pillBtnArr = [
     {

@@ -5,7 +5,6 @@ import {isCardDue} from '../utils/is-card-due';
 const useFormatWordsToStudy = ({
   targetLanguageWordsState,
   setWordStudyState,
-  setTagsState,
   setGeneralTopicState,
   targetLanguageLoadedContent,
   targetLanguageLoadedSentences,
@@ -15,7 +14,6 @@ const useFormatWordsToStudy = ({
   const timeNow = new Date();
   useEffect(() => {
     const dueCards = [];
-    const tagsAvailable = [];
     const generalTopics = [];
 
     const formattedTargetLanguageWordData = targetLanguageWordsState.map(
@@ -39,7 +37,7 @@ const useFormatWordsToStudy = ({
             const content = contentData.content;
             const isArticle = contentData?.isArticle;
             const generalTopicTitle = getGeneralTopicName(contentData.title);
-            const tags = content?.tags;
+
             const isMediaContent =
               contentData?.origin === 'netflix' ||
               contentData?.origin === 'youtube' ||
@@ -53,7 +51,6 @@ const useFormatWordsToStudy = ({
                 ...contextIdMatchesSentence,
                 title: generalTopicTitle,
                 fullTitle: contentData.title,
-                tags,
                 isMediaContent,
               });
               if (
@@ -63,19 +60,11 @@ const useFormatWordsToStudy = ({
                 generalTopics.push(generalTopicTitle);
               }
               thisWordsCategories.push(generalTopicTitle);
-
-              if (tags && !tagsAvailable.includes(tags)) {
-                tagsAvailable.push(tags);
-              }
-              if (tags) {
-                thisWordsCategories.push(tags);
-              }
             }
           });
           // conditionally
           targetLanguageLoadedSentences.forEach(adhocSentenceData => {
             const generalTopicTitle = adhocSentenceData.topic;
-            const tags = adhocSentenceData?.tags;
 
             const adhocSentenceDataId = adhocSentenceData.id;
 
@@ -85,7 +74,6 @@ const useFormatWordsToStudy = ({
               contextData.push({
                 ...adhocSentenceData,
                 title: generalTopicTitle,
-                tags,
               });
               if (
                 generalTopicTitle &&
@@ -94,19 +82,7 @@ const useFormatWordsToStudy = ({
                 generalTopics.push(generalTopicTitle);
               }
 
-              if (tags?.length > 0) {
-                tags.forEach(singleTag => {
-                  if (singleTag && !tagsAvailable.includes(singleTag)) {
-                    tagsAvailable.push(singleTag);
-                  }
-                });
-              }
-
               thisWordsCategories.push(generalTopicTitle);
-
-              if (tags?.length) {
-                thisWordsCategories.push(...tags);
-              }
             }
           });
         });
@@ -125,7 +101,6 @@ const useFormatWordsToStudy = ({
       },
     );
     setWordStudyState(formattedTargetLanguageWordData);
-    setTagsState(tagsAvailable);
     setGeneralTopicState(generalTopics);
     setDueCardsState(dueCards);
   }, [languageSelectedState]);

@@ -2,7 +2,6 @@ import React, {useEffect, useRef, useState} from 'react';
 import {useSelector} from 'react-redux';
 import {ScrollView, View} from 'react-native';
 import useFormatWordsToStudy from '../../hooks/useFormatWordsToStudy';
-import {makeArrayUnique} from '../../hooks/useHighlightWordToWordBank';
 import SelectedCategoriesWordsSection from '../../components/SelectedCategoriesSection';
 import FlashcardsWordsSection from '../../components/FlashcardsWordsSection';
 import useWordData from '../../context/WordData/useWordData';
@@ -16,7 +15,6 @@ import {FAB} from 'react-native-paper';
 import AddSentenceContainer from '../../components/AddSentenceContainer';
 
 function WordStudyContainer(): React.JSX.Element {
-  const [tagsState, setTagsState] = useState<string[]>([]);
   const [generalTopicState, setGeneralTopicState] = useState<string[]>([]);
   const [showDueCardsState, setShowDueCardsState] = useState<boolean>(true);
   const [showAddSentenceState, setShowAddSentenceState] =
@@ -34,8 +32,6 @@ function WordStudyContainer(): React.JSX.Element {
   );
 
   const scrollViewRef = useRef(null);
-
-  const wordCategories = makeArrayUnique([...tagsState, ...generalTopicState]);
 
   const {languageSelectedState} = useLanguageSelector();
 
@@ -59,7 +55,6 @@ function WordStudyContainer(): React.JSX.Element {
   useFormatWordsToStudy({
     targetLanguageWordsState,
     setWordStudyState,
-    setTagsState,
     setGeneralTopicState,
     targetLanguageLoadedContent,
     targetLanguageLoadedSentences,
@@ -224,12 +219,12 @@ function WordStudyContainer(): React.JSX.Element {
           setSelectedTopic={setSelectedTopic}
           setDueCardsState={setDueCardsState}
           wordStudyState={wordStudyState}
-          wordCategories={wordCategories}
+          generalTopicState={generalTopicState}
           realCapacity={realCapacity}
         />
         {showCategories && !selectedTopic && (
           <SelectedCategoriesWordsSection
-            wordCategories={wordCategories}
+            generalTopicState={generalTopicState}
             handleShowThisCategoriesWords={handleShowThisCategoriesWords}
           />
         )}
