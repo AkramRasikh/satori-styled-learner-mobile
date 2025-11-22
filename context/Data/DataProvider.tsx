@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useMemo} from 'react';
 import {createContext, PropsWithChildren, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {getAllData} from '../../api/load-content';
@@ -65,7 +65,8 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
   const dataStorageKeyPrefix = `${language}-data-`;
 
   const wordsFromSentences = [];
-  const getPureWords = () => {
+
+  const pureWordsArrMemoized = useMemo(() => {
     let pureWords = [];
 
     targetLanguageWordsState?.forEach(wordData => {
@@ -93,9 +94,11 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
     const pureWordsUnique =
       pureWords?.length > 0 ? makeArrayUnique(pureWords) : [];
     return pureWordsUnique;
-  };
-
-  const pureWordsArr = getPureWords();
+  }, [
+    targetLanguageWordsState,
+    wordsFromSentences,
+    adhocTargetLanguageSentencesState,
+  ]);
 
   const updateLoadedContentStateAfterSentenceUpdate = ({
     sentenceId,
@@ -941,7 +944,7 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
         updateSentenceData,
         addSnippet,
         removeSnippet,
-        pureWords: pureWordsArr,
+        pureWords: pureWordsArrMemoized,
         saveWordFirebase,
         getThisSentencesWordList,
         updatingSentenceState,
