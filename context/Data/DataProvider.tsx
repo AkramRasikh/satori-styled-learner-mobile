@@ -39,6 +39,11 @@ import {breakdownAllSentencesAPI} from '../../api/breakdown-all-sentences';
 import {sentenceReviewBulkAllAPI} from '../../api/remove-all-content-review';
 import addCustomWordPromptAPI from '../../api/add-custom-word-prompt';
 import addExpressionAPI from '../../api/add-expression';
+import {
+  getGeneralTopicName,
+  stringEndsWithNumber,
+} from '../../utils/get-general-topic-name';
+import {isDueCheck} from '../../utils/is-due-check';
 
 export const DataContext = createContext(null);
 
@@ -96,6 +101,83 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
     wordsFromSentences,
     adhocTargetLanguageSentencesState,
   ]);
+
+  const generalTopicDisplayNameMemoized = useMemo(() => {
+    const generalNamesArr = [];
+
+    for (const contentItem of targetLanguageLoadedContentMasterState) {
+      const generalTopicName = !stringEndsWithNumber(contentItem.title)
+        ? contentItem.title
+        : getGeneralTopicName(contentItem.title);
+      const isMedia = contentItem?.origin === 'youtube';
+      if (
+        isMedia &&
+        !generalNamesArr.some(item => item.title === generalTopicName)
+      ) {
+        const youtubeId = contentItem?.url?.split('=')[1];
+        generalNamesArr.push({
+          title: generalTopicName,
+          youtubeId,
+        });
+      }
+    }
+    return generalNamesArr;
+  }, [targetLanguageLoadedContentMasterState]);
+
+  const squashedSentenceIdsViaContentMemoized = useMemo(() => {
+    const generalTopicsObject = generalTopicDisplayNameMemoized.reduce(
+      (acc, key) => {
+        acc[key?.title] = {
+          ids: [],
+          isDue: false,
+        };
+        return acc;
+      },
+      {},
+    );
+
+    targetLanguageLoadedContentMasterState.forEach(contentEl => {
+      const generalTopicName = !stringEndsWithNumber(contentEl.title)
+        ? contentEl.title
+        : getGeneralTopicName(contentEl.title);
+
+      const topicObj = generalTopicsObject[generalTopicName];
+
+      if (topicObj) {
+        // Add IDs
+
+        const ids = contentEl.content.map(item => item.id);
+        topicObj.ids.push(...ids);
+
+        // Determine if any item is due
+
+        if (contentEl.snippets?.length > 0) {
+          topicObj.isDue = true; // once true, stays true
+          return;
+        }
+        const hasDueItem = contentEl.content.some(
+          item => item?.reviewData?.due,
+        );
+
+        if (hasDueItem) {
+          topicObj.isDue = true; // once true, stays true
+        }
+      }
+    });
+
+    return generalTopicsObject;
+  }, [generalTopicDisplayNameMemoized, targetLanguageLoadedContentMasterState]);
+
+  const wordsForReviewMemoized = useMemo(() => {
+    const dateNow = new Date();
+    const wordsForReview = targetLanguageWordsState.filter(item => {
+      const isLegacyWordWithNoReview = !item?.reviewData;
+      if (isLegacyWordWithNoReview || isDueCheck(item, dateNow)) {
+        return true;
+      }
+    });
+    return wordsForReview;
+  }, [targetLanguageWordsState]);
 
   const updateLoadedContentStateAfterSentenceUpdate = ({
     sentenceId,
@@ -923,6 +1005,8 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
         handleAddCustomWordPrompt,
         combineWordsFromSingularDataProvider,
         handleAddExpressDataProvider,
+        squashedSentenceIdsViaContentMemoized,
+        wordsForReviewMemoized,
       }}>
       {children}
     </DataContext.Provider>

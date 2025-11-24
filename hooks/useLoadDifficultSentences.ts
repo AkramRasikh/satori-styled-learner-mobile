@@ -4,6 +4,7 @@ import {
   getGeneralTopicName,
   stringEndsWithNumber,
 } from '../utils/get-general-topic-name';
+import useData from '../context/Data/useData';
 
 const useLoadDifficultSentences = () => {
   const targetLanguageLoadedContentMasterState = useSelector(
@@ -13,9 +14,20 @@ const useLoadDifficultSentences = () => {
     state => state.sentences,
   );
 
+  const {squashedSentenceIdsViaContentMemoized} = useData();
   const getSentencesMarkedAsDifficult = () => {
     const difficultSentences = [];
     targetLanguageLoadedContentMasterState?.forEach(contentWidget => {
+      const generalTopicName = !stringEndsWithNumber(contentWidget.title)
+        ? contentWidget.title
+        : getGeneralTopicName(contentWidget.title);
+      const hasDueContent =
+        squashedSentenceIdsViaContentMemoized[generalTopicName]?.isDue;
+
+      if (!hasDueContent) {
+        return;
+      }
+
       const contentIndex = contentWidget.contentIndex;
       const thisTopic = contentWidget.title;
       const isCore = contentWidget.isCore;
@@ -28,35 +40,23 @@ const useLoadDifficultSentences = () => {
         isArticle;
       const content = contentWidget?.content;
       content?.forEach((sentenceInContent, index) => {
-        if (
-          sentenceInContent?.nextReview ||
-          sentenceInContent?.reviewData?.due
-        ) {
-          const generalTopicName = !stringEndsWithNumber(contentWidget.title)
-            ? contentWidget.title
-            : getGeneralTopicName(contentWidget.title);
-
-          const isLast = content.length - 1 === index;
-          difficultSentences.push({
-            sentenceIndex: index,
-            topic: thisTopic,
-            isCore,
-            isMediaContent,
-            contentIndex,
-            generalTopic: generalTopicName,
-            previousSentence: index > 0 ? content[index - 1].targetLang : null,
-            ...sentenceInContent,
-            endTime: isLast ? null : content[index + 1].time,
-            isContent: true,
-            indexKey: contentWidget.id,
-          });
-        }
+        const isLast = content.length - 1 === index;
+        difficultSentences.push({
+          sentenceIndex: index,
+          topic: thisTopic,
+          isCore,
+          isMediaContent,
+          contentIndex,
+          generalTopic: generalTopicName,
+          previousSentence: index > 0 ? content[index - 1].targetLang : null,
+          ...sentenceInContent,
+          endTime: isLast ? null : content[index + 1].time,
+          isContent: true,
+          indexKey: contentWidget.id,
+        });
       });
       snippets?.forEach(snippet => {
         if (snippet?.reviewData?.due) {
-          const generalTopicName = !stringEndsWithNumber(contentWidget.title)
-            ? contentWidget.title
-            : getGeneralTopicName(contentWidget.title);
           difficultSentences.push({
             topic: thisTopic,
             isCore,

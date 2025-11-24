@@ -24,9 +24,12 @@ export const DifficultSentencesProvider = ({
   const [combineSentenceContext, setCombineSentenceContext] = useState('');
   const [dueWordsState, setDueWordsState] = useState([]);
 
-  const {combineWords} = useData();
+  const {
+    combineWords,
+    squashedSentenceIdsViaContentMemoized,
+    wordsForReviewMemoized,
+  } = useData();
 
-  const targetLanguageWordsState = useSelector(state => state.words);
   const adhocTargetLanguageSentencesState = useSelector(
     state => state.sentences,
   );
@@ -123,7 +126,7 @@ export const DifficultSentencesProvider = ({
       setDifficultSentencesHasBeenSetState(true);
       const matchedWordsForCards = [];
       // need to map first sentence with topic
-      targetLanguageWordsState.forEach(item => {
+      wordsForReviewMemoized.forEach(item => {
         if (isDueCheck(item, dateNow) || !item?.reviewData) {
           const firstContext = item.contexts[0];
 
@@ -180,8 +183,9 @@ export const DifficultSentencesProvider = ({
     }
   }, [
     difficultSentencesHasBeenSetState,
-    targetLanguageWordsState,
+    wordsForReviewMemoized,
     getAllDataReady,
+    squashedSentenceIdsViaContentMemoized,
   ]);
 
   return (
