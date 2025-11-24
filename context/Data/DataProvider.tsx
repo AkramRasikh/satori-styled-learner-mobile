@@ -102,6 +102,54 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
     adhocTargetLanguageSentencesState,
   ]);
 
+  const transcriptIdToDataMap = useMemo(() => {
+    const map = {};
+
+    // 1. Load content from targetLanguageLoadedContentMasterState
+    targetLanguageLoadedContentMasterState.forEach(contentWidget => {
+      const generalTopicName = !stringEndsWithNumber(contentWidget.title)
+        ? contentWidget.title
+        : getGeneralTopicName(contentWidget.title);
+      const contentIndex = contentWidget.contentIndex;
+      const thisTopic = contentWidget.title;
+      const isCore = contentWidget.isCore;
+      const isArticle = contentWidget?.isArticle;
+
+      const isMediaContent =
+        contentWidget.origin === 'netflix' ||
+        contentWidget.origin === 'youtube' ||
+        isArticle;
+      const content = contentWidget?.content;
+      content.forEach((transcriptEl, index) => {
+        const isLast = content.length - 1 === index;
+
+        map[transcriptEl.id] = {
+          sentenceIndex: index,
+          topic: thisTopic,
+          isCore,
+          isMediaContent,
+          contentIndex,
+          generalTopic: generalTopicName,
+          previousSentence: index > 0 ? content[index - 1].targetLang : null,
+          ...transcriptEl,
+          endTime: isLast ? null : content[index + 1].time,
+          isContent: true,
+          indexKey: contentWidget.id,
+        };
+      });
+    });
+
+    // 2. Load content from adhocTargetLanguageSentencesState
+    adhocTargetLanguageSentencesState.forEach(sentenceEl => {
+      map[sentenceEl.id] = sentenceEl;
+    });
+
+    return map;
+  }, [
+    targetLanguageLoadedContentMasterState,
+    adhocTargetLanguageSentencesState,
+  ]);
+
   const generalTopicDisplayNameMemoized = useMemo(() => {
     const generalNamesArr = [];
 
@@ -1007,6 +1055,7 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
         handleAddExpressDataProvider,
         squashedSentenceIdsViaContentMemoized,
         wordsForReviewMemoized,
+        transcriptIdToDataMap,
       }}>
       {children}
     </DataContext.Provider>

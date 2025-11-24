@@ -24,11 +24,7 @@ function WordStudyContainer(): React.JSX.Element {
   const [loadingCombineSentences, setLoadingCombineSentences] = useState(false);
   const [combineSentenceContext, setCombineSentenceContext] = useState('');
 
-  const targetLanguageLoadedSentences = useSelector(state => state.sentences);
   const targetLanguageWordsState = useSelector(state => state.words);
-  const targetLanguageLoadedContent = useSelector(
-    state => state.learningContent,
-  );
 
   const scrollViewRef = useRef(null);
 
@@ -52,8 +48,6 @@ function WordStudyContainer(): React.JSX.Element {
   useFormatWordsToStudy({
     targetLanguageWordsState,
     setWordStudyState,
-    targetLanguageLoadedContent,
-    targetLanguageLoadedSentences,
     languageSelectedState,
   });
 

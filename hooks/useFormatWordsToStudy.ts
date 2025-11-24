@@ -1,14 +1,14 @@
 import {useEffect} from 'react';
-import {getGeneralTopicName} from '../utils/get-general-topic-name';
 import {isCardDue} from '../utils/is-card-due';
+import useData from '../context/Data/useData';
 
 const useFormatWordsToStudy = ({
   targetLanguageWordsState,
   setWordStudyState,
-  targetLanguageLoadedContent,
-  targetLanguageLoadedSentences,
   languageSelectedState,
 }) => {
+  const {transcriptIdToDataMap} = useData();
+
   const timeNow = new Date();
   useEffect(() => {
     const formattedTargetLanguageWordData = targetLanguageWordsState.map(
@@ -28,46 +28,15 @@ const useFormatWordsToStudy = ({
         const thisWordsCategories = [];
 
         thisWordsContext.forEach(contextId => {
-          targetLanguageLoadedContent.forEach(contentData => {
-            const content = contentData.content;
-            const isArticle = contentData?.isArticle;
-            const generalTopicTitle = getGeneralTopicName(contentData.title);
-
-            const isMediaContent =
-              contentData?.origin === 'netflix' ||
-              contentData?.origin === 'youtube' ||
-              isArticle;
-
-            const contextIdMatchesSentence = content.find(
-              contentSentence => contentSentence.id === contextId,
-            );
-            if (contextIdMatchesSentence) {
-              contextData.push({
-                ...contextIdMatchesSentence,
-                title: generalTopicTitle,
-                fullTitle: contentData.title,
-                isMediaContent,
-              });
-              thisWordsCategories.push(generalTopicTitle);
-            }
-          });
-          // conditionally
-          targetLanguageLoadedSentences.forEach(adhocSentenceData => {
-            const generalTopicTitle = adhocSentenceData.topic;
-
-            const adhocSentenceDataId = adhocSentenceData.id;
-
-            const matchingContextID = contextId === adhocSentenceDataId;
-
-            if (matchingContextID) {
-              contextData.push({
-                ...adhocSentenceData,
-                title: generalTopicTitle,
-              });
-
-              thisWordsCategories.push(generalTopicTitle);
-            }
-          });
+          const wordDataFromMap = transcriptIdToDataMap[contextId];
+          if (wordDataFromMap) {
+            contextData.push({
+              ...wordDataFromMap,
+              title: wordDataFromMap?.generalTopic,
+              fullTitle: wordDataFromMap.topic,
+            });
+            thisWordsCategories.push(wordDataFromMap?.generalTopic);
+          }
         });
 
         const fullWordData = {
