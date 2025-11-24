@@ -24,7 +24,6 @@ import {
   updateAdhocSentenceAndReturnState,
   updateAdhocSentenceRemoveReviewAndReturnState,
 } from '../../store/sentencesSlice';
-import {setSnippetsStateDispatch} from '../../store/snippetsSlice';
 import {deleteWordAPI} from '../../api/delete-word';
 import {updateWordAPI} from '../../api/update-word-data';
 import {breakdownSentenceAPI} from '../../api/breakdown-sentence';
@@ -53,7 +52,6 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
   const adhocTargetLanguageSentencesState = useSelector(
     state => state.sentences,
   );
-  const targetLanguageSnippetsState = useSelector(state => state.snippets);
   const targetLanguageWordsState = useSelector(state => state.words);
   const targetLanguageLoadedContentMasterState = useSelector(
     state => state.learningContent,
@@ -870,16 +868,7 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
       });
       const targetLanguageLoadedSentences = allStudyDataRes.sentences;
       const targetLanguageLoadedContent = allStudyDataRes.content;
-      const targetLanguageLoadedSnippets = allStudyDataRes.snippets;
       const targetLanguageLoadedWords = allStudyDataRes.words;
-      const targetLanguageLoadedSnippetsWithSavedTag =
-        targetLanguageLoadedSnippets?.map(item => ({
-          ...item,
-          saved: true,
-        }));
-      dispatch(
-        setSnippetsStateDispatch(targetLanguageLoadedSnippetsWithSavedTag),
-      );
       const sortedContent = targetLanguageLoadedContent
         ?.sort((a, b) => {
           return a.isCore === b.isCore ? 0 : a.isCore ? -1 : 1;

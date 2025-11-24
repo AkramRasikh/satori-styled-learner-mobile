@@ -1,4 +1,4 @@
-import {adhocSentences, content, snippets, words, sentences} from '../refs';
+import {adhocSentences, content, words, sentences} from '../refs';
 import {GET_ON_ALL_LOAD_URL} from '@env';
 import {
   getLocalStorageData,
@@ -17,7 +17,7 @@ const loadAllContent = async ({language}) => {
       },
       body: JSON.stringify({
         language,
-        refs: [content, snippets, words, sentences],
+        refs: [content, words, sentences],
       }),
     });
 
@@ -53,22 +53,19 @@ const getFreshData = async ({language}) => {
     ).content.filter(item => item !== null);
 
     const targetLanguageLoadedWords = getNestedObjectData(words)?.words || [];
-    const targetLanguageLoadedSnippets =
-      getNestedObjectData(snippets)?.snippets || [];
     const targetLanguageLoadedSentences =
       getNestedObjectData(sentences)?.sentences || [];
 
     const data = {
       content: targetLanguageLoadedContent,
       words: targetLanguageLoadedWords,
-      snippets: targetLanguageLoadedSnippets,
+
       sentences: targetLanguageLoadedSentences,
     };
 
     const dataStorageKeyPrefix = `${language}-data-`;
     await storeDataLocalStorage(dataStorageKeyPrefix + content, data.content);
     await storeDataLocalStorage(dataStorageKeyPrefix + words, data.words);
-    await storeDataLocalStorage(dataStorageKeyPrefix + snippets, data.snippets);
     await storeDataLocalStorage(
       dataStorageKeyPrefix + sentences,
       data.sentences,
@@ -93,9 +90,6 @@ const getAllDataLocally = async ({language}) => {
       return null;
     }
     const wordsData = await getLocalStorageData(dataStorageKeyPrefix + words);
-    const snippetsData = await getLocalStorageData(
-      dataStorageKeyPrefix + snippets,
-    );
     const sentencesData = await getLocalStorageData(
       dataStorageKeyPrefix + adhocSentences,
     );
@@ -103,7 +97,6 @@ const getAllDataLocally = async ({language}) => {
     return {
       content: contentData,
       words: wordsData,
-      snippets: snippetsData,
       sentences: sentencesData,
     };
   } catch (error) {
@@ -124,7 +117,6 @@ export const getAllData = async ({language, freshData}) => {
     return {
       content: [],
       words: [],
-      snippets: [],
       sentences: [],
     };
   }
