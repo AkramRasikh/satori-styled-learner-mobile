@@ -120,8 +120,6 @@ const DifficultSentencesSnippet = ({
   indexNum,
 }) => {
   const [isLoadingState, setIsLoadingState] = useState(false);
-  const [isLoadingStateAudioState, setIsLoadingStateAudioState] =
-    useState(false);
 
   const topic = snippetData.topic;
   const generalTopic = snippetData.generalTopic;
@@ -204,15 +202,8 @@ const DifficultSentencesSnippet = ({
     return () => clearInterval(interval);
   }, [soundRef, setCurrentTimeState]);
 
-  const handleLoad = async () => {
-    try {
-      setIsLoadingStateAudioState(true);
-      await loadFile(topic, url);
-    } catch (error) {
-      console.log('## handleLoad', error);
-    } finally {
-      setIsLoadingStateAudioState(false);
-    }
+  const handleLoad = () => {
+    loadFile(topic, url);
   };
 
   useEffect(() => {
@@ -298,7 +289,7 @@ const DifficultSentencesSnippet = ({
           handleLoad={handleLoad}
           isLoaded={isLoaded}
           defaultPlayTime={startTime}
-          isLoadingStateAudioState={isLoadingStateAudioState}
+          isLoadingStateAudioState={!isLoaded && isTriggered}
         />
         {hasDueDateInFuture ? (
           <View
