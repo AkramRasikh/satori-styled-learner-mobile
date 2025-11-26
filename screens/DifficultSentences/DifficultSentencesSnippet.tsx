@@ -25,6 +25,8 @@ import {getTimeDiffSRS} from '../../utils/getTimeDiffSRS';
 import AnimationContainer from '../../components/AnimationContainer';
 import useAnimation from '../../hooks/useAnimation';
 import FlashCardLoadingSpinner from '../../components/FlashCard/FlashCardLoadingSpinner';
+import useData from '../../context/Data/useData';
+import DifficultSentenceMappedWords from '../../components/DifficultSentence/DifficultSentenceMappedWords';
 
 const DifficultSnippetAudioControls = ({
   sentence,
@@ -123,7 +125,7 @@ const DifficultSentencesSnippet = ({
   indexNum,
 }) => {
   const [isCollapsingState, setIsCollapsingState] = useState(false);
-
+  const [matchedWordListState, setMatchedWordListState] = useState([]);
   const [isLoadingState, setIsLoadingState] = useState(false);
 
   const fadeAnim = useRef(new Animated.Value(0)).current;
@@ -172,6 +174,7 @@ const DifficultSentencesSnippet = ({
   const soundRef = useRef();
 
   const {loadFile, filePath} = useMP3File(topic);
+  const {getThisSentencesWordList} = useData();
   const {triggerLoadURL, isLoaded} = useLoadAudioInstance({
     soundRef,
     url: filePath,
@@ -216,6 +219,16 @@ const DifficultSentencesSnippet = ({
   const handleLoad = () => {
     loadFile(topic, url);
   };
+
+  useEffect(() => {
+    const matchedWordList = getThisSentencesWordList(focusedText).map(
+      (item, index) => ({
+        ...item,
+        colorIndex: index,
+      }),
+    );
+    setMatchedWordListState(matchedWordList);
+  }, [focusedText]);
 
   useEffect(() => {
     const isFirst2 = indexNum === 0 || indexNum === 1;
@@ -379,6 +392,22 @@ const DifficultSentencesSnippet = ({
               quickDeleteFunc={quickDeleteFunc}
             />
           )}
+        </View>
+        <View style={{width: '100%'}}>
+          {matchedWordListState.map((item, index) => {
+            return (
+              <DifficultSentenceMappedWords
+                key={index}
+                item={item}
+                handleSelectWord={() => {}}
+                deleteWord={() => {}}
+                handleUpdateWordFinal={() => {}}
+                indexNum={index}
+                combineWordsListState={[]}
+                setCombineWordsListState={() => {}}
+              />
+            );
+          })}
         </View>
       </View>
     </AnimationContainer>
