@@ -79,10 +79,10 @@ export const DifficultSentenceProvider = ({
   const handleDeleteContent = async () => {
     try {
       stopAudioOnUnmount();
-      setIsTriggeringReview(true);
       await collapseAnimation();
+      setIsTriggeringReview(true);
       setIsCollapsingState(true);
-      updateSentenceData({
+      await updateSentenceData({
         isAdhoc: sentence?.isAdhoc,
         topicName: sentence.topic,
         sentenceId: sentence.id,
@@ -97,9 +97,9 @@ export const DifficultSentenceProvider = ({
         indexKey: sentence?.indexKey,
       });
     } catch (error) {
-    } finally {
       setIsTriggeringReview(false);
       setIsCollapsingState(false);
+    } finally {
     }
   };
 
@@ -110,6 +110,7 @@ export const DifficultSentenceProvider = ({
   const handleNextReview = async difficulty => {
     try {
       stopAudioOnUnmount();
+      await collapseAnimation();
       setIsTriggeringReview(true);
       const nextScheduledOptions = getNextScheduledOptions({
         card: cardDataRelativeToNow,
@@ -122,7 +123,6 @@ export const DifficultSentenceProvider = ({
         timeNow: new Date(),
       });
 
-      await collapseAnimation();
       setIsCollapsingState(true);
       if (futureReviewData.isScheduledForDeletion) {
         await updateSentenceData({
@@ -152,9 +152,9 @@ export const DifficultSentenceProvider = ({
         });
       }
     } catch (error) {
-    } finally {
       setIsTriggeringReview(true);
       setIsCollapsingState(false);
+    } finally {
     }
   };
 

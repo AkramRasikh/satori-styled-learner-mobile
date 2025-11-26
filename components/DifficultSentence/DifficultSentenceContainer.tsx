@@ -275,7 +275,7 @@ const DifficultSentenceContainer = ({
     scaleAnim,
     matchedWordListState,
     setMatchedWordListState,
-    isTriggeringReview,
+    // isTriggeringReview,
     revealSentenceBreakdown,
     quickTranslationArr,
     setQuickTranslationArr,
@@ -289,13 +289,11 @@ const DifficultSentenceContainer = ({
     if (isCollapsingState) {
       const id = setTimeout(() => setHideAllTogetherState(true), 300);
       return () => clearTimeout(id);
-    } else {
-      setHideAllTogetherState(false);
     }
   }, [isCollapsingState]);
 
   const isLastEl = toggleableSentencesStateLength === indexNum + 1;
-  const isFirst = indexNum === 0;
+  // const isFirst = indexNum === 0;
   const isLastInTotalOrder = realCapacity === indexNum + 1;
   const numberOfWords = pureWords.length;
 
@@ -447,27 +445,26 @@ const DifficultSentenceContainer = ({
     return null;
   }
   if (isCollapsingState) {
-    return <FlashCardLoadingSpinner />;
+    return (
+      <ActivityIndicator
+        style={{
+          position: 'absolute',
+          alignSelf: 'center',
+          top: '30%',
+          zIndex: 100,
+        }}
+        size="large"
+      />
+    );
   }
 
   return (
     <View {...spreadHandler}>
-      {isTriggeringReview && (
-        <ActivityIndicator
-          style={{
-            position: 'absolute',
-            alignSelf: 'center',
-            top: '30%',
-            zIndex: 100,
-          }}
-          size="large"
-        />
-      )}
       <AnimationContainer fadeAnim={fadeAnim} scaleAnim={scaleAnim}>
         <View
           style={{
             paddingBottom: isLastEl ? 100 : 0,
-            paddingTop: !isFirst ? 70 : 0,
+            // paddingTop: !isFirst ? 70 : 0,
             opacity: thisSentenceIsLoading ? 0.5 : 1,
             display: 'flex',
             flexDirection: 'column',
