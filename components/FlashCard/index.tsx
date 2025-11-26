@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useRef, useState} from 'react';
+import React, {useMemo, useRef, useState} from 'react';
 import {Animated, View} from 'react-native';
 import {
   ActivityIndicator,
@@ -62,7 +62,6 @@ const FlashCard = ({
   combineWordsSentenceDiffSentence,
 }) => {
   const [isCollapsingState, setIsCollapsingState] = useState(false);
-
   const [isOpenWordOptionsState, setIsOpenWordOptionsState] = useState(false);
   const [isLoadingState, setIsLoadingState] = useState(false);
   const [isCustomPromptOpenState, setIsCustomPromptOpenState] = useState(false);
@@ -105,6 +104,7 @@ const FlashCard = ({
     if (isCollapsingState) {
       setTimeout(() => true, 300);
     }
+    return false;
   }, [isCollapsingState]);
 
   const handleCloseModal = async () => {

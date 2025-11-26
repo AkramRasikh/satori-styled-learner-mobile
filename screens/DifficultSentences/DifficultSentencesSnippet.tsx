@@ -1,4 +1,4 @@
-import {Text, View} from 'react-native';
+import {Animated, Text, View} from 'react-native';
 import {getFirebaseAudioURL} from '../../hooks/useGetCombinedAudioData';
 import SRSTogglesScaled from '../../components/SRSTogglesScaled';
 import {
@@ -8,7 +8,7 @@ import {
   srsRetentionKeyTypes,
 } from '../../srs-algo';
 import {srsCalculationAndText} from '../../utils/srs/srs-calculation-and-text';
-import {useEffect, useRef, useState} from 'react';
+import {useEffect, useMemo, useRef, useState} from 'react';
 import useMP3File from '../../hooks/useMP3File';
 import useLoadAudioInstance from '../../hooks/useLoadAudioInstance';
 
@@ -22,6 +22,9 @@ import {
 
 import useMainAudioControls from '../../hooks/useMainAudioControls';
 import {getTimeDiffSRS} from '../../utils/getTimeDiffSRS';
+import AnimationContainer from '../../components/AnimationContainer';
+import useAnimation from '../../hooks/useAnimation';
+import FlashCardLoadingSpinner from '../../components/FlashCard/FlashCardLoadingSpinner';
 
 const DifficultSnippetAudioControls = ({
   sentence,
@@ -119,7 +122,12 @@ const DifficultSentencesSnippet = ({
   updateContentSnippetsDataScreenLevel,
   indexNum,
 }) => {
+  const [isCollapsingState, setIsCollapsingState] = useState(false);
+
   const [isLoadingState, setIsLoadingState] = useState(false);
+
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+  const scaleAnim = useRef(new Animated.Value(0.8)).current;
 
   const topic = snippetData.topic;
   const generalTopic = snippetData.generalTopic;
@@ -134,6 +142,18 @@ const DifficultSentencesSnippet = ({
   const focusedText = snippetData.focusedText;
   const targetLang = snippetData.targetLang;
   const baseLang = snippetData.baseLang;
+
+  const {collapseAnimation} = useAnimation({
+    fadeAnim,
+    scaleAnim,
+  });
+
+  const hideAllTogetherStateMemoized = useMemo(() => {
+    if (isCollapsingState) {
+      setTimeout(() => true, 300);
+    }
+    return false;
+  }, [isCollapsingState]);
 
   const timeNow = new Date();
 
@@ -217,6 +237,8 @@ const DifficultSentencesSnippet = ({
   const quickDeleteFunc = async () => {
     try {
       setIsLoadingState(true);
+      setIsCollapsingState(true);
+      await collapseAnimation();
       await updateContentSnippetsDataScreenLevel({
         snippetId: snippetData.id,
         contentIndex: snippetData.contentIndex,
@@ -230,6 +252,7 @@ const DifficultSentencesSnippet = ({
     } catch (error) {
     } finally {
       setIsLoadingState(false);
+      setIsCollapsingState(false);
     }
   };
 
@@ -254,6 +277,8 @@ const DifficultSentencesSnippet = ({
         ? {...nextReviewData, due: setToFiveAM(nextReviewData.due)}
         : nextReviewData;
 
+      setIsCollapsingState(true);
+      await collapseAnimation();
       await updateContentSnippetsDataScreenLevel({
         snippetId: snippetData.id,
         fieldToUpdate: {reviewData: formattedToBe5am},
@@ -267,78 +292,88 @@ const DifficultSentencesSnippet = ({
     } catch (error) {
     } finally {
       setIsLoadingState(false);
+      setIsCollapsingState(false);
     }
   };
 
+  if (hideAllTogetherStateMemoized) {
+    return null;
+  }
+  if (isCollapsingState) {
+    return <FlashCardLoadingSpinner />;
+  }
+
   return (
-    <View
-      style={{
-        padding: 3,
-        display: 'flex',
-        flexDirection: 'column',
-        gap: 10,
-        alignItems: 'center',
-        opacity: isLoadingState ? 0.5 : 1,
-      }}>
-      <Text>{topic}</Text>
-      <FocusedTextHighlighted
-        focusedText={focusedText}
-        targetLang={targetLang}
-      />
-      <Text>{baseLang}</Text>
+    <AnimationContainer fadeAnim={fadeAnim} scaleAnim={scaleAnim}>
       <View
         style={{
+          padding: 3,
           display: 'flex',
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          width: '100%',
+          flexDirection: 'column',
+          gap: 10,
+          alignItems: 'center',
+          opacity: isLoadingState ? 0.5 : 1,
         }}>
-        <DifficultSnippetAudioControls
-          sentence={snippetData}
-          isPlaying={isPlaying}
-          setIsPlaying={setIsPlaying}
-          soundRef={soundRef}
-          handleLoad={handleLoad}
-          isLoaded={isLoaded}
-          defaultPlayTime={startTime}
-          isLoadingStateAudioState={!isLoaded && isTriggered}
+        <Text>{topic}</Text>
+        <FocusedTextHighlighted
+          focusedText={focusedText}
+          targetLang={targetLang}
         />
-        {hasDueDateInFuture ? (
-          <View
-            style={{
-              display: 'flex',
-              flexDirection: 'row',
-              gap: 10,
-            }}>
-            <Text
-              style={{
-                ...DefaultTheme.fonts.bodySmall,
-                alignSelf: 'center',
-                fontStyle: 'italic',
-              }}>
-              Due in {getTimeDiffSRS({dueTimeStamp: hasDueDate, timeNow})}
-            </Text>
-            <IconButton
-              icon="delete"
-              containerColor={MD3Colors.error50}
-              iconColor={MD2Colors.white}
-              size={20}
-              onPress={quickDeleteFunc}
-            />
-          </View>
-        ) : (
-          <SRSTogglesScaled
-            handleNextReview={handleNextReview}
-            againText={againText}
-            hardText={hardText}
-            goodText={goodText}
-            easyText={easyText}
-            fontSize={10}
-            quickDeleteFunc={quickDeleteFunc}
+        <Text>{baseLang}</Text>
+        <View
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            width: '100%',
+          }}>
+          <DifficultSnippetAudioControls
+            sentence={snippetData}
+            isPlaying={isPlaying}
+            setIsPlaying={setIsPlaying}
+            soundRef={soundRef}
+            handleLoad={handleLoad}
+            isLoaded={isLoaded}
+            defaultPlayTime={startTime}
+            isLoadingStateAudioState={!isLoaded && isTriggered}
           />
-        )}
+          {hasDueDateInFuture ? (
+            <View
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+                gap: 10,
+              }}>
+              <Text
+                style={{
+                  ...DefaultTheme.fonts.bodySmall,
+                  alignSelf: 'center',
+                  fontStyle: 'italic',
+                }}>
+                Due in {getTimeDiffSRS({dueTimeStamp: hasDueDate, timeNow})}
+              </Text>
+              <IconButton
+                icon="delete"
+                containerColor={MD3Colors.error50}
+                iconColor={MD2Colors.white}
+                size={20}
+                onPress={quickDeleteFunc}
+              />
+            </View>
+          ) : (
+            <SRSTogglesScaled
+              handleNextReview={handleNextReview}
+              againText={againText}
+              hardText={hardText}
+              goodText={goodText}
+              easyText={easyText}
+              fontSize={10}
+              quickDeleteFunc={quickDeleteFunc}
+            />
+          )}
+        </View>
       </View>
-    </View>
+    </AnimationContainer>
   );
 };
 
