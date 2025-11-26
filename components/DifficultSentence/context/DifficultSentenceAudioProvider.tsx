@@ -24,14 +24,15 @@ export const DifficultSentenceAudioProvider = ({
 
   const id = sentence.id;
   const topic = sentence.topic;
+  const generalTopic = sentence.generalTopic;
   const isMediaContent = sentence.isMediaContent;
 
-  const audioId = isMediaContent ? topic : id;
+  const audioId = isMediaContent ? generalTopic : id;
   const soundRef = useRef();
 
   const soundDuration = soundRef?.current?._duration || 0;
 
-  const url = getFirebaseAudioURL(audioId, languageSelectedState);
+  const url = getFirebaseAudioURL(audioId, languageSelectedState); // only allowing non number ending mp3 files
 
   const {loadFile, filePath} = useMP3File(audioId);
   const {triggerLoadURL, isLoaded} = useLoadAudioInstance({

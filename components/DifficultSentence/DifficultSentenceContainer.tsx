@@ -282,7 +282,7 @@ const DifficultSentenceContainer = ({
   const {languageSelectedState} = useLanguageSelector();
 
   const isLastEl = toggleableSentencesStateLength === indexNum + 1;
-  const isFirst = 0 === indexNum;
+  const isFirst = indexNum === 0;
   const isLastInTotalOrder = realCapacity === indexNum + 1;
   const numberOfWords = pureWords.length;
 
