@@ -102,7 +102,7 @@ const FlashCard = ({
 
   const hideAllTogetherStateMemoized = useMemo(() => {
     if (isCollapsingState) {
-      setTimeout(() => true, 300);
+      return setTimeout(() => true, 300);
     }
     return false;
   }, [isCollapsingState]);
@@ -162,13 +162,13 @@ const FlashCard = ({
   };
 
   const collapseAnimationWithState = async () => {
-    setIsCollapsingState(true);
     await collapseAnimation();
+    setIsCollapsingState(true);
   };
 
   const handleDeleteWordWithAnimation = async () => {
-    setIsCollapsingState(true);
     await collapseAnimation();
+    setIsCollapsingState(true);
     handleDeleteWord(wordData);
   };
 
