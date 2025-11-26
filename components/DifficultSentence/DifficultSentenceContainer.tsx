@@ -1,5 +1,5 @@
 import React, {Animated, Easing, PanResponder, View} from 'react-native';
-import {useEffect, useRef, useState} from 'react';
+import {useEffect, useMemo, useRef, useState} from 'react';
 import DifficultSentenceTopHeader from './DifficultSentenceTopHeader';
 import DifficultSentenceTextContainer from './DifficultSentenceTextContainer';
 import useData from '../../context/Data/useData';
@@ -34,6 +34,7 @@ import SentenceBreakdown from '../SentenceBreakdown';
 import {getHexCode} from '../../utils/get-hex-code';
 import {translateText} from '../../api/google-translate';
 import useLanguageSelector from '../../context/LanguageSelector/useLanguageSelector';
+import FlashCardLoadingSpinner from '../FlashCard/FlashCardLoadingSpinner';
 
 const DifficultSentenceMidSection = ({sentence, addSnippet, removeSnippet}) => {
   const {
@@ -220,6 +221,7 @@ const DifficultSentenceContainer = ({
     useState(false);
   const [isDeleteReadyState, setIsDeleteReadyState] = useState(false);
   const [isHighlightMode, setHighlightMode] = useState(false);
+  const [hideAllTogetherState, setHideAllTogetherState] = useState(false);
 
   const {handleDeleteContent, collapseAnimation} =
     useDifficultSentenceContext();
@@ -277,9 +279,20 @@ const DifficultSentenceContainer = ({
     revealSentenceBreakdown,
     quickTranslationArr,
     setQuickTranslationArr,
+    isCollapsingState,
+    soundRef,
   } = useDifficultSentenceContext();
 
   const {languageSelectedState} = useLanguageSelector();
+
+  useEffect(() => {
+    if (isCollapsingState) {
+      const id = setTimeout(() => setHideAllTogetherState(true), 300);
+      return () => clearTimeout(id);
+    } else {
+      setHideAllTogetherState(false);
+    }
+  }, [isCollapsingState]);
 
   const isLastEl = toggleableSentencesStateLength === indexNum + 1;
   const isFirst = indexNum === 0;
@@ -430,6 +443,13 @@ const DifficultSentenceContainer = ({
     setMatchedWordListState(updatedMatchedWordListState);
   };
 
+  if (hideAllTogetherState) {
+    return null;
+  }
+  if (isCollapsingState) {
+    return <FlashCardLoadingSpinner />;
+  }
+
   return (
     <View {...spreadHandler}>
       {isTriggeringReview && (
@@ -493,6 +513,7 @@ const DifficultSentenceContainer = ({
             </View>
           )}
           <DifficultSentenceAudioProvider
+            soundRef={soundRef}
             sentence={sentence}
             indexNum={indexNum}
             nextAudioIsTheSameUrl={nextAudioIsTheSameUrl}>

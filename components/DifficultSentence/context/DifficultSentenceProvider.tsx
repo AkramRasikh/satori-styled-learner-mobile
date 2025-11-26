@@ -20,11 +20,13 @@ export const DifficultSentenceProvider = ({
 }: PropsWithChildren<{}>) => {
   const [matchedWordListState, setMatchedWordListState] = useState([]);
   const [isTriggeringReview, setIsTriggeringReview] = useState(false);
+  const [isCollapsingState, setIsCollapsingState] = useState(false);
   const [showSentenceBreakDown, setShowSentenceBreakDown] = useState(false);
   const [quickTranslationArr, setQuickTranslationArr] = useState([]);
 
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const scaleAnim = useRef(new Animated.Value(0.8)).current;
+  const soundRef = useRef();
 
   const {collapseAnimation} = useAnimation({
     fadeAnim,
@@ -68,10 +70,18 @@ export const DifficultSentenceProvider = ({
     setShowSentenceBreakDown(!showSentenceBreakDown);
   };
 
+  const stopAudioOnUnmount = () => {
+    if (soundRef?.current) {
+      soundRef?.current.stop(() => {});
+    }
+  };
+
   const handleDeleteContent = async () => {
     try {
+      stopAudioOnUnmount();
       setIsTriggeringReview(true);
       await collapseAnimation();
+      setIsCollapsingState(true);
       updateSentenceData({
         isAdhoc: sentence?.isAdhoc,
         topicName: sentence.topic,
@@ -89,6 +99,7 @@ export const DifficultSentenceProvider = ({
     } catch (error) {
     } finally {
       setIsTriggeringReview(false);
+      setIsCollapsingState(false);
     }
   };
 
@@ -98,6 +109,7 @@ export const DifficultSentenceProvider = ({
 
   const handleNextReview = async difficulty => {
     try {
+      stopAudioOnUnmount();
       setIsTriggeringReview(true);
       const nextScheduledOptions = getNextScheduledOptions({
         card: cardDataRelativeToNow,
@@ -111,6 +123,7 @@ export const DifficultSentenceProvider = ({
       });
 
       await collapseAnimation();
+      setIsCollapsingState(true);
       if (futureReviewData.isScheduledForDeletion) {
         await updateSentenceData({
           isAdhoc: sentence?.isAdhoc,
@@ -141,6 +154,7 @@ export const DifficultSentenceProvider = ({
     } catch (error) {
     } finally {
       setIsTriggeringReview(true);
+      setIsCollapsingState(false);
     }
   };
 
@@ -167,6 +181,8 @@ export const DifficultSentenceProvider = ({
         setQuickTranslationArr,
         collapseAnimation,
         isEasyFollowedByDeletion,
+        isCollapsingState,
+        soundRef,
       }}>
       {children}
     </DifficultSentenceContext.Provider>

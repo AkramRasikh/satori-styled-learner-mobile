@@ -1,4 +1,4 @@
-import React, {useEffect, useRef} from 'react';
+import React, {useEffect} from 'react';
 import {createContext, PropsWithChildren, useState} from 'react';
 import useLanguageSelector from '../../../context/LanguageSelector/useLanguageSelector';
 import {getFirebaseAudioURL} from '../../../hooks/useGetCombinedAudioData';
@@ -9,6 +9,7 @@ import {generateRandomId} from '../../../utils/generate-random-id';
 export const DifficultSentenceAudioContext = createContext(null);
 
 export const DifficultSentenceAudioProvider = ({
+  soundRef,
   sentence,
   indexNum,
   nextAudioIsTheSameUrl,
@@ -28,7 +29,6 @@ export const DifficultSentenceAudioProvider = ({
   const isMediaContent = sentence.isMediaContent;
 
   const audioId = isMediaContent ? generalTopic : id;
-  const soundRef = useRef();
 
   const soundDuration = soundRef?.current?._duration || 0;
 
