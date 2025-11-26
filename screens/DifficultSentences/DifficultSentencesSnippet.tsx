@@ -128,6 +128,7 @@ const DifficultSentencesSnippet = ({
 
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const scaleAnim = useRef(new Animated.Value(0.8)).current;
+  const lastCheckRef = useRef(0);
 
   const topic = snippetData.topic;
   const generalTopic = snippetData.generalTopic;
@@ -185,6 +186,13 @@ const DifficultSentencesSnippet = ({
   });
 
   useEffect(() => {
+    const now = Date.now();
+
+    // throttle: only run every 200ms
+    if (now - lastCheckRef.current < 200) {
+      return;
+    }
+    lastCheckRef.current = now;
     if (soundRef.current) {
       const beforeLoopTime1500 = currentTimeState < startTime;
       const beyondLoopTime1500 = endTime < currentTimeState;
@@ -192,16 +200,6 @@ const DifficultSentencesSnippet = ({
       if (beforeLoopTime1500 || beyondLoopTime1500) {
         soundRef.current.getCurrentTime(() => {
           soundRef.current.setCurrentTime(startTime);
-        });
-      }
-      return;
-    }
-    if (soundRef.current) {
-      const beforeStartTime = currentTimeState < snippetData.time;
-      const beyondEndTime = snippetData?.endTime < currentTimeState;
-      if (beforeStartTime || beyondEndTime) {
-        soundRef.current.getCurrentTime(() => {
-          soundRef.current.setCurrentTime(snippetData.time);
         });
       }
     }
