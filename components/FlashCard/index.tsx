@@ -1,4 +1,4 @@
-import React, {useRef, useState} from 'react';
+import React, {useEffect, useMemo, useRef, useState} from 'react';
 import {Animated, View} from 'react-native';
 import {
   ActivityIndicator,
@@ -62,6 +62,7 @@ const FlashCard = ({
   combineWordsSentenceDiffSentence,
 }) => {
   const [isCollapsingState, setIsCollapsingState] = useState(false);
+
   const [isOpenWordOptionsState, setIsOpenWordOptionsState] = useState(false);
   const [isLoadingState, setIsLoadingState] = useState(false);
   const [isCustomPromptOpenState, setIsCustomPromptOpenState] = useState(false);
@@ -99,6 +100,12 @@ const FlashCard = ({
   const definition = wordData.definition;
 
   const moreToLoad = sliceArrState === index + 1 && !isLastInTotalOrder;
+
+  const hideAllTogetherStateMemoized = useMemo(() => {
+    if (isCollapsingState) {
+      setTimeout(() => true, 300);
+    }
+  }, [isCollapsingState]);
 
   const handleCloseModal = async () => {
     await new Promise(resolve => {
@@ -177,96 +184,99 @@ const FlashCard = ({
     scrollToTarget();
   };
 
+  if (hideAllTogetherStateMemoized) {
+    return null;
+  }
+  if (isCollapsingState) {
+    return <FlashCardLoadingSpinner />;
+  }
+
   return (
     <>
-      {isCollapsingState ? (
-        <FlashCardLoadingSpinner />
-      ) : (
-        <>
-          <FlashCardBodyContainer
-            fadeAnim={fadeAnim}
-            scaleAnim={scaleAnim}
-            isCardDue={isCardDue}
-            isSelectedWord={isSelectedWord}
-            cardReviewButNotDue={cardReviewButNotDue}
-            targetRef={targetRef}>
-            <FlashCardTopSection
-              listTextNumber={listTextNumber}
-              baseForm={baseForm}
-              definiton={definition}
-              selectWordWithScroll={selectWordWithScroll}
-              isSelectedWord={isSelectedWord}
-              handleCloseModal={handleCloseModal}
-              setIsOpenWordOptionsState={setIsOpenWordOptionsState}
-              isOpenWordOptionsState={isOpenWordOptionsState}
-              handleCopyText={handleCopyText}
-            />
-            <Divider bold />
-            {isSelectedWord && (
-              <NestedFlashCard
-                fadeAnimNestedModal={fadeAnimNestedModal}
-                scaleAnimNestedModal={scaleAnimNestedModal}
-                wordData={wordData}
-                handleCloseModal={handleCloseModal}
-                isJapanese={isJapanese}
+      <FlashCardBodyContainer
+        fadeAnim={fadeAnim}
+        scaleAnim={scaleAnim}
+        isCardDue={isCardDue}
+        isSelectedWord={isSelectedWord}
+        cardReviewButNotDue={cardReviewButNotDue}
+        targetRef={targetRef}>
+        <FlashCardTopSection
+          listTextNumber={listTextNumber}
+          baseForm={baseForm}
+          definiton={definition}
+          selectWordWithScroll={selectWordWithScroll}
+          isSelectedWord={isSelectedWord}
+          handleCloseModal={handleCloseModal}
+          setIsOpenWordOptionsState={setIsOpenWordOptionsState}
+          isOpenWordOptionsState={isOpenWordOptionsState}
+          handleCopyText={handleCopyText}
+        />
+        <Divider bold />
+        {isSelectedWord && (
+          <NestedFlashCard
+            fadeAnimNestedModal={fadeAnimNestedModal}
+            scaleAnimNestedModal={scaleAnimNestedModal}
+            wordData={wordData}
+            handleCloseModal={handleCloseModal}
+            isJapanese={isJapanese}
+          />
+        )}
+        <FlashCardSRSToggles
+          reviewData={wordData.reviewData}
+          id={wordId}
+          baseForm={baseForm}
+          deleteWord={handleDeleteWordWithAnimation}
+          collapseAnimation={collapseAnimationWithState}
+          definition={definition}
+          updateWordDataAdditionalFunc={updateWordDataAdditionalFunc}
+        />
+        {isOpenWordOptionsState && (
+          <View>
+            {isLoadingState && (
+              <ActivityIndicator
+                style={{
+                  position: 'absolute',
+                  alignSelf: 'center',
+                  top: '30%',
+                  zIndex: 100,
+                }}
               />
             )}
-            <FlashCardSRSToggles
-              reviewData={wordData.reviewData}
-              id={wordId}
-              baseForm={baseForm}
-              deleteWord={handleDeleteWordWithAnimation}
-              collapseAnimation={collapseAnimationWithState}
-              definition={definition}
-              updateWordDataAdditionalFunc={updateWordDataAdditionalFunc}
-            />
-            {isOpenWordOptionsState && (
-              <View>
-                {isLoadingState && (
-                  <ActivityIndicator
-                    style={{
-                      position: 'absolute',
-                      alignSelf: 'center',
-                      top: '30%',
-                      zIndex: 100,
-                    }}
-                  />
-                )}
-                <View
-                  style={{
-                    display: 'flex',
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                    flexWrap: 'wrap',
-                    gap: 10,
-                    opacity: isLoadingState ? 0.5 : 1,
-                  }}>
-                  <Button
-                    mode="elevated"
-                    buttonColor="yellow"
-                    disabled={isLoadingState}
-                    onPress={() => handleAdhocWord('any')}>
-                    any
-                  </Button>
-                  <Button
-                    mode="elevated"
-                    disabled={isLoadingState}
-                    onPress={() => handleAdhocWord('antonym')}>
-                    antonym
-                  </Button>
-                  <Button
-                    mode="elevated"
-                    disabled={isLoadingState}
-                    onPress={() => handleAdhocWord('synonym')}>
-                    synonym
-                  </Button>
-                  <Button
-                    mode="elevated"
-                    disabled={isLoadingState}
-                    onPress={() => handleAdhocWord('functional')}>
-                    functional
-                  </Button>
-                  {/* <Button
+            <View
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                flexWrap: 'wrap',
+                gap: 10,
+                opacity: isLoadingState ? 0.5 : 1,
+              }}>
+              <Button
+                mode="elevated"
+                buttonColor="yellow"
+                disabled={isLoadingState}
+                onPress={() => handleAdhocWord('any')}>
+                any
+              </Button>
+              <Button
+                mode="elevated"
+                disabled={isLoadingState}
+                onPress={() => handleAdhocWord('antonym')}>
+                antonym
+              </Button>
+              <Button
+                mode="elevated"
+                disabled={isLoadingState}
+                onPress={() => handleAdhocWord('synonym')}>
+                synonym
+              </Button>
+              <Button
+                mode="elevated"
+                disabled={isLoadingState}
+                onPress={() => handleAdhocWord('functional')}>
+                functional
+              </Button>
+              {/* <Button
                     mode="elevated"
                     disabled={isLoadingState}
                     onPress={() => handleAdhocWord('conversation')}>
@@ -285,66 +295,62 @@ const FlashCard = ({
                     rhyme
                   </Button> */}
 
-                  {isCharacterBasedLanguage && (
-                    <Button
-                      mode="elevated"
-                      disabled={isLoadingState}
-                      onPress={() => handleAdhocWord('seperate')}>
-                      seperate 字字
-                    </Button>
-                  )}
-                  {/* <Button
+              {isCharacterBasedLanguage && (
+                <Button
+                  mode="elevated"
+                  disabled={isLoadingState}
+                  onPress={() => handleAdhocWord('seperate')}>
+                  seperate 字字
+                </Button>
+              )}
+              {/* <Button
                     buttonColor={MD2Colors.lightBlue300}
                     mode="elevated"
                     disabled={isLoadingState}
                     onPress={() => handleAdhocWord('')}>
                     sound 🎶
                   </Button> */}
-                  <Button
-                    buttonColor={MD2Colors.lightBlue300}
-                    mode="elevated"
-                    disabled={isLoadingState}
-                    onPress={combineThisWordWithOthers}>
-                    combine
-                  </Button>
+              <Button
+                buttonColor={MD2Colors.lightBlue300}
+                mode="elevated"
+                disabled={isLoadingState}
+                onPress={combineThisWordWithOthers}>
+                combine
+              </Button>
 
-                  <Button
-                    buttonColor={MD2Colors.teal500}
-                    mode="elevated"
-                    disabled={isLoadingState}
-                    onPress={() =>
-                      setIsCustomPromptOpenState(!isCustomPromptOpenState)
-                    }>
-                    Custom
-                  </Button>
-                </View>
-                {isCustomPromptOpenState && (
-                  <View>
-                    <TextInput
-                      label="Prompt"
-                      value={customPromptTextState}
-                      onChangeText={setCustomPromptTextState}
-                      mode="outlined"
-                      style={{margin: 5}}
-                      multiline
-                    />
-                    <Button
-                      mode="contained"
-                      onPress={handleSubmitWordPrompt}
-                      disabled={customPromptTextState?.trim() === ''}>
-                      Submit
-                    </Button>
-                  </View>
-                )}
+              <Button
+                buttonColor={MD2Colors.teal500}
+                mode="elevated"
+                disabled={isLoadingState}
+                onPress={() =>
+                  setIsCustomPromptOpenState(!isCustomPromptOpenState)
+                }>
+                Custom
+              </Button>
+            </View>
+            {isCustomPromptOpenState && (
+              <View>
+                <TextInput
+                  label="Prompt"
+                  value={customPromptTextState}
+                  onChangeText={setCustomPromptTextState}
+                  mode="outlined"
+                  style={{margin: 5}}
+                  multiline
+                />
+                <Button
+                  mode="contained"
+                  onPress={handleSubmitWordPrompt}
+                  disabled={customPromptTextState?.trim() === ''}>
+                  Submit
+                </Button>
               </View>
             )}
-          </FlashCardBodyContainer>
-          {moreToLoad && (
-            <FlashCardLoadMoreBtn
-              handleExpandWordArray={handleExpandWordArray}
-            />
-          )}
-        </>
+          </View>
+        )}
+      </FlashCardBodyContainer>
+      {moreToLoad && (
+        <FlashCardLoadMoreBtn handleExpandWordArray={handleExpandWordArray} />
       )}
     </>
   );

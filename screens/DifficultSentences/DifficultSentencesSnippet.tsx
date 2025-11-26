@@ -207,10 +207,12 @@ const DifficultSentencesSnippet = ({
   };
 
   useEffect(() => {
-    if (filePath && !isLoaded) {
+    const isFirst2 = indexNum === 0 || indexNum === 1;
+
+    if (isFirst2 && filePath && !isLoaded) {
       triggerLoadURL();
     }
-  }, [filePath, triggerLoadURL, isLoaded]);
+  }, [filePath, triggerLoadURL, indexNum, isLoaded]);
 
   const quickDeleteFunc = async () => {
     try {
@@ -220,6 +222,11 @@ const DifficultSentencesSnippet = ({
         contentIndex: snippetData.contentIndex,
         isRemove: true,
       });
+      if (soundRef?.current) {
+        soundRef?.current.stop(() => {
+          setIsPlaying(false);
+        });
+      }
     } catch (error) {
     } finally {
       setIsLoadingState(false);
@@ -252,6 +259,11 @@ const DifficultSentencesSnippet = ({
         fieldToUpdate: {reviewData: formattedToBe5am},
         contentIndex: snippetData.contentIndex,
       });
+      if (soundRef?.current) {
+        soundRef?.current.stop(() => {
+          setIsPlaying(false);
+        });
+      }
     } catch (error) {
     } finally {
       setIsLoadingState(false);

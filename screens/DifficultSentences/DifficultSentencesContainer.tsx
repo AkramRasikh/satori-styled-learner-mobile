@@ -556,36 +556,40 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
             includeSnippetsState={includeSnippetsState}
             setIncludeSnippetsState={setIncludeSnippetsState}
           />
-          <View style={{marginTop: 10}}>
+          <View
+            style={{
+              marginTop: 10,
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 10,
+            }}>
             {displayedStudyItems?.map((sentence, index) => {
               const isWordCard = sentence?.isWord;
               if (isWordCard) {
                 return (
-                  <View style={{paddingVertical: 10}} key={sentence.id}>
-                    <FlashCardProvider>
-                      <FlashCard
-                        combineWordsSentenceDiffSentence={
-                          combineWordsSentenceDiffSentence
-                        }
-                        wordData={sentence}
-                        index={index}
-                        realCapacity={toggleableSentencesMemoized.length}
-                        sliceArrState={null}
-                        handleDeleteWord={handleDeleteWordFlashCard}
-                        handleExpandWordArray={() => {}}
-                        handleAdhocMinimalPairFunc={handleAdhocMinimalPairFunc}
-                        scrollViewRef={scrollViewRef}
-                        updateWordDataAdditionalFunc={
-                          updateWordDataAdditionalFunc
-                        }
-                        handleAddCustomWordPromptFunc={
-                          handleAddCustomWordPromptFunc
-                        }
-                        selectedDueCardState={selectedDueCardState}
-                        setSelectedDueCardState={setSelectedDueCardState}
-                      />
-                    </FlashCardProvider>
-                  </View>
+                  <FlashCardProvider key={sentence.id}>
+                    <FlashCard
+                      combineWordsSentenceDiffSentence={
+                        combineWordsSentenceDiffSentence
+                      }
+                      wordData={sentence}
+                      index={index}
+                      realCapacity={toggleableSentencesMemoized.length}
+                      sliceArrState={null}
+                      handleDeleteWord={handleDeleteWordFlashCard}
+                      handleExpandWordArray={() => {}}
+                      handleAdhocMinimalPairFunc={handleAdhocMinimalPairFunc}
+                      scrollViewRef={scrollViewRef}
+                      updateWordDataAdditionalFunc={
+                        updateWordDataAdditionalFunc
+                      }
+                      handleAddCustomWordPromptFunc={
+                        handleAddCustomWordPromptFunc
+                      }
+                      selectedDueCardState={selectedDueCardState}
+                      setSelectedDueCardState={setSelectedDueCardState}
+                    />
+                  </FlashCardProvider>
                 );
               }
 
