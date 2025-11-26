@@ -149,13 +149,6 @@ const DifficultSentencesSnippet = ({
     scaleAnim,
   });
 
-  const hideAllTogetherStateMemoized = useMemo(() => {
-    if (isCollapsingState) {
-      setTimeout(() => true, 300);
-    }
-    return false;
-  }, [isCollapsingState]);
-
   const timeNow = new Date();
 
   const reviewData = snippetData?.reviewData;
@@ -232,11 +225,20 @@ const DifficultSentencesSnippet = ({
     }
   }, [filePath, triggerLoadURL, indexNum, isLoaded]);
 
+  const stopAudioOnUnmount = () => {
+    if (isPlaying && soundRef?.current) {
+      soundRef?.current.stop(() => {
+        setIsPlaying(false);
+      });
+    }
+  };
+
   const quickDeleteFunc = async () => {
     try {
+      stopAudioOnUnmount();
+      await collapseAnimation();
       setIsLoadingState(true);
       setIsCollapsingState(true);
-      await collapseAnimation();
       await updateContentSnippetsDataScreenLevel({
         snippetId: snippetData.id,
         contentIndex: snippetData.contentIndex,
@@ -264,6 +266,8 @@ const DifficultSentencesSnippet = ({
 
   const handleNextReview = async difficulty => {
     try {
+      stopAudioOnUnmount();
+      await collapseAnimation();
       setIsLoadingState(true);
       const nextReviewData = nextScheduledOptions[difficulty].card;
       const isMoreThanADayAheadBool = isMoreThanADayAhead(
@@ -276,7 +280,6 @@ const DifficultSentencesSnippet = ({
         : nextReviewData;
 
       setIsCollapsingState(true);
-      await collapseAnimation();
       await updateContentSnippetsDataScreenLevel({
         snippetId: snippetData.id,
         fieldToUpdate: {reviewData: formattedToBe5am},
@@ -293,6 +296,13 @@ const DifficultSentencesSnippet = ({
       setIsCollapsingState(false);
     }
   };
+
+  const hideAllTogetherStateMemoized = useMemo(() => {
+    if (isCollapsingState) {
+      return setTimeout(() => true, 400);
+    }
+    return false;
+  }, [isCollapsingState]);
 
   if (hideAllTogetherStateMemoized) {
     return null;
