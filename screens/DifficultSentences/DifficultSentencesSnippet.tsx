@@ -28,7 +28,7 @@ import FlashCardLoadingSpinner from '../../components/FlashCard/FlashCardLoading
 import useData from '../../context/Data/useData';
 import DifficultSentenceMappedWords from '../../components/DifficultSentence/DifficultSentenceMappedWords';
 
-const DifficultSnippetAudioControls = ({
+export const DifficultSnippetAudioControls = ({
   sentence,
   handleLoad,
   isLoaded,
@@ -97,7 +97,7 @@ const DifficultSnippetAudioControls = ({
   );
 };
 
-const FocusedTextHighlighted = ({focusedText, targetLang}) => {
+export const FocusedTextHighlighted = ({focusedText, targetLang}) => {
   const index = targetLang.indexOf(focusedText);
 
   if (index === -1) {

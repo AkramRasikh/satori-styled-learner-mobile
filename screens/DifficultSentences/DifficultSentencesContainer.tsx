@@ -20,6 +20,7 @@ import {sortObjByKeys} from '../../utils/sort-obj-by-keys';
 import FlashCard from '../../components/FlashCard';
 import {FlashCardProvider} from '../../components/FlashCard/context/FlashCardProvider';
 import DifficultSentencesSnippet from './DifficultSentencesSnippet';
+import DifficultSentencesGrandSnippetContainer from './DifficultSentencesGrandSnippetContainer';
 
 const sortFilteredOrder = (a, b) => {
   if (!a.topic) return 1; // Push objects without a topic to the end
@@ -495,6 +496,13 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
     [toggleableSentencesMemoized],
   );
 
+  const isSnippetsAndHasSelectedTopicMemoized = useMemo(
+    () =>
+      selectedGeneralTopicState &&
+      toggleableSentencesMemoized.every(item => item?.isSnippet),
+    [selectedGeneralTopicState, toggleableSentencesMemoized],
+  );
+
   return (
     <ScreenContainerComponent>
       {combineWordsListState?.length ? (
@@ -563,75 +571,86 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
               flexDirection: 'column',
               gap: 10,
             }}>
-            {displayedStudyItems?.map((sentence, index) => {
-              const isWordCard = sentence?.isWord;
-              if (isWordCard) {
-                return (
-                  <FlashCardProvider key={sentence.id}>
-                    <FlashCard
-                      combineWordsSentenceDiffSentence={
-                        combineWordsSentenceDiffSentence
-                      }
-                      wordData={sentence}
-                      index={index}
-                      realCapacity={toggleableSentencesMemoized.length}
-                      sliceArrState={null}
-                      handleDeleteWord={handleDeleteWordFlashCard}
-                      handleExpandWordArray={() => {}}
-                      handleAdhocMinimalPairFunc={handleAdhocMinimalPairFunc}
-                      scrollViewRef={scrollViewRef}
-                      updateWordDataAdditionalFunc={
-                        updateWordDataAdditionalFunc
-                      }
-                      handleAddCustomWordPromptFunc={
-                        handleAddCustomWordPromptFunc
-                      }
-                      selectedDueCardState={selectedDueCardState}
-                      setSelectedDueCardState={setSelectedDueCardState}
-                    />
-                  </FlashCardProvider>
-                );
-              }
+            {isSnippetsAndHasSelectedTopicMemoized &&
+            displayedStudyItems?.length > 0 ? (
+              <DifficultSentencesGrandSnippetContainer
+                displayedStudyItems={displayedStudyItems}
+                languageSelectedState={languageSelectedState}
+                updateContentSnippetsDataScreenLevel={
+                  updateContentSnippetsDataScreenLevel
+                }
+              />
+            ) : (
+              displayedStudyItems?.map((sentence, index) => {
+                const isWordCard = sentence?.isWord;
+                if (isWordCard) {
+                  return (
+                    <FlashCardProvider key={sentence.id}>
+                      <FlashCard
+                        combineWordsSentenceDiffSentence={
+                          combineWordsSentenceDiffSentence
+                        }
+                        wordData={sentence}
+                        index={index}
+                        realCapacity={toggleableSentencesMemoized.length}
+                        sliceArrState={null}
+                        handleDeleteWord={handleDeleteWordFlashCard}
+                        handleExpandWordArray={() => {}}
+                        handleAdhocMinimalPairFunc={handleAdhocMinimalPairFunc}
+                        scrollViewRef={scrollViewRef}
+                        updateWordDataAdditionalFunc={
+                          updateWordDataAdditionalFunc
+                        }
+                        handleAddCustomWordPromptFunc={
+                          handleAddCustomWordPromptFunc
+                        }
+                        selectedDueCardState={selectedDueCardState}
+                        setSelectedDueCardState={setSelectedDueCardState}
+                      />
+                    </FlashCardProvider>
+                  );
+                }
 
-              if (sentence?.isSnippet) {
+                if (sentence?.isSnippet) {
+                  return (
+                    <DifficultSentencesSnippet
+                      key={sentence.id}
+                      indexNum={index}
+                      snippetData={sentence}
+                      languageSelectedState={languageSelectedState}
+                      updateContentSnippetsDataScreenLevel={
+                        updateContentSnippetsDataScreenLevel
+                      }
+                    />
+                  );
+                }
+                const nextAudioIsTheSameUrl =
+                  sentence.isMediaContent &&
+                  sentence.topic ===
+                    toggleableSentencesMemoized[index + 1]?.topic;
                 return (
-                  <DifficultSentencesSnippet
+                  <DifficultSentenceComponent
                     key={sentence.id}
+                    toggleableSentencesStateLength={realCapacity}
+                    updateSentenceData={updateSentenceDataScreenLevel}
+                    navigation={navigation}
+                    sliceArrState={sliceArrState}
+                    setSliceArrState={setSliceArrState}
+                    realCapacity={realCapacity}
+                    handleSelectWord={handleSelectWord}
+                    handleWordUpdate={handleWordUpdate}
+                    sentence={sentence}
+                    openGoogleTranslateApp={openGoogleTranslateApp}
                     indexNum={index}
-                    snippetData={sentence}
-                    languageSelectedState={languageSelectedState}
-                    updateContentSnippetsDataScreenLevel={
-                      updateContentSnippetsDataScreenLevel
-                    }
+                    underlineWordsInSentence={underlineWordsInSentence}
+                    combineWordsListState={combineWordsListState}
+                    setCombineWordsListState={setCombineWordsListState}
+                    nextAudioIsTheSameUrl={nextAudioIsTheSameUrl}
+                    getThisTopicsDueSentences={getThisTopicsDueSentences}
                   />
                 );
-              }
-              const nextAudioIsTheSameUrl =
-                sentence.isMediaContent &&
-                sentence.topic ===
-                  toggleableSentencesMemoized[index + 1]?.topic;
-              return (
-                <DifficultSentenceComponent
-                  key={sentence.id}
-                  toggleableSentencesStateLength={realCapacity}
-                  updateSentenceData={updateSentenceDataScreenLevel}
-                  navigation={navigation}
-                  sliceArrState={sliceArrState}
-                  setSliceArrState={setSliceArrState}
-                  realCapacity={realCapacity}
-                  handleSelectWord={handleSelectWord}
-                  handleWordUpdate={handleWordUpdate}
-                  sentence={sentence}
-                  openGoogleTranslateApp={openGoogleTranslateApp}
-                  indexNum={index}
-                  underlineWordsInSentence={underlineWordsInSentence}
-                  combineWordsListState={combineWordsListState}
-                  setCombineWordsListState={setCombineWordsListState}
-                  nextAudioIsTheSameUrl={nextAudioIsTheSameUrl}
-                  getThisTopicsDueSentences={getThisTopicsDueSentences}
-                />
-              );
-            })}
+              })
+            )}
           </View>
         </ScrollView>
       </View>
