@@ -21,6 +21,7 @@ import FlashCard from '../../components/FlashCard';
 import {FlashCardProvider} from '../../components/FlashCard/context/FlashCardProvider';
 import DifficultSentencesSnippet from './DifficultSentencesSnippet';
 import DifficultSentencesGrandSnippetContainer from './DifficultSentencesGrandSnippetContainer';
+import DifficultSentencesGrandSentenceContainer from './DifficultSentencesGrandSentenceContainer';
 
 const sortFilteredOrder = (a, b) => {
   if (!a.topic) return 1; // Push objects without a topic to the end
@@ -503,6 +504,18 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
     [selectedGeneralTopicState, toggleableSentencesMemoized],
   );
 
+  const isSentencesAndSelectedTopicsMemoized = useMemo(() => {
+    if (
+      isSentencesAndSelectedTopicsMemoized ||
+      toggleableSentencesMemoized.length === 0 ||
+      !selectedGeneralTopicState
+    ) {
+      return false;
+    }
+
+    return toggleableSentencesMemoized.every(item => item?.isContent);
+  }, [selectedGeneralTopicState, toggleableSentencesMemoized]);
+
   return (
     <ScreenContainerComponent>
       {combineWordsListState?.length ? (
@@ -579,6 +592,12 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
                 updateContentSnippetsDataScreenLevel={
                   updateContentSnippetsDataScreenLevel
                 }
+              />
+            ) : isSentencesAndSelectedTopicsMemoized ? (
+              <DifficultSentencesGrandSentenceContainer
+                displayedStudyItems={displayedStudyItems}
+                languageSelectedState={languageSelectedState}
+                updateSentenceData={updateSentenceDataScreenLevel}
               />
             ) : (
               displayedStudyItems?.map((sentence, index) => {
