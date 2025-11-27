@@ -286,10 +286,6 @@ const DifficultSentencesGrandSnippetContainer = ({
     return () => clearInterval(interval);
   }, [soundRef, setCurrentTimeState, isPlaying]);
 
-  const handleLoad = () => {
-    loadFile(topic, url);
-  };
-
   const playThisSnippet = thisTime => {
     soundRef.current.setCurrentTime(thisTime);
     soundRef.current.getCurrentTime(() => {
