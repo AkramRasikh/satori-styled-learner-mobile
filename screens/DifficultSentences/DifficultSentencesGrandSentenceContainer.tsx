@@ -17,10 +17,12 @@ import {
   IconButton,
   MD2Colors,
 } from 'react-native-paper';
-import {srsRetentionKeyTypes} from '../../srs-algo';
+import {
+  isMoreThanADayAhead,
+  setToFiveAM,
+  srsRetentionKeyTypes,
+} from '../../srs-algo';
 import {srsCalculationAndText} from '../../utils/srs/srs-calculation-and-text';
-import useAnimation from '../../hooks/useAnimation';
-import AnimationContainer from '../../components/AnimationContainer';
 import FlashCardLoadingSpinner from '../../components/FlashCard/FlashCardLoadingSpinner';
 import SRSTogglesScaled from '../../components/SRSTogglesScaled';
 import useHighlightWordToWordBank from '../../hooks/useHighlightWordToWordBank';
@@ -51,10 +53,11 @@ const NestedSentence = ({
 
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const scaleAnim = useRef(new Animated.Value(0.8)).current;
-  const {collapseAnimation} = useAnimation({
-    fadeAnim,
-    scaleAnim,
-  });
+
+  // useAnimation({
+  //   fadeAnim,
+  //   scaleAnim,
+  // });
 
   useEffect(() => {
     if (isCollapsingState) {
@@ -119,8 +122,8 @@ const NestedSentence = ({
   const handleDeleteContent = async () => {
     try {
       stopAudioOnUnmount();
-      await collapseAnimation();
-      setIsCollapsingState(true);
+      // setIsCollapsingState(true);
+      // await collapseAnimation();
       await updateSentenceData({
         isAdhoc: sentence?.isAdhoc,
         topicName: sentence.topic,
@@ -143,13 +146,22 @@ const NestedSentence = ({
   const handleNextReview = async difficulty => {
     try {
       stopAudioOnUnmount();
-      await collapseAnimation();
+      // setIsCollapsingState(true);
+      // await collapseAnimation();
       // const nextScheduledOptions = getNextScheduledOptions({
       //   card: cardDataRelativeToNow,
       //   contentType: srsRetentionKeyTypes.sentences,
       // });
       const nextReviewData = nextScheduledOptions[difficulty].card;
-      setIsCollapsingState(true);
+      const isMoreThanADayAheadBool = isMoreThanADayAhead(
+        nextReviewData.due,
+        new Date(),
+      );
+
+      const formattedToBe5am = isMoreThanADayAheadBool
+        ? {...nextReviewData, due: setToFiveAM(nextReviewData.due)}
+        : nextReviewData;
+
       if (isScheduledForDeletion) {
         await updateSentenceData({
           isAdhoc: sentence?.isAdhoc,
@@ -171,7 +183,7 @@ const NestedSentence = ({
           topicName: sentence.topic,
           sentenceId: sentence.id,
           fieldToUpdate: {
-            reviewData: nextReviewData,
+            reviewData: formattedToBe5am,
           },
           contentIndex: sentence?.contentIndex,
           indexKey: sentence?.indexKey,
@@ -266,58 +278,56 @@ const NestedSentence = ({
     indexNum === selectedIndexState && isLoaded && isPlaying;
 
   return (
-    <AnimationContainer fadeAnim={fadeAnim} scaleAnim={scaleAnim}>
-      <View>
-        <DifficultSentenceTextContainer
-          targetLang={sentence.targetLang}
-          previousSentence={sentence.previousSentence}
-          baseLang={sentence.baseLang}
-          sentenceId={sentence.id}
-          safeTextFunc={getSafeText}
-          saveWordFirebase={saveWordFirebase}
-          isHighlightMode={isHighlightMode}
-          setHighlightMode={setHighlightMode}
-          handleQuickGoogleTranslate={() => {}}
-          notes={sentence.notes}
+    <View>
+      <DifficultSentenceTextContainer
+        targetLang={sentence.targetLang}
+        previousSentence={sentence.previousSentence}
+        baseLang={sentence.baseLang}
+        sentenceId={sentence.id}
+        safeTextFunc={getSafeText}
+        saveWordFirebase={saveWordFirebase}
+        isHighlightMode={isHighlightMode}
+        setHighlightMode={setHighlightMode}
+        handleQuickGoogleTranslate={() => {}}
+        notes={sentence.notes}
+      />
+      <View
+        style={{
+          display: 'flex',
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          width: '100%',
+        }}>
+        <IconButton
+          icon={thisIsPlaying ? 'pause' : 'play'}
+          mode="outlined"
+          size={20}
+          onPress={handlePlayThisSnippet}
+          // disabled={isLoadingStateAudioState}
+          // style={{opacity: isLoadingStateAudioState ? 0.5 : 1}}
         />
-        <View
-          style={{
-            display: 'flex',
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            width: '100%',
-          }}>
-          <IconButton
-            icon={thisIsPlaying ? 'pause' : 'play'}
-            mode="outlined"
-            size={20}
-            onPress={handlePlayThisSnippet}
-            // disabled={isLoadingStateAudioState}
-            // style={{opacity: isLoadingStateAudioState ? 0.5 : 1}}
-          />
-          {isDueState ? (
-            <View
-              style={{
-                alignSelf: 'center',
-              }}>
-              <SRSTogglesScaled
-                handleNextReview={handleNextReview}
-                againText={againText}
-                hardText={hardText}
-                goodText={goodText}
-                easyText={easyText}
-                quickDeleteFunc={handleDeleteContent}
-                willBeFollowedByDeletion={isScheduledForDeletion}
-              />
-            </View>
-          ) : (
-            <View style={{alignSelf: 'center'}}>
-              <Text style={DefaultTheme.fonts.bodyMedium}>Due in X</Text>
-            </View>
-          )}
-        </View>
+        {isDueState ? (
+          <View
+            style={{
+              alignSelf: 'center',
+            }}>
+            <SRSTogglesScaled
+              handleNextReview={handleNextReview}
+              againText={againText}
+              hardText={hardText}
+              goodText={goodText}
+              easyText={easyText}
+              quickDeleteFunc={handleDeleteContent}
+              willBeFollowedByDeletion={isScheduledForDeletion}
+            />
+          </View>
+        ) : (
+          <View style={{alignSelf: 'center'}}>
+            <Text style={DefaultTheme.fonts.bodyMedium}>Due in X</Text>
+          </View>
+        )}
       </View>
-    </AnimationContainer>
+    </View>
   );
 };
 

@@ -506,7 +506,6 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
 
   const isSentencesAndSelectedTopicsMemoized = useMemo(() => {
     if (
-      isSentencesAndSelectedTopicsMemoized ||
       toggleableSentencesMemoized.length === 0 ||
       !selectedGeneralTopicState
     ) {
