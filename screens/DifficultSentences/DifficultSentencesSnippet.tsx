@@ -249,8 +249,8 @@ const DifficultSentencesSnippet = ({
   const quickDeleteFunc = async () => {
     try {
       stopAudioOnUnmount();
-      await collapseAnimation();
-      setIsLoadingState(true);
+      // await collapseAnimation();
+      // setIsLoadingState(true);
       setIsCollapsingState(true);
       await updateContentSnippetsDataScreenLevel({
         snippetId: snippetData.id,
@@ -280,8 +280,8 @@ const DifficultSentencesSnippet = ({
   const handleNextReview = async difficulty => {
     try {
       stopAudioOnUnmount();
-      await collapseAnimation();
-      setIsLoadingState(true);
+      // await collapseAnimation();
+      // setIsLoadingState(true);
       const nextReviewData = nextScheduledOptions[difficulty].card;
       const isMoreThanADayAheadBool = isMoreThanADayAhead(
         nextReviewData.due,

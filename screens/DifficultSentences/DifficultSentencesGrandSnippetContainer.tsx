@@ -15,7 +15,12 @@ import {
 import {srsCalculationAndText} from '../../utils/srs/srs-calculation-and-text';
 import FlashCardLoadingSpinner from '../../components/FlashCard/FlashCardLoadingSpinner';
 import useAnimation from '../../hooks/useAnimation';
-import {Divider, IconButton} from 'react-native-paper';
+import {
+  ActivityIndicator,
+  Divider,
+  IconButton,
+  MD2Colors,
+} from 'react-native-paper';
 import AnimationContainer from '../../components/AnimationContainer';
 
 const NestedSnippetData = ({
@@ -78,7 +83,7 @@ const NestedSnippetData = ({
   const handleNextReview = async difficulty => {
     try {
       stopAudioOnUnmount();
-      await collapseAnimation();
+      // await collapseAnimation();
       // setIsLoadingState(true);
       const nextReviewData = nextScheduledOptions[difficulty].card;
       const isMoreThanADayAheadBool = isMoreThanADayAhead(
@@ -111,7 +116,7 @@ const NestedSnippetData = ({
   const quickDeleteFunc = async () => {
     try {
       stopAudioOnUnmount();
-      await collapseAnimation();
+      // await collapseAnimation();
       // setIsLoadingState(true);
       setIsCollapsingState(true);
       await updateContentSnippetsDataScreenLevel({
@@ -132,18 +137,17 @@ const NestedSnippetData = ({
   };
 
   const handlePlayThisSnippet = () => {
-    if (selectedIndexState === indexNum && isPlaying) {
+    if (selectedIndexState === item.id && isPlaying) {
       stopAudioOnUnmount();
-    } else if (selectedIndexState === indexNum && !isPlaying) {
+    } else if (selectedIndexState === item.id && !isPlaying) {
       playThisSnippet(item.time);
     } else {
-      setSelectedIndexState(indexNum);
+      setSelectedIndexState(item.id);
       playThisSnippet(item.time);
     }
   };
 
-  const thisIsPlaying =
-    indexNum === selectedIndexState && isLoaded && isPlaying;
+  const thisIsPlaying = item.id === selectedIndexState && isLoaded && isPlaying;
 
   const hideAllTogetherStateMemoized = useMemo(() => {
     if (isCollapsingState) {
@@ -219,7 +223,9 @@ const DifficultSentencesGrandSnippetContainer = ({
   languageSelectedState,
   updateContentSnippetsDataScreenLevel,
 }) => {
-  const [selectedIndexState, setSelectedIndexState] = useState(0);
+  const [selectedIndexState, setSelectedIndexState] = useState(
+    displayedStudyItems[0].id,
+  );
 
   const [currentTimeState, setCurrentTimeState] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -228,12 +234,24 @@ const DifficultSentencesGrandSnippetContainer = ({
 
   const soundRef = useRef();
 
-  useEffect(() => {
-    setSelectedIndexState(0);
-  }, [displayedStudyItems.length]);
+  const displayedStudyItemsMemoizedMap = useMemo(() => {
+    const displayedStudyItemsMap = {};
 
-  const topic = displayedStudyItems[0].topic;
-  const generalTopic = displayedStudyItems[0].generalTopic;
+    displayedStudyItems.forEach(item => {
+      displayedStudyItemsMap[item.id] = {
+        id: item.id,
+        topic: item.topic,
+        generalTopic: item.generalTopic,
+        time: item.time,
+        isContracted: item.isContracted,
+      };
+    });
+
+    return displayedStudyItemsMap;
+  }, [displayedStudyItems]);
+
+  const topic = displayedStudyItems[selectedIndexState].topic;
+  const generalTopic = displayedStudyItems[selectedIndexState].generalTopic;
   const url = getFirebaseAudioURL(generalTopic, languageSelectedState);
   const snippetData = displayedStudyItems[selectedIndexState];
   let startTime = snippetData.time;
@@ -269,7 +287,7 @@ const DifficultSentencesGrandSnippetContainer = ({
         });
       }
     }
-  }, [snippetData, currentTimeState, soundRef, isPlaying, endTime, startTime]);
+  }, [currentTimeState, soundRef, isPlaying, endTime, startTime]);
 
   useEffect(() => {
     const getCurrentTimeFunc = () => {
@@ -321,6 +339,23 @@ const DifficultSentencesGrandSnippetContainer = ({
         alignItems: 'center',
       }}>
       <Text>{topic}</Text>
+      <View style={{display: 'flex', flexDirection: 'column', gap: 10}}>
+        {!isLoaded && isTriggered && (
+          <View
+            style={{
+              justifyContent: 'center',
+              alignItems: 'center',
+              gap: 20,
+              marginBottom: 20,
+            }}>
+            <ActivityIndicator
+              animating={true}
+              color={MD2Colors.red800}
+              size="large"
+            />
+          </View>
+        )}
+      </View>
       <View style={{display: 'flex', flexDirection: 'column', gap: 10}}>
         {displayedStudyItems.map((item, index) => {
           return (
