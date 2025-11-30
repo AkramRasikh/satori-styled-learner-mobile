@@ -33,7 +33,6 @@ const NestedSnippetData = ({
   setSelectedIndexState,
   selectedIndexState,
   playThisSnippet,
-  indexNum,
 }) => {
   const [isCollapsingState, setIsCollapsingState] = useState(false);
   const [matchedWordListState, setMatchedWordListState] = useState([]);
@@ -48,10 +47,10 @@ const NestedSnippetData = ({
   const {getThisSentencesWordList} = useData();
   const timeNow = new Date();
 
-  const {collapseAnimation} = useAnimation({
-    fadeAnim,
-    scaleAnim,
-  });
+  // const {collapseAnimation} = useAnimation({
+  //   fadeAnim,
+  //   scaleAnim,
+  // });
 
   const reviewData = item?.reviewData;
 
@@ -164,7 +163,7 @@ const NestedSnippetData = ({
   }
 
   return (
-    <AnimationContainer fadeAnim={fadeAnim} scaleAnim={scaleAnim}>
+    <View>
       <View>
         <FocusedTextHighlighted
           focusedText={focusedText}
@@ -214,7 +213,7 @@ const NestedSnippetData = ({
         </View>
       </View>
       <Divider bold style={{marginTop: 5}} />
-    </AnimationContainer>
+    </View>
   );
 };
 
@@ -250,11 +249,11 @@ const DifficultSentencesGrandSnippetContainer = ({
     return displayedStudyItemsMap;
   }, [displayedStudyItems]);
 
-  const topic = displayedStudyItems[selectedIndexState].topic;
-  const generalTopic = displayedStudyItems[selectedIndexState].generalTopic;
+  const topic = displayedStudyItems[0].topic;
+  const generalTopic = displayedStudyItems[0].generalTopic;
   const url = getFirebaseAudioURL(generalTopic, languageSelectedState);
-  const snippetData = displayedStudyItems[selectedIndexState];
-  let startTime = snippetData.time;
+  const snippetData = displayedStudyItemsMemoizedMap[selectedIndexState];
+  let startTime = snippetData?.time;
   const isContracted = snippetData?.isContracted;
   const duration = isContracted ? 1.5 : 3;
   let endTime = startTime + duration;
