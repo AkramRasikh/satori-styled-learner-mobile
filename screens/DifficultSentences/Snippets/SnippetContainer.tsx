@@ -10,12 +10,49 @@ import {
 } from '../../../srs-algo';
 import {srsCalculationAndText} from '../../../utils/srs/srs-calculation-and-text';
 import FlashCardLoadingSpinner from '../../../components/FlashCard/FlashCardLoadingSpinner';
-import {Divider, IconButton} from 'react-native-paper';
+import {ActivityIndicator, Divider, IconButton} from 'react-native-paper';
 import TextSegment from '../../../components/TextSegment';
 import {translateText} from '../../../api/google-translate';
 import useLanguageSelector from '../../../context/LanguageSelector/useLanguageSelector';
 import HighlightTextZone from '../../../components/HighlightTextZone';
 import {DoubleClickButton} from '../../../components/Button';
+import {useSelector} from 'react-redux';
+
+const threeSecondLoopLogic = ({
+  formattedTranscriptState,
+  startTime,
+  endTime,
+}) => {
+  const results = [];
+
+  formattedTranscriptState.forEach((item, index) => {
+    const start = item.time;
+    const end =
+      index < formattedTranscriptState.length - 1
+        ? formattedTranscriptState[index + 1].time
+        : start;
+    const duration = end - start;
+
+    const overlapStart = Math.max(start, startTime);
+    const overlapEnd = Math.min(end, endTime);
+
+    if (overlapStart < overlapEnd) {
+      const overlapDuration = overlapEnd - overlapStart;
+      const percentageOverlap = (overlapDuration / duration) * 100;
+      const startPoint = ((overlapStart - start) / duration) * 100;
+
+      results.push({
+        id: item.id,
+        start,
+        end,
+        percentageOverlap: Number(percentageOverlap.toFixed(2)),
+        startPoint: Number(startPoint.toFixed(2)),
+      });
+    }
+  });
+
+  return results;
+};
 
 function highlightApprox(
   fullText,
@@ -90,8 +127,13 @@ const SnippetContainer = ({
   const [quickTranslationArr, setQuickTranslationArr] = useState([]);
   const [isHighlightMode, setHighlightMode] = useState(false);
   const [highlightedIndices, setHighlightedIndices] = useState([]);
+  const [saveWordLoadingState, setSaveWordLoadingState] = useState(false);
 
   const {languageSelectedState} = useLanguageSelector();
+  const targetLanguageLoadedContentMasterState = useSelector(
+    state => state.learningContent,
+  );
+
   const focusedText = item.focusedText || item.suggestedFocusText;
 
   const targetLang = item.targetLang;
@@ -101,7 +143,7 @@ const SnippetContainer = ({
   const snippetMovementChanged =
     endIndexKeyState !== 0 || startIndexKeyState !== 0;
 
-  const {getThisSentencesWordList} = useData();
+  const {getThisSentencesWordList, saveWordFirebase, pureWords} = useData();
   const timeNow = new Date();
 
   const reviewData = item?.reviewData;
@@ -169,6 +211,61 @@ const SnippetContainer = ({
     });
   }
 
+  const getSentenceDataOfOverlappingWordsDuringSave = wordToSave => {
+    const highlightedWord = wordToSave.highlightedWord;
+    const thisSnippetsTime = item.time;
+    const snippetStartTime =
+      thisSnippetsTime - (item?.isContracted ? 0.75 : 1.5);
+    const snippetEndTime = thisSnippetsTime + (item?.isContracted ? 0.75 : 1.5);
+
+    const thisContent =
+      targetLanguageLoadedContentMasterState[item.contentIndex].content;
+
+    const overlapResId = threeSecondLoopLogic({
+      formattedTranscriptState: thisContent,
+      startTime: snippetStartTime,
+      endTime: snippetEndTime,
+    })?.map(i => i.id);
+
+    if (overlapResId.length === 0) {
+      return null;
+    }
+
+    if (overlapResId.length === 1) {
+      return overlapResId[0];
+    }
+
+    const contentWithOverlappingIds = thisContent.filter(contentItem =>
+      overlapResId.includes(contentItem.id),
+    );
+
+    const found = contentWithOverlappingIds.find(sentenceData => {
+      return sentenceData.targetLang.includes(highlightedWord);
+    });
+
+    return found?.id || contentWithOverlappingIds[0].id;
+  };
+
+  const handleSaveWordFromSnippet = async wordToSave => {
+    const highlightedWordSentenceId =
+      getSentenceDataOfOverlappingWordsDuringSave(wordToSave.highlightedWord);
+
+    if (!highlightedWordSentenceId) {
+      return null;
+    }
+    try {
+      setSaveWordLoadingState(true);
+      await saveWordFirebase({
+        ...wordToSave,
+        highlightedWordSentenceId,
+      });
+    } catch (error) {
+      console.log('## handleSaveWordFromSnippet', error);
+    } finally {
+      setSaveWordLoadingState(false);
+    }
+  };
+
   const handleSettingHighlightmode = () => {
     setHighlightMode(!isHighlightMode);
   };
@@ -190,7 +287,7 @@ const SnippetContainer = ({
   }, [targetLang, underlineWordsInSentence, matchStartKey, matchEndKey]);
 
   useEffect(() => {
-    const matchedWordList = getThisSentencesWordList(focusedText).map(
+    const matchedWordList = getThisSentencesWordList(targetLang).map(
       (item, index) => ({
         ...item,
         colorIndex: index,
@@ -332,12 +429,22 @@ const SnippetContainer = ({
           }}>
           {isHighlightMode ? (
             <View {...spreadHandler}>
+              {saveWordLoadingState && (
+                <ActivityIndicator
+                  style={{
+                    position: 'absolute',
+                    alignSelf: 'center',
+                    top: '30%',
+                    zIndex: 100,
+                  }}
+                />
+              )}
               <HighlightTextZone
                 id={item.id}
                 text={targetLang}
                 highlightedIndices={highlightedIndices}
                 setHighlightedIndices={setHighlightedIndices}
-                saveWordFirebase={() => {}}
+                saveWordFirebase={handleSaveWordFromSnippet}
                 setHighlightMode={setHighlightMode}
                 handleQuickGoogleTranslate={handleQuickGoogleTranslate}
               />
