@@ -90,7 +90,6 @@ const SnippetContainer = ({
   const [quickTranslationArr, setQuickTranslationArr] = useState([]);
   const [isHighlightMode, setHighlightMode] = useState(false);
   const [highlightedIndices, setHighlightedIndices] = useState([]);
-  const [isDeleteReadyState, setIsDeleteReadyState] = useState(false);
 
   const {languageSelectedState} = useLanguageSelector();
   const focusedText = item.focusedText || item.suggestedFocusText;

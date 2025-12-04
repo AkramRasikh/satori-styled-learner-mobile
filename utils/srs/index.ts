@@ -7,12 +7,14 @@ export const srsRetentionKey = {
   sentences: 0.97,
   topic: 0.95,
   media: 0.93,
+  snippet: 0.92,
 };
 export const srsRetentionKeyTypes = {
   vocab: 'vocab',
   sentences: 'sentences',
   topic: 'topic',
   media: 'media',
+  snippet: 'snippet',
 };
 
 const initFsrs = ({contentType}) => {

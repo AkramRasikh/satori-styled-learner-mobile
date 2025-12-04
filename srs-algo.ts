@@ -1,12 +1,13 @@
 import {createEmptyCard, generatorParameters, fsrs} from 'ts-fsrs';
 
 // grade = [1,2,3,4]
+// theres a mix up somewhere
 export const srsRetentionKey = {
   vocab: 0.98,
   sentences: 0.97,
   topic: 0.95,
   media: 0.93,
-  snippet: 0.99,
+  snippet: 0.92,
 };
 export const srsRetentionKeyTypes = {
   vocab: 'vocab',
