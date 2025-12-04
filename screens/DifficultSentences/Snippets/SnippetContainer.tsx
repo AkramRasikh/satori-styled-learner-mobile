@@ -1,6 +1,5 @@
-import React, {useEffect, useMemo, useState} from 'react';
-import {Text, View} from 'react-native';
-import {FocusedTextHighlighted} from '../DifficultSentencesSnippet';
+import React, {useEffect, useMemo, useRef, useState} from 'react';
+import {PanResponder, Text, View} from 'react-native';
 import useData from '../../../context/Data/useData';
 import DifficultSentenceMappedWords from '../../../components/DifficultSentence/DifficultSentenceMappedWords';
 import SRSTogglesScaled from '../../../components/SRSTogglesScaled';
@@ -13,6 +12,10 @@ import {srsCalculationAndText} from '../../../utils/srs/srs-calculation-and-text
 import FlashCardLoadingSpinner from '../../../components/FlashCard/FlashCardLoadingSpinner';
 import {Divider, IconButton} from 'react-native-paper';
 import TextSegment from '../../../components/TextSegment';
+import {translateText} from '../../../api/google-translate';
+import useLanguageSelector from '../../../context/LanguageSelector/useLanguageSelector';
+import HighlightTextZone from '../../../components/HighlightTextZone';
+import {DoubleClickButton} from '../../../components/Button';
 
 function highlightApprox(
   fullText,
@@ -84,7 +87,12 @@ const SnippetContainer = ({
   const [isLoadingSaveSnippetState, setIsLoadingSaveSnippetState] =
     useState(false);
   const [endIndexKeyState, setEndIndexKeyState] = useState(0);
+  const [quickTranslationArr, setQuickTranslationArr] = useState([]);
+  const [isHighlightMode, setHighlightMode] = useState(false);
+  const [highlightedIndices, setHighlightedIndices] = useState([]);
+  const [isDeleteReadyState, setIsDeleteReadyState] = useState(false);
 
+  const {languageSelectedState} = useLanguageSelector();
   const focusedText = item.focusedText || item.suggestedFocusText;
 
   const targetLang = item.targetLang;
@@ -123,6 +131,14 @@ const SnippetContainer = ({
     );
   }, [targetLang, startIndexKeyState, endIndexKeyState, focusedText]);
 
+  const handleQuickGoogleTranslate = async text => {
+    const result = await translateText({
+      text,
+      language: languageSelectedState,
+    });
+    setQuickTranslationArr(prev => [...prev, result]);
+  };
+
   const {againText, hardText, goodText, easyText, nextScheduledOptions} =
     srsCalculationAndText({
       reviewData,
@@ -154,17 +170,23 @@ const SnippetContainer = ({
     });
   }
 
+  const handleSettingHighlightmode = () => {
+    setHighlightMode(!isHighlightMode);
+  };
+
   const displayedText = useMemo(() => {
     const textSegments = underlineWordsInSentence(targetLang);
 
     const granularFormattedSentence = expandWordsIntoChunks(textSegments);
 
     return (
-      <TextSegment
-        textSegments={granularFormattedSentence}
-        matchStartKey={matchStartKey}
-        matchEndKey={matchEndKey}
-      />
+      <DoubleClickButton onPress={handleSettingHighlightmode}>
+        <TextSegment
+          textSegments={granularFormattedSentence}
+          matchStartKey={matchStartKey}
+          matchEndKey={matchEndKey}
+        />
+      </DoubleClickButton>
     );
   }, [targetLang, underlineWordsInSentence, matchStartKey, matchEndKey]);
 
@@ -185,8 +207,6 @@ const SnippetContainer = ({
       });
     }
   };
-
-  // console.log('## item', item);
 
   const handleNextReview = async difficulty => {
     try {
@@ -269,6 +289,23 @@ const SnippetContainer = ({
   };
 
   const thisIsPlaying = item.id === selectedIndexState && isLoaded && isPlaying;
+  const hasQuickTranslation = quickTranslationArr.length > 0;
+
+  const swipeDistance = useRef(0);
+
+  const panResponder = useRef(
+    PanResponder.create({
+      onMoveShouldSetPanResponder: (_, gestureState) => {
+        swipeDistance.current = 0;
+        return Math.abs(gestureState.dx) > 5;
+      },
+      onPanResponderMove: (_, gestureState) => {
+        swipeDistance.current += gestureState.dx; // Accumulate swipe distance
+      },
+    }),
+  ).current;
+
+  const spreadHandler = isHighlightMode ? {} : panResponder.panHandlers;
 
   const hideAllTogetherStateMemoized = useMemo(() => {
     if (isCollapsingState) {
@@ -294,8 +331,39 @@ const SnippetContainer = ({
             gap: 5,
             marginBottom: 10,
           }}>
-          <Text>{displayedText}</Text>
+          {isHighlightMode ? (
+            <View {...spreadHandler}>
+              <HighlightTextZone
+                id={item.id}
+                text={targetLang}
+                highlightedIndices={highlightedIndices}
+                setHighlightedIndices={setHighlightedIndices}
+                saveWordFirebase={() => {}}
+                setHighlightMode={setHighlightMode}
+                handleQuickGoogleTranslate={handleQuickGoogleTranslate}
+              />
+            </View>
+          ) : (
+            <Text>{displayedText}</Text>
+          )}
           <Text>{baseLang}</Text>
+          {hasQuickTranslation && (
+            <View style={{gap: 5, marginVertical: 5}}>
+              {quickTranslationArr.map((translationItem, key) => {
+                const countNumber = key + 1 + ') ';
+                return (
+                  <View key={key}>
+                    <Text>
+                      {countNumber}
+                      {translationItem.text}, {translationItem.transliteration}
+                      {', '}
+                      {translationItem.translation}
+                    </Text>
+                  </View>
+                );
+              })}
+            </View>
+          )}
           {isPreSnippet && (
             <View
               style={{
