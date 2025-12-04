@@ -10,6 +10,7 @@ const DifficultSentencesGrandSnippetContainer = ({
   displayedStudyItems,
   languageSelectedState,
   updateContentSnippetsDataScreenLevel,
+  underlineWordsInSentence,
 }) => {
   const [selectedIndexState, setSelectedIndexState] = useState(
     displayedStudyItems[0].id,
@@ -160,6 +161,7 @@ const DifficultSentencesGrandSnippetContainer = ({
               isPlaying={isPlaying}
               playThisSnippet={playThisSnippet}
               setIsPlaying={setIsPlaying}
+              underlineWordsInSentence={underlineWordsInSentence}
             />
           );
         })}

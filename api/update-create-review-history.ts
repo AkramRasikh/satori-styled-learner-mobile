@@ -15,7 +15,7 @@ export const updateCreateReviewHistory = async ({
       },
       body: JSON.stringify({
         language,
-        indexKey,
+        contentId: indexKey,
         fieldToUpdate,
       }),
     });
