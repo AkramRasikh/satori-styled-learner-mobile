@@ -876,6 +876,9 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
       }
       const baseForm = word.baseForm;
       const surfaceForm = word.surfaceForm;
+      if (!sentence) {
+        return;
+      }
       if (sentence.includes(baseForm)) {
         const indexOfBaseForm = sentence.indexOf(baseForm);
         matchedWordsData.push({
@@ -905,6 +908,9 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
           item.word === matchedWord.baseForm ||
           item.word === matchedWord.surfaceForm,
       );
+      if (!sentence) {
+        return;
+      }
 
       if (sentence.includes(item.word) && !isAlreadyInSentence) {
         const thisWordsData = targetLanguageWordsState.find(
