@@ -33,6 +33,9 @@ export const DifficultSentencesProvider = ({
   const adhocTargetLanguageSentencesState = useSelector(
     state => state.sentences,
   );
+  const targetLanguageLoadedContentMasterState = useSelector(
+    state => state.learningContent,
+  );
 
   const handleCombineSentences = async () => {
     try {
@@ -96,6 +99,27 @@ export const DifficultSentencesProvider = ({
     );
   };
 
+  const wordHasOverlappingSnippetTime = (word, contentIndex) => {
+    // maybe not getting the most optimal one
+    // const contentSnippets
+    const contentSnippets =
+      targetLanguageLoadedContentMasterState[contentIndex]?.snippets;
+    if (!contentSnippets || contentSnippets.length === 0) {
+      return;
+    }
+    const overlappedWord = contentSnippets.find(
+      item =>
+        item?.focusedText?.includes(word.surfaceForm) ||
+        item?.focusedText?.includes(word.baseForm) ||
+        item?.suggestedFocusText?.includes(word.surfaceForm) ||
+        item?.suggestedFocusText?.includes(word.baseForm),
+    );
+    if (overlappedWord) {
+      const time = overlappedWord.time;
+      return overlappedWord?.isContract ? time - 0.75 : time - 1.5;
+    }
+  };
+
   const getAdditionalContextData = arr => {
     if (arr?.length === 0) {
       return null;
@@ -138,10 +162,16 @@ export const DifficultSentencesProvider = ({
             thisWordsSentenceData?.topic &&
             thisWordsSentenceData?.generalTopic
           ) {
+            const isSnippetTime = wordHasOverlappingSnippetTime(
+              item,
+              thisWordsSentenceData?.contentIndex,
+            );
+
             const formattedContext = {
               ...thisWordsSentenceData,
               title: thisWordsSentenceData?.generalTopic,
               fullTitle: thisWordsSentenceData.topic,
+              isSnippetTime,
             };
 
             const contextData =

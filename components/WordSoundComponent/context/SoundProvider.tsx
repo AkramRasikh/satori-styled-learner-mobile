@@ -62,7 +62,11 @@ export const SoundProvider = ({
       soundRef,
       isPlaying,
       setIsPlaying,
-      startTime: isMediaContent ? sentenceData.time : null,
+      startTime: sentenceData?.isSnippetTime
+        ? sentenceData?.isSnippetTime
+        : isMediaContent
+        ? sentenceData.time
+        : null,
       rewindForwardInterval: 2,
       isMediaContent: isMediaContent,
     });
