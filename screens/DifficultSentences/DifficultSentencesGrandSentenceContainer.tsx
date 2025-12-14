@@ -38,6 +38,7 @@ const NestedSentence = ({
   isPlaying,
   playThisSnippet,
   setSelectedIndexState,
+  currentTimeState,
 }) => {
   const [isCollapsingState, setIsCollapsingState] = useState(false);
   const [isHighlightMode, setHighlightMode] = useState(false);
@@ -54,10 +55,11 @@ const NestedSentence = ({
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const scaleAnim = useRef(new Animated.Value(0.8)).current;
 
-  // useAnimation({
-  //   fadeAnim,
-  //   scaleAnim,
-  // });
+  const isThisAudioPlayingInRange =
+    indexNum === selectedIndexState &&
+    isPlaying &&
+    currentTimeState >= sentence.time &&
+    currentTimeState <= sentence.endTime;
 
   useEffect(() => {
     if (isCollapsingState) {
@@ -304,7 +306,11 @@ const NestedSentence = ({
           size={20}
           onPress={handlePlayThisSnippet}
           // disabled={isLoadingStateAudioState}
-          // style={{opacity: isLoadingStateAudioState ? 0.5 : 1}}
+          style={{
+            backgroundColor: isThisAudioPlayingInRange
+              ? 'yellow'
+              : 'transparent',
+          }}
         />
         {isDueState ? (
           <View
@@ -456,6 +462,7 @@ const DifficultSentencesGrandSentenceContainer = ({
               updateSentenceData={updateSentenceData}
               stopAudioOnUnmount={stopAudioOnUnmount}
               playThisSnippet={playThisSnippet}
+              currentTimeState={currentTimeState}
             />
           );
         })}
