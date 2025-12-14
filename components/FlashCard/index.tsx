@@ -212,15 +212,6 @@ const FlashCard = ({
           handleCopyText={handleCopyText}
         />
         <Divider bold />
-        {isSelectedWord && (
-          <NestedFlashCard
-            fadeAnimNestedModal={fadeAnimNestedModal}
-            scaleAnimNestedModal={scaleAnimNestedModal}
-            wordData={wordData}
-            handleCloseModal={handleCloseModal}
-            isJapanese={isJapanese}
-          />
-        )}
         <FlashCardSRSToggles
           reviewData={wordData.reviewData}
           id={wordId}
@@ -230,6 +221,16 @@ const FlashCard = ({
           definition={definition}
           updateWordDataAdditionalFunc={updateWordDataAdditionalFunc}
         />
+        {isSelectedWord && (
+          <NestedFlashCard
+            fadeAnimNestedModal={fadeAnimNestedModal}
+            scaleAnimNestedModal={scaleAnimNestedModal}
+            wordData={wordData}
+            handleCloseModal={handleCloseModal}
+            isJapanese={isJapanese}
+          />
+        )}
+
         {isOpenWordOptionsState && (
           <View>
             {isLoadingState && (

@@ -152,6 +152,13 @@ export const FlashCardContent = ({
 
   return (
     <View style={[styles.modalContainer]}>
+      {sentenceExamples?.length > 0 && (
+        <ExampleSentences
+          sentenceExamples={sentenceExamples}
+          baseForm={baseForm}
+          surfaceForm={surfaceForm}
+        />
+      )}
       {arr.map((item, index) => {
         return (
           <FlashCardLineContainer
@@ -172,13 +179,6 @@ export const FlashCardContent = ({
           uniqueSetOfKanj={uniqueSetOfKanj}
           kanji={hasKanji}
           baseForm={baseForm}
-        />
-      )}
-      {sentenceExamples?.length > 0 && (
-        <ExampleSentences
-          sentenceExamples={sentenceExamples}
-          baseForm={baseForm}
-          surfaceForm={surfaceForm}
         />
       )}
     </View>
