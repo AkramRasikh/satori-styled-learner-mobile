@@ -24,10 +24,11 @@ const FlashCardTopSection = ({
         flexDirection: 'row',
         width: 'auto',
         justifyContent: 'space-between',
+        marginRight: 10,
       }}>
       <TouchableOpacity
         style={{
-          flex: 6,
+          flex: 8,
         }}
         onPress={() => setIsShowTargetLangState(!isShowTargetLangState)}>
         <Text
@@ -43,33 +44,22 @@ const FlashCardTopSection = ({
         onPress={selectWordWithScroll}
         onLongPress={handleCopyText}
         style={{
-          alignSelf: 'flex-start',
-          marginVertical: 5,
-          justifyContent: 'space-between',
-          display: 'flex',
-          flexDirection: 'row',
-          alignItems: 'center',
-          flex: isSelectedWord ? 3 : 1,
+          flex: 1,
         }}>
-        <View style={{display: 'flex', flexDirection: 'row'}}>
-          {isSelectedWord && (
-            <IconButton
-              icon="close"
-              onPress={handleCloseModal}
-              mode="outlined"
-              iconColor={'white'}
-              containerColor={MD3Colors.error50}
-            />
-          )}
-          <IconButton
-            icon="dots-vertical"
-            containerColor={MD2Colors.blueGrey300}
-            onPress={() => {
-              selectWordWithScroll();
-              setIsOpenWordOptionsState(!isOpenWordOptionsState);
-            }}
-          />
-        </View>
+        <IconButton
+          icon={isSelectedWord ? 'close' : 'dots-vertical'}
+          containerColor={
+            isSelectedWord ? MD3Colors.error50 : MD2Colors.blueGrey300
+          }
+          iconColor={isSelectedWord ? 'white' : 'black'}
+          onPress={() => {
+            selectWordWithScroll();
+            setIsOpenWordOptionsState(!isOpenWordOptionsState);
+            if (isSelectedWord) {
+              handleCloseModal();
+            }
+          }}
+        />
       </TouchableOpacity>
     </View>
   );
