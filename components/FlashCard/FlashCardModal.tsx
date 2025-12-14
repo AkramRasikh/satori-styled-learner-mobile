@@ -36,13 +36,13 @@ const ExampleSentences = ({sentenceExamples, baseForm, surfaceForm}) => {
         const targetLang = exampleSentence.targetLang;
         return (
           <View key={index}>
+            <SoundProvider sentenceData={exampleSentence}>
+              <FlashCardAudio />
+            </SoundProvider>
             <Text style={styles.modalContent}>
               {exampleNumber} {baseLang}
             </Text>
             <Text style={styles.modalContent}>{getSafeText(targetLang)}</Text>
-            <SoundProvider sentenceData={exampleSentence}>
-              <FlashCardAudio />
-            </SoundProvider>
           </View>
         );
       })}
