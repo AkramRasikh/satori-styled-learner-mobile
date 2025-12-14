@@ -279,7 +279,7 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
     contentIndex,
     indexKey,
   }) => {
-    const isRemoveFromDifficultSentences = fieldToUpdate?.nextReview === null;
+    const isRemoveFromDifficultSentences = fieldToUpdate?.removeReview;
 
     if (isRemoveFromDifficultSentences) {
       removeDifficultSentenceFromState(sentenceId);
@@ -514,6 +514,12 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
 
     return toggleableSentencesMemoized.every(item => item?.isContent);
   }, [selectedGeneralTopicState, toggleableSentencesMemoized]);
+
+  console.log('## difficultSentencesState', difficultSentencesState.length);
+  console.log(
+    '## toggleableSentencesMemoized',
+    toggleableSentencesMemoized.length,
+  );
 
   return (
     <ScreenContainerComponent>
