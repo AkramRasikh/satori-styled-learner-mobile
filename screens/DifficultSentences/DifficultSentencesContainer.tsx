@@ -515,12 +515,6 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
     return toggleableSentencesMemoized.every(item => item?.isContent);
   }, [selectedGeneralTopicState, toggleableSentencesMemoized]);
 
-  console.log('## difficultSentencesState', difficultSentencesState.length);
-  console.log(
-    '## toggleableSentencesMemoized',
-    toggleableSentencesMemoized.length,
-  );
-
   return (
     <ScreenContainerComponent>
       {combineWordsListState?.length ? (
