@@ -184,6 +184,10 @@ const FlashCard = ({
     scrollToTarget();
   };
 
+  const firstExampleSentence =
+    wordData.contextData &&
+    wordData.contextData.find(item => item?.isSnippetTime);
+
   if (hideAllTogetherStateMemoized) {
     return null;
   }
@@ -210,6 +214,7 @@ const FlashCard = ({
           setIsOpenWordOptionsState={setIsOpenWordOptionsState}
           isOpenWordOptionsState={isOpenWordOptionsState}
           handleCopyText={handleCopyText}
+          firstExampleSentence={firstExampleSentence}
         />
         <Divider bold />
         <FlashCardSRSToggles
