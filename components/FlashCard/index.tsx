@@ -186,7 +186,10 @@ const FlashCard = ({
 
   const firstExampleSentence =
     wordData.contextData &&
-    wordData.contextData.find(item => item?.isSnippetTime);
+    (wordData.contextData.find(
+      item => item?.isSnippetTime && !item?.isPreSnippet,
+    ) ||
+      wordData.contextData.find(item => item?.isSnippetTime));
 
   if (hideAllTogetherStateMemoized) {
     return null;
