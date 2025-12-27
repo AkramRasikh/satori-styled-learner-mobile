@@ -157,7 +157,8 @@ export const DataProvider = ({children}: PropsWithChildren<{}>) => {
       const generalTopicName = !stringEndsWithNumber(contentItem.title)
         ? contentItem.title
         : getGeneralTopicName(contentItem.title);
-      const isMedia = contentItem?.origin === 'youtube';
+      const isMedia =
+        contentItem?.origin === 'youtube' || contentItem?.origin === 'netflix';
       if (
         isMedia &&
         !generalNamesArr.some(item => item.title === generalTopicName)
