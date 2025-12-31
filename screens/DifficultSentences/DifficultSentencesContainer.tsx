@@ -592,6 +592,8 @@ const DifficultSentencesContainer = ({navigation}): React.JSX.Element => {
                   updateContentSnippetsDataScreenLevel
                 }
                 underlineWordsInSentence={underlineWordsInSentence}
+                topic={selectedGeneralTopicState}
+                generalTopic={selectedGeneralTopicState}
               />
             ) : isSentencesAndSelectedTopicsMemoized ? (
               <DifficultSentencesGrandSentenceContainer

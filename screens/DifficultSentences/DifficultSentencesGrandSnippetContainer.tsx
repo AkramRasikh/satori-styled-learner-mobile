@@ -11,6 +11,8 @@ const DifficultSentencesGrandSnippetContainer = ({
   languageSelectedState,
   updateContentSnippetsDataScreenLevel,
   underlineWordsInSentence,
+  topic,
+  generalTopic,
 }) => {
   const [selectedIndexState, setSelectedIndexState] = useState(
     displayedStudyItems[0].id,
@@ -39,8 +41,6 @@ const DifficultSentencesGrandSnippetContainer = ({
     return displayedStudyItemsMap;
   }, [displayedStudyItems]);
 
-  const topic = displayedStudyItems[0].topic;
-  const generalTopic = displayedStudyItems[0].generalTopic;
   const url = getFirebaseAudioURL(generalTopic, languageSelectedState);
   const snippetData = displayedStudyItemsMemoizedMap[selectedIndexState];
   let startTime = snippetData?.time;

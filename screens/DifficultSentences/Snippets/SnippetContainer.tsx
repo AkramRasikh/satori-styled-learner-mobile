@@ -323,11 +323,6 @@ const SnippetContainer = ({
         fieldToUpdate: {reviewData: formattedToBe5am},
         contentIndex: item.contentIndex,
       });
-      if (soundRef?.current) {
-        soundRef?.current.stop(() => {
-          setIsPlaying(false);
-        });
-      }
     } catch (error) {
     } finally {
       setIsCollapsingState(false);
@@ -343,11 +338,6 @@ const SnippetContainer = ({
         contentIndex: item.contentIndex,
         isRemove: true,
       });
-      if (soundRef?.current) {
-        soundRef?.current.stop(() => {
-          setIsPlaying(false);
-        });
-      }
     } catch (error) {
     } finally {
       // setIsLoadingState(false);
